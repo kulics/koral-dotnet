@@ -139,64 +139,36 @@ return (obj) ;
 public partial class LiteLangVisitor{
 public  override  object VisitPackageControlStatement( PackageControlStatementContext context )
 {
+var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
+self_ID=Self.id;
 var r1 = ((Result)(Visit(context.id())));
 var isMutable = true;
 var isVirtual = "";
 if ( r1.isVirtual ) {
 isVirtual=" virtual ";
 }
-var typ = "";
-Result r2 = null;
-if ( context.expression()!=null ) {
-r2=((Result)(Visit(context.expression())));
-typ=((string)(r2.data));
+if ( Self.value!=null ) {
+super_ID=Self.value;
+isVirtual=" override ";
 }
+var typ = "";
 if ( context.typeType()!=null ) {
 typ=((string)(Visit(context.typeType())));
 }
 var obj = "";
+obj+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type).Append("").Append(BlockLeft+Wrap).Append("")).to_Str();
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-if ( context.packageControlSubStatement().Length>0 ) {
 obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(isVirtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("").Append(BlockLeft).Append("")).to_Str();
-var record = (new Dic<string,bool>());
 foreach (var item in context.packageControlSubStatement()){
 var temp = ((Result)(Visit(item)));
 obj+=temp.text;
-record[((string)(temp.data))]=true;
 } ;
-if ( r2!=null ) {
-obj=(new System.Text.StringBuilder("protected ").Append(typ).Append(" _").Append(r1.text).Append(" = ").Append(r2.text).Append("").Append(Terminate).Append(" ").Append(Wrap).Append("").Append(obj).Append("")).to_Str();
-if ( !record.ContainsKey("get") ) {
-obj+=(new System.Text.StringBuilder("get ").Append(BlockLeft).Append(" return _").Append(r1.text).Append("; ").Append(BlockRight).Append("")).to_Str();
-}
-if ( isMutable&&!record.ContainsKey("set") ) {
-obj+=(new System.Text.StringBuilder("set ").Append(BlockLeft).Append(" _").Append(r1.text).Append(" = value").Append(Terminate).Append(" ").Append(BlockRight).Append("")).to_Str();
-}
-}
 obj+=BlockRight+Wrap;
-}
-else {
-if ( isMutable ) {
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(isVirtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append(" ").Append(BlockLeft).Append(" get").Append(Terminate).Append("set").Append(Terminate).Append(" ").Append(BlockRight).Append("")).to_Str();
-if ( r2!=null ) {
-obj+=(new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate).Append(" ").Append(Wrap).Append("")).to_Str();
-}
-else {
-obj+=Wrap;
-}
-}
-else {
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(isVirtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append(" ").Append(BlockLeft).Append(" get").Append(Terminate).Append(" ").Append(BlockRight).Append("")).to_Str();
-if ( r2!=null ) {
-obj+=(new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate).Append(" ").Append(Wrap).Append("")).to_Str();
-}
-else {
-obj+=Wrap;
-}
-}
-}
+obj+=BlockRight+Wrap;
+self_ID="";
+super_ID="";
 return (obj) ; 
 }
 }
@@ -287,21 +259,11 @@ r.text+=Visit(context.annotationSupport());
 r.permission="public";
 var type = ((string)(Visit(context.typeType())));
 r.text+=type+" "+id.text;
-if ( context.protocolControlSubStatement().Length>0 ) {
-r.text+=" {";
+r.text+=BlockLeft;
 foreach (var item in context.protocolControlSubStatement()){
 r.text+=Visit(item);
 } ;
-r.text+="}"+Wrap;
-}
-else {
-if ( isMutable ) {
-r.text+=" { get; set; }"+Wrap;
-}
-else {
-r.text+=" { get; }"+Wrap;
-}
-}
+r.text+=BlockRight+Wrap;
 return (r) ; 
 }
 }
@@ -309,7 +271,7 @@ public partial class LiteLangVisitor{
 public  override  object VisitProtocolControlSubStatement( ProtocolControlSubStatementContext context )
 {
 var obj = "";
-obj=GetControlSub(context.id().GetText())+Terminate;
+obj=GetControlSub(context.id().GetText()).id+Terminate;
 return (obj) ; 
 }
 }

@@ -28,7 +28,7 @@ var content = "";
 var contentStatic = "";
 foreach (var item in context.namespaceSupportStatement()){
 var type = item.GetChild(0).GetType();
-if ( type==typeof(NamespaceVariableStatementContext)||type==typeof(NamespaceControlStatementContext)||type==typeof(NamespaceFunctionStatementContext)||type==typeof(NamespaceConstantStatementContext) ) {
+if ( type==typeof(NamespaceVariableStatementContext)||type==typeof(NamespaceControlStatementContext)||type==typeof(NamespaceAutoControlStatementContext)||type==typeof(NamespaceFunctionStatementContext)||type==typeof(NamespaceConstantStatementContext) ) {
 contentStatic+=Visit(item);
 }
 else {
@@ -270,6 +270,28 @@ public  override  object VisitNamespaceControlStatement( NamespaceControlStateme
 var r1 = ((Result)(Visit(context.id())));
 var isMutable = r1.isVirtual;
 var typ = "";
+if ( context.typeType()!=null ) {
+typ=((string)(Visit(context.typeType())));
+}
+var obj = "";
+if ( context.annotationSupport()!=null ) {
+obj+=Visit(context.annotationSupport());
+}
+obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text+BlockLeft).Append("")).to_Str();
+foreach (var item in context.packageControlSubStatement()){
+var temp = ((Result)(Visit(item)));
+obj+=temp.text;
+} ;
+obj+=BlockRight+Wrap;
+return (obj) ; 
+}
+}
+public partial class LiteLangVisitor{
+public  override  object VisitNamespaceAutoControlStatement( NamespaceAutoControlStatementContext context )
+{
+var r1 = ((Result)(Visit(context.id())));
+var isMutable = r1.isVirtual;
+var typ = "";
 Result r2 = null;
 if ( context.expression()!=null ) {
 r2=((Result)(Visit(context.expression())));
@@ -282,45 +304,16 @@ var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-if ( context.packageControlSubStatement().Length>0 ) {
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text+BlockLeft).Append("")).to_Str();
-var record = (new Dic<string,bool>());
-foreach (var item in context.packageControlSubStatement()){
-var temp = ((Result)(Visit(item)));
-obj+=temp.text;
-record[((string)(temp.data))]=true;
+obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append("")).to_Str();
+obj+=BlockLeft;
+foreach (var item in context.protocolControlSubStatement()){
+obj+=Visit(item);
 } ;
+obj+=BlockRight;
 if ( r2!=null ) {
-obj=(new System.Text.StringBuilder("protected static ").Append(typ).Append(" _").Append(r1.text).Append(" = ").Append(r2.text).Append("; ").Append(Wrap).Append("")).to_Str()+obj;
-if ( !record.ContainsKey("get") ) {
-obj+=(new System.Text.StringBuilder("get { return _").Append(r1.text).Append("; }")).to_Str();
+obj+="="+r2.text+Terminate;
 }
-if ( isMutable&&!record.ContainsKey("set") ) {
-obj+=(new System.Text.StringBuilder("set { _").Append(r1.text).Append(" = value; }")).to_Str();
-}
-}
-obj+=BlockRight+Wrap;
-}
-else {
-if ( isMutable ) {
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append(" { get;set; }")).to_Str();
-if ( r2!=null ) {
-obj+=(new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate+Wrap).Append("")).to_Str();
-}
-else {
 obj+=Wrap;
-}
-}
-else {
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append(" { get; }")).to_Str();
-if ( r2!=null ) {
-obj+=(new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate+Wrap).Append("")).to_Str();
-}
-else {
-obj+=Wrap;
-}
-}
-}
 return (obj) ; 
 }
 }
