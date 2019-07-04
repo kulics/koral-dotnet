@@ -19,6 +19,7 @@ public partial class LiteLangVisitor:LiteParserBaseVisitor<object>
 {
 public string self_ID = "" ; 
 public string super_ID = "" ; 
+public string set_ID = "" ; 
 };
 public partial class LiteLangVisitor{
 public  override  object VisitProgram( ProgramContext context )
@@ -53,6 +54,9 @@ r.text="this";
 }
 else if ( r.text==super_ID ) {
 r.text="base";
+} 
+else if ( r.text==set_ID ) {
+r.text="value";
 } 
 return (r) ; 
 }

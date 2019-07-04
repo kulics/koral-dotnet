@@ -78,7 +78,7 @@ packageVariableStatement: (annotationSupport)? id (Colon_Equal expression|Colon 
 packageControlStatement: (annotationSupport)? parameterClauseSelf (n='_')? id 
  Colon typeType Right_Arrow (packageControlSubStatement)+ end;
 // 定义子方法
-packageControlSubStatement: id left_brace (functionSupportStatement)+ right_brace;
+packageControlSubStatement: id (left_paren id right_paren)? left_brace (functionSupportStatement)+ right_brace;
 // 定义包事件
 packageEventStatement: id Colon left_brack Question right_brack nameSpaceItem end;
 // 协议

@@ -178,7 +178,10 @@ public  override  object VisitPackageControlSubStatement( PackageControlSubState
 var obj = "";
 var id = "";
 var typ = "";
-(id, typ)=GetControlSub(context.id().GetText());
+(id, typ)=GetControlSub(context.id(0).GetText());
+if ( context.id(1)!=null ) {
+this.set_ID=context.id(1).GetText();
+}
 if ( context.functionSupportStatement().Length>0 ) {
 obj+=id+BlockLeft;
 foreach (var item in context.functionSupportStatement()){
@@ -189,6 +192,7 @@ obj+=BlockRight+Wrap;
 else {
 obj+=id+Terminate;
 }
+this.set_ID="";
 return ((new Result(){text = obj,data = typ})) ; 
 }
 }

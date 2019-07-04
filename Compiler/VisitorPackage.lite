@@ -168,7 +168,10 @@
     obj := ""
     id := ""
     typ := ""
-    (id, typ) = GetControlSub(context.id().GetText())
+    (id, typ) = GetControlSub(context.id(0).GetText())
+    ? context.id(1) >< Nil {
+        me.set ID = context.id(1).GetText()
+    }
     ? context.functionSupportStatement().Length > 0 {
         obj += id + BlockLeft
         context.functionSupportStatement() @ item {
@@ -178,7 +181,7 @@
     } _ {
         obj += id + Terminate
     }
-
+    me.set ID = ""
     <- (Result{ text = obj, data = typ })
 }
 

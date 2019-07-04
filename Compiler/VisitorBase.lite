@@ -53,6 +53,7 @@ LiteLangVisitor -> {
 
     self ID := ""
     super ID := ""
+    set ID := ""
 }
 (me:LiteLangVisitor)(base) VisitProgram(context: ProgramContext) -> (v: Any) {
     Statement List := context.statement()
@@ -83,6 +84,8 @@ LiteLangVisitor -> {
         r.text = "this"
     } r.text == super ID {
         r.text = "base"
+    } r.text == set ID {
+        r.text = "value"
     }
     <- (r)
 }
