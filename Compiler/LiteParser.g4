@@ -349,7 +349,7 @@ floatExpr
 ;
 
 floatExpr: integerExpr call integerExpr;
-integerExpr: NumberLiteral+;
+integerExpr: NumberLiteral;
 
 // 类型
 typeNotNull:
@@ -415,7 +415,7 @@ pow: op=(Pow | Root | Log) (New_Line)?;
 call: op=Dot (New_Line)?;
 wave: op=Wave;
 
-id: (idItem)+;
+id: (idItem);
 
 idItem: op=(IDPublic|IDPrivate)
 |typeBasic

@@ -614,9 +614,7 @@ DicEle -> {
 
 (me:LiteLangVisitor)(base) VisitIntegerExpr(context: IntegerExprContext) -> (v: Any) {
     number := ""
-    context.NumberLiteral() @ item {
-        number += item.GetText()
-    }
+    number += context.NumberLiteral().GetText()
     <- (number)
 }
 

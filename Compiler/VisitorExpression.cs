@@ -742,9 +742,7 @@ public partial class LiteLangVisitor{
 public  override  object VisitIntegerExpr( IntegerExprContext context )
 {
 var number = "";
-foreach (var item in context.NumberLiteral()){
-number+=item.GetText();
-} ;
+number+=context.NumberLiteral().GetText();
 return (number) ; 
 }
 }
