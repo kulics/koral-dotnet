@@ -28,7 +28,7 @@ var content = "";
 var contentStatic = "";
 foreach (var item in context.namespaceSupportStatement()){
 var type = item.GetChild(0).GetType();
-if ( type==typeof(NamespaceVariableStatementContext)||type==typeof(NamespaceControlStatementContext)||type==typeof(NamespaceAutoControlStatementContext)||type==typeof(NamespaceFunctionStatementContext)||type==typeof(NamespaceConstantStatementContext) ) {
+if ( type==typeof(NamespaceVariableStatementContext)||type==typeof(NamespaceControlStatementContext)||type==typeof(NamespaceFunctionStatementContext)||type==typeof(NamespaceConstantStatementContext) ) {
 contentStatic+=Visit(item);
 }
 else {
@@ -283,37 +283,6 @@ var temp = ((Result)(Visit(item)));
 obj+=temp.text;
 } ;
 obj+=BlockRight+Wrap;
-return (obj) ; 
-}
-}
-public partial class LiteLangVisitor{
-public  override  object VisitNamespaceAutoControlStatement( NamespaceAutoControlStatementContext context )
-{
-var r1 = ((Result)(Visit(context.id())));
-var isMutable = r1.isVirtual;
-var typ = "";
-Result r2 = null;
-if ( context.expression()!=null ) {
-r2=((Result)(Visit(context.expression())));
-typ=((string)(r2.data));
-}
-if ( context.typeType()!=null ) {
-typ=((string)(Visit(context.typeType())));
-}
-var obj = "";
-if ( context.annotationSupport()!=null ) {
-obj+=Visit(context.annotationSupport());
-}
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append("")).to_Str();
-obj+=BlockLeft;
-foreach (var item in context.protocolControlSubStatement()){
-obj+=Visit(item);
-} ;
-obj+=BlockRight;
-if ( r2!=null ) {
-obj+="="+r2.text+Terminate;
-}
-obj+=Wrap;
 return (obj) ; 
 }
 }

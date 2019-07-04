@@ -53,7 +53,6 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
         type := item.GetChild(0).GetType()
         ? type == ?(:NamespaceVariableStatementContext) |
             type == ?(:NamespaceControlStatementContext) |
-            type == ?(:NamespaceAutoControlStatementContext) |
             type == ?(:NamespaceFunctionStatementContext) |
             type == ?(:NamespaceConstantStatementContext) {
             contentStatic += Visit(item)
@@ -278,34 +277,5 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
         obj += temp.text
     }
     obj += BlockRight + Wrap
-    <- (obj)
-}
-
-(me:LiteLangVisitor)(base) VisitNamespaceAutoControlStatement(context: NamespaceAutoControlStatementContext) -> (v: Any) {
-    r1 := Visit(context.id()):(Result)
-    isMutable := r1.isVirtual
-    typ := ""
-    r2: Result = Nil
-    ? context.expression() >< Nil {
-        r2 = Visit(context.expression()):(Result)
-        typ = r2.data:(Str)
-    }
-    ? context.typeType() >< Nil {
-        typ = Visit(context.typeType()):(Str)
-    }
-    obj := ""
-    ? context.annotationSupport() >< Nil {
-        obj += Visit(context.annotationSupport())
-    }
-    obj += ""r1.permission" static "typ" "r1.text""
-    obj += BlockLeft
-    context.protocolControlSubStatement() @ item {
-        obj += Visit(item)
-    }
-    obj += BlockRight
-    ? r2 >< Nil {
-        obj += "=" + r2.text + Terminate
-    }
-    obj += Wrap
     <- (obj)
 }

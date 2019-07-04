@@ -16,7 +16,6 @@ importStatement: (annotationSupport)? TextLiteral (id call?)? end;
 namespaceSupportStatement:
 namespaceVariableStatement
 |namespaceControlStatement
-|namespaceAutoControlStatement
 |namespaceFunctionStatement
 |namespaceConstantStatement
 |packageStatement
@@ -41,9 +40,6 @@ enumStatement: (annotationSupport)? id Right_Arrow New_Line* typeType left_brack
 enumSupportStatement: id (Equal (add)? integerExpr)? end;
 // 命名空间变量
 namespaceVariableStatement: (annotationSupport)? id (Colon_Equal expression|Colon typeType (Equal expression)?) end;
-// 命名空间自动控制
-namespaceAutoControlStatement: (annotationSupport)? id (Colon_Equal expression|Colon typeType (Equal expression)?)
- Right_Arrow protocolControlSubStatement (Comma protocolControlSubStatement)* end;
 // 命名空间控制
 namespaceControlStatement: (annotationSupport)? id Colon typeType (Equal expression)?
 Right_Arrow (packageControlSubStatement)+ end;
