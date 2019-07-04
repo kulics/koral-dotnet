@@ -10,11 +10,11 @@ namespace Compiler
 {
 public partial class Iterator
 {
-public  virtual  Result begin { get;set; }
-public  virtual  Result end { get;set; }
-public  virtual  Result step { get;set; }
-public  virtual  string order { get;set; } = T ; 
-public  virtual  string attach { get;set; } = F ; 
+public Result begin;
+public Result end;
+public Result step;
+public string order = T ; 
+public string attach = F ; 
 };
 public partial class LiteLangVisitor{
 public  override  object VisitIteratorStatement( IteratorStatementContext context )

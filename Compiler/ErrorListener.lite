@@ -9,7 +9,7 @@
 
 ErrorListener -> {
     :BaseErrorListener
-    File Dir(): Str
+    File Dir: Str
 } 
 (me:ErrorListener)(super) SyntaxError(recognizer: IRecognizer, offendingSymbol: ?IToken, 
     line: Int, charPositionInLine: Int, msg: Str, 

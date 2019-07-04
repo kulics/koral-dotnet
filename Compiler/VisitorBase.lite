@@ -42,10 +42,10 @@ BlockRight :: "}"
 Task :: "System.Threading.Tasks.Task"
 
 Result -> {
-    data(): Any
-    text(): Str
-    permission(): Str
-    isVirtual(): Bool
+    data: Any
+    text: Str
+    permission: Str
+    isVirtual: Bool
 }
 
 LiteLangVisitor -> {

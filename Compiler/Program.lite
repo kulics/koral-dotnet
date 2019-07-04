@@ -5,8 +5,8 @@
     "System/Text"
 }
 
-_Read Path(): Str
-_Path Line(): Str
+_Read Path: Str
+_Path Line: Str
 
 Main(args: [:]Str) -> () {
     # 检查系统平台，区分路径字符 #

@@ -10,11 +10,11 @@ namespace Compiler
 {
 public partial class Parameter
 {
-public  virtual  string id { get;set; }
-public  virtual  string type { get;set; }
-public  virtual  string value { get;set; }
-public  virtual  string annotation { get;set; }
-public  virtual  string permission { get;set; }
+public string id;
+public string type;
+public string value;
+public string annotation;
+public string permission;
 };
 public partial class LiteLangVisitor{
 public  virtual  string ProcessFunctionSupport( FunctionSupportStatementContext[] items )

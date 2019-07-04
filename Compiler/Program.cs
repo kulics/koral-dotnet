@@ -8,8 +8,8 @@ using System.Text;
 namespace Compiler
 {
 public partial class Compiler_Static{
-protected static string _Read_Path { get;set; }
-protected static string _Path_Line { get;set; }
+protected static string _Read_Path;
+protected static string _Path_Line;
 public static void Main( string[] args )
 {
 var os = Environment.OSVersion.Platform;

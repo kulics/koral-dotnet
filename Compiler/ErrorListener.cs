@@ -10,7 +10,7 @@ namespace Compiler
 {
 public partial class ErrorListener:BaseErrorListener
 {
-public  virtual  string File_Dir { get;set; }
+public string File_Dir;
 };
 public partial class ErrorListener{
 public  override  void SyntaxError( IRecognizer recognizer ,  IToken offendingSymbol ,  int line ,  int charPositionInLine ,  string msg ,  RecognitionException e )

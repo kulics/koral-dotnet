@@ -10,8 +10,8 @@ namespace Compiler
 {
 public partial class Namespace
 {
-public  virtual  string name { get;set; }
-public  virtual  string imports { get;set; }
+public string name;
+public string imports;
 };
 public partial class LiteLangVisitor{
 public  override  object VisitStatement( StatementContext context )

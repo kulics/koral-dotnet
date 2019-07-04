@@ -19,14 +19,14 @@ keywords := []Str{
 }
 
 TemplateItem -> {
-    Template(): Str
-    Contract(): Str
+    Template: Str
+    Contract: Str
 }
 
 DicEle -> {
-    key(): Str
-    value(): Str
-    text(): Str
+    key: Str
+    value: Str
+    text: Str
 }
 
 (me:LiteLangVisitor)(base) VisitVariableStatement(context: VariableStatementContext) -> (v: Any) {

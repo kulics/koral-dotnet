@@ -10,10 +10,10 @@ namespace Compiler
 {
 public partial class Result
 {
-public  virtual  object data { get;set; }
-public  virtual  string text { get;set; }
-public  virtual  string permission { get;set; }
-public  virtual  bool isVirtual { get;set; }
+public object data;
+public string text;
+public string permission;
+public bool isVirtual;
 };
 public partial class LiteLangVisitor:LiteParserBaseVisitor<object>
 {

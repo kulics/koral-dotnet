@@ -10,14 +10,14 @@ namespace Compiler
 {
 public partial class TemplateItem
 {
-public  virtual  string Template { get;set; }
-public  virtual  string Contract { get;set; }
+public string Template;
+public string Contract;
 };
 public partial class DicEle
 {
-public  virtual  string key { get;set; }
-public  virtual  string value { get;set; }
-public  virtual  string text { get;set; }
+public string key;
+public string value;
+public string text;
 };
 public partial class LiteLangVisitor{
 public  override  object VisitVariableStatement( VariableStatementContext context )
