@@ -15,7 +15,7 @@ public Result end;
 public Result step;
 public string order = T ; 
 public string attach = F ; 
-};
+}
 public partial class LiteLangVisitor{
 public  override  object VisitIteratorStatement( IteratorStatementContext context )
 {
@@ -38,8 +38,6 @@ it.step=((Result)(Visit(context.expression(2))));
 }
 return (it) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitLoopStatement( LoopStatementContext context )
 {
 var obj = "";
@@ -54,8 +52,6 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitLoopInfiniteStatement( LoopInfiniteStatementContext context )
 {
 var obj = (new System.Text.StringBuilder("for (;;) ").Append(BlockLeft+Wrap).Append("")).to_Str();
@@ -63,8 +59,6 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitLoopEachStatement( LoopEachStatementContext context )
 {
 var obj = "";
@@ -84,8 +78,6 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitLoopCaseStatement( LoopCaseStatementContext context )
 {
 var obj = "";
@@ -96,20 +88,14 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append(" ").Append(Terminate+Wrap).Append("")).to_Str();
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitLoopJumpStatement( LoopJumpStatementContext context )
 {
 return ((new System.Text.StringBuilder("break ").Append(Terminate+Wrap).Append("")).to_Str()) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitLoopContinueStatement( LoopContinueStatementContext context )
 {
 return ((new System.Text.StringBuilder("continue ").Append(Terminate+Wrap).Append("")).to_Str()) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitJudgeCaseStatement( JudgeCaseStatementContext context )
 {
 var obj = "";
@@ -118,12 +104,10 @@ obj+=(new System.Text.StringBuilder("switch (").Append(expr.text).Append(") ").A
 foreach (var item in context.caseStatement()){
 var r = ((string)(Visit(item)));
 obj+=r+Wrap;
-} ;
+}
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append(" ").Append(Wrap).Append("")).to_Str();
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitCaseDefaultStatement( CaseDefaultStatementContext context )
 {
 var obj = "";
@@ -132,8 +116,6 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append("break;")).to_Str();
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitCaseExprStatement( CaseExprStatementContext context )
 {
 var obj = "";
@@ -153,29 +135,23 @@ obj+=(new System.Text.StringBuilder("").Append(BlockLeft).Append(" ").Append(Pro
 obj+="break;";
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitCaseStatement( CaseStatementContext context )
 {
 var obj = ((string)(Visit(context.GetChild(0))));
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitJudgeStatement( JudgeStatementContext context )
 {
 var obj = "";
 obj+=Visit(context.judgeIfStatement());
 foreach (var it in context.judgeElseIfStatement()){
 obj+=Visit(it);
-} ;
+}
 if ( context.judgeElseStatement()!=null ) {
 obj+=Visit(context.judgeElseStatement());
 }
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitJudgeIfStatement( JudgeIfStatementContext context )
 {
 var b = ((Result)(Visit(context.expression())));
@@ -184,8 +160,6 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append("").Append(Wrap).Append("")).to_Str();
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitJudgeElseIfStatement( JudgeElseIfStatementContext context )
 {
 var b = ((Result)(Visit(context.expression())));
@@ -194,8 +168,6 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append(" ").Append(Wrap).Append("")).to_Str();
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitJudgeElseStatement( JudgeElseStatementContext context )
 {
 var obj = (new System.Text.StringBuilder("else ").Append(BlockLeft+Wrap).Append("")).to_Str();
@@ -203,8 +175,6 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append("").Append(Wrap).Append("")).to_Str();
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitCheckStatement( CheckStatementContext context )
 {
 var obj = (new System.Text.StringBuilder("try ").Append(BlockLeft+Wrap).Append("")).to_Str();
@@ -212,14 +182,12 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=(new System.Text.StringBuilder("").Append(BlockRight+Wrap).Append("")).to_Str();
 foreach (var item in context.checkErrorStatement()){
 obj+=(new System.Text.StringBuilder("").Append(Visit(item)).Append("").Append(Wrap).Append("")).to_Str();
-} ;
+}
 if ( context.checkFinallyStatment()!=null ) {
 obj+=Visit(context.checkFinallyStatment());
 }
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitCheckErrorStatement( CheckErrorStatementContext context )
 {
 var obj = "";
@@ -236,8 +204,6 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitCheckFinallyStatment( CheckFinallyStatmentContext context )
 {
 var obj = (new System.Text.StringBuilder("finally ").Append(Wrap+BlockLeft+Wrap).Append("")).to_Str();
@@ -245,8 +211,6 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append("").Append(Wrap).Append("")).to_Str();
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitUsingStatement( UsingStatementContext context )
 {
 var obj = "";
@@ -261,8 +225,6 @@ obj=(new System.Text.StringBuilder("var ").Append(r1.text).Append(" = ").Append(
 }
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitReportStatement( ReportStatementContext context )
 {
 var obj = "";
@@ -272,20 +234,16 @@ obj+=r.text;
 }
 return ((new System.Text.StringBuilder("throw ").Append(obj+Terminate+Wrap).Append("")).to_Str()) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitLinq( LinqContext context )
 {
 var r = (new Result(){data = "var"});
 r.text+=(new System.Text.StringBuilder("from ").Append(((Result)(Visit(context.expression(0)))).text).Append(" ")).to_Str();
 foreach (var item in context.linqItem()){
 r.text+=(new System.Text.StringBuilder("").Append(Visit(item)).Append(" ")).to_Str();
-} ;
+}
 r.text+=(new System.Text.StringBuilder("").Append(context.k.Text).Append(" ").Append(((Result)(Visit(context.expression(1)))).text).Append("")).to_Str();
 return (r) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitLinqItem( LinqItemContext context )
 {
 var obj = ((string)(Visit(context.linqKeyword())));
@@ -294,20 +252,14 @@ obj+=(new System.Text.StringBuilder(" ").Append(((Result)(Visit(context.expressi
 }
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitLinqKeyword( LinqKeywordContext context )
 {
 return (Visit(context.GetChild(0))) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitLinqHeadKeyword( LinqHeadKeywordContext context )
 {
 return (context.k.Text) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitLinqBodyKeyword( LinqBodyKeywordContext context )
 {
 return (context.k.Text) ; 

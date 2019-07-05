@@ -55,11 +55,11 @@ catch( Exception err )
 Prt(err);
 return  ; 
 }
-}} ;
+}}
 var Folders = Directory.GetDirectories(path);
 foreach (var folder in Folders){
 Compiled(folder);
-} ;
+}
 }
 }
 }

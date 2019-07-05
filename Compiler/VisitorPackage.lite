@@ -7,204 +7,204 @@
     "Compiler" Compiler_Static.
 }
 
-(me:LiteLangVisitor)(base) VisitIncludeStatement(context: IncludeStatementContext) -> (v: Any) {
-    <- (Visit(context.typeType()))
-}
+(me:LiteLangVisitor)(base) -> {
+    VisitIncludeStatement(context: IncludeStatementContext) -> (v: Any) {
+        <- (Visit(context.typeType()))
+    }
 
-(me:LiteLangVisitor)(base) VisitPackageStatement(context: PackageStatementContext) -> (v: Any) {
-    id := Visit(context.id()):(Result)
-    obj := ""
-    extend := ""
+    VisitPackageStatement(context: PackageStatementContext) -> (v: Any) {
+        id := Visit(context.id()):(Result)
+        obj := ""
+        extend := ""
 
-    context.packageSupportStatement() @ item {
-        ? item.GetChild(0).GetType() == ?(:IncludeStatementContext) {
-            ? extend == "" {
-                extend += Visit(item)
+        context.packageSupportStatement() @ item {
+            ? item.GetChild(0).GetType() == ?(:IncludeStatementContext) {
+                ? extend == "" {
+                    extend += Visit(item)
+                } _ {
+                    extend += "," + Visit(item)
+                }
             } _ {
-                extend += "," + Visit(item)
+                obj += Visit(item)
             }
-        } _ {
-            obj += Visit(item)
-        }
-    }
-    obj += BlockRight + Wrap
-    header := ""
-    ? context.annotationSupport() >< Nil {
-        header += Visit(context.annotationSupport())
-    }
-    header += ""id.permission" partial class "id.text""
-    # 泛型 #
-    template := ""
-    templateContract := ""
-    ? context.templateDefine() >< Nil {
-        item := Visit(context.templateDefine()):(TemplateItem)
-        template += item.Template
-        templateContract = item.Contract
-        header += template;
-    }
-
-    ? extend.Length > 0 {
-        header += ":"
-        ? extend.Length > 0 {
-            header += extend
-        }
-    }
-
-    header += templateContract + Wrap + BlockLeft + Wrap
-    obj = header + obj
-    <- (obj)
-}
-
-(me:LiteLangVisitor)(base) VisitPackageVariableStatement(context: PackageVariableStatementContext) -> (v: Any) {
-    r1 := Visit(context.id()):(Result)
-    isMutable := r1.isVirtual
-    typ := ""
-    r2: Result = Nil
-    ? context.expression() >< Nil {
-        r2 = Visit(context.expression()):(Result)
-        typ = r2.data:(Str)
-    }
-    ? context.typeType() >< Nil {
-        typ = Visit(context.typeType()):(Str)
-    }
-    obj := ""
-    ? context.annotationSupport() >< Nil {
-        obj += Visit(context.annotationSupport())
-    }
-
-    obj += ""r1.permission" "typ" "r1.text""
-    ? r2 >< Nil {
-        obj += " = "r2.text" "Terminate" "Wrap""
-    } _ {
-        obj += Terminate + Wrap
-    }
-    <- (obj)
-}
-
-
-
-(me:LiteLangVisitor)(base) VisitPackageControlSubStatement(context: PackageControlSubStatementContext) -> (v: Any) {
-    obj := ""
-    id := ""
-    typ := ""
-    (id, typ) = GetControlSub(context.id(0).GetText())
-    ? context.id(1) >< Nil {
-        me.setID = context.id(1).GetText()
-    }
-    ? context.functionSupportStatement().Length > 0 {
-        obj += id + BlockLeft
-        context.functionSupportStatement() @ item {
-            obj += Visit(item)
         }
         obj += BlockRight + Wrap
-    } _ {
-        obj += id + Terminate
-    }
-    me.setID = ""
-    <- (Result{ text = obj, data = typ })
-}
-
-(me:LiteLangVisitor)(base) VisitPackageNewStatement(context: PackageNewStatementContext) -> (v: Any) {
-    text := ""
-    Self := Visit(context.parameterClauseSelf()):(Parameter)
-    selfID = Self.id
-    text += ""Self.permission" partial class "Self.type""BlockLeft + Wrap""
-    text += "public " Self.type " "
-    # 获取构造数据 #
-    text += Visit(context.parameterClauseIn()):(Str)
-    ? context.expressionList() >< Nil {
-        text += ":base(" Visit(context.expressionList()):(Result).text ")"
-    }
-    text += BlockLeft + ProcessFunctionSupport(context.functionSupportStatement()) + BlockRight + Wrap
-    text += BlockRight + Wrap
-    selfID = ""
-    <- (text)
-}
-
-(me:LiteLangVisitor)(base) VisitPackageEventStatement(context: PackageEventStatementContext) -> (v: Any) {
-    obj := ""
-    id := Visit(context.id()):(Result)
-    nameSpace := Visit(context.nameSpaceItem())
-    obj += "public event "nameSpace" "id.text + Terminate + Wrap""
-    <- (obj)
-}
-
-(me:LiteLangVisitor)(base) VisitProtocolStatement(context: ProtocolStatementContext) -> (v: Any) {
-    id := Visit(context.id()):(Result)
-    obj := ""
-    interfaceProtocol := ""
-    ptclName := id.text
-    ? context.annotationSupport() >< Nil {
-        obj += Visit(context.annotationSupport())
-    }
-    context.protocolSupportStatement() @ item {
-        r := Visit(item):(Result)
-        interfaceProtocol += r.text
-    }
-    obj += "public partial interface " + ptclName
-    # 泛型 #
-    templateContract := ""
-    ? context.templateDefine() >< Nil {
-        template := Visit(context.templateDefine()):(TemplateItem)
-        obj += template.Template
-        templateContract = template.Contract
-    }
-    obj += templateContract + Wrap + BlockLeft + Wrap
-    obj += interfaceProtocol
-    obj += BlockRight + Wrap
-    <- (obj)
-}
-
-(me:LiteLangVisitor)(base) VisitProtocolControlStatement(context: ProtocolControlStatementContext) -> (v: Any) {
-    id := Visit(context.id()):(Result)
-    isMutable := id.isVirtual
-    r := Result{}
-    ? context.annotationSupport() >< Nil {
-        r.text += Visit(context.annotationSupport())
-    }
-    r.permission = "public"
-    type := Visit(context.typeType()):(Str)
-    r.text += type + " " + id.text
-    r.text += BlockLeft
-    context.protocolControlSubStatement() @ item {
-        r.text += Visit(item)
-    }
-    r.text += BlockRight + Wrap
-    <- (r)
-}
-
-(me:LiteLangVisitor)(base) VisitProtocolControlSubStatement(context: ProtocolControlSubStatementContext) -> (v: Any) {
-    obj := ""
-    obj = GetControlSub(context.id().GetText()).id + Terminate
-    <- (obj)
-}
-
-(me:LiteLangVisitor)(base) VisitProtocolFunctionStatement(context: ProtocolFunctionStatementContext) -> (v: Any) {
-    id := Visit(context.id()):(Result)
-    r := Result{}
-    ? context.annotationSupport() >< Nil {
-        r.text += Visit(context.annotationSupport())
-    }
-    r.permission = "public"
-    # 异步 #
-    ? context.t.Type == Right_Flow {
-        pout := Visit(context.parameterClauseOut()):(Str)
-        ? pout >< "void" {
-            pout = ""Task"<"pout">"
-        } _ {
-            pout = Task
+        header := ""
+        ? context.annotationSupport() >< Nil {
+            header += Visit(context.annotationSupport())
         }
-        r.text += pout + " " + id.text
-    } _ {
-        r.text += Visit(context.parameterClauseOut()) + " " + id.text
+        header += ""id.permission" partial class "id.text""
+        # 泛型 #
+        template := ""
+        templateContract := ""
+        ? context.templateDefine() >< Nil {
+            item := Visit(context.templateDefine()):(TemplateItem)
+            template += item.Template
+            templateContract = item.Contract
+            header += template;
+        }
+
+        ? extend.Length > 0 {
+            header += ":"
+            ? extend.Length > 0 {
+                header += extend
+            }
+        }
+
+        header += templateContract + Wrap + BlockLeft + Wrap
+        obj = header + obj
+        <- (obj)
     }
-    # 泛型 #
-    templateContract := ""
-    ? context.templateDefine() >< Nil {
-        template := Visit(context.templateDefine()):(TemplateItem)
-        r.text += template.Template
-        templateContract = template.Contract
+
+    VisitPackageVariableStatement(context: PackageVariableStatementContext) -> (v: Any) {
+        r1 := Visit(context.id()):(Result)
+        isMutable := r1.isVirtual
+        typ := ""
+        r2: Result = Nil
+        ? context.expression() >< Nil {
+            r2 = Visit(context.expression()):(Result)
+            typ = r2.data:(Str)
+        }
+        ? context.typeType() >< Nil {
+            typ = Visit(context.typeType()):(Str)
+        }
+        obj := ""
+        ? context.annotationSupport() >< Nil {
+            obj += Visit(context.annotationSupport())
+        }
+
+        obj += ""r1.permission" "typ" "r1.text""
+        ? r2 >< Nil {
+            obj += " = "r2.text" "Terminate" "Wrap""
+        } _ {
+            obj += Terminate + Wrap
+        }
+        <- (obj)
     }
-    r.text += Visit(context.parameterClauseIn()) + templateContract + Terminate + Wrap
-    <- (r)
+
+    VisitPackageControlSubStatement(context: PackageControlSubStatementContext) -> (v: Any) {
+        obj := ""
+        id := ""
+        typ := ""
+        (id, typ) = GetControlSub(context.id(0).GetText())
+        ? context.id(1) >< Nil {
+            me.setID = context.id(1).GetText()
+        }
+        ? context.functionSupportStatement().Length > 0 {
+            obj += id + BlockLeft
+            context.functionSupportStatement() @ item {
+                obj += Visit(item)
+            }
+            obj += BlockRight + Wrap
+        } _ {
+            obj += id + Terminate
+        }
+        me.setID = ""
+        <- (Result{ text = obj, data = typ })
+    }
+
+    VisitPackageNewStatement(context: PackageNewStatementContext) -> (v: Any) {
+        text := ""
+        Self := Visit(context.parameterClauseSelf()):(Parameter)
+        selfID = Self.id
+        text += ""Self.permission" partial class "Self.type""BlockLeft + Wrap""
+        text += "public " Self.type " "
+        # 获取构造数据 #
+        text += Visit(context.parameterClauseIn()):(Str)
+        ? context.expressionList() >< Nil {
+            text += ":base(" Visit(context.expressionList()):(Result).text ")"
+        }
+        text += BlockLeft + ProcessFunctionSupport(context.functionSupportStatement()) + BlockRight + Wrap
+        text += BlockRight + Wrap
+        selfID = ""
+        <- (text)
+    }
+
+    VisitPackageEventStatement(context: PackageEventStatementContext) -> (v: Any) {
+        obj := ""
+        id := Visit(context.id()):(Result)
+        nameSpace := Visit(context.nameSpaceItem())
+        obj += "public event "nameSpace" "id.text + Terminate + Wrap""
+        <- (obj)
+    }
+
+    VisitProtocolStatement(context: ProtocolStatementContext) -> (v: Any) {
+        id := Visit(context.id()):(Result)
+        obj := ""
+        interfaceProtocol := ""
+        ptclName := id.text
+        ? context.annotationSupport() >< Nil {
+            obj += Visit(context.annotationSupport())
+        }
+        context.protocolSupportStatement() @ item {
+            r := Visit(item):(Result)
+            interfaceProtocol += r.text
+        }
+        obj += "public partial interface " + ptclName
+        # 泛型 #
+        templateContract := ""
+        ? context.templateDefine() >< Nil {
+            template := Visit(context.templateDefine()):(TemplateItem)
+            obj += template.Template
+            templateContract = template.Contract
+        }
+        obj += templateContract + Wrap + BlockLeft + Wrap
+        obj += interfaceProtocol
+        obj += BlockRight + Wrap
+        <- (obj)
+    }
+
+    VisitProtocolControlStatement(context: ProtocolControlStatementContext) -> (v: Any) {
+        id := Visit(context.id()):(Result)
+        isMutable := id.isVirtual
+        r := Result{}
+        ? context.annotationSupport() >< Nil {
+            r.text += Visit(context.annotationSupport())
+        }
+        r.permission = "public"
+        type := Visit(context.typeType()):(Str)
+        r.text += type + " " + id.text
+        r.text += BlockLeft
+        context.protocolControlSubStatement() @ item {
+            r.text += Visit(item)
+        }
+        r.text += BlockRight + Wrap
+        <- (r)
+    }
+
+    VisitProtocolControlSubStatement(context: ProtocolControlSubStatementContext) -> (v: Any) {
+        obj := ""
+        obj = GetControlSub(context.id().GetText()).id + Terminate
+        <- (obj)
+    }
+
+    VisitProtocolFunctionStatement(context: ProtocolFunctionStatementContext) -> (v: Any) {
+        id := Visit(context.id()):(Result)
+        r := Result{}
+        ? context.annotationSupport() >< Nil {
+            r.text += Visit(context.annotationSupport())
+        }
+        r.permission = "public"
+        # 异步 #
+        ? context.t.Type == Right_Flow {
+            pout := Visit(context.parameterClauseOut()):(Str)
+            ? pout >< "void" {
+                pout = ""Task"<"pout">"
+            } _ {
+                pout = Task
+            }
+            r.text += pout + " " + id.text
+        } _ {
+            r.text += Visit(context.parameterClauseOut()) + " " + id.text
+        }
+        # 泛型 #
+        templateContract := ""
+        ? context.templateDefine() >< Nil {
+            template := Visit(context.templateDefine()):(TemplateItem)
+            r.text += template.Template
+            templateContract = template.Contract
+        }
+        r.text += Visit(context.parameterClauseIn()) + templateContract + Terminate + Wrap
+        <- (r)
+    }
 }

@@ -12,7 +12,7 @@ public partial class Namespace
 {
 public string name;
 public string imports;
-};
+}
 public partial class LiteLangVisitor{
 public  override  object VisitStatement( StatementContext context )
 {
@@ -34,7 +34,7 @@ contentStatic+=Visit(item);
 else {
 content+=Visit(item);
 }
-} ;
+}
 obj+=content;
 if ( contentStatic!="" ) {
 obj+=(new System.Text.StringBuilder("public partial class ").Append(ns.name.sub_Str(ns.name.last_index_of(".")+1)).Append("_Static")).to_Str()+BlockLeft+Wrap+contentStatic+BlockRight+Wrap;
@@ -42,8 +42,6 @@ obj+=(new System.Text.StringBuilder("public partial class ").Append(ns.name.sub_
 obj+=BlockRight+Wrap;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitExportStatement( ExportStatementContext context )
 {
 var name = context.TextLiteral().GetText();
@@ -52,11 +50,9 @@ name=name.replace("/", ".");
 var obj = (new Namespace(){name = name});
 foreach (var item in context.importStatement()){
 obj.imports+=((string)(Visit(item)));
-} ;
+}
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitImportStatement( ImportStatementContext context )
 {
 var obj = "";
@@ -78,8 +74,6 @@ obj+="using "+ns;
 obj+=Terminate+Wrap;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitNameSpaceItem( NameSpaceItemContext context )
 {
 var obj = "";
@@ -91,11 +85,9 @@ obj+=""+id.text;
 else {
 obj+="."+id.text;
 }
-} ;
+}
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitName( NameContext context )
 {
 var obj = "";
@@ -107,11 +99,9 @@ obj+=""+id.text;
 else {
 obj+="."+id.text;
 }
-} ;
+}
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitEnumStatement( EnumStatementContext context )
 {
 var obj = "";
@@ -125,13 +115,11 @@ header+=id.permission+" enum "+id.text+":"+typ;
 header+=Wrap+BlockLeft+Wrap;
 foreach (var i in Range(0,context.enumSupportStatement().Length,1,true,false)){
 obj+=Visit(context.enumSupportStatement(i));
-} ;
+}
 obj+=BlockRight+Terminate+Wrap;
 obj=header+obj;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitEnumSupportStatement( EnumSupportStatementContext context )
 {
 var id = ((Result)(Visit(context.id())));
@@ -144,8 +132,6 @@ id.text+=" = "+op+Visit(context.integerExpr());
 }
 return (id.text+",") ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitNamespaceFunctionStatement( NamespaceFunctionStatementContext context )
 {
 var id = ((Result)(Visit(context.id())));
@@ -177,8 +163,6 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitNamespaceConstantStatement( NamespaceConstantStatementContext context )
 {
 var id = ((Result)(Visit(context.id())));
@@ -235,8 +219,6 @@ case Str :
 obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" const ").Append(typ).Append(" ").Append(id.text).Append(" = ").Append(expr.text).Append(" ").Append(Terminate+Wrap).Append("")).to_Str();
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitNamespaceVariableStatement( NamespaceVariableStatementContext context )
 {
 var r1 = ((Result)(Visit(context.id())));
@@ -263,8 +245,6 @@ obj+=Terminate+Wrap;
 }
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitNamespaceControlStatement( NamespaceControlStatementContext context )
 {
 var r1 = ((Result)(Visit(context.id())));
@@ -281,7 +261,7 @@ obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ")
 foreach (var item in context.packageControlSubStatement()){
 var temp = ((Result)(Visit(item)));
 obj+=temp.text;
-} ;
+}
 obj+=BlockRight+Wrap;
 return (obj) ; 
 }

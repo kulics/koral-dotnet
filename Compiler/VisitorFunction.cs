@@ -15,7 +15,7 @@ public string type;
 public string value;
 public string annotation;
 public string permission;
-};
+}
 public partial class LiteLangVisitor{
 public  virtual  string ProcessFunctionSupport( FunctionSupportStatementContext[] items )
 {
@@ -30,11 +30,11 @@ content+=(new System.Text.StringBuilder("using (").Append(((string)(Visit(item))
 else {
 content+=Visit(item);
 }
-} ;
+}
 if ( lazy.Count>0 ) {
 foreach (var i in Range(lazy.Count-1,0,1,false,true)){
 content+=BlockRight;
-} ;
+}
 }
 obj+=content;
 return (obj) ; 
@@ -69,8 +69,6 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitReturnStatement( ReturnStatementContext context )
 {
 var r = ((Result)(Visit(context.tuple())));
@@ -79,8 +77,6 @@ r.text="";
 }
 return ((new System.Text.StringBuilder("return ").Append(r.text).Append(" ").Append(Terminate).Append(" ").Append(Wrap).Append("")).to_Str()) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitTuple( TupleContext context )
 {
 var obj = "(";
@@ -92,13 +88,11 @@ obj+=r.text;
 else {
 obj+=(new System.Text.StringBuilder(", ").Append(r.text).Append("")).to_Str();
 }
-} ;
+}
 obj+=")";
 var result = (new Result(){data = "var",text = obj});
 return (result) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitTupleExpression( TupleExpressionContext context )
 {
 var obj = "(";
@@ -110,13 +104,11 @@ obj+=r.text;
 else {
 obj+=(new System.Text.StringBuilder(", ").Append(r.text).Append("")).to_Str();
 }
-} ;
+}
 obj+=")";
 var result = (new Result(){data = "var",text = obj});
 return (result) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitParameterClauseIn( ParameterClauseInContext context )
 {
 var obj = "(";
@@ -124,7 +116,7 @@ var temp = (new Lst<string>());
 foreach (var i in Range(context.parameter().Length-1,0,1,false,true)){
 var p = ((Parameter)(Visit(context.parameter(i))));
 temp.add((new System.Text.StringBuilder("").Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value).Append("")).to_Str());
-} ;
+}
 foreach (var i in Range(temp.Count-1,0,1,false,true)){
 if ( i==temp.Count-1 ) {
 obj+=temp[i];
@@ -132,12 +124,10 @@ obj+=temp[i];
 else {
 obj+=(new System.Text.StringBuilder(", ").Append(temp[i]).Append("")).to_Str();
 }
-} ;
+}
 obj+=")";
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitParameterClauseOut( ParameterClauseOutContext context )
 {
 var obj = "";
@@ -154,7 +144,7 @@ var temp = (new Lst<string>());
 foreach (var i in Range(context.parameter().Length-1,0,1,false,true)){
 var p = ((Parameter)(Visit(context.parameter(i))));
 temp.add((new System.Text.StringBuilder("").Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value).Append("")).to_Str());
-} ;
+}
 foreach (var i in Range(temp.Count-1,0,1,false,true)){
 if ( i==temp.Count-1 ) {
 obj+=temp[i];
@@ -162,13 +152,11 @@ obj+=temp[i];
 else {
 obj+=(new System.Text.StringBuilder(", ").Append(temp[i]).Append("")).to_Str();
 }
-} ;
+}
 obj+=" )";
 }
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitParameterClauseSelf( ParameterClauseSelfContext context )
 {
 var p = (new Parameter());
@@ -178,8 +166,6 @@ p.permission=id.permission;
 p.type=((string)(Visit(context.typeType())));
 return (p) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitParameter( ParameterContext context )
 {
 var p = (new Parameter());

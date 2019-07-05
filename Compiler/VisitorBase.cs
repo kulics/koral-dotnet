@@ -14,13 +14,13 @@ public object data;
 public string text;
 public string permission;
 public bool isVirtual;
-};
+}
 public partial class LiteLangVisitor:LiteParserBaseVisitor<object>
 {
 public string selfID = "" ; 
 public string superID = "" ; 
 public string setID = "" ; 
-};
+}
 public partial class LiteLangVisitor{
 public  override  object VisitProgram( ProgramContext context )
 {
@@ -28,11 +28,9 @@ var StatementList = context.statement();
 var Result = "";
 foreach (var item in StatementList){
 Result+=VisitStatement(item);
-} ;
+}
 return (Result) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitId( IdContext context )
 {
 var r = (new Result(){data = "var"});
@@ -44,7 +42,7 @@ if ( context.ChildCount>=2 ) {
 foreach (var i in Range(1,context.ChildCount,1,true,false)){
 var other = ((Result)(Visit(context.GetChild(i))));
 r.text+=(new System.Text.StringBuilder("_").Append(other.text).Append("")).to_Str();
-} ;
+}
 }
 if ( keywords.Exists((t)=>t==r.text) ) {
 r.text=(new System.Text.StringBuilder("@").Append(r.text).Append("")).to_Str();
@@ -60,8 +58,6 @@ r.text="value";
 } 
 return (r) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitIdItem( IdItemContext context )
 {
 var r = (new Result(){data = "var"});
@@ -92,8 +88,6 @@ r.isVirtual=true;
 } 
 return (r) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitBoolExpr( BoolExprContext context )
 {
 var r = (new Result());
@@ -107,14 +101,10 @@ r.text=F;
 } 
 return (r) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitAnnotationSupport( AnnotationSupportContext context )
 {
 return (((string)(Visit(context.annotation())))) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitAnnotation( AnnotationContext context )
 {
 var obj = "";
@@ -126,8 +116,6 @@ var r = ((string)(Visit(context.annotationList())));
 obj+=(new System.Text.StringBuilder("[").Append(id).Append("").Append(r).Append("]")).to_Str();
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitAnnotationList( AnnotationListContext context )
 {
 var obj = "";
@@ -138,11 +126,9 @@ obj+=(new System.Text.StringBuilder(",").Append(Visit(context.annotationItem(i))
 else {
 obj+=Visit(context.annotationItem(i));
 }
-} ;
+}
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitAnnotationItem( AnnotationItemContext context )
 {
 var obj = "";
@@ -154,14 +140,12 @@ obj+=(new System.Text.StringBuilder(",").Append(Visit(context.annotationAssign(i
 else {
 obj+=(new System.Text.StringBuilder("(").Append(Visit(context.annotationAssign(i))).Append("")).to_Str();
 }
-} ;
+}
 if ( context.annotationAssign().Length>0 ) {
 obj+=")";
 }
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitAnnotationAssign( AnnotationAssignContext context )
 {
 var obj = "";

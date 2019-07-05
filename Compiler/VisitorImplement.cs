@@ -22,13 +22,11 @@ extends+=":"+Visit(context.typeType());
 obj+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type+extends+BlockLeft+Wrap).Append("")).to_Str();
 foreach (var item in context.implementSupportStatement()){
 obj+=Visit(item);
-} ;
+}
 obj+=BlockRight+Wrap;
 selfID="";
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitImplementFunctionStatement( ImplementFunctionStatementContext context )
 {
 var id = ((Result)(Visit(context.id())));
@@ -67,8 +65,6 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitImplementControlStatement( ImplementControlStatementContext context )
 {
 var r1 = ((Result)(Visit(context.id())));
@@ -89,12 +85,10 @@ obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append
 foreach (var item in context.packageControlSubStatement()){
 var temp = ((Result)(Visit(item)));
 obj+=temp.text;
-} ;
+}
 obj+=BlockRight+Wrap;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitOverrideStatement( OverrideStatementContext context )
 {
 var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
@@ -104,14 +98,12 @@ var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type).Append("").Append(BlockLeft+Wrap).Append("")).to_Str();
 foreach (var item in context.overrideSupportStatement()){
 obj+=Visit(item);
-} ;
+}
 obj+=BlockRight+Wrap;
 selfID="";
 superID="";
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitOverrideFunctionStatement( OverrideFunctionStatementContext context )
 {
 var id = ((Result)(Visit(context.id())));
@@ -147,8 +139,6 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitOverrideControlStatement( OverrideControlStatementContext context )
 {
 var r1 = ((Result)(Visit(context.id())));
@@ -166,7 +156,7 @@ obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append
 foreach (var item in context.packageControlSubStatement()){
 var temp = ((Result)(Visit(item)));
 obj+=temp.text;
-} ;
+}
 obj+=BlockRight+Wrap;
 return (obj) ; 
 }

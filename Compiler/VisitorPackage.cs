@@ -13,8 +13,6 @@ public  override  object VisitIncludeStatement( IncludeStatementContext context 
 {
 return (Visit(context.typeType())) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitPackageStatement( PackageStatementContext context )
 {
 var id = ((Result)(Visit(context.id())));
@@ -32,7 +30,7 @@ extend+=","+Visit(item);
 else {
 obj+=Visit(item);
 }
-} ;
+}
 obj+=BlockRight+Wrap;
 var header = "";
 if ( context.annotationSupport()!=null ) {
@@ -57,8 +55,6 @@ header+=templateContract+Wrap+BlockLeft+Wrap;
 obj=header+obj;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitPackageVariableStatement( PackageVariableStatementContext context )
 {
 var r1 = ((Result)(Visit(context.id())));
@@ -85,8 +81,6 @@ obj+=Terminate+Wrap;
 }
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitPackageControlSubStatement( PackageControlSubStatementContext context )
 {
 var obj = "";
@@ -100,7 +94,7 @@ if ( context.functionSupportStatement().Length>0 ) {
 obj+=id+BlockLeft;
 foreach (var item in context.functionSupportStatement()){
 obj+=Visit(item);
-} ;
+}
 obj+=BlockRight+Wrap;
 }
 else {
@@ -109,8 +103,6 @@ obj+=id+Terminate;
 this.setID="";
 return ((new Result(){text = obj,data = typ})) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitPackageNewStatement( PackageNewStatementContext context )
 {
 var text = "";
@@ -127,8 +119,6 @@ text+=BlockRight+Wrap;
 selfID="";
 return (text) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitPackageEventStatement( PackageEventStatementContext context )
 {
 var obj = "";
@@ -137,8 +127,6 @@ var nameSpace = Visit(context.nameSpaceItem());
 obj+=(new System.Text.StringBuilder("public event ").Append(nameSpace).Append(" ").Append(id.text+Terminate+Wrap).Append("")).to_Str();
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitProtocolStatement( ProtocolStatementContext context )
 {
 var id = ((Result)(Visit(context.id())));
@@ -151,7 +139,7 @@ obj+=Visit(context.annotationSupport());
 foreach (var item in context.protocolSupportStatement()){
 var r = ((Result)(Visit(item)));
 interfaceProtocol+=r.text;
-} ;
+}
 obj+="public partial interface "+ptclName;
 var templateContract = "";
 if ( context.templateDefine()!=null ) {
@@ -164,8 +152,6 @@ obj+=interfaceProtocol;
 obj+=BlockRight+Wrap;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitProtocolControlStatement( ProtocolControlStatementContext context )
 {
 var id = ((Result)(Visit(context.id())));
@@ -180,20 +166,16 @@ r.text+=type+" "+id.text;
 r.text+=BlockLeft;
 foreach (var item in context.protocolControlSubStatement()){
 r.text+=Visit(item);
-} ;
+}
 r.text+=BlockRight+Wrap;
 return (r) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitProtocolControlSubStatement( ProtocolControlSubStatementContext context )
 {
 var obj = "";
 obj=GetControlSub(context.id().GetText()).id+Terminate;
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitProtocolFunctionStatement( ProtocolFunctionStatementContext context )
 {
 var id = ((Result)(Visit(context.id())));

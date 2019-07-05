@@ -15,8 +15,6 @@ var obj = "";
 obj=((string)(Visit(context.GetChild(0))));
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitTypeReference( TypeReferenceContext context )
 {
 var obj = "ref ";
@@ -28,8 +26,6 @@ obj+=Visit(context.typeNotNull());
 } 
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitTypeNullable( TypeNullableContext context )
 {
 var obj = "";
@@ -39,8 +35,6 @@ obj+="?";
 }
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitTypeTuple( TypeTupleContext context )
 {
 var obj = "";
@@ -52,12 +46,10 @@ obj+=Visit(context.typeType(i));
 else {
 obj+=(new System.Text.StringBuilder(",").Append(Visit(context.typeType(i))).Append("")).to_Str();
 }
-} ;
+}
 obj+=")";
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitGetType( GetTypeContext context )
 {
 var r = (new Result(){data = "System.Type"});
@@ -69,40 +61,30 @@ r.text=(new System.Text.StringBuilder("typeof(").Append(Visit(context.typeType()
 }
 return (r) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitTypeArray( TypeArrayContext context )
 {
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Visit(context.typeType())).Append("[]")).to_Str();
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitTypeList( TypeListContext context )
 {
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Lst).Append("<").Append(Visit(context.typeType())).Append(">")).to_Str();
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitTypeSet( TypeSetContext context )
 {
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Set).Append("<").Append(Visit(context.typeType())).Append(">")).to_Str();
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitTypeDictionary( TypeDictionaryContext context )
 {
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Dic).Append("<").Append(Visit(context.typeType(0))).Append(",").Append(Visit(context.typeType(1))).Append(">")).to_Str();
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitTypePackage( TypePackageContext context )
 {
 var obj = "";
@@ -112,8 +94,6 @@ obj+=Visit(context.templateCall());
 }
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitTypeFunction( TypeFunctionContext context )
 {
 var obj = "";
@@ -160,14 +140,10 @@ obj=(new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(Task
 }
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitTypeAny( TypeAnyContext context )
 {
 return (Any) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitTypeFunctionParameterClause( TypeFunctionParameterClauseContext context )
 {
 var obj = "";
@@ -179,11 +155,9 @@ obj+=p;
 else {
 obj+=(new System.Text.StringBuilder(", ").Append(p).Append("")).to_Str();
 }
-} ;
+}
 return (obj) ; 
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitTypeBasic( TypeBasicContext context )
 {
 var obj = "";

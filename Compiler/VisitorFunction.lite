@@ -15,122 +15,98 @@ Parameter -> {
     permission: Str
 }
 
-(me:LiteLangVisitor) ProcessFunctionSupport(items: [:]FunctionSupportStatementContext) -> (v:Str) {
-    obj := ""
-    content := ""
-    lazy := []Str{}
-    items @ item {
-        ? item.GetChild(0) == :UsingStatementContext {
-            lazy.add("}")
-            content += "using ("Visit(item):(Str)") "BlockLeft" "Wrap""
+(me:LiteLangVisitor) -> {
+    ProcessFunctionSupport(items: [:]FunctionSupportStatementContext) -> (v:Str) {
+        obj := ""
+        content := ""
+        lazy := []Str{}
+        items @ item {
+            ? item.GetChild(0) == :UsingStatementContext {
+                lazy.add("}")
+                content += "using ("Visit(item):(Str)") "BlockLeft" "Wrap""
+            } _ {
+                content += Visit(item)
+            }
+        }
+        ? lazy.Count > 0 {
+            [lazy.Count - 1 >= 0] @ i {
+                content += BlockRight
+            }
+        }
+        obj += content
+        <- (obj)
+    }
+}
+
+(me:LiteLangVisitor)(base) -> {
+    VisitFunctionStatement(context: FunctionStatementContext) -> (v: Any) {
+        id := Visit(context.id()):(Result)
+        obj := ""
+        # 异步 #
+        ? context.t.Type == Right_Flow {
+            pout := Visit(context.parameterClauseOut()):(Str)
+            ? pout >< "void" {
+                pout = ""Task"<"pout">"
+            } _ {
+                pout = Task
+            }
+            obj += " async "pout" "id.text""
         } _ {
-            content += Visit(item)
+            obj += ""Visit(context.parameterClauseOut())" "id.text""
         }
-    }
-    ? lazy.Count > 0 {
-        [lazy.Count - 1 >= 0] @ i {
-            content += BlockRight
+        # 泛型 #
+        templateContract := ""
+        ? context.templateDefine() >< Nil {
+            template := Visit(context.templateDefine()):(TemplateItem)
+            obj += template.Template
+            templateContract = template.Contract
         }
+        obj += ""Visit(context.parameterClauseIn())" "templateContract" "Wrap" "BlockLeft" "Wrap""
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        obj += BlockRight + Wrap
+        <- (obj)
     }
-    obj += content
-    <- (obj)
-}
 
-(me:LiteLangVisitor)(base) VisitFunctionStatement(context: FunctionStatementContext) -> (v: Any) {
-    id := Visit(context.id()):(Result)
-    obj := ""
-    # 异步 #
-    ? context.t.Type == Right_Flow {
-        pout := Visit(context.parameterClauseOut()):(Str)
-        ? pout >< "void" {
-            pout = ""Task"<"pout">"
-        } _ {
-            pout = Task
+    VisitReturnStatement(context: ReturnStatementContext) -> (v: Any) {
+        r := Visit(context.tuple()):(Result)
+        ? r.text == "()" {
+            r.text = ""
         }
-        obj += " async "pout" "id.text""
-    } _ {
-        obj += ""Visit(context.parameterClauseOut())" "id.text""
+        <- ("return "r.text" "Terminate" "Wrap"")
     }
-    # 泛型 #
-    templateContract := ""
-    ? context.templateDefine() >< Nil {
-        template := Visit(context.templateDefine()):(TemplateItem)
-        obj += template.Template
-        templateContract = template.Contract
-    }
-    obj += ""Visit(context.parameterClauseIn())" "templateContract" "Wrap" "BlockLeft" "Wrap""
-    obj += ProcessFunctionSupport(context.functionSupportStatement())
-    obj += BlockRight + Wrap
-    <- (obj)
-}
 
-(me:LiteLangVisitor)(base) VisitReturnStatement(context: ReturnStatementContext) -> (v: Any) {
-    r := Visit(context.tuple()):(Result)
-    ? r.text == "()" {
-        r.text = ""
-    }
-    <- ("return "r.text" "Terminate" "Wrap"")
-}
-
-(me:LiteLangVisitor)(base) VisitTuple(context: TupleContext) -> (v: Any) {
-    obj := "("
-    [0 < context.expression().Length] @ i {
-        r := Visit(context.expression(i)):(Result)
-        ? i == 0 {
-            obj += r.text
-        } _ {
-            obj += ", " r.text ""
+    VisitTuple(context: TupleContext) -> (v: Any) {
+        obj := "("
+        [0 < context.expression().Length] @ i {
+            r := Visit(context.expression(i)):(Result)
+            ? i == 0 {
+                obj += r.text
+            } _ {
+                obj += ", " r.text ""
+            }
         }
+        obj += ")"
+        result := Result{ data = "var", text = obj }
+        <- (result)
     }
-    obj += ")"
-    result := Result{ data = "var", text = obj }
-    <- (result)
-}
 
-(me:LiteLangVisitor)(base) VisitTupleExpression(context: TupleExpressionContext) -> (v: Any) {
-    obj := "("
-    [0 < context.expression().Length] @ i {
-        r := Visit(context.expression(i)):(Result)
-        ? i == 0 {
-            obj += r.text
-        } _ {
-            obj += ", " r.text ""
+    VisitTupleExpression(context: TupleExpressionContext) -> (v: Any) {
+        obj := "("
+        [0 < context.expression().Length] @ i {
+            r := Visit(context.expression(i)):(Result)
+            ? i == 0 {
+                obj += r.text
+            } _ {
+                obj += ", " r.text ""
+            }
         }
-    }
-    obj += ")"
-    result := Result{ data = "var", text = obj }
-    <- (result)
-}
-
-(me:LiteLangVisitor)(base) VisitParameterClauseIn(context: ParameterClauseInContext) -> (v: Any) {
-    obj := "("
-    temp := []Str{}
-    [context.parameter().Length - 1 >= 0] @ i {
-        p := Visit(context.parameter(i)):(Parameter)
-        temp.add(""p.annotation" "p.type" "p.id" "p.value"")
-    }
-    [temp.Count - 1 >= 0] @ i {
-        ? i == temp.Count - 1 {
-            obj += temp[i]
-        } _ {
-            obj += ", "temp[i]""
-        }
+        obj += ")"
+        result := Result{ data = "var", text = obj }
+        <- (result)
     }
 
-    obj += ")"
-    <- (obj)
-}
-
-(me:LiteLangVisitor)(base) VisitParameterClauseOut(context: ParameterClauseOutContext) -> (v: Any) {
-    obj := ""
-    ? context.parameter().Length == 0 {
-        obj += "void"
-    } context.parameter().Length == 1 {
-        p := Visit(context.parameter(0)):(Parameter)
-        obj += p.type
-    }
-    ? context.parameter().Length > 1 {
-        obj += "( "
+    VisitParameterClauseIn(context: ParameterClauseInContext) -> (v: Any) {
+        obj := "("
         temp := []Str{}
         [context.parameter().Length - 1 >= 0] @ i {
             p := Visit(context.parameter(i)):(Parameter)
@@ -143,31 +119,59 @@ Parameter -> {
                 obj += ", "temp[i]""
             }
         }
-        obj += " )"
-    }
-    <- (obj)
-}
 
-(me:LiteLangVisitor)(base) VisitParameterClauseSelf(context: ParameterClauseSelfContext) -> (v: Any) {
-    p := Parameter{}
-    id := Visit(context.id()):(Result)
-    p.id = id.text
-    p.permission = id.permission
-    p.type = Visit(context.typeType()):(Str)
-    <- (p)
-}
+        obj += ")"
+        <- (obj)
+    }
 
-(me:LiteLangVisitor)(base) VisitParameter(context: ParameterContext) -> (v: Any) {
-    p := Parameter{}
-    id := Visit(context.id()):(Result)
-    p.id = id.text
-    p.permission = id.permission
-    ? context.annotationSupport() >< Nil {
-        p.annotation = Visit(context.annotationSupport()):(Str)
+    VisitParameterClauseOut(context: ParameterClauseOutContext) -> (v: Any) {
+        obj := ""
+        ? context.parameter().Length == 0 {
+            obj += "void"
+        } context.parameter().Length == 1 {
+            p := Visit(context.parameter(0)):(Parameter)
+            obj += p.type
+        }
+        ? context.parameter().Length > 1 {
+            obj += "( "
+            temp := []Str{}
+            [context.parameter().Length - 1 >= 0] @ i {
+                p := Visit(context.parameter(i)):(Parameter)
+                temp.add(""p.annotation" "p.type" "p.id" "p.value"")
+            }
+            [temp.Count - 1 >= 0] @ i {
+                ? i == temp.Count - 1 {
+                    obj += temp[i]
+                } _ {
+                    obj += ", "temp[i]""
+                }
+            }
+            obj += " )"
+        }
+        <- (obj)
     }
-    ? context.expression() >< Nil {
-        p.value = "=" Visit(context.expression()):(Result).text ""
+
+    VisitParameterClauseSelf(context: ParameterClauseSelfContext) -> (v: Any) {
+        p := Parameter{}
+        id := Visit(context.id()):(Result)
+        p.id = id.text
+        p.permission = id.permission
+        p.type = Visit(context.typeType()):(Str)
+        <- (p)
     }
-    p.type = Visit(context.typeType()):(Str)
-    <- (p)
+
+    VisitParameter(context: ParameterContext) -> (v: Any) {
+        p := Parameter{}
+        id := Visit(context.id()):(Result)
+        p.id = id.text
+        p.permission = id.permission
+        ? context.annotationSupport() >< Nil {
+            p.annotation = Visit(context.annotationSupport()):(Str)
+        }
+        ? context.expression() >< Nil {
+            p.value = "=" Visit(context.expression()):(Result).text ""
+        }
+        p.type = Visit(context.typeType()):(Str)
+        <- (p)
+    }
 }

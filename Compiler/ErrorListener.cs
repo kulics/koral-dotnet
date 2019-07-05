@@ -11,7 +11,7 @@ namespace Compiler
 public partial class ErrorListener:BaseErrorListener
 {
 public string FileDir;
-};
+}
 public partial class ErrorListener{
 public  override  void SyntaxError( IRecognizer recognizer ,  IToken offendingSymbol ,  int line ,  int charPositionInLine ,  string msg ,  RecognitionException e )
 {
