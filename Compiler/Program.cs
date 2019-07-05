@@ -8,20 +8,20 @@ using System.Text;
 namespace Compiler
 {
 public partial class Compiler_Static{
-protected static string _Read_Path;
-protected static string _Path_Line;
+protected static string _ReadPath;
+protected static string _PathLine;
 public static void Main( string[] args )
 {
 var os = Environment.OSVersion.Platform;
 if ( os==PlatformID.Unix||os==PlatformID.MacOSX ) {
-_Read_Path="./";
-_Path_Line="/";
+_ReadPath="./";
+_PathLine="/";
 }
 else {
-_Read_Path=".\\";
-_Path_Line="\\";
+_ReadPath=".\\";
+_PathLine="\\";
 }
-Compiled(_Read_Path);
+Compiled(_ReadPath);
 Prt("Completed");
 Rd();
 }
@@ -29,12 +29,12 @@ public static void Compiled( string path )
 {
 var Files = Directory.GetFiles(path, "*.lite");
 foreach (var file in Files){
-using (var fs_read = (new FileStream(file, FileMode.Open))) { 
+using (var fsRead = (new FileStream(file, FileMode.Open))) { 
 try {
-var FSLength = ((int)(fs_read.Length));
-var Byte_Block = Array<byte>(FSLength);
-var r = fs_read.Read(Byte_Block, 0, Byte_Block.Length);
-var Input = Encoding.UTF8.GetString(Byte_Block);
+var FSLength = ((int)(fsRead.Length));
+var ByteBlock = Array<byte>(FSLength);
+var r = fsRead.Read(ByteBlock, 0, ByteBlock.Length);
+var Input = Encoding.UTF8.GetString(ByteBlock);
 Input.Replace("\r", "");
 var Stream = (new AntlrInputStream(Input));
 var Lexer = (new LiteLexer(Stream));
@@ -42,13 +42,13 @@ var Tokens = (new CommonTokenStream(Lexer));
 var Parser = (new LiteParser(Tokens));
 Parser.BuildParseTree=true;
 Parser.RemoveErrorListeners();
-Parser.AddErrorListener((new ErrorListener(){File_Dir = file}));
+Parser.AddErrorListener((new ErrorListener(){FileDir = file}));
 var AST = Parser.program();
 var Visitor = (new LiteLangVisitor());
 var Result = Visitor.Visit(AST);
-var Byte_Result = Encoding.UTF8.GetBytes(Result.to_Str());
-using (var fs_write = (new FileStream(_Read_Path+file.sub_Str(0, file.Length-5)+".cs", FileMode.Create))) { 
-fs_write.Write(Byte_Result, 0, Byte_Result.Length);
+var ByteResult = Encoding.UTF8.GetBytes(Result.to_Str());
+using (var fsWrite = (new FileStream(_ReadPath+file.sub_Str(0, file.Length-5)+".cs", FileMode.Create))) { 
+fsWrite.Write(ByteResult, 0, ByteResult.Length);
 }}
 catch( Exception err )
 {

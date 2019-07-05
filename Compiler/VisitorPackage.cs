@@ -9,56 +9,6 @@ using static Compiler.Compiler_Static;
 namespace Compiler
 {
 public partial class LiteLangVisitor{
-public  override  object VisitPackageFunctionStatement( PackageFunctionStatementContext context )
-{
-var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
-self_ID=Self.id;
-var id = ((Result)(Visit(context.id())));
-var isVirtual = "";
-if ( id.isVirtual ) {
-isVirtual=" virtual ";
-}
-if ( Self.value!=null ) {
-super_ID=Self.value;
-isVirtual=" override ";
-}
-var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type).Append("").Append(BlockLeft+Wrap).Append("")).to_Str();
-if ( context.n!=null ) {
-obj+="protected ";
-}
-else {
-obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" ")).to_Str();
-}
-if ( context.t.Type==Right_Flow ) {
-var pout = ((string)(Visit(context.parameterClauseOut())));
-if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_Str();
-}
-else {
-pout=Task;
-}
-obj+=(new System.Text.StringBuilder("").Append(isVirtual).Append(" async ").Append(pout).Append(" ").Append(id.text).Append("")).to_Str();
-}
-else {
-obj+=(new System.Text.StringBuilder("").Append(isVirtual).Append(" ").Append(Visit(context.parameterClauseOut())).Append(" ").Append(id.text).Append("")).to_Str();
-}
-var templateContract = "";
-if ( context.templateDefine()!=null ) {
-var template = ((TemplateItem)(Visit(context.templateDefine())));
-obj+=template.Template;
-templateContract=template.Contract;
-}
-obj+=Visit(context.parameterClauseIn())+templateContract+Wrap+BlockLeft+Wrap;
-obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=BlockRight+Wrap;
-obj+=BlockRight+Wrap;
-self_ID="";
-super_ID="";
-return (obj) ; 
-}
-}
-public partial class LiteLangVisitor{
 public  override  object VisitIncludeStatement( IncludeStatementContext context )
 {
 return (Visit(context.typeType())) ; 
@@ -83,7 +33,7 @@ else {
 obj+=Visit(item);
 }
 } ;
-obj+=BlockRight+Terminate+Wrap;
+obj+=BlockRight+Wrap;
 var header = "";
 if ( context.annotationSupport()!=null ) {
 header+=Visit(context.annotationSupport());
@@ -137,42 +87,6 @@ return (obj) ;
 }
 }
 public partial class LiteLangVisitor{
-public  override  object VisitPackageControlStatement( PackageControlStatementContext context )
-{
-var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
-self_ID=Self.id;
-var r1 = ((Result)(Visit(context.id())));
-var isMutable = true;
-var isVirtual = "";
-if ( r1.isVirtual ) {
-isVirtual=" virtual ";
-}
-if ( Self.value!=null ) {
-super_ID=Self.value;
-isVirtual=" override ";
-}
-var typ = "";
-if ( context.typeType()!=null ) {
-typ=((string)(Visit(context.typeType())));
-}
-var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type).Append("").Append(BlockLeft+Wrap).Append("")).to_Str();
-if ( context.annotationSupport()!=null ) {
-obj+=Visit(context.annotationSupport());
-}
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(isVirtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("").Append(BlockLeft).Append("")).to_Str();
-foreach (var item in context.packageControlSubStatement()){
-var temp = ((Result)(Visit(item)));
-obj+=temp.text;
-} ;
-obj+=BlockRight+Wrap;
-obj+=BlockRight+Wrap;
-self_ID="";
-super_ID="";
-return (obj) ; 
-}
-}
-public partial class LiteLangVisitor{
 public  override  object VisitPackageControlSubStatement( PackageControlSubStatementContext context )
 {
 var obj = "";
@@ -180,7 +94,7 @@ var id = "";
 var typ = "";
 (id, typ)=GetControlSub(context.id(0).GetText());
 if ( context.id(1)!=null ) {
-this.set_ID=context.id(1).GetText();
+this.setID=context.id(1).GetText();
 }
 if ( context.functionSupportStatement().Length>0 ) {
 obj+=id+BlockLeft;
@@ -192,7 +106,7 @@ obj+=BlockRight+Wrap;
 else {
 obj+=id+Terminate;
 }
-this.set_ID="";
+this.setID="";
 return ((new Result(){text = obj,data = typ})) ; 
 }
 }
@@ -201,7 +115,7 @@ public  override  object VisitPackageNewStatement( PackageNewStatementContext co
 {
 var text = "";
 var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
-self_ID=Self.id;
+selfID=Self.id;
 text+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type).Append("").Append(BlockLeft+Wrap).Append("")).to_Str();
 text+=(new System.Text.StringBuilder("public ").Append(Self.type).Append(" ")).to_Str();
 text+=((string)(Visit(context.parameterClauseIn())));
@@ -210,7 +124,7 @@ text+=(new System.Text.StringBuilder(":base(").Append(((Result)(Visit(context.ex
 }
 text+=BlockLeft+ProcessFunctionSupport(context.functionSupportStatement())+BlockRight+Wrap;
 text+=BlockRight+Wrap;
-self_ID="";
+selfID="";
 return (text) ; 
 }
 }

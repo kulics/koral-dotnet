@@ -4,7 +4,7 @@
     "System"
 
     "Compiler" LiteParser.
-    "Compiler" Compiler Static.
+    "Compiler" Compiler_Static.
 }
 
 Terminate :: ";"
@@ -51,14 +51,14 @@ Result -> {
 LiteLangVisitor -> {
     :LiteParserBaseVisitor<Any> 
 
-    self ID := ""
-    super ID := ""
-    set ID := ""
+    selfID := ""
+    superID := ""
+    setID := ""
 }
 (me:LiteLangVisitor)(base) VisitProgram(context: ProgramContext) -> (v: Any) {
-    Statement List := context.statement()
+    StatementList := context.statement()
     Result := ""
-    Statement List @ item {
+    StatementList @ item {
         Result += VisitStatement(item)
     }
     <- (Result)
@@ -80,11 +80,11 @@ LiteLangVisitor -> {
     ? keywords.Exists({t -> t == r.text}) {
         r.text = "@"r.text""
     }
-    ? r.text == self ID {
+    ? r.text == selfID {
         r.text = "this"
-    } r.text == super ID {
+    } r.text == superID {
         r.text = "base"
-    } r.text == set ID {
+    } r.text == setID {
         r.text = "value"
     }
     <- (r)

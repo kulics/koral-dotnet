@@ -4,7 +4,7 @@
     "System"
 
     "Compiler" LiteParser.
-    "Compiler" Compiler Static.
+    "Compiler" Compiler_Static.
 }
 
 Parameter -> {
@@ -40,7 +40,7 @@ Parameter -> {
     id := Visit(context.id()):(Result)
     obj := ""
     # 异步 #
-    ? context.t.Type == Right Flow {
+    ? context.t.Type == Right_Flow {
         pout := Visit(context.parameterClauseOut()):(Str)
         ? pout >< "void" {
             pout = ""Task"<"pout">"
@@ -150,13 +150,10 @@ Parameter -> {
 
 (me:LiteLangVisitor)(base) VisitParameterClauseSelf(context: ParameterClauseSelfContext) -> (v: Any) {
     p := Parameter{}
-    id := Visit(context.id(0)):(Result)
+    id := Visit(context.id()):(Result)
     p.id = id.text
     p.permission = id.permission
     p.type = Visit(context.typeType()):(Str)
-    ? context.id(1) >< Nil {
-        p.value = Visit(context.id(1)):(Result).text
-    }
     <- (p)
 }
 

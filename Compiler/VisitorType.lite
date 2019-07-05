@@ -4,7 +4,7 @@
     "System"
 
     "Compiler" LiteParser.
-    "Compiler" Compiler Static.
+    "Compiler" Compiler_Static.
 }
 
 (me:LiteLangVisitor)(base) VisitTypeType(context: TypeTypeContext) -> (v: Any) {
@@ -95,7 +95,7 @@
     obj := ""
     in := Visit(context.typeFunctionParameterClause(0)):(Str)
     out := Visit(context.typeFunctionParameterClause(1)):(Str)
-    ? context.t.Type == Right Arrow {
+    ? context.t.Type == Right_Arrow {
         ? out.Length == 0 {
             ? in.Length == 0 {
                 obj = "Action"
@@ -103,7 +103,7 @@
                 obj = "Action<"in">"
             }
         } _ {
-            ? out.first index of(",") >= 0 {
+            ? out.first_index_of(",") >= 0 {
                 out = "(" out ")"
             }
             ? in.Length == 0 {

@@ -4,7 +4,7 @@
     "System"
 
     "Compiler" LiteParser.
-    "Compiler" Compiler Static.
+    "Compiler" Compiler_Static.
 }
 
 keywords := []Str{

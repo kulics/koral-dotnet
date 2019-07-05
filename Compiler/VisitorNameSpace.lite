@@ -4,7 +4,7 @@
     "System"
 
     "Compiler" LiteParser.
-    "Compiler" Compiler Static.
+    "Compiler" Compiler_Static.
 }
 
 Namespace -> {
@@ -62,7 +62,7 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
     }
     obj += content
     ? contentStatic >< "" {
-        obj += "public partial class "ns.name.sub Str(ns.name.last index of(".") + 1) "_Static" +
+        obj += "public partial class "ns.name.sub_Str(ns.name.last_index_of(".") + 1) "_Static" +
             BlockLeft + Wrap + contentStatic + BlockRight + Wrap
     }
     obj += BlockRight + Wrap
@@ -71,7 +71,7 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
 
 (me:LiteLangVisitor)(base) VisitExportStatement(context: ExportStatementContext) -> (v: Any) {
     name := context.TextLiteral().GetText()
-    name = name.sub Str(1, name.len()-2)
+    name = name.sub_Str(1, name.len()-2)
     name = name.replace("/", ".")
     obj := Namespace{
         name = name
@@ -88,7 +88,7 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
         obj += Visit(context.annotationSupport())
     }
     ns := context.TextLiteral().GetText()
-    ns = ns.sub Str(1, ns.len()-2)
+    ns = ns.sub_Str(1, ns.len()-2)
     ns = ns.replace("/", ".")
     ? context.call() >< Nil {
         obj += "using static " + ns + "." + Visit(context.id()):(Result).text
@@ -164,7 +164,7 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
         obj += Visit(context.annotationSupport())
     }
     # 异步 #
-    ? context.t.Type == Right Flow {
+    ? context.t.Type == Right_Flow {
         pout := Visit(context.parameterClauseOut()):(Str)
         ? pout >< "void" {
             pout = ""Task"<"pout">"

@@ -17,16 +17,16 @@ public bool isVirtual;
 };
 public partial class LiteLangVisitor:LiteParserBaseVisitor<object>
 {
-public string self_ID = "" ; 
-public string super_ID = "" ; 
-public string set_ID = "" ; 
+public string selfID = "" ; 
+public string superID = "" ; 
+public string setID = "" ; 
 };
 public partial class LiteLangVisitor{
 public  override  object VisitProgram( ProgramContext context )
 {
-var Statement_List = context.statement();
+var StatementList = context.statement();
 var Result = "";
-foreach (var item in Statement_List){
+foreach (var item in StatementList){
 Result+=VisitStatement(item);
 } ;
 return (Result) ; 
@@ -49,13 +49,13 @@ r.text+=(new System.Text.StringBuilder("_").Append(other.text).Append("")).to_St
 if ( keywords.Exists((t)=>t==r.text) ) {
 r.text=(new System.Text.StringBuilder("@").Append(r.text).Append("")).to_Str();
 }
-if ( r.text==self_ID ) {
+if ( r.text==selfID ) {
 r.text="this";
 }
-else if ( r.text==super_ID ) {
+else if ( r.text==superID ) {
 r.text="base";
 } 
-else if ( r.text==set_ID ) {
+else if ( r.text==setID ) {
 r.text="value";
 } 
 return (r) ; 

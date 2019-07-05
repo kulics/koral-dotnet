@@ -20,8 +20,8 @@ namespaceVariableStatement
 |namespaceConstantStatement
 |packageStatement
 |protocolStatement
-|packageFunctionStatement
-|packageControlStatement
+|implementStatement
+|overrideStatement
 |packageNewStatement
 |enumStatement
 |typeAliasStatement
@@ -65,18 +65,41 @@ includeStatement: Colon typeType end;
 // 包构造方法
 packageNewStatement: (annotationSupport)? parameterClauseSelf Less Greater parameterClauseIn 
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
-// 函数
-packageFunctionStatement: (annotationSupport)? parameterClauseSelf (n='_')? id (templateDefine)? parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut left_brace (functionSupportStatement)* right_brace end;
 // 定义变量
 packageVariableStatement: (annotationSupport)? id (Colon_Equal expression|Colon typeType (Equal expression)?) end;
-// 定义控制
-packageControlStatement: (annotationSupport)? parameterClauseSelf (n='_')? id 
- Colon typeType Right_Arrow (packageControlSubStatement)+ end;
+
 // 定义子方法
 packageControlSubStatement: id (left_paren id right_paren)? left_brace (functionSupportStatement)+ right_brace;
 // 定义包事件
 packageEventStatement: id Colon left_brack Question right_brack nameSpaceItem end;
+
+// 实现
+implementStatement: parameterClauseSelf Right_Arrow (typeType)? New_Line* left_brace (implementSupportStatement)* right_brace end;
+
+// 实现支持的语句
+implementSupportStatement: implementFunctionStatement | implementControlStatement | New_Line;
+
+// 函数
+implementFunctionStatement: (annotationSupport)? (n='_')? id (templateDefine)? parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut left_brace (functionSupportStatement)* right_brace end;
+// 定义控制
+implementControlStatement: (annotationSupport)? (n='_')? id 
+ Colon typeType Right_Arrow (packageControlSubStatement)+ end;
+
+// 重载
+overrideStatement: parameterClauseSelf left_paren id right_paren
+ Right_Arrow New_Line* left_brace (overrideSupportStatement)* right_brace end;
+
+// 实现支持的语句
+overrideSupportStatement: overrideFunctionStatement | overrideControlStatement | New_Line;
+
+// 函数
+overrideFunctionStatement: (annotationSupport)? (n='_')? id (templateDefine)? parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut left_brace (functionSupportStatement)* right_brace end;
+// 定义控制
+overrideControlStatement: (annotationSupport)? (n='_')? id 
+ Colon typeType Right_Arrow (packageControlSubStatement)+ end;
+
 // 协议
 protocolStatement: (annotationSupport)? id (templateDefine)? Left_Arrow left_brace (protocolSupportStatement)* right_brace end;
 // 协议支持的语句
@@ -105,7 +128,7 @@ parameterClauseIn: left_paren parameter? (more parameter)*  right_paren ;
 // 出参
 parameterClauseOut: left_paren parameter? (more parameter)*  right_paren ;
 // 接收器
-parameterClauseSelf: left_paren id Colon typeType right_paren (left_paren id right_paren)?;
+parameterClauseSelf: left_paren id Colon typeType right_paren;
 // 参数结构
 parameter: (annotationSupport)? id Colon typeType (Equal expression)?;
 

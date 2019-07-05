@@ -49,9 +49,9 @@ id=((Result)(Visit(context.id()))).text;
 }
 var it = ((Iterator)(Visit(context.iteratorStatement())));
 obj+=(new System.Text.StringBuilder("foreach (var ").Append(id).Append(" in Range(").Append(it.begin.text).Append(",").Append(it.end.text).Append(",").Append(it.step.text).Append(",").Append(it.order).Append(",").Append(it.attach).Append("))")).to_Str();
-obj+=(new System.Text.StringBuilder("").Append(BlockLeft+Wrap).Append("")).to_Str();
+obj+=BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append(" ").Append(Terminate+Wrap).Append("")).to_Str();
+obj+=BlockRight+Wrap;
 return (obj) ; 
 }
 }
@@ -60,7 +60,7 @@ public  override  object VisitLoopInfiniteStatement( LoopInfiniteStatementContex
 {
 var obj = (new System.Text.StringBuilder("for (;;) ").Append(BlockLeft+Wrap).Append("")).to_Str();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append(" ").Append(Terminate+Wrap).Append("")).to_Str();
+obj+=BlockRight+Wrap;
 return (obj) ; 
 }
 }
@@ -79,9 +79,9 @@ else if ( context.id().Length==1 ) {
 id=((Result)(Visit(context.id(0)))).text;
 } 
 obj+=(new System.Text.StringBuilder("foreach (var ").Append(id).Append(" in ").Append(target).Append(")")).to_Str();
-obj+=(new System.Text.StringBuilder("").Append(BlockLeft+Wrap).Append("")).to_Str();
+obj+=BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append(" ").Append(Terminate+Wrap).Append("")).to_Str();
+obj+=BlockRight+Wrap;
 return (obj) ; 
 }
 }

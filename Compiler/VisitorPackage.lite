@@ -4,55 +4,7 @@
     "System"
 
     "Compiler" LiteParser.
-    "Compiler" Compiler Static.
-}
-
-(me:LiteLangVisitor)(base) VisitPackageFunctionStatement(context: PackageFunctionStatementContext) -> (v: Any) {
-    Self := Visit(context.parameterClauseSelf()):(Parameter)
-    self ID = Self.id
-    id := Visit(context.id()):(Result)
-    isVirtual := ""
-    ? id.isVirtual {
-        isVirtual = " virtual "
-    }
-    ? Self.value >< Nil {
-        super ID = Self.value
-        isVirtual = " override "
-    }
-    obj := ""
-
-    obj += ""Self.permission" partial class "Self.type""BlockLeft + Wrap""
-    # 异步 #
-    ? context.n >< Nil {
-        obj += "protected "
-    } _ {
-        obj += ""id.permission" "
-    }
-    ? context.t.Type == Right Flow {
-        pout := Visit(context.parameterClauseOut()):(Str)
-        ? pout >< "void" {
-            pout = ""Task"<"pout">"
-        } _ {
-            pout = Task
-        }
-        obj += ""isVirtual" async "pout" "id.text""
-    } _ {
-        obj += ""isVirtual" " Visit(context.parameterClauseOut())" "id.text""
-    }
-        # 泛型 #
-    templateContract := ""
-    ? context.templateDefine() >< Nil {
-        template := Visit(context.templateDefine()):(TemplateItem)
-        obj += template.Template
-        templateContract = template.Contract
-    }
-    obj += Visit(context.parameterClauseIn()) + templateContract + Wrap + BlockLeft + Wrap
-    obj += ProcessFunctionSupport(context.functionSupportStatement())
-    obj += BlockRight + Wrap
-    obj += BlockRight + Wrap
-    self ID = ""
-    super ID = ""
-    <- (obj)
+    "Compiler" Compiler_Static.
 }
 
 (me:LiteLangVisitor)(base) VisitIncludeStatement(context: IncludeStatementContext) -> (v: Any) {
@@ -75,7 +27,7 @@
             obj += Visit(item)
         }
     }
-    obj += BlockRight + Terminate + Wrap
+    obj += BlockRight + Wrap
     header := ""
     ? context.annotationSupport() >< Nil {
         header += Visit(context.annotationSupport())
@@ -129,40 +81,7 @@
     <- (obj)
 }
 
-(me:LiteLangVisitor)(base) VisitPackageControlStatement(context: PackageControlStatementContext) -> (v: Any) {
-    Self := Visit(context.parameterClauseSelf()):(Parameter)
-    self ID = Self.id
-    
-    r1 := Visit(context.id()):(Result)
-    isMutable := True # r1.isVirtual #
-    isVirtual := ""
-    ? r1.isVirtual {
-        isVirtual = " virtual "
-    }
-    ? Self.value >< Nil {
-        super ID = Self.value
-        isVirtual = " override "
-    }
-    typ := ""
-    ? context.typeType() >< Nil {
-        typ = Visit(context.typeType()):(Str)
-    }
-    obj := ""
-    obj += ""Self.permission" partial class "Self.type""BlockLeft + Wrap""
-    ? context.annotationSupport() >< Nil {
-        obj += Visit(context.annotationSupport())
-    }
-    obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""
-    context.packageControlSubStatement() @ item {
-        temp := Visit(item):(Result)
-        obj += temp.text
-    }
-    obj += BlockRight + Wrap
-    obj += BlockRight + Wrap
-    self ID = ""
-    super ID = ""
-    <- (obj)
-}
+
 
 (me:LiteLangVisitor)(base) VisitPackageControlSubStatement(context: PackageControlSubStatementContext) -> (v: Any) {
     obj := ""
@@ -170,7 +89,7 @@
     typ := ""
     (id, typ) = GetControlSub(context.id(0).GetText())
     ? context.id(1) >< Nil {
-        me.set ID = context.id(1).GetText()
+        me.setID = context.id(1).GetText()
     }
     ? context.functionSupportStatement().Length > 0 {
         obj += id + BlockLeft
@@ -181,14 +100,14 @@
     } _ {
         obj += id + Terminate
     }
-    me.set ID = ""
+    me.setID = ""
     <- (Result{ text = obj, data = typ })
 }
 
 (me:LiteLangVisitor)(base) VisitPackageNewStatement(context: PackageNewStatementContext) -> (v: Any) {
     text := ""
     Self := Visit(context.parameterClauseSelf()):(Parameter)
-    self ID = Self.id
+    selfID = Self.id
     text += ""Self.permission" partial class "Self.type""BlockLeft + Wrap""
     text += "public " Self.type " "
     # 获取构造数据 #
@@ -198,7 +117,7 @@
     }
     text += BlockLeft + ProcessFunctionSupport(context.functionSupportStatement()) + BlockRight + Wrap
     text += BlockRight + Wrap
-    self ID = ""
+    selfID = ""
     <- (text)
 }
 
@@ -268,7 +187,7 @@
     }
     r.permission = "public"
     # 异步 #
-    ? context.t.Type == Right Flow {
+    ? context.t.Type == Right_Flow {
         pout := Visit(context.parameterClauseOut()):(Str)
         ? pout >< "void" {
             pout = ""Task"<"pout">"

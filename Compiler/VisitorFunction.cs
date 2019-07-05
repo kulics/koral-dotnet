@@ -172,13 +172,10 @@ public partial class LiteLangVisitor{
 public  override  object VisitParameterClauseSelf( ParameterClauseSelfContext context )
 {
 var p = (new Parameter());
-var id = ((Result)(Visit(context.id(0))));
+var id = ((Result)(Visit(context.id())));
 p.id=id.text;
 p.permission=id.permission;
 p.type=((string)(Visit(context.typeType())));
-if ( context.id(1)!=null ) {
-p.value=((Result)(Visit(context.id(1)))).text;
-}
 return (p) ; 
 }
 }

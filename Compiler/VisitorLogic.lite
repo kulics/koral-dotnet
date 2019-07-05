@@ -4,7 +4,7 @@
     "System"
 
     "Compiler" LiteParser.
-    "Compiler" Compiler Static.
+    "Compiler" Compiler_Static.
 }
 
 Iterator -> {
@@ -45,16 +45,16 @@ Iterator -> {
 
     obj += "foreach (var "id" in Range("it.begin.text","it.end.text","it.step.text","it.order","it.attach"))"
 
-    obj += ""BlockLeft+Wrap""
+    obj += BlockLeft+Wrap
     obj += ProcessFunctionSupport(context.functionSupportStatement())
-    obj += ""BlockRight" "Terminate+Wrap""
+    obj += BlockRight+Wrap
     <- (obj)
 }
 
 (me:LiteLangVisitor)(base) VisitLoopInfiniteStatement(context: LoopInfiniteStatementContext) -> (v: Any) {
     obj := "for (;;) "BlockLeft+Wrap""
     obj += ProcessFunctionSupport(context.functionSupportStatement())
-    obj += ""BlockRight" "Terminate+Wrap""
+    obj += BlockRight+Wrap
     <- (obj)
 }
 
@@ -71,9 +71,9 @@ Iterator -> {
     }
 
     obj += "foreach (var "id" in "target")"
-    obj += ""BlockLeft+Wrap""
+    obj += BlockLeft+Wrap
     obj += ProcessFunctionSupport(context.functionSupportStatement())
-    obj += ""BlockRight" "Terminate+Wrap""
+    obj += BlockRight+Wrap
     <- (obj)
 }
 
