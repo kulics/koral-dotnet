@@ -87,7 +87,7 @@ implementControlStatement: (annotationSupport)? (n='_')? id
  Colon typeType left_brace (packageControlSubStatement)+ right_brace end;
 
 // 重载
-overrideStatement: parameterClauseSelf left_paren id right_paren
+overrideStatement: left_paren id right_paren parameterClauseSelf 
  Right_Arrow New_Line* left_brace (overrideSupportStatement)* right_brace end;
 
 // 实现支持的语句
