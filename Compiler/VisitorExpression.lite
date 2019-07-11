@@ -123,6 +123,9 @@ DicEle -> {
                 e2 := Visit(context.GetChild(1)):(Str)
                 r.data = e2
                 r.text = "(("e2")("r.text"))"
+            } context.GetChild(1).GetType() == ?(:CallElementContext) {
+                e2 := Visit(context.GetChild(1)):(Result)
+                r.text = r.text + e2.text
             } _ {
                 ? context.op.Type == LiteParser.Bang {
                     r.text = "ref "r.text""
@@ -271,15 +274,11 @@ DicEle -> {
     }
 
     VisitCallElement(context: CallElementContext -> v: Any) {
-        id := Visit(context.id()):(Result)
-        ? context.op?.Type == LiteParser.Question {
-            id.text += "?"
-        }
         ? context.expression() == Nil {
-            <- (Result{ text = id.text + Visit(context.slice()):(Str) })
+            <- (Result{ text = Visit(context.slice()):(Str) })
         }
         r := Visit(context.expression()):(Result)
-        r.text = "" id.text "[" r.text "]"
+        r.text = "[" r.text "]"
         <- r
     }
 

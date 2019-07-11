@@ -128,6 +128,10 @@ var e2 = ((string)(Visit(context.GetChild(1))));
 r.data=e2;
 r.text=(new System.Text.StringBuilder("((").Append(e2).Append(")(").Append(r.text).Append("))")).to_Str();
 }
+else if ( context.GetChild(1).GetType()==typeof(CallElementContext) ) {
+var e2 = ((Result)(Visit(context.GetChild(1))));
+r.text=r.text+e2.text;
+} 
 else {
 if ( context.op.Type==LiteParser.Bang ) {
 r.text=(new System.Text.StringBuilder("ref ").Append(r.text).Append("")).to_Str();
@@ -286,15 +290,11 @@ return(obj);
 }
 public  override  object VisitCallElement( CallElementContext context )
 {
-var id = ((Result)(Visit(context.id())));
-if ( context.op?.Type==LiteParser.Question ) {
-id.text+="?";
-}
 if ( context.expression()==null ) {
-return(((new Result(){text = id.text+((string)(Visit(context.slice())))})));
+return(((new Result(){text = ((string)(Visit(context.slice())))})));
 }
 var r = ((Result)(Visit(context.expression())));
-r.text=(new System.Text.StringBuilder("").Append(id.text).Append("[").Append(r.text).Append("]")).to_Str();
+r.text=(new System.Text.StringBuilder("[").Append(r.text).Append("]")).to_Str();
 return(r);
 }
 public  override  object VisitSlice( SliceContext context )

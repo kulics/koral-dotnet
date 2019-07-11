@@ -224,7 +224,6 @@ linq // 联合查询
 | callFunc // 函数调用
 | primaryExpression
 | callChannel //调用通道
-| callElement //调用元素
 | callNew // 构造类对象
 | callPkg // 新建包
 | getType // 获取类型
@@ -242,6 +241,7 @@ linq // 联合查询
 | expression op=Question // 可空判断
 | expression op=Left_Flow // 异步执行
 | expression typeConversion // 类型转换
+| expression callElement // 访问元素
 | expression call callExpression // 链式调用
 | expression judgeType typeType // 类型判断表达式
 | expression judge expression // 判断型表达式
@@ -252,8 +252,7 @@ linq // 联合查询
 ;
 
 callExpression:
-callElement // 访问元素
-| callFunc // 函数调用
+ callFunc // 函数调用
 | callPkg //
 | id // id
 | callExpression call New_Line? callExpression // 链式调用
@@ -277,7 +276,7 @@ callFunc: id (templateCall)? (tuple|lambda); // 函数调用
 
 callChannel: id op=Question? Left_Brack Left_Arrow Right_Brack;
 
-callElement: id op=Question? Left_Brack (slice | expression) Right_Brack;
+callElement: Left_Brack (slice | expression) Right_Brack;
 
 callPkg: typeType left_brace (pkgAssign|listAssign|setAssign|dictionaryAssign)? right_brace; // 新建包
 
