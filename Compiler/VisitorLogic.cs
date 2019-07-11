@@ -108,36 +108,34 @@ obj+=r+Wrap;
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append(" ").Append(Wrap).Append("")).to_Str();
 return (obj) ; 
 }
-public  override  object VisitCaseDefaultStatement( CaseDefaultStatementContext context )
-{
-var obj = "";
-obj+=(new System.Text.StringBuilder("default:").Append(BlockLeft+Wrap).Append("")).to_Str();
-obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append("break;")).to_Str();
-return (obj) ; 
-}
 public  override  object VisitCaseExprStatement( CaseExprStatementContext context )
 {
 var obj = "";
-if ( context.typeType()==null ) {
+if ( context.expression()!=null ) {
 var expr = ((Result)(Visit(context.expression())));
 obj+=(new System.Text.StringBuilder("case ").Append(expr.text).Append(" :").Append(Wrap).Append("")).to_Str();
 }
-else {
+else if ( context.typeType()!=null ) {
 var id = "it";
 if ( context.id()!=null ) {
 id=((Result)(Visit(context.id()))).text;
 }
 var type = ((string)(Visit(context.typeType())));
 obj+=(new System.Text.StringBuilder("case ").Append(type).Append(" ").Append(id).Append(" :").Append(Wrap).Append("")).to_Str();
+} 
+else {
+obj+=(new System.Text.StringBuilder("default:").Append(Wrap).Append("")).to_Str();
 }
-obj+=(new System.Text.StringBuilder("").Append(BlockLeft).Append(" ").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append("").Append(BlockRight).Append(" ")).to_Str();
-obj+="break;";
 return (obj) ; 
 }
 public  override  object VisitCaseStatement( CaseStatementContext context )
 {
-var obj = ((string)(Visit(context.GetChild(0))));
+var obj = "";
+var process = (new System.Text.StringBuilder("").Append(BlockLeft).Append(" ").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append("").Append(BlockRight).Append("break;")).to_Str();
+foreach (var item in context.caseExprStatement()){
+var r = ((string)(Visit(item)));
+obj+=r+process;
+}
 return (obj) ; 
 }
 public  override  object VisitJudgeStatement( JudgeStatementContext context )

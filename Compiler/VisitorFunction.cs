@@ -71,11 +71,11 @@ return (obj) ;
 }
 public  override  object VisitReturnStatement( ReturnStatementContext context )
 {
-var r = ((Result)(Visit(context.tuple())));
-if ( r.text=="()" ) {
-r.text="";
+if ( context.expressionList()!=null ) {
+var r = ((Result)(Visit(context.expressionList())));
+return ((new System.Text.StringBuilder("return(").Append(r.text).Append(")").Append(Terminate).Append("").Append(Wrap).Append("")).to_Str()) ; 
 }
-return ((new System.Text.StringBuilder("return ").Append(r.text).Append(" ").Append(Terminate).Append(" ").Append(Wrap).Append("")).to_Str()) ; 
+return ((new System.Text.StringBuilder("return").Append(Terminate).Append("").Append(Wrap).Append("")).to_Str()) ; 
 }
 public  override  object VisitTuple( TupleContext context )
 {

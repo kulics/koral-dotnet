@@ -46,8 +46,8 @@ Right_Arrow (packageControlSubStatement)+ end;
 // 命名空间常量
 namespaceConstantStatement: (annotationSupport)? id (Colon typeType Colon|Colon_Colon) expression end;
 // 命名空间函数
-namespaceFunctionStatement: (annotationSupport)? id (templateDefine)? parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut left_brace (functionSupportStatement)* right_brace end;
+namespaceFunctionStatement: (annotationSupport)? id (templateDefine)? left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 定义包
 packageStatement: (annotationSupport)? id (templateDefine)? Right_Arrow left_brace (packageSupportStatement)* right_brace end;
@@ -63,7 +63,7 @@ includeStatement
 // 包含
 includeStatement: Colon typeType end;
 // 包构造方法
-packageNewStatement: (annotationSupport)? parameterClauseSelf Less Greater parameterClauseIn 
+packageNewStatement: (annotationSupport)? parameterClauseSelf Less Greater left_paren parameterClauseIn right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
 // 定义变量
 packageVariableStatement: (annotationSupport)? id (Colon_Equal expression|Colon typeType (Equal expression)?) end;
@@ -80,8 +80,8 @@ implementStatement: parameterClauseSelf Right_Arrow (typeType)? New_Line* left_b
 implementSupportStatement: implementFunctionStatement | implementControlStatement | New_Line;
 
 // 函数
-implementFunctionStatement: (annotationSupport)? (n='_')? id (templateDefine)? parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut left_brace (functionSupportStatement)* right_brace end;
+implementFunctionStatement: (annotationSupport)? (n='_')? id (templateDefine)? left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义控制
 implementControlStatement: (annotationSupport)? (n='_')? id 
  Colon typeType Right_Arrow (packageControlSubStatement)+ end;
@@ -94,8 +94,8 @@ overrideStatement: parameterClauseSelf left_paren id right_paren
 overrideSupportStatement: overrideFunctionStatement | overrideControlStatement | New_Line;
 
 // 函数
-overrideFunctionStatement: (annotationSupport)? (n='_')? id (templateDefine)? parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut left_brace (functionSupportStatement)* right_brace end;
+overrideFunctionStatement: (annotationSupport)? (n='_')? id (templateDefine)? left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义控制
 overrideControlStatement: (annotationSupport)? (n='_')? id 
  Colon typeType Right_Arrow (packageControlSubStatement)+ end;
@@ -115,18 +115,18 @@ protocolControlStatement: (annotationSupport)? id Colon typeType
 // 定义子方法
 protocolControlSubStatement: id;
 // 函数
-protocolFunctionStatement: (annotationSupport)? id (templateDefine)? parameterClauseIn 
-t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut end;
+protocolFunctionStatement: (annotationSupport)? id (templateDefine)? left_paren parameterClauseIn 
+t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut right_paren end;
 
 // 函数
-functionStatement: id (templateDefine)? parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut left_brace
-(functionSupportStatement)* right_brace end;
+functionStatement: id (templateDefine)? left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
+ parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 返回
-returnStatement: Left_Arrow tuple end;
+returnStatement: Left_Arrow (expressionList)? end;
 // 入参
-parameterClauseIn: left_paren parameter? (more parameter)*  right_paren ;
+parameterClauseIn: parameter? (more parameter)*;
 // 出参
-parameterClauseOut: left_paren parameter? (more parameter)*  right_paren ;
+parameterClauseOut: parameter? (more parameter)*;
 // 接收器
 parameterClauseSelf: left_paren id Colon typeType right_paren;
 // 参数结构
@@ -158,7 +158,7 @@ functionSupportStatement:
 // 条件判断
 judgeCaseStatement: expression Question (caseStatement)+ end;
 // 判断条件声明
-caseStatement: (caseExprStatement)+ left_brace (functionSupportStatement)* right_brace;
+caseStatement: caseExprStatement (more caseExprStatement)* left_brace (functionSupportStatement)* right_brace;
 caseExprStatement: Discard | expression | (id)? Colon typeType;
 // 判断
 judgeStatement:
@@ -335,8 +335,8 @@ pkgAnonymousAssign: left_brace pkgAnonymousAssignElement (more pkgAnonymousAssig
 
 pkgAnonymousAssignElement: name Equal expression; // 简化赋值元素
 
-functionExpression: parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut left_brace (functionSupportStatement)* right_brace;
+functionExpression: left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace;
 
 tupleExpression: left_paren expression (more expression)*  right_paren; // 元组
 
@@ -396,11 +396,11 @@ typeSet: Left_Brack typeType Right_Brack;
 typeDictionary: Left_Brack typeType Right_Brack typeType;
 typeChannel: Left_Brack Right_Arrow Right_Brack typeType;
 typePackage: nameSpaceItem (templateCall)? ;
-typeFunction: typeFunctionParameterClause t=(Right_Arrow|Right_Flow) New_Line* typeFunctionParameterClause;
+typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) New_Line* typeFunctionParameterClause right_paren;
 typeAny: TypeAny;
 
 // 函数类型参数
-typeFunctionParameterClause: left_paren typeType? (more typeType)*  right_paren;
+typeFunctionParameterClause: typeType? (more typeType)*;
 
 // 基础类型名
 typeBasic:

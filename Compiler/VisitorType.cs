@@ -164,54 +164,54 @@ var obj = "";
 switch (context.t.Type) {
 case TypeI8 :
 { obj=I8;
-} break;
+}break;
 case TypeU8 :
 { obj=U8;
-} break;
+}break;
 case TypeI16 :
 { obj=I16;
-} break;
+}break;
 case TypeU16 :
 { obj=U16;
-} break;
+}break;
 case TypeI32 :
 { obj=I32;
-} break;
+}break;
 case TypeU32 :
 { obj=U32;
-} break;
+}break;
 case TypeI64 :
 { obj=I64;
-} break;
+}break;
 case TypeU64 :
 { obj=U64;
-} break;
+}break;
 case TypeF32 :
 { obj=F32;
-} break;
+}break;
 case TypeF64 :
 { obj=F64;
-} break;
+}break;
 case TypeChr :
 { obj=Chr;
-} break;
+}break;
 case TypeStr :
 { obj=Str;
-} break;
+}break;
 case TypeBool :
 { obj=Bool;
-} break;
+}break;
 case TypeInt :
 { obj=Int;
-} break;
+}break;
 case TypeNum :
 { obj=Num;
-} break;
+}break;
 case TypeByte :
 { obj=U8;
-} break;
-default:{
-obj=Any;
+}break;
+default:
+{ obj=Any;
 }break;
 } 
 return (obj) ; 

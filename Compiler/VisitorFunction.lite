@@ -68,11 +68,11 @@ Parameter -> {
     }
 
     VisitReturnStatement(context: ReturnStatementContext) -> (v: Any) {
-        r := Visit(context.tuple()):(Result)
-        ? r.text == "()" {
-            r.text = ""
+        ? context.expressionList() >< Nil {
+            r := Visit(context.expressionList()):(Result)
+            <- ("return("r.text")"Terminate""Wrap"")
         }
-        <- ("return "r.text" "Terminate" "Wrap"")
+        <- ("return"Terminate""Wrap"")
     }
 
     VisitTuple(context: TupleContext) -> (v: Any) {

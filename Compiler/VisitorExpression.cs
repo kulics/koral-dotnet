@@ -73,16 +73,16 @@ var e3 = ((string)(Visit(context.GetChild(2))));
 switch (op) {
 case "==" :
 { r.text=(new System.Text.StringBuilder("(").Append(e1.text).Append(" is ").Append(e3).Append(")")).to_Str();
-} break;
+}break;
 case "><" :
 { r.text=(new System.Text.StringBuilder("!(").Append(e1.text).Append(" is ").Append(e3).Append(")")).to_Str();
-} break;
+}break;
 } 
 return (r) ; 
-} break;
+}break;
 case JudgeContext it :
 { r.data=Bool;
-} break;
+}break;
 case AddContext it :
 { if ( ((string)(e1.data))==Str||((string)(((Result)(e2)).data))==Str ) {
 r.data=Str;
@@ -93,7 +93,7 @@ r.data=I32;
 else {
 r.data=F64;
 }
-} break;
+}break;
 case MulContext it :
 { if ( ((string)(e1.data))==I32&&((string)(((Result)(e2)).data))==I32 ) {
 r.data=I32;
@@ -101,23 +101,23 @@ r.data=I32;
 else {
 r.data=F64;
 }
-} break;
+}break;
 case PowContext it :
 { r.data=F64;
 switch (op) {
 case "**" :
 { op="Pow";
-} break;
+}break;
 case "//" :
 { op="Root";
-} break;
+}break;
 case "%%" :
 { op="Log";
-} break;
+}break;
 } 
 r.text=(new System.Text.StringBuilder("").Append(op).Append("(").Append(e1.text).Append(", ").Append(((Result)(e2)).text).Append(")")).to_Str();
 return (r) ; 
-} break;
+}break;
 } 
 r.text=e1.text+op+((Result)(e2)).text;
 }
@@ -309,17 +309,17 @@ switch (context.op.Text) {
 case "<=" :
 { order="true";
 attach="true";
-} break;
+}break;
 case "<" :
 { order="true";
-} break;
+}break;
 case ">=" :
 { order="false";
 attach="true";
-} break;
+}break;
 case ">" :
 { order="false";
-} break;
+}break;
 } 
 var expr1 = ((Result)(Visit(context.expression(0))));
 var expr2 = ((Result)(Visit(context.expression(1))));
@@ -333,17 +333,17 @@ switch (context.op.Text) {
 case "<=" :
 { order="true";
 attach="true";
-} break;
+}break;
 case "<" :
 { order="true";
-} break;
+}break;
 case ">=" :
 { order="false";
 attach="true";
-} break;
+}break;
 case ">" :
 { order="false";
-} break;
+}break;
 } 
 var expr = ((Result)(Visit(context.expression())));
 return ((new System.Text.StringBuilder(".slice(").Append(expr.text).Append(", null, ").Append(order).Append(", ").Append(attach).Append(")")).to_Str()) ; 
@@ -356,17 +356,17 @@ switch (context.op.Text) {
 case "<=" :
 { order="true";
 attach="true";
-} break;
+}break;
 case "<" :
 { order="true";
-} break;
+}break;
 case ">=" :
 { order="false";
 attach="true";
-} break;
+}break;
 case ">" :
 { order="false";
-} break;
+}break;
 } 
 var expr = ((Result)(Visit(context.expression())));
 return ((new System.Text.StringBuilder(".slice(null, ").Append(expr.text).Append(", ").Append(order).Append(", ").Append(attach).Append(")")).to_Str()) ; 

@@ -181,40 +181,40 @@ obj+=Visit(context.annotationSupport());
 switch (typ) {
 case I8 :
 { typ="ubyte";
-} break;
+}break;
 case I16 :
 { typ="short";
-} break;
+}break;
 case I32 :
 { typ="int";
-} break;
+}break;
 case I64 :
 { typ="long";
-} break;
+}break;
 case U8 :
 { typ="byte";
-} break;
+}break;
 case U16 :
 { typ="ushort";
-} break;
+}break;
 case U32 :
 { typ="uint";
-} break;
+}break;
 case U64 :
 { typ="ulong";
-} break;
+}break;
 case F32 :
 { typ="float";
-} break;
+}break;
 case F64 :
 { typ="double";
-} break;
+}break;
 case Chr :
 { typ="char";
-} break;
+}break;
 case Str :
 { typ="string";
-} break;
+}break;
 } 
 obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" const ").Append(typ).Append(" ").Append(id.text).Append(" = ").Append(expr.text).Append(" ").Append(Terminate+Wrap).Append("")).to_Str();
 return (obj) ; 
@@ -274,27 +274,27 @@ switch (id) {
 case "get" :
 { id=" get ";
 typ="get";
-} break;
+}break;
 case "set" :
 { id=" set ";
 typ="set";
-} break;
+}break;
 case "_get" :
 { id=" protected get ";
 typ="get";
-} break;
+}break;
 case "_set" :
 { id=" protected set ";
 typ="set";
-} break;
+}break;
 case "add" :
 { id=" add ";
 typ="add";
-} break;
+}break;
 case "remove" :
 { id=" remove ";
 typ="remove";
-} break;
+}break;
 } 
 return (id, typ) ; 
 }
