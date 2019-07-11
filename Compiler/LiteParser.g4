@@ -42,7 +42,7 @@ enumSupportStatement: id (Equal (add)? integerExpr)? end;
 namespaceVariableStatement: (annotationSupport)? id (Colon_Equal expression|Colon typeType (Equal expression)?) end;
 // 命名空间控制
 namespaceControlStatement: (annotationSupport)? id Colon typeType (Equal expression)?
-Right_Arrow (packageControlSubStatement)+ end;
+left_brace (packageControlSubStatement)+ right_brace end;
 // 命名空间常量
 namespaceConstantStatement: (annotationSupport)? id (Colon typeType Colon|Colon_Colon) expression end;
 // 命名空间函数
@@ -69,7 +69,7 @@ packageNewStatement: (annotationSupport)? parameterClauseSelf Less Greater left_
 packageVariableStatement: (annotationSupport)? id (Colon_Equal expression|Colon typeType (Equal expression)?) end;
 
 // 定义子方法
-packageControlSubStatement: id (left_paren id right_paren)? left_brace (functionSupportStatement)+ right_brace;
+packageControlSubStatement: id (left_paren id right_paren)? left_brace (functionSupportStatement)+ right_brace end;
 // 定义包事件
 packageEventStatement: id Colon left_brack Question right_brack nameSpaceItem end;
 
@@ -84,7 +84,7 @@ implementFunctionStatement: (annotationSupport)? (n='_')? id (templateDefine)? l
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义控制
 implementControlStatement: (annotationSupport)? (n='_')? id 
- Colon typeType Right_Arrow (packageControlSubStatement)+ end;
+ Colon typeType left_brace (packageControlSubStatement)+ right_brace end;
 
 // 重载
 overrideStatement: parameterClauseSelf left_paren id right_paren
@@ -98,7 +98,7 @@ overrideFunctionStatement: (annotationSupport)? (n='_')? id (templateDefine)? le
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义控制
 overrideControlStatement: (annotationSupport)? (n='_')? id 
- Colon typeType Right_Arrow (packageControlSubStatement)+ end;
+ Colon typeType left_brace (packageControlSubStatement)+ right_brace end;
 
 // 协议
 protocolStatement: (annotationSupport)? id (templateDefine)? Left_Arrow left_brace (protocolSupportStatement)* right_brace end;
@@ -111,7 +111,7 @@ includeStatement
 ;
 // 定义控制
 protocolControlStatement: (annotationSupport)? id Colon typeType
- Right_Arrow protocolControlSubStatement (Comma protocolControlSubStatement)* end;
+ left_brace (protocolControlSubStatement)* right_brace end;
 // 定义子方法
 protocolControlSubStatement: id;
 // 函数
@@ -128,7 +128,7 @@ parameterClauseIn: parameter? (more parameter)*;
 // 出参
 parameterClauseOut: parameter? (more parameter)*;
 // 接收器
-parameterClauseSelf: left_paren id Colon typeType right_paren;
+parameterClauseSelf: id Colon typeType;
 // 参数结构
 parameter: (annotationSupport)? id Colon typeType (Equal expression)?;
 
