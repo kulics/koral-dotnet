@@ -55,7 +55,7 @@ LiteLangVisitor -> {
     superID := ""
     setID := ""
 }
-(me:LiteLangVisitor)(base) -> {
+(base)me: LiteLangVisitor -> {
     VisitProgram(context: ProgramContext -> v: Any) {
         StatementList := context.statement()
         Result := ""

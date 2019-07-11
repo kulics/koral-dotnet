@@ -7,7 +7,7 @@
     "Compiler" Compiler_Static.
 }
 
-(me:LiteLangVisitor)(base) -> {
+(base)me: LiteLangVisitor -> {
     VisitIncludeStatement(context: IncludeStatementContext -> v: Any) {
         <- Visit(context.typeType())
     }

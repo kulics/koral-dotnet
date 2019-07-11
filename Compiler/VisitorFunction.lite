@@ -15,7 +15,7 @@ Parameter -> {
     permission: Str
 }
 
-(me:LiteLangVisitor) -> {
+me: LiteLangVisitor -> {
     ProcessFunctionSupport(items: [:]FunctionSupportStatementContext -> v:Str) {
         obj := ""
         content := ""
@@ -38,7 +38,7 @@ Parameter -> {
     }
 }
 
-(me:LiteLangVisitor)(base) -> {
+(base)me: LiteLangVisitor -> {
     VisitFunctionStatement(context: FunctionStatementContext -> v: Any) {
         id := Visit(context.id()):(Result)
         obj := ""

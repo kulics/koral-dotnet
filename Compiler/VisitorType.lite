@@ -7,7 +7,7 @@
     "Compiler" Compiler_Static.
 }
 
-(me:LiteLangVisitor)(base) -> {
+(base)me: LiteLangVisitor -> {
     VisitTypeType(context: TypeTypeContext -> v: Any) {
         obj := ""
         obj = Visit(context.GetChild(0)):(Str)

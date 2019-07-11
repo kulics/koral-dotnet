@@ -29,7 +29,7 @@ DicEle -> {
     text: Str
 }
 
-(me:LiteLangVisitor)(base) -> {
+(base)me: LiteLangVisitor -> {
     VisitVariableStatement(context: VariableStatementContext -> v: Any) {
         obj := ""
         r1 := Visit(context.expression(0)):(Result)

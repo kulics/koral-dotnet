@@ -7,7 +7,7 @@
     "Compiler" Compiler_Static.
 }
 
-(me:LiteLangVisitor)(base) -> { 
+(base)me: LiteLangVisitor -> { 
     VisitImplementStatement(context: ImplementStatementContext -> v: Any) {
         Self := Visit(context.parameterClauseSelf()):(Parameter)
         selfID = Self.id
