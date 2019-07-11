@@ -25,7 +25,7 @@ obj+=Visit(item);
 }
 obj+=BlockRight+Wrap;
 selfID="";
-return (obj) ; 
+return(obj);
 }
 public  override  object VisitImplementFunctionStatement( ImplementFunctionStatementContext context )
 {
@@ -63,7 +63,7 @@ templateContract=template.Contract;
 obj+=Visit(context.parameterClauseIn())+templateContract+Wrap+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
-return (obj) ; 
+return(obj);
 }
 public  override  object VisitImplementControlStatement( ImplementControlStatementContext context )
 {
@@ -87,7 +87,7 @@ var temp = ((Result)(Visit(item)));
 obj+=temp.text;
 }
 obj+=BlockRight+Wrap;
-return (obj) ; 
+return(obj);
 }
 public  override  object VisitOverrideStatement( OverrideStatementContext context )
 {
@@ -102,7 +102,7 @@ obj+=Visit(item);
 obj+=BlockRight+Wrap;
 selfID="";
 superID="";
-return (obj) ; 
+return(obj);
 }
 public  override  object VisitOverrideFunctionStatement( OverrideFunctionStatementContext context )
 {
@@ -137,7 +137,7 @@ templateContract=template.Contract;
 obj+=Visit(context.parameterClauseIn())+templateContract+Wrap+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
-return (obj) ; 
+return(obj);
 }
 public  override  object VisitOverrideControlStatement( OverrideControlStatementContext context )
 {
@@ -158,7 +158,7 @@ var temp = ((Result)(Visit(item)));
 obj+=temp.text;
 }
 obj+=BlockRight+Wrap;
-return (obj) ; 
+return(obj);
 }
 }
 }

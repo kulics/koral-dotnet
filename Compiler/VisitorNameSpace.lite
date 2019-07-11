@@ -12,7 +12,7 @@ Namespace -> {
     imports: Str
 }
 
-GetControlSub(id: Str) -> (id: Str, type:Str) {
+GetControlSub(id: Str -> id: Str, type:Str) {
     typ := ""
     id ? "get" {
         id = " get "
@@ -33,11 +33,11 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
         id = " remove "
         typ = "remove"
     }
-    <- (id, typ)
+    <- id, typ
 }
 
 (me:LiteLangVisitor)(base) -> {
-    VisitStatement(context: StatementContext) -> (v: Any) {
+    VisitStatement(context: StatementContext -> v: Any) {
         obj := ""
         ns := Visit(context.exportStatement()):(Namespace)
         # import library #
@@ -67,10 +67,10 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
                 BlockLeft + Wrap + contentStatic + BlockRight + Wrap
         }
         obj += BlockRight + Wrap
-        <- (obj)
+        <- obj
     }
 
-    VisitExportStatement(context: ExportStatementContext) -> (v: Any) {
+    VisitExportStatement(context: ExportStatementContext -> v: Any) {
         name := context.TextLiteral().GetText()
         name = name.sub_Str(1, name.len()-2)
         name = name.replace("/", ".")
@@ -80,10 +80,10 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
         context.importStatement() @ item {
             obj.imports += Visit(item):(Str)
         }
-        <- (obj)
+        <- obj
     }
 
-    VisitImportStatement(context: ImportStatementContext) -> (v: Any) {
+    VisitImportStatement(context: ImportStatementContext -> v: Any) {
         obj := ""
         ? context.annotationSupport() >< Nil {
             obj += Visit(context.annotationSupport())
@@ -99,10 +99,10 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
             obj += "using " + ns
         }
         obj += Terminate + Wrap
-        <- (obj)
+        <- obj
     }
 
-    VisitNameSpaceItem(context: NameSpaceItemContext) -> (v: Any) {
+    VisitNameSpaceItem(context: NameSpaceItemContext -> v: Any) {
         obj := ""
         [0 < context.id().Length] @ i {
             id := Visit(context.id(i)):(Result)
@@ -112,10 +112,10 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
                 obj += "." + id.text
             }
         }
-        <- (obj)
+        <- obj
     }
 
-    VisitName(context: NameContext) -> (v: Any) {
+    VisitName(context: NameContext -> v: Any) {
         obj := ""
         [0 < context.id().Length] @ i {
             id := Visit(context.id(i)):(Result)
@@ -125,10 +125,10 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
                 obj += "." + id.text
             }
         }
-        <- (obj)
+        <- obj
     }
 
-    VisitEnumStatement(context: EnumStatementContext) -> (v: Any) {
+    VisitEnumStatement(context: EnumStatementContext -> v: Any) {
         obj := ""
         id := Visit(context.id()):(Result)
         header := ""
@@ -143,10 +143,10 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
         }
         obj += BlockRight + Terminate + Wrap
         obj = header + obj
-        <- (obj)
+        <- obj
     }
 
-    VisitEnumSupportStatement(context: EnumSupportStatementContext) -> (v: Any) {
+    VisitEnumSupportStatement(context: EnumSupportStatementContext -> v: Any) {
         id := Visit(context.id()):(Result)
         ? context.integerExpr() >< Nil {
             op := ""
@@ -155,10 +155,10 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
             }
             id.text += " = " + op + Visit(context.integerExpr())
         }
-        <- (id.text + ",")
+        <- id.text + ","
     }
 
-    VisitNamespaceFunctionStatement(context: NamespaceFunctionStatementContext) -> (v: Any) {
+    VisitNamespaceFunctionStatement(context: NamespaceFunctionStatementContext -> v: Any) {
         id := Visit(context.id()):(Result)
         obj := ""
         ? context.annotationSupport() >< Nil {
@@ -187,10 +187,10 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
         obj += Visit(context.parameterClauseIn()) + templateContract + Wrap + BlockLeft + Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += BlockRight + Wrap
-        <- (obj)
+        <- obj
     }
 
-    VisitNamespaceConstantStatement(context: NamespaceConstantStatementContext) -> (v: Any) {
+    VisitNamespaceConstantStatement(context: NamespaceConstantStatementContext -> v: Any) {
         id := Visit(context.id()):(Result)
         expr := Visit(context.expression()):(Result)
         typ := ""
@@ -231,10 +231,10 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
         }
         
         obj += ""id.permission" const "typ" "id.text" = "expr.text" "Terminate + Wrap""
-        <- (obj)
+        <- obj
     }
 
-    VisitNamespaceVariableStatement(context: NamespaceVariableStatementContext) -> (v: Any) {
+    VisitNamespaceVariableStatement(context: NamespaceVariableStatementContext -> v: Any) {
         r1 := Visit(context.id()):(Result)
         isMutable := r1.isVirtual
         typ := ""
@@ -257,10 +257,10 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
         } _ {
             obj += Terminate + Wrap
         }
-        <- (obj)
+        <- obj
     }
 
-    VisitNamespaceControlStatement(context: NamespaceControlStatementContext) -> (v: Any) {
+    VisitNamespaceControlStatement(context: NamespaceControlStatementContext -> v: Any) {
         r1 := Visit(context.id()):(Result)
         isMutable := r1.isVirtual
         typ := ""
@@ -278,6 +278,6 @@ GetControlSub(id: Str) -> (id: Str, type:Str) {
             obj += temp.text
         }
         obj += BlockRight + Wrap
-        <- (obj)
+        <- obj
     }
 }

@@ -8,11 +8,11 @@
 }
 
 (me:LiteLangVisitor)(base) -> {
-    VisitIncludeStatement(context: IncludeStatementContext) -> (v: Any) {
-        <- (Visit(context.typeType()))
+    VisitIncludeStatement(context: IncludeStatementContext -> v: Any) {
+        <- Visit(context.typeType())
     }
 
-    VisitPackageStatement(context: PackageStatementContext) -> (v: Any) {
+    VisitPackageStatement(context: PackageStatementContext -> v: Any) {
         id := Visit(context.id()):(Result)
         obj := ""
         extend := ""
@@ -53,10 +53,10 @@
 
         header += templateContract + Wrap + BlockLeft + Wrap
         obj = header + obj
-        <- (obj)
+        <- obj
     }
 
-    VisitPackageVariableStatement(context: PackageVariableStatementContext) -> (v: Any) {
+    VisitPackageVariableStatement(context: PackageVariableStatementContext -> v: Any) {
         r1 := Visit(context.id()):(Result)
         isMutable := r1.isVirtual
         typ := ""
@@ -79,10 +79,10 @@
         } _ {
             obj += Terminate + Wrap
         }
-        <- (obj)
+        <- obj
     }
 
-    VisitPackageControlSubStatement(context: PackageControlSubStatementContext) -> (v: Any) {
+    VisitPackageControlSubStatement(context: PackageControlSubStatementContext -> v: Any) {
         obj := ""
         id := ""
         typ := ""
@@ -100,10 +100,10 @@
             obj += id + Terminate
         }
         me.setID = ""
-        <- (Result{ text = obj, data = typ })
+        <- Result{ text = obj, data = typ }
     }
 
-    VisitPackageNewStatement(context: PackageNewStatementContext) -> (v: Any) {
+    VisitPackageNewStatement(context: PackageNewStatementContext -> v: Any) {
         text := ""
         Self := Visit(context.parameterClauseSelf()):(Parameter)
         selfID = Self.id
@@ -117,18 +117,18 @@
         text += BlockLeft + ProcessFunctionSupport(context.functionSupportStatement()) + BlockRight + Wrap
         text += BlockRight + Wrap
         selfID = ""
-        <- (text)
+        <- text
     }
 
-    VisitPackageEventStatement(context: PackageEventStatementContext) -> (v: Any) {
+    VisitPackageEventStatement(context: PackageEventStatementContext -> v: Any) {
         obj := ""
         id := Visit(context.id()):(Result)
         nameSpace := Visit(context.nameSpaceItem())
         obj += "public event "nameSpace" "id.text + Terminate + Wrap""
-        <- (obj)
+        <- obj
     }
 
-    VisitProtocolStatement(context: ProtocolStatementContext) -> (v: Any) {
+    VisitProtocolStatement(context: ProtocolStatementContext -> v: Any) {
         id := Visit(context.id()):(Result)
         obj := ""
         interfaceProtocol := ""
@@ -151,10 +151,10 @@
         obj += templateContract + Wrap + BlockLeft + Wrap
         obj += interfaceProtocol
         obj += BlockRight + Wrap
-        <- (obj)
+        <- obj
     }
 
-    VisitProtocolControlStatement(context: ProtocolControlStatementContext) -> (v: Any) {
+    VisitProtocolControlStatement(context: ProtocolControlStatementContext -> v: Any) {
         id := Visit(context.id()):(Result)
         isMutable := id.isVirtual
         r := Result{}
@@ -169,16 +169,16 @@
             r.text += Visit(item)
         }
         r.text += BlockRight + Wrap
-        <- (r)
+        <- r
     }
 
-    VisitProtocolControlSubStatement(context: ProtocolControlSubStatementContext) -> (v: Any) {
+    VisitProtocolControlSubStatement(context: ProtocolControlSubStatementContext -> v: Any) {
         obj := ""
         obj = GetControlSub(context.id().GetText()).id + Terminate
-        <- (obj)
+        <- obj
     }
 
-    VisitProtocolFunctionStatement(context: ProtocolFunctionStatementContext) -> (v: Any) {
+    VisitProtocolFunctionStatement(context: ProtocolFunctionStatementContext -> v: Any) {
         id := Visit(context.id()):(Result)
         r := Result{}
         ? context.annotationSupport() >< Nil {
@@ -205,6 +205,6 @@
             templateContract = template.Contract
         }
         r.text += Visit(context.parameterClauseIn()) + templateContract + Terminate + Wrap
-        <- (r)
+        <- r
     }
 }

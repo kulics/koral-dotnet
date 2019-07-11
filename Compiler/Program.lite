@@ -8,7 +8,7 @@
 _ReadPath: Str
 _PathLine: Str
 
-Main(args: [:]Str) -> () {
+Main(args: [:]Str->) {
     # 检查系统平台，区分路径字符 #
     os := Environment.OSVersion.Platform
     ? os == PlatformID.Unix | os == PlatformID.MacOSX {
@@ -25,7 +25,7 @@ Main(args: [:]Str) -> () {
     Rd()
 }
 
-Compiled(path: Str) -> () {
+Compiled(path: Str->) {
     # 获取相对路径下所有文件 #
     Files := Directory.GetFiles(path, "*.lite")
     Files @ file {
@@ -58,7 +58,7 @@ Compiled(path: Str) -> () {
             fsWrite.Write(ByteResult, 0, ByteResult.Length)
         } err: Exception {
             Prt(err)
-            <- ()
+            <-
         }
     }
 

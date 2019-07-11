@@ -14,7 +14,7 @@ ErrorListener -> {
 (me:ErrorListener)(super) -> {
     SyntaxError(recognizer: IRecognizer, offendingSymbol: ?IToken, 
     line: Int, charPositionInLine: Int, msg: Str, 
-    e: ?RecognitionException) -> () {
+    e: ?RecognitionException->) {
             super.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
             Prt("------Syntax Error------")
             Prt("File: "me.FileDir"")

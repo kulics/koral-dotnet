@@ -56,16 +56,16 @@ LiteLangVisitor -> {
     setID := ""
 }
 (me:LiteLangVisitor)(base) -> {
-    VisitProgram(context: ProgramContext) -> (v: Any) {
+    VisitProgram(context: ProgramContext -> v: Any) {
         StatementList := context.statement()
         Result := ""
         StatementList @ item {
             Result += VisitStatement(item)
         }
-        <- (Result)
+        <- Result
     }
 
-    VisitId(context: IdContext) -> (v: Any) {
+    VisitId(context: IdContext -> v: Any) {
         r := Result{data = "var"}
         first := Visit(context.GetChild(0)):(Result)
         r.permission = first.permission
@@ -88,10 +88,10 @@ LiteLangVisitor -> {
         } r.text == setID {
             r.text = "value"
         }
-        <- (r)
+        <- r
     }
 
-    VisitIdItem(context: IdItemContext) -> (v: Any) {
+    VisitIdItem(context: IdItemContext -> v: Any) {
         r := Result{data = "var"}
         ? context.typeBasic() >< Nil {
             r.permission = "public"
@@ -114,10 +114,10 @@ LiteLangVisitor -> {
             r.text += context.op.Text
             r.isVirtual = True
         }
-        <- (r)
+        <- r
     }
 
-    VisitBoolExpr(context: BoolExprContext) -> (v: Any) {
+    VisitBoolExpr(context: BoolExprContext -> v: Any) {
         r := Result{}
         ? context.t.Type == TrueLiteral {
             r.data = Bool
@@ -126,14 +126,14 @@ LiteLangVisitor -> {
             r.data = Bool
             r.text = F
         }
-        <- (r)
+        <- r
     }
 
-    VisitAnnotationSupport(context: AnnotationSupportContext) -> (v: Any) {
-        <- (Visit(context.annotation()):(Str))
+    VisitAnnotationSupport(context: AnnotationSupportContext -> v: Any) {
+        <- Visit(context.annotation()):(Str)
     }
 
-    VisitAnnotation(context: AnnotationContext) -> (v: Any) {
+    VisitAnnotation(context: AnnotationContext -> v: Any) {
         obj := ""
         id := ""
         ? context.id() >< Nil {
@@ -142,10 +142,10 @@ LiteLangVisitor -> {
 
         r := Visit(context.annotationList()):(Str)
         obj += "[" id "" r "]"
-        <- (obj)
+        <- obj
     }
 
-    VisitAnnotationList(context: AnnotationListContext) -> (v: Any) {
+    VisitAnnotationList(context: AnnotationListContext -> v: Any) {
         obj := ""
         [0 < context.annotationItem().Length] @ i {
             ? i > 0 {
@@ -154,10 +154,10 @@ LiteLangVisitor -> {
                 obj += Visit(context.annotationItem(i))
             }
         }
-        <- (obj)
+        <- obj
     }
 
-    VisitAnnotationItem(context: AnnotationItemContext) -> (v: Any) {
+    VisitAnnotationItem(context: AnnotationItemContext -> v: Any) {
         obj := ""
         obj += Visit(context.id()):(Result).text
         [0 < context.annotationAssign().Length] @ i {
@@ -170,10 +170,10 @@ LiteLangVisitor -> {
         ? context.annotationAssign().Length > 0 {
             obj += ")"
         }
-        <- (obj)
+        <- obj
     }
 
-    VisitAnnotationAssign(context: AnnotationAssignContext) -> (v: Any) {
+    VisitAnnotationAssign(context: AnnotationAssignContext -> v: Any) {
         obj := ""
         id := ""
         ? context.id() >< Nil {
@@ -181,6 +181,6 @@ LiteLangVisitor -> {
         }
         r := Visit(context.expression()):(Result)
         obj = id + r.text
-        <- (obj)
+        <- obj
     }
 }

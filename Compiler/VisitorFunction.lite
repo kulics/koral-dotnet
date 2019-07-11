@@ -16,7 +16,7 @@ Parameter -> {
 }
 
 (me:LiteLangVisitor) -> {
-    ProcessFunctionSupport(items: [:]FunctionSupportStatementContext) -> (v:Str) {
+    ProcessFunctionSupport(items: [:]FunctionSupportStatementContext -> v:Str) {
         obj := ""
         content := ""
         lazy := []Str{}
@@ -34,12 +34,12 @@ Parameter -> {
             }
         }
         obj += content
-        <- (obj)
+        <- obj
     }
 }
 
 (me:LiteLangVisitor)(base) -> {
-    VisitFunctionStatement(context: FunctionStatementContext) -> (v: Any) {
+    VisitFunctionStatement(context: FunctionStatementContext -> v: Any) {
         id := Visit(context.id()):(Result)
         obj := ""
         # 异步 #
@@ -64,18 +64,18 @@ Parameter -> {
         obj += ""Visit(context.parameterClauseIn())" "templateContract" "Wrap" "BlockLeft" "Wrap""
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += BlockRight + Wrap
-        <- (obj)
+        <- obj
     }
 
-    VisitReturnStatement(context: ReturnStatementContext) -> (v: Any) {
+    VisitReturnStatement(context: ReturnStatementContext -> v: Any) {
         ? context.expressionList() >< Nil {
             r := Visit(context.expressionList()):(Result)
-            <- ("return("r.text")"Terminate""Wrap"")
+            <- "return("r.text")"Terminate""Wrap""
         }
-        <- ("return"Terminate""Wrap"")
+        <- "return"Terminate""Wrap""
     }
 
-    VisitTuple(context: TupleContext) -> (v: Any) {
+    VisitTuple(context: TupleContext -> v: Any) {
         obj := "("
         [0 < context.expression().Length] @ i {
             r := Visit(context.expression(i)):(Result)
@@ -87,10 +87,10 @@ Parameter -> {
         }
         obj += ")"
         result := Result{ data = "var", text = obj }
-        <- (result)
+        <- result
     }
 
-    VisitTupleExpression(context: TupleExpressionContext) -> (v: Any) {
+    VisitTupleExpression(context: TupleExpressionContext -> v: Any) {
         obj := "("
         [0 < context.expression().Length] @ i {
             r := Visit(context.expression(i)):(Result)
@@ -102,10 +102,10 @@ Parameter -> {
         }
         obj += ")"
         result := Result{ data = "var", text = obj }
-        <- (result)
+        <- result
     }
 
-    VisitParameterClauseIn(context: ParameterClauseInContext) -> (v: Any) {
+    VisitParameterClauseIn(context: ParameterClauseInContext -> v: Any) {
         obj := "("
         temp := []Str{}
         [context.parameter().Length - 1 >= 0] @ i {
@@ -121,10 +121,10 @@ Parameter -> {
         }
 
         obj += ")"
-        <- (obj)
+        <- obj
     }
 
-    VisitParameterClauseOut(context: ParameterClauseOutContext) -> (v: Any) {
+    VisitParameterClauseOut(context: ParameterClauseOutContext -> v: Any) {
         obj := ""
         ? context.parameter().Length == 0 {
             obj += "void"
@@ -148,19 +148,19 @@ Parameter -> {
             }
             obj += " )"
         }
-        <- (obj)
+        <- obj
     }
 
-    VisitParameterClauseSelf(context: ParameterClauseSelfContext) -> (v: Any) {
+    VisitParameterClauseSelf(context: ParameterClauseSelfContext -> v: Any) {
         p := Parameter{}
         id := Visit(context.id()):(Result)
         p.id = id.text
         p.permission = id.permission
         p.type = Visit(context.typeType()):(Str)
-        <- (p)
+        <- p
     }
 
-    VisitParameter(context: ParameterContext) -> (v: Any) {
+    VisitParameter(context: ParameterContext -> v: Any) {
         p := Parameter{}
         id := Visit(context.id()):(Result)
         p.id = id.text
@@ -172,6 +172,6 @@ Parameter -> {
             p.value = "=" Visit(context.expression()):(Result).text ""
         }
         p.type = Visit(context.typeType()):(Str)
-        <- (p)
+        <- p
     }
 }

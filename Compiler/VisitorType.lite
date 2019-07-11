@@ -8,23 +8,23 @@
 }
 
 (me:LiteLangVisitor)(base) -> {
-    VisitTypeType(context: TypeTypeContext) -> (v: Any) {
+    VisitTypeType(context: TypeTypeContext -> v: Any) {
         obj := ""
         obj = Visit(context.GetChild(0)):(Str)
-        <- (obj)
+        <- obj
     }
 
-    VisitTypeReference(context: TypeReferenceContext) -> (v: Any) {
+    VisitTypeReference(context: TypeReferenceContext -> v: Any) {
         obj := "ref "
         ? context.typeNullable() >< Nil {
             obj += Visit(context.typeNullable())
         } context.typeNotNull() >< Nil {
             obj += Visit(context.typeNotNull())
         }
-        <- (obj)
+        <- obj
     }
 
-    VisitTypeNullable(context: TypeNullableContext) -> (v: Any) {
+    VisitTypeNullable(context: TypeNullableContext -> v: Any) {
         obj := ""
         obj = Visit(context.typeNotNull()):(Str)
         ? context.typeNotNull().GetChild(0) == :TypeBasicContext &
@@ -32,10 +32,10 @@
             context.typeNotNull().GetChild(0).GetText() >< "Str" {
             obj += "?"
         }
-        <- (obj)
+        <- obj
     }
 
-    VisitTypeTuple(context: TypeTupleContext) -> (v: Any) {
+    VisitTypeTuple(context: TypeTupleContext -> v: Any) {
         obj := ""
         obj += "("
         [0 < context.typeType().Length] @ i {
@@ -46,53 +46,53 @@
             }
         }
         obj += ")"
-        <- (obj)
+        <- obj
     }
 
-    VisitGetType(context: GetTypeContext) -> (v: Any) {
+    VisitGetType(context: GetTypeContext -> v: Any) {
         r := Result{data = "System.Type"}
         ? context.typeType() == Nil {
             r.text = ""Visit(context.expression()):(Result).text".GetType()"
         } _ {
             r.text = "typeof("Visit(context.typeType())")"
         }
-        <- (r)
+        <- r
     }
 
-    VisitTypeArray(context: TypeArrayContext) -> (v: Any) {
+    VisitTypeArray(context: TypeArrayContext -> v: Any) {
         obj := ""
         obj += ""Visit(context.typeType())"[]"
-        <- (obj)
+        <- obj
     }
 
-    VisitTypeList(context: TypeListContext) -> (v: Any) {
+    VisitTypeList(context: TypeListContext -> v: Any) {
         obj := ""
         obj += ""Lst"<"Visit(context.typeType())">"
-        <- (obj)
+        <- obj
     }
 
-    VisitTypeSet(context: TypeSetContext) -> (v: Any) {
+    VisitTypeSet(context: TypeSetContext -> v: Any) {
         obj := ""
         obj += ""Set"<"Visit(context.typeType())">"
-        <- (obj)
+        <- obj
     }
 
-    VisitTypeDictionary(context: TypeDictionaryContext) -> (v: Any) {
+    VisitTypeDictionary(context: TypeDictionaryContext -> v: Any) {
         obj := ""
         obj += ""Dic"<"Visit(context.typeType(0))","Visit(context.typeType(1))">"
-        <- (obj)
+        <- obj
     }
 
-    VisitTypePackage(context: TypePackageContext) -> (v: Any) {
+    VisitTypePackage(context: TypePackageContext -> v: Any) {
         obj := ""
         obj += Visit(context.nameSpaceItem())
         ? context.templateCall() >< Nil {
             obj += Visit(context.templateCall())
         }
-        <- (obj)
+        <- obj
     }
 
-    VisitTypeFunction(context: TypeFunctionContext) -> (v: Any) {
+    VisitTypeFunction(context: TypeFunctionContext -> v: Any) {
         obj := ""
         in := Visit(context.typeFunctionParameterClause(0)):(Str)
         out := Visit(context.typeFunctionParameterClause(1)):(Str)
@@ -128,14 +128,14 @@
                 }
             }
         }
-        <- (obj)
+        <- obj
     }
 
-    VisitTypeAny(context: TypeAnyContext) -> (v: Any) {
-        <- (Any)
+    VisitTypeAny(context: TypeAnyContext -> v: Any) {
+        <- Any
     }
 
-    VisitTypeFunctionParameterClause(context: TypeFunctionParameterClauseContext) -> (v: Any) {
+    VisitTypeFunctionParameterClause(context: TypeFunctionParameterClauseContext -> v: Any) {
         obj := ""
         [0 <= context.typeType().Length - 1] @ i {
             p := Visit(context.typeType(i)):(Str)
@@ -145,10 +145,10 @@
                 obj += ", "p""
             }
         }
-        <- (obj)
+        <- obj
     }
 
-    VisitTypeBasic(context: TypeBasicContext) -> (v: Any) {
+    VisitTypeBasic(context: TypeBasicContext -> v: Any) {
         obj := ""
         context.t.Type ? TypeI8 {
             obj = I8
@@ -185,6 +185,6 @@
         } _ {
             obj = Any
         }
-        <- (obj)
+        <- obj
     }
 }

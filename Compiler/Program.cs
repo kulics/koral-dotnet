@@ -53,7 +53,7 @@ fsWrite.Write(ByteResult, 0, ByteResult.Length);
 catch( Exception err )
 {
 Prt(err);
-return  ; 
+return;
 }
 }}
 var Folders = Directory.GetDirectories(path);

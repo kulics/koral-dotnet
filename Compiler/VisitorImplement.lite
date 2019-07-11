@@ -8,7 +8,7 @@
 }
 
 (me:LiteLangVisitor)(base) -> { 
-    VisitImplementStatement(context: ImplementStatementContext) -> (v: Any) {
+    VisitImplementStatement(context: ImplementStatementContext -> v: Any) {
         Self := Visit(context.parameterClauseSelf()):(Parameter)
         selfID = Self.id
         isVirtual := ""
@@ -23,10 +23,10 @@
         }
         obj += BlockRight + Wrap
         selfID = ""
-        <- (obj)
+        <- obj
     }
 
-    VisitImplementFunctionStatement(context: ImplementFunctionStatementContext) -> (v: Any) {
+    VisitImplementFunctionStatement(context: ImplementFunctionStatementContext -> v: Any) {
         id := Visit(context.id()):(Result)
         isVirtual := ""
         ? id.isVirtual {
@@ -60,10 +60,10 @@
         obj += Visit(context.parameterClauseIn()) + templateContract + Wrap + BlockLeft + Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += BlockRight + Wrap
-        <- (obj)
+        <- obj
     }
 
-    VisitImplementControlStatement(context: ImplementControlStatementContext) -> (v: Any) {
+    VisitImplementControlStatement(context: ImplementControlStatementContext -> v: Any) {
         r1 := Visit(context.id()):(Result)
         isMutable := True # r1.isVirtual #
         isVirtual := ""
@@ -84,10 +84,10 @@
             obj += temp.text
         }
         obj += BlockRight + Wrap
-        <- (obj)
+        <- obj
     }
 
-    VisitOverrideStatement(context: OverrideStatementContext) -> (v: Any) {
+    VisitOverrideStatement(context: OverrideStatementContext -> v: Any) {
         Self := Visit(context.parameterClauseSelf()):(Parameter)
         selfID = Self.id
         superID = Visit(context.id()):(Result).text
@@ -99,10 +99,10 @@
         obj += BlockRight + Wrap
         selfID = ""
         superID = ""
-        <- (obj)
+        <- obj
     }
 
-    VisitOverrideFunctionStatement(context: OverrideFunctionStatementContext) -> (v: Any) {
+    VisitOverrideFunctionStatement(context: OverrideFunctionStatementContext -> v: Any) {
         id := Visit(context.id()):(Result)
         isVirtual := " override "
         obj := ""
@@ -133,10 +133,10 @@
         obj += Visit(context.parameterClauseIn()) + templateContract + Wrap + BlockLeft + Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += BlockRight + Wrap
-        <- (obj)
+        <- obj
     }
 
-    VisitOverrideControlStatement(context: OverrideControlStatementContext) -> (v: Any) {
+    VisitOverrideControlStatement(context: OverrideControlStatementContext -> v: Any) {
         r1 := Visit(context.id()):(Result)
         isMutable := True # r1.isVirtual #
         isVirtual := " override "
@@ -154,6 +154,6 @@
             obj += temp.text
         }
         obj += BlockRight + Wrap
-        <- (obj)
+        <- obj
     }
 }
