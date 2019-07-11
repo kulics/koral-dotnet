@@ -157,12 +157,9 @@ functionSupportStatement:
 
 // 条件判断
 judgeCaseStatement: expression Question (caseStatement)+ end;
-// 缺省条件声明
-caseDefaultStatement: Discard left_brace (functionSupportStatement)* right_brace;
-// 条件声明
-caseExprStatement: (expression| (id)? Colon typeType) left_brace (functionSupportStatement)* right_brace;
 // 判断条件声明
-caseStatement: caseDefaultStatement|caseExprStatement;
+caseStatement: (caseExprStatement)+ left_brace (functionSupportStatement)* right_brace;
+caseExprStatement: Discard | expression | (id)? Colon typeType;
 // 判断
 judgeStatement:
 judgeIfStatement (judgeElseIfStatement)* judgeElseStatement end

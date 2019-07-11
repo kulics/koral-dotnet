@@ -1,6 +1,7 @@
-﻿Compiler/.vs
+Compiler/.vs
 Compiler/bin
 Compiler/obj
 Library/bin
 Library/obj
 Compiler/Compiler.csproj.user
+Library/.vs

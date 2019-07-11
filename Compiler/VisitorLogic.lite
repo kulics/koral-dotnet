@@ -108,35 +108,31 @@ Iterator -> {
         <- (obj)
     }
 
-    VisitCaseDefaultStatement(context: CaseDefaultStatementContext) -> (v: Any) {
-        obj := ""
-        obj += "default:"BlockLeft+Wrap""
-        obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += ""BlockRight"break;"
-        <- (obj)
-    }
-
     VisitCaseExprStatement(context: CaseExprStatementContext) -> (v: Any) {
         obj := ""
-        ? context.typeType() == Nil {
+        ? context.expression() >< Nil  {
             expr := Visit(context.expression()):(Result)
             obj += "case "expr.text" :"Wrap""
-        } _ {
+        } context.typeType() >< Nil {
             id := "it"
             ? context.id() >< Nil {
                 id = Visit(context.id()):(Result).text
             }
             type := Visit(context.typeType()):(Str)
             obj += "case "type" "id" :"Wrap""
+        } _ {
+            obj += "default:"Wrap""
         }
-
-        obj += ""BlockLeft" "ProcessFunctionSupport(context.functionSupportStatement())"" BlockRight" "
-        obj += "break;"
         <- (obj)
     }
 
     VisitCaseStatement(context: CaseStatementContext) -> (v: Any) {
-        obj := Visit(context.GetChild(0)):(Str)
+        obj := ""
+        process := ""BlockLeft" "ProcessFunctionSupport(context.functionSupportStatement())"" BlockRight"break;"
+        context.caseExprStatement() @ item {
+            r := Visit(item):(Str)
+            obj += r + process
+        }
         <- (obj)
     }
 
