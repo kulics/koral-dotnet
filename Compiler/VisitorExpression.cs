@@ -118,6 +118,10 @@ case "%%" :
 r.text=(new System.Text.StringBuilder("").Append(op).Append("(").Append(e1.text).Append(", ").Append(((Result)(e2)).text).Append(")")).to_Str();
 return(r);
 }break;
+case CallContext it :
+{ r.text=e1.text+"."+((Result)(e2)).text;
+return(r);
+}break;
 } 
 r.text=e1.text+op+((Result)(e2)).text;
 }
@@ -128,6 +132,14 @@ var e2 = ((string)(Visit(context.GetChild(1))));
 r.data=e2;
 r.text=(new System.Text.StringBuilder("((").Append(e2).Append(")(").Append(r.text).Append("))")).to_Str();
 }
+else if ( context.GetChild(1).GetType()==typeof(CallExpressionContext) ) {
+var e2 = ((Result)(Visit(context.GetChild(1))));
+r.text=r.text+e2.text;
+} 
+else if ( context.GetChild(1).GetType()==typeof(CallFuncContext) ) {
+var e2 = ((Result)(Visit(context.GetChild(1))));
+r.text=r.text+e2.text;
+} 
 else if ( context.GetChild(1).GetType()==typeof(CallElementContext) ) {
 var e2 = ((Result)(Visit(context.GetChild(1))));
 r.text=r.text+e2.text;
@@ -149,15 +161,22 @@ return(r);
 public  override  object VisitCallExpression( CallExpressionContext context )
 {
 var count = context.ChildCount;
-var r = (new Result());
-if ( count==3 ) {
-var e1 = ((Result)(Visit(context.GetChild(0))));
-var op = Visit(context.GetChild(1));
-var e2 = ((Result)(Visit(context.GetChild(2))));
-r.text=e1.text+op+e2.text;
+var r = ((Result)(Visit(context.id())));
+r.text="."+r.text;
+if ( context.templateCall()!=null ) {
+r.text+=((string)(Visit(context.templateCall())));
 }
-else if ( count==1 ) {
-r=((Result)(Visit(context.GetChild(0))));
+if ( context.callFunc()!=null ) {
+var e2 = ((Result)(Visit(context.callFunc())));
+r.text=r.text+e2.text;
+}
+else if ( context.callElement()!=null ) {
+var e2 = ((Result)(Visit(context.callElement())));
+r.text=r.text+e2.text;
+} 
+else if ( context.callChannel()!=null ) {
+var e2 = ((Result)(Visit(context.callChannel())));
+r.text=r.text+e2.text;
 } 
 return(r);
 }
@@ -374,11 +393,6 @@ return((new System.Text.StringBuilder(".slice(null, ").Append(expr.text).Append(
 public  override  object VisitCallFunc( CallFuncContext context )
 {
 var r = (new Result(){data = "var"});
-var id = ((Result)(Visit(context.id())));
-r.text+=id.text;
-if ( context.templateCall()!=null ) {
-r.text+=Visit(context.templateCall());
-}
 if ( context.tuple()!=null ) {
 r.text+=((Result)(Visit(context.tuple()))).text;
 }

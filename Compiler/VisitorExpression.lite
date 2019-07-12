@@ -115,6 +115,9 @@ DicEle -> {
                 }
                 r.text = ""op"("e1.text", "e2:(Result).text")"
                 <- r
+            } :CallContext {
+                r.text = e1.text + "." + e2:(Result).text
+                <- r
             }
             r.text = e1.text + op + e2:(Result).text
         } count == 2 {
@@ -123,6 +126,12 @@ DicEle -> {
                 e2 := Visit(context.GetChild(1)):(Str)
                 r.data = e2
                 r.text = "(("e2")("r.text"))"
+            } context.GetChild(1).GetType() == ?(:CallExpressionContext) {
+                e2 := Visit(context.GetChild(1)):(Result)
+                r.text = r.text + e2.text
+            } context.GetChild(1).GetType() == ?(:CallFuncContext) {
+                e2 := Visit(context.GetChild(1)):(Result)
+                r.text = r.text + e2.text
             } context.GetChild(1).GetType() == ?(:CallElementContext) {
                 e2 := Visit(context.GetChild(1)):(Result)
                 r.text = r.text + e2.text
@@ -141,14 +150,20 @@ DicEle -> {
 
     VisitCallExpression(context: CallExpressionContext -> v: Any) {
         count := context.ChildCount
-        r := Result{}
-        ? count == 3 {
-            e1 := Visit(context.GetChild(0)):(Result)
-            op := Visit(context.GetChild(1))
-            e2 := Visit(context.GetChild(2)):(Result)
-            r.text = e1.text + op + e2.text
-        } count == 1 {
-            r = Visit(context.GetChild(0)):(Result)
+        r := Visit(context.id()):(Result)
+        r.text = "." + r.text
+        ? context.templateCall() >< Nil {
+            r.text += Visit(context.templateCall()):(Str)
+        }
+        ? context.callFunc() >< Nil {
+            e2 := Visit(context.callFunc()):(Result)
+            r.text = r.text + e2.text
+        } context.callElement() >< Nil {
+            e2 := Visit(context.callElement()):(Result)
+            r.text = r.text + e2.text
+        } context.callChannel() >< Nil {
+            e2 := Visit(context.callChannel()):(Result)
+            r.text = r.text + e2.text
         }
         <- r
     }
@@ -343,11 +358,6 @@ DicEle -> {
 
     VisitCallFunc(context: CallFuncContext -> v: Any) {
         r := Result{data = "var"}
-        id := Visit(context.id()):(Result)
-        r.text += id.text
-        ? context.templateCall() >< Nil {
-            r.text += Visit(context.templateCall())
-        }
         ? context.tuple() >< Nil {
             r.text += Visit(context.tuple()):(Result).text
         } _ {

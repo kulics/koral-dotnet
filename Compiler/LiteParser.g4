@@ -221,9 +221,7 @@ id (templateCall)?
 // 表达式
 expression:
 linq // 联合查询
-| callFunc // 函数调用
 | primaryExpression
-| callChannel //调用通道
 | callNew // 构造类对象
 | callPkg // 新建包
 | getType // 获取类型
@@ -241,8 +239,10 @@ linq // 联合查询
 | expression op=Question // 可空判断
 | expression op=Left_Flow // 异步执行
 | expression typeConversion // 类型转换
+| expression callFunc // 函数调用
+| expression callChannel // 调用通道
 | expression callElement // 访问元素
-| expression call callExpression // 链式调用
+| expression callExpression // 链式调用
 | expression judgeType typeType // 类型判断表达式
 | expression judge expression // 判断型表达式
 | expression add expression // 和型表达式
@@ -251,12 +251,7 @@ linq // 联合查询
 | stringExpression // 字符串插值
 ;
 
-callExpression:
- callFunc // 函数调用
-| callPkg //
-| id // id
-| callExpression call New_Line? callExpression // 链式调用
-;
+callExpression: call New_Line? id (templateCall)? (callFunc|callChannel|callElement)?;
 
 tuple: left_paren (expression (more expression)* )? right_paren; // 元组
 
@@ -272,11 +267,11 @@ annotationItem: id ( left_paren annotationAssign (more annotationAssign)* right_
 
 annotationAssign: (id Equal)? expression ;
 
-callFunc: id (templateCall)? (tuple|lambda); // 函数调用
+callFunc: (tuple|lambda); // 函数调用
 
-callChannel: id op=Question? Left_Brack Left_Arrow Right_Brack;
+callChannel: Left_Brack Left_Arrow Right_Brack; // 通道调用
 
-callElement: Left_Brack (slice | expression) Right_Brack;
+callElement: Left_Brack (slice | expression) Right_Brack; // 元素调用
 
 callPkg: typeType left_brace (pkgAssign|listAssign|setAssign|dictionaryAssign)? right_brace; // 新建包
 
