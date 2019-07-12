@@ -149,7 +149,6 @@ DicEle -> {
     }
 
     VisitCallExpression(context: CallExpressionContext -> v: Any) {
-        count := context.ChildCount
         r := Visit(context.id()):(Result)
         r.text = "." + r.text
         ? context.templateCall() >< Nil {
