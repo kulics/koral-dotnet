@@ -83,9 +83,9 @@ public  override  object VisitLoopCaseStatement( LoopCaseStatementContext contex
 var obj = "";
 var expr = ((Result)(Visit(context.expression())));
 obj+=(new System.Text.StringBuilder("for ( ;").Append(expr.text).Append(" ;)")).to_Str();
-obj+=(new System.Text.StringBuilder("").Append(BlockLeft+Wrap).Append("")).to_Str();
+obj+=BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append(" ").Append(Terminate+Wrap).Append("")).to_Str();
+obj+=BlockRight+Wrap;
 return(obj);
 }
 public  override  object VisitLoopJumpStatement( LoopJumpStatementContext context )

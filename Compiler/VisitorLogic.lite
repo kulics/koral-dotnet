@@ -82,9 +82,9 @@ Iterator -> {
         obj := ""
         expr := Visit(context.expression()):(Result)
         obj += "for ( ;"expr.text" ;)"
-        obj += ""BlockLeft+Wrap""
+        obj += BlockLeft+Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += ""BlockRight" "Terminate+Wrap""
+        obj += BlockRight+Wrap
         <- obj
     }
 
