@@ -247,7 +247,7 @@ Iterator -> {
         ? context.expression() >< Nil {
             obj += " "Visit(context.expression()):(Result).text""
         }
-        <- (obj)
+        <- obj
     }
 
     VisitLinqKeyword(context: LinqKeywordContext -> v: Any) {
