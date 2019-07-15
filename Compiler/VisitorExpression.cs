@@ -193,16 +193,27 @@ return(context.op.Text);
 }
 public  override  object VisitBitwise( BitwiseContext context )
 {
-if ( context.op.Text=="&&" ) {
+return(((string)(this.Visit(context.GetChild(0)))));
+}
+public  override  object VisitBitwiseAnd( BitwiseAndContext context )
+{
 return("&");
 }
-else if ( context.op.Text=="||" ) {
+public  override  object VisitBitwiseOr( BitwiseOrContext context )
+{
 return("|");
-} 
-else if ( context.op.Text=="^^" ) {
+}
+public  override  object VisitBitwiseXor( BitwiseXorContext context )
+{
 return("^");
-} 
-return(context.op.Text);
+}
+public  override  object VisitBitwiseLeftShift( BitwiseLeftShiftContext context )
+{
+return("<<");
+}
+public  override  object VisitBitwiseRightShift( BitwiseRightShiftContext context )
+{
+return(">>");
 }
 public  override  object VisitJudge( JudgeContext context )
 {
@@ -740,7 +751,7 @@ r.data=expr.data;
 r.text="!"+expr.text;
 return(r);
 }
-public  override  object VisitBitwiseNot( BitwiseNotContext context )
+public  override  object VisitBitwiseNotExpression( BitwiseNotExpressionContext context )
 {
 var r = (new Result());
 var expr = ((Result)(Visit(context.expression())));

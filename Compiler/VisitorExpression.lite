@@ -181,14 +181,27 @@ DicEle -> {
     }
 
     VisitBitwise(context: BitwiseContext -> v: Any) {
-        ? context.op.Text == "&&" {
-            <- "&"
-        } context.op.Text == "||" {
-            <- "|"
-        } context.op.Text == "^^" {
-            <- "^"
-        }
-        <- context.op.Text
+        <- me.Visit(context.GetChild(0)):(Str)
+    }
+
+    VisitBitwiseAnd(context: BitwiseAndContext -> v: Any) {
+        <- "&"
+    }
+
+    VisitBitwiseOr(context: BitwiseOrContext -> v: Any) {
+        <- "|"
+    }
+
+    VisitBitwiseXor(context: BitwiseXorContext -> v: Any) {
+        <- "^"
+    }
+
+    VisitBitwiseLeftShift(context: BitwiseLeftShiftContext -> v: Any) {
+        <- "<<"
+    }
+
+    VisitBitwiseRightShift(context: BitwiseRightShiftContext -> v: Any) {
+        <- ">>"
     }
 
     VisitJudge(context: JudgeContext -> v: Any) {
@@ -700,7 +713,7 @@ DicEle -> {
         <- r
     }
 
-    VisitBitwiseNot(context: BitwiseNotContext -> v: Any) {
+    VisitBitwiseNotExpression(context: BitwiseNotExpressionContext -> v: Any) {
         r := Result{}
         expr := Visit(context.expression()):(Result)
         r.data = expr.data

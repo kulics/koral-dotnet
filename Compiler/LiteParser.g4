@@ -234,8 +234,8 @@ linq // 联合查询
 | pkgAnonymous // 匿名包
 | tupleExpression //元组表达式
 | plusMinus // 正负处理
+| bitwiseNotExpression // 位运算取反
 | negate // 取反
-| bitwiseNot // 位运算取反
 | expression op=Bang // 引用判断
 | expression op=Question // 可空判断
 | expression op=Left_Flow // 异步执行
@@ -340,7 +340,7 @@ plusMinus: add expression;
 
 negate: wave expression;
 
-bitwiseNot: Not_Not expression;
+bitwiseNotExpression: bitwiseNot expression;
 
 linq: linqHeadKeyword New_Line? expression Right_Arrow New_Line?  (linqItem)+ k=(LinqSelect|LinqBy) New_Line? expression;
 
@@ -425,7 +425,14 @@ nilExpr: NilLiteral;
 boolExpr: t=TrueLiteral|t=FalseLiteral;
 
 judgeType: op=(Equal_Equal|Not_Equal) Colon;
-bitwise: op=(And_And | Or_Or | Xor_Xor | Left_Left | Right_Right ) (New_Line)?;
+bitwise: (bitwiseAnd | bitwiseOr | bitwiseXor 
+| bitwiseLeftShift | bitwiseRightShift) (New_Line)?;
+bitwiseAnd: And And;
+bitwiseOr: Or Or;
+bitwiseNot: Wave Wave;
+bitwiseXor: Xor Xor;
+bitwiseLeftShift: Less Less;
+bitwiseRightShift: Greater Greater;
 judge: op=(Or | And | Equal_Equal | Not_Equal | Less_Equal | Greater_Equal | Less | Greater) (New_Line)?;
 assign: op=(Equal | Add_Equal | Sub_Equal | Mul_Equal | Div_Equal | Mod_Equal) (New_Line)?;
 add: op=(Add | Sub) (New_Line)?;
