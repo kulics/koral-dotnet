@@ -178,44 +178,6 @@ var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-switch (typ) {
-case I8 :
-{ typ="ubyte";
-}break;
-case I16 :
-{ typ="short";
-}break;
-case I32 :
-{ typ="int";
-}break;
-case I64 :
-{ typ="long";
-}break;
-case U8 :
-{ typ="byte";
-}break;
-case U16 :
-{ typ="ushort";
-}break;
-case U32 :
-{ typ="uint";
-}break;
-case U64 :
-{ typ="ulong";
-}break;
-case F32 :
-{ typ="float";
-}break;
-case F64 :
-{ typ="double";
-}break;
-case Chr :
-{ typ="char";
-}break;
-case Str :
-{ typ="string";
-}break;
-} 
 obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" const ").Append(typ).Append(" ").Append(id.text).Append(" = ").Append(expr.text).Append(" ").Append(Terminate+Wrap).Append("")).to_Str();
 return(obj);
 }
@@ -250,17 +212,21 @@ public  override  object VisitNamespaceControlStatement( NamespaceControlStateme
 var r1 = ((Result)(Visit(context.id())));
 var isMutable = r1.isVirtual;
 var typ = "";
-if ( context.typeType()!=null ) {
 typ=((string)(Visit(context.typeType())));
-}
 var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
 obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text+BlockLeft).Append("")).to_Str();
+if ( context.expression()!=null ) {
+var expr = ((Result)(this.Visit(context.expression())));
+obj+=(new System.Text.StringBuilder("get{return ").Append(expr.text).Append("; }set{").Append(expr.text).Append("=value;}")).to_Str();
+}
+else {
 foreach (var item in context.packageControlSubStatement()){
 var temp = ((Result)(Visit(item)));
 obj+=temp.text;
+}
 }
 obj+=BlockRight+Wrap;
 return(obj);

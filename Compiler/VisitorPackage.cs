@@ -164,8 +164,13 @@ r.permission="public";
 var type = ((string)(Visit(context.typeType())));
 r.text+=type+" "+id.text;
 r.text+=BlockLeft;
+if ( context.protocolControlSubStatement().Length>0 ) {
 foreach (var item in context.protocolControlSubStatement()){
 r.text+=Visit(item);
+}
+}
+else {
+r.text+="get;set;";
 }
 r.text+=BlockRight+Wrap;
 return(r);

@@ -204,31 +204,6 @@ GetControlSub(id: Str -> id: Str, type:Str) {
         ? context.annotationSupport() >< Nil {
             obj += Visit(context.annotationSupport())
         }
-        typ ? I8 {
-            typ = "ubyte"
-        } I16 {
-            typ = "short"
-        } I32 {
-            typ = "int"
-        } I64 {
-            typ = "long"
-        } U8 {
-            typ = "byte"
-        } U16 {
-            typ = "ushort"
-        } U32 {
-            typ = "uint"
-        } U64 {
-            typ = "ulong"
-        } F32 {
-            typ = "float"
-        } F64 {
-            typ = "double"
-        } Chr {
-            typ = "char"
-        } Str {
-            typ = "string"
-        }
         
         obj += ""id.permission" const "typ" "id.text" = "expr.text" "Terminate + Wrap""
         <- obj
@@ -264,18 +239,21 @@ GetControlSub(id: Str -> id: Str, type:Str) {
         r1 := Visit(context.id()):(Result)
         isMutable := r1.isVirtual
         typ := ""
-        ? context.typeType() >< Nil {
-            typ = Visit(context.typeType()):(Str)
-        }
+        typ = Visit(context.typeType()):(Str)
         obj := ""
         ? context.annotationSupport() >< Nil {
             obj += Visit(context.annotationSupport())
         }
 
         obj += ""r1.permission" static "typ" "r1.text + BlockLeft""
-        context.packageControlSubStatement() @ item {
-            temp := Visit(item):(Result)
-            obj += temp.text
+        ? context.expression() >< Nil {
+            expr := me.Visit(context.expression()):(Result)
+            obj += "get{return "expr.text"; }set{"expr.text"=value;}"
+        } _ {
+            context.packageControlSubStatement() @ item {
+                temp := Visit(item):(Result)
+                obj += temp.text
+            }
         }
         obj += BlockRight + Wrap
         <- obj

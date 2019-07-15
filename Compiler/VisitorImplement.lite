@@ -34,11 +34,7 @@
         }
         obj := ""
         # 异步 #
-        ? context.n >< Nil {
-            obj += "protected "
-        } _ {
-            obj += ""id.permission" "
-        }
+        obj += ""id.permission" "
         ? context.t.Type == Right_Flow {
             pout := Visit(context.parameterClauseOut()):(Str)
             ? pout >< "void" {
@@ -71,17 +67,20 @@
             isVirtual = " virtual "
         }
         typ := ""
-        ? context.typeType() >< Nil {
-            typ = Visit(context.typeType()):(Str)
-        }
+        typ = Visit(context.typeType()):(Str)
         obj := ""
         ? context.annotationSupport() >< Nil {
             obj += Visit(context.annotationSupport())
         }
         obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""
-        context.packageControlSubStatement() @ item {
-            temp := Visit(item):(Result)
-            obj += temp.text
+        ? context.expression() >< Nil {
+            expr := me.Visit(context.expression()):(Result)
+            obj += "get{return "expr.text"; }set{"expr.text"=value;}"
+        } _ {
+            context.packageControlSubStatement() @ item {
+                temp := Visit(item):(Result)
+                obj += temp.text
+            }
         }
         obj += BlockRight + Wrap
         <- obj

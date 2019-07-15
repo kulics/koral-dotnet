@@ -35,12 +35,7 @@ if ( id.isVirtual ) {
 isVirtual=" virtual ";
 }
 var obj = "";
-if ( context.n!=null ) {
-obj+="protected ";
-}
-else {
 obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" ")).to_Str();
-}
 if ( context.t.Type==Right_Flow ) {
 var pout = ((string)(Visit(context.parameterClauseOut())));
 if ( pout!="void" ) {
@@ -74,17 +69,21 @@ if ( r1.isVirtual ) {
 isVirtual=" virtual ";
 }
 var typ = "";
-if ( context.typeType()!=null ) {
 typ=((string)(Visit(context.typeType())));
-}
 var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
 obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(isVirtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("").Append(BlockLeft).Append("")).to_Str();
+if ( context.expression()!=null ) {
+var expr = ((Result)(this.Visit(context.expression())));
+obj+=(new System.Text.StringBuilder("get{return ").Append(expr.text).Append("; }set{").Append(expr.text).Append("=value;}")).to_Str();
+}
+else {
 foreach (var item in context.packageControlSubStatement()){
 var temp = ((Result)(Visit(item)));
 obj+=temp.text;
+}
 }
 obj+=BlockRight+Wrap;
 return(obj);

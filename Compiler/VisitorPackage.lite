@@ -165,9 +165,14 @@
         type := Visit(context.typeType()):(Str)
         r.text += type + " " + id.text
         r.text += BlockLeft
-        context.protocolControlSubStatement() @ item {
-            r.text += Visit(item)
+        ? context.protocolControlSubStatement().Length > 0 {
+            context.protocolControlSubStatement() @ item {
+                r.text += Visit(item)
+            }
+        } _ {
+            r.text += "get;set;"
         }
+
         r.text += BlockRight + Wrap
         <- r
     }
