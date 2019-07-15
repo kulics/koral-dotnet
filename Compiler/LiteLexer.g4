@@ -15,6 +15,13 @@ LinqEquals: 'equals';
 LinqAscending: 'ascending';
 LinqDescending: 'descending';
 
+And_And: '&&';
+Or_Or: '||';
+Not_Not: '~~';
+Xor_Xor: '^^';
+Left_Left: '<<';
+Right_Right: '>>';
+
 Pow:    '**';
 Root:   '//';
 Log:    '%%';

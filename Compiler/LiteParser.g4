@@ -235,6 +235,7 @@ linq // 联合查询
 | tupleExpression //元组表达式
 | plusMinus // 正负处理
 | negate // 取反
+| bitwiseNot // 位运算取反
 | expression op=Bang // 引用判断
 | expression op=Question // 可空判断
 | expression op=Left_Flow // 异步执行
@@ -244,6 +245,7 @@ linq // 联合查询
 | expression callElement // 访问元素
 | expression callExpression // 链式调用
 | expression judgeType typeType // 类型判断表达式
+| expression bitwise expression // 位运算表达式
 | expression judge expression // 判断型表达式
 | expression add expression // 和型表达式
 | expression mul expression // 积型表达式
@@ -338,6 +340,8 @@ plusMinus: add expression;
 
 negate: wave expression;
 
+bitwiseNot: Not_Not expression;
+
 linq: linqHeadKeyword New_Line? expression Right_Arrow New_Line?  (linqItem)+ k=(LinqSelect|LinqBy) New_Line? expression;
 
 linqItem: linqKeyword (expression)? Right_Arrow New_Line?;
@@ -421,6 +425,7 @@ nilExpr: NilLiteral;
 boolExpr: t=TrueLiteral|t=FalseLiteral;
 
 judgeType: op=(Equal_Equal|Not_Equal) Colon;
+bitwise: op=(And_And | Or_Or | Xor_Xor | Left_Left | Right_Right ) (New_Line)?;
 judge: op=(Or | And | Equal_Equal | Not_Equal | Less_Equal | Greater_Equal | Less | Greater) (New_Line)?;
 assign: op=(Equal | Add_Equal | Sub_Equal | Mul_Equal | Div_Equal | Mod_Equal) (New_Line)?;
 add: op=(Add | Sub) (New_Line)?;

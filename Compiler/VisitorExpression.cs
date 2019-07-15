@@ -118,10 +118,6 @@ case "%%" :
 r.text=(new System.Text.StringBuilder("").Append(op).Append("(").Append(e1.text).Append(", ").Append(((Result)(e2)).text).Append(")")).to_Str();
 return(r);
 }break;
-case CallContext it :
-{ r.text=e1.text+"."+((Result)(e2)).text;
-return(r);
-}break;
 } 
 r.text=e1.text+op+((Result)(e2)).text;
 }
@@ -160,7 +156,6 @@ return(r);
 }
 public  override  object VisitCallExpression( CallExpressionContext context )
 {
-var count = context.ChildCount;
 var r = ((Result)(Visit(context.id())));
 r.text="."+r.text;
 if ( context.templateCall()!=null ) {
@@ -194,6 +189,19 @@ return(context.op.Text);
 }
 public  override  object VisitJudgeType( JudgeTypeContext context )
 {
+return(context.op.Text);
+}
+public  override  object VisitBitwise( BitwiseContext context )
+{
+if ( context.op.Text=="&&" ) {
+return("&");
+}
+else if ( context.op.Text=="||" ) {
+return("|");
+} 
+else if ( context.op.Text=="^^" ) {
+return("^");
+} 
 return(context.op.Text);
 }
 public  override  object VisitJudge( JudgeContext context )
@@ -730,6 +738,14 @@ var r = (new Result());
 var expr = ((Result)(Visit(context.expression())));
 r.data=expr.data;
 r.text="!"+expr.text;
+return(r);
+}
+public  override  object VisitBitwiseNot( BitwiseNotContext context )
+{
+var r = (new Result());
+var expr = ((Result)(Visit(context.expression())));
+r.data=expr.data;
+r.text="~"+expr.text;
 return(r);
 }
 }

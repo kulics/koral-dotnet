@@ -248,7 +248,7 @@ var obj = ((string)(Visit(context.linqKeyword())));
 if ( context.expression()!=null ) {
 obj+=(new System.Text.StringBuilder(" ").Append(((Result)(Visit(context.expression()))).text).Append("")).to_Str();
 }
-return((obj));
+return(obj);
 }
 public  override  object VisitLinqKeyword( LinqKeywordContext context )
 {

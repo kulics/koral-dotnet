@@ -180,6 +180,17 @@ DicEle -> {
         <- context.op.Text
     }
 
+    VisitBitwise(context: BitwiseContext -> v: Any) {
+        ? context.op.Text == "&&" {
+            <- "&"
+        } context.op.Text == "||" {
+            <- "|"
+        } context.op.Text == "^^" {
+            <- "^"
+        }
+        <- context.op.Text
+    }
+
     VisitJudge(context: JudgeContext -> v: Any) {
         ? context.op.Text == "><" {
             <- "!="
@@ -686,6 +697,14 @@ DicEle -> {
         expr := Visit(context.expression()):(Result)
         r.data = expr.data
         r.text = "!" + expr.text
+        <- r
+    }
+
+    VisitBitwiseNot(context: BitwiseNotContext -> v: Any) {
+        r := Result{}
+        expr := Visit(context.expression()):(Result)
+        r.data = expr.data
+        r.text = "~" + expr.text
         <- r
     }
 }
