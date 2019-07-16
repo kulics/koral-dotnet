@@ -41,7 +41,7 @@ enumSupportStatement: id (Equal (add)? integerExpr)? end;
 // 命名空间变量
 namespaceVariableStatement: (annotationSupport)? id (Colon_Equal expression|Colon typeType (Equal expression)?) end;
 // 命名空间控制
-namespaceControlStatement: (annotationSupport)? left_paren expression? right_paren id Colon typeType
+namespaceControlStatement: (annotationSupport)? id left_paren expression? right_paren Colon typeType
 (left_brace (packageControlSubStatement)+ right_brace)? end;
 // 命名空间常量
 namespaceConstantStatement: (annotationSupport)? id (Colon typeType Colon|Colon_Colon) expression end;
@@ -83,7 +83,7 @@ implementSupportStatement: implementFunctionStatement | implementControlStatemen
 implementFunctionStatement: (annotationSupport)? id (templateDefine)? left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义控制
-implementControlStatement: (annotationSupport)? left_paren expression? right_paren id 
+implementControlStatement: (annotationSupport)? id left_paren expression? right_paren 
  Colon typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
 
 // 重载
@@ -97,7 +97,7 @@ overrideSupportStatement: overrideFunctionStatement | overrideControlStatement |
 overrideFunctionStatement: (annotationSupport)? (n='_')? id (templateDefine)? left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义控制
-overrideControlStatement: (annotationSupport)? (n='_')? left_paren expression? right_paren id 
+overrideControlStatement: (annotationSupport)? (n='_')? id left_paren expression? right_paren
  Colon typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
 
 // 协议
@@ -110,7 +110,7 @@ includeStatement
 |New_Line
 ;
 // 定义控制
-protocolControlStatement: (annotationSupport)? left_paren right_paren id Colon typeType
+protocolControlStatement: (annotationSupport)? id left_paren right_paren Colon typeType
  (left_brace (protocolControlSubStatement)* right_brace)? end;
 // 定义子方法
 protocolControlSubStatement: id;
