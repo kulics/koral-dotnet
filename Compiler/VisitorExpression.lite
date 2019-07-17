@@ -107,11 +107,11 @@ DicEle -> {
                 # todo 如果左右部署number类型，报错 #
                 r.data = F64
                 op ? "**" {
-                    op = "Pow"
+                    op = "pow"
                 } "//" {
-                    op = "Root"
+                    op = "root"
                 } "%%" {
-                    op = "Log"
+                    op = "log"
                 }
                 r.text = ""op"("e1.text", "e2:(Result).text")"
                 <- r
@@ -529,7 +529,7 @@ DicEle -> {
                 result.text += "," + r.text
             }
         }
-        result.data = "list<"type">"
+        result.data = "" Lst "<"type">"
         result.text = "(new "result.data"(){ "result.text" })"
         <- result
     }
@@ -549,7 +549,7 @@ DicEle -> {
                 result.text += "," + r.text
             }
         }
-        result.data = "hashset<"type">"
+        result.data = "" Set "<"type">"
         result.text = "(new "result.data"(){ "result.text" })"
         <- result
     }
@@ -575,7 +575,7 @@ DicEle -> {
             }
         }
         type := key + "," + value
-        result.data = "dictionary<"type">"
+        result.data = "" Dic "<"type">"
         result.text = "(new "result.data"(){ "result.text" })"
         <- result
     }

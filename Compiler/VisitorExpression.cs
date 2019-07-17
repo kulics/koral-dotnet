@@ -106,13 +106,13 @@ case PowContext it :
 { r.data=F64;
 switch (op) {
 case "**" :
-{ op="Pow";
+{ op="pow";
 }break;
 case "//" :
-{ op="Root";
+{ op="root";
 }break;
 case "%%" :
-{ op="Log";
+{ op="log";
 }break;
 } 
 r.text=(new System.Text.StringBuilder("").Append(op).Append("(").Append(e1.text).Append(", ").Append(((Result)(e2)).text).Append(")")).to_str();
@@ -569,7 +569,7 @@ type="object";
 result.text+=","+r.text;
 }
 }
-result.data=(new System.Text.StringBuilder("list<").Append(type).Append(">")).to_str();
+result.data=(new System.Text.StringBuilder("").Append(Lst).Append("<").Append(type).Append(">")).to_str();
 result.text=(new System.Text.StringBuilder("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
 return(result);
 }
@@ -590,7 +590,7 @@ type="object";
 result.text+=","+r.text;
 }
 }
-result.data=(new System.Text.StringBuilder("hashset<").Append(type).Append(">")).to_str();
+result.data=(new System.Text.StringBuilder("").Append(Set).Append("<").Append(type).Append(">")).to_str();
 result.text=(new System.Text.StringBuilder("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
 return(result);
 }
@@ -617,7 +617,7 @@ result.text+=","+r.text;
 }
 }
 var type = key+","+value;
-result.data=(new System.Text.StringBuilder("dictionary<").Append(type).Append(">")).to_str();
+result.data=(new System.Text.StringBuilder("").Append(Dic).Append("<").Append(type).Append(">")).to_str();
 result.text=(new System.Text.StringBuilder("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
 return(result);
 }

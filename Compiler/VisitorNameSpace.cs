@@ -37,7 +37,7 @@ content+=Visit(item);
 }
 obj+=content;
 if ( contentStatic!="" ) {
-obj+=(new System.Text.StringBuilder("public partial class ").Append(ns.name.sub_str(ns.name.last_index_of(".")+1)).Append("_Static")).to_str()+BlockLeft+Wrap+contentStatic+BlockRight+Wrap;
+obj+=(new System.Text.StringBuilder("public partial class ").Append(ns.name.sub_str(ns.name.last_index_of(".")+1)).Append("_static")).to_str()+BlockLeft+Wrap+contentStatic+BlockRight+Wrap;
 }
 obj+=BlockRight+Wrap;
 return(obj);

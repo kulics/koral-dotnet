@@ -8,7 +8,7 @@ namespace Library {
 
     public static partial class Lib {
 
-        public static T[] arrry_of<T>(params T[] item) => item;
+        public static T[] array_of<T>(params T[] item) => item;
 
         public static T[] array<T>(int cap, params T[] item) {
             var arr = new T[cap];
@@ -20,9 +20,7 @@ namespace Library {
 
         public static list<T> list_of<T>(params T[] item) => new list<T>(item);
 
-        public static T def<T>() => default(T);
-
-        public static T @default<T>() => def<T>();
+        public static T empty<T>() => default(T);
 
         public static T to<T>(object it) => (T)it;
 

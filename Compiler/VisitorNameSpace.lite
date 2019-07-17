@@ -63,7 +63,7 @@ GetControlSub(id: str -> id: str, type:str) {
         }
         obj += content
         ? contentStatic >< "" {
-            obj += "public partial class "ns.name.sub_str(ns.name.last_index_of(".") + 1) "_Static" +
+            obj += "public partial class "ns.name.sub_str(ns.name.last_index_of(".") + 1) "_static" +
                 BlockLeft + Wrap + contentStatic + BlockRight + Wrap
         }
         obj += BlockRight + Wrap
