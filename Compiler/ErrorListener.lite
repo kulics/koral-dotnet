@@ -9,18 +9,18 @@
 
 ErrorListener -> {
     :BaseErrorListener
-    FileDir: Str
+    FileDir: str
 } 
 (super)me: ErrorListener -> {
     SyntaxError(recognizer: IRecognizer, offendingSymbol: ?IToken, 
-    line: Int, charPositionInLine: Int, msg: Str, 
+    line: int, charPositionInLine: int, msg: str, 
     e: ?RecognitionException->) {
             super.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
-            Prt("------Syntax Error------")
-            Prt("File: "me.FileDir"")
-            Prt("Line: "line"  Column: "charPositionInLine"")
-            Prt("OffendingSymbol: "offendingSymbol.Text"")
-            Prt("Message: "msg"")
+            print("------Syntax Error------")
+            print("File: "me.FileDir"")
+            print("Line: "line"  Column: "charPositionInLine"")
+            print("OffendingSymbol: "offendingSymbol.Text"")
+            print("Message: "msg"")
         }
     }
 }

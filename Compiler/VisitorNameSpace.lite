@@ -8,11 +8,11 @@
 }
 
 Namespace -> {
-    name: Str
-    imports: Str
+    name: str
+    imports: str
 }
 
-GetControlSub(id: Str -> id: Str, type:Str) {
+GetControlSub(id: str -> id: str, type:str) {
     typ := ""
     id ? "get" {
         id = " get "
@@ -37,13 +37,13 @@ GetControlSub(id: Str -> id: Str, type:Str) {
 }
 
 (base)me: LiteLangVisitor -> {
-    VisitStatement(context: StatementContext -> v: Any) {
+    VisitStatement(context: StatementContext -> v: any) {
         obj := ""
         ns := Visit(context.exportStatement()):(Namespace)
         # import library #
         obj += "using Library;"Wrap"using static Library.Lib;"Wrap""
         obj += ns.imports + Wrap
-        ? context.annotationSupport() >< Nil {
+        ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
         obj += "namespace "ns.name + Wrap + BlockLeft + Wrap""
@@ -63,37 +63,37 @@ GetControlSub(id: Str -> id: Str, type:Str) {
         }
         obj += content
         ? contentStatic >< "" {
-            obj += "public partial class "ns.name.sub_Str(ns.name.last_index_of(".") + 1) "_Static" +
+            obj += "public partial class "ns.name.sub_str(ns.name.last_index_of(".") + 1) "_Static" +
                 BlockLeft + Wrap + contentStatic + BlockRight + Wrap
         }
         obj += BlockRight + Wrap
         <- obj
     }
 
-    VisitExportStatement(context: ExportStatementContext -> v: Any) {
+    VisitExportStatement(context: ExportStatementContext -> v: any) {
         name := context.TextLiteral().GetText()
-        name = name.sub_Str(1, name.len()-2)
+        name = name.sub_str(1, name.len()-2)
         name = name.replace("/", ".")
         obj := Namespace{
             name = name
         }
         context.importStatement() @ item {
-            obj.imports += Visit(item):(Str)
+            obj.imports += Visit(item):(str)
         }
         <- obj
     }
 
-    VisitImportStatement(context: ImportStatementContext -> v: Any) {
+    VisitImportStatement(context: ImportStatementContext -> v: any) {
         obj := ""
-        ? context.annotationSupport() >< Nil {
+        ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
         ns := context.TextLiteral().GetText()
-        ns = ns.sub_Str(1, ns.len()-2)
+        ns = ns.sub_str(1, ns.len()-2)
         ns = ns.replace("/", ".")
-        ? context.call() >< Nil {
+        ? context.call() >< nil {
             obj += "using static " + ns + "." + Visit(context.id()):(Result).text
-        } context.id() >< Nil {
+        } context.id() >< nil {
             obj += "using " + ns + "." + Visit(context.id()):(Result).text
         } _ {
             obj += "using " + ns
@@ -102,7 +102,7 @@ GetControlSub(id: Str -> id: Str, type:Str) {
         <- obj
     }
 
-    VisitNameSpaceItem(context: NameSpaceItemContext -> v: Any) {
+    VisitNameSpaceItem(context: NameSpaceItemContext -> v: any) {
         obj := ""
         [0 < context.id().Length] @ i {
             id := Visit(context.id(i)):(Result)
@@ -115,7 +115,7 @@ GetControlSub(id: Str -> id: Str, type:Str) {
         <- obj
     }
 
-    VisitName(context: NameContext -> v: Any) {
+    VisitName(context: NameContext -> v: any) {
         obj := ""
         [0 < context.id().Length] @ i {
             id := Visit(context.id(i)):(Result)
@@ -128,12 +128,12 @@ GetControlSub(id: Str -> id: Str, type:Str) {
         <- obj
     }
 
-    VisitEnumStatement(context: EnumStatementContext -> v: Any) {
+    VisitEnumStatement(context: EnumStatementContext -> v: any) {
         obj := ""
         id := Visit(context.id()):(Result)
         header := ""
-        typ := Visit(context.typeType()):(Str)
-        ? context.annotationSupport() >< Nil {
+        typ := Visit(context.typeType()):(str)
+        ? context.annotationSupport() >< nil {
             header += Visit(context.annotationSupport())
         }
         header += id.permission + " enum " + id.text + ":" + typ
@@ -146,27 +146,27 @@ GetControlSub(id: Str -> id: Str, type:Str) {
         <- obj
     }
 
-    VisitEnumSupportStatement(context: EnumSupportStatementContext -> v: Any) {
+    VisitEnumSupportStatement(context: EnumSupportStatementContext -> v: any) {
         id := Visit(context.id()):(Result)
-        ? context.integerExpr() >< Nil {
+        ? context.integerExpr() >< nil {
             op := ""
-            ? context.add() >< Nil {
-                op = Visit(context.add()):(Str)
+            ? context.add() >< nil {
+                op = Visit(context.add()):(str)
             }
             id.text += " = " + op + Visit(context.integerExpr())
         }
         <- id.text + ","
     }
 
-    VisitNamespaceFunctionStatement(context: NamespaceFunctionStatementContext -> v: Any) {
+    VisitNamespaceFunctionStatement(context: NamespaceFunctionStatementContext -> v: any) {
         id := Visit(context.id()):(Result)
         obj := ""
-        ? context.annotationSupport() >< Nil {
+        ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
         # 异步 #
         ? context.t.Type == Right_Flow {
-            pout := Visit(context.parameterClauseOut()):(Str)
+            pout := Visit(context.parameterClauseOut()):(str)
             ? pout >< "void" {
                 pout = ""Task"<"pout">"
             } _ {
@@ -179,7 +179,7 @@ GetControlSub(id: Str -> id: Str, type:Str) {
 
         # 泛型 #
         templateContract := ""
-        ? context.templateDefine() >< Nil {
+        ? context.templateDefine() >< nil {
             template := Visit(context.templateDefine()):(TemplateItem)
             obj += template.Template
             templateContract = template.Contract
@@ -190,18 +190,18 @@ GetControlSub(id: Str -> id: Str, type:Str) {
         <- obj
     }
 
-    VisitNamespaceConstantStatement(context: NamespaceConstantStatementContext -> v: Any) {
+    VisitNamespaceConstantStatement(context: NamespaceConstantStatementContext -> v: any) {
         id := Visit(context.id()):(Result)
         expr := Visit(context.expression()):(Result)
         typ := ""
-        ? context.typeType() >< Nil {
-            typ = Visit(context.typeType()):(Str)
+        ? context.typeType() >< nil {
+            typ = Visit(context.typeType()):(str)
         } _ {
-            typ = expr.data:(Str)
+            typ = expr.data:(str)
         }
 
         obj := ""
-        ? context.annotationSupport() >< Nil {
+        ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
         
@@ -209,25 +209,25 @@ GetControlSub(id: Str -> id: Str, type:Str) {
         <- obj
     }
 
-    VisitNamespaceVariableStatement(context: NamespaceVariableStatementContext -> v: Any) {
+    VisitNamespaceVariableStatement(context: NamespaceVariableStatementContext -> v: any) {
         r1 := Visit(context.id()):(Result)
         isMutable := r1.isVirtual
         typ := ""
-        r2: Result = Nil
-        ? context.expression() >< Nil {
+        r2: Result = nil
+        ? context.expression() >< nil {
             r2 = Visit(context.expression()):(Result)
-            typ = r2.data:(Str)
+            typ = r2.data:(str)
         }
-        ? context.typeType() >< Nil {
-            typ = Visit(context.typeType()):(Str)
+        ? context.typeType() >< nil {
+            typ = Visit(context.typeType()):(str)
         }
         obj := ""
-        ? context.annotationSupport() >< Nil {
+        ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
 
         obj += ""r1.permission" static "typ" "r1.text""
-        ? r2 >< Nil {
+        ? r2 >< nil {
             obj += " = "r2.text" "Terminate+Wrap""
         } _ {
             obj += Terminate + Wrap
@@ -235,18 +235,18 @@ GetControlSub(id: Str -> id: Str, type:Str) {
         <- obj
     }
 
-    VisitNamespaceControlStatement(context: NamespaceControlStatementContext -> v: Any) {
+    VisitNamespaceControlStatement(context: NamespaceControlStatementContext -> v: any) {
         r1 := Visit(context.id()):(Result)
         isMutable := r1.isVirtual
         typ := ""
-        typ = Visit(context.typeType()):(Str)
+        typ = Visit(context.typeType()):(str)
         obj := ""
-        ? context.annotationSupport() >< Nil {
+        ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
 
         obj += ""r1.permission" static "typ" "r1.text + BlockLeft""
-        ? context.expression() >< Nil {
+        ? context.expression() >< nil {
             expr := me.Visit(context.expression()):(Result)
             obj += "get{return "expr.text"; }set{"expr.text"=value;}"
         } _ {

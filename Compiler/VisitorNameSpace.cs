@@ -18,12 +18,12 @@ public  override  object VisitStatement( StatementContext context )
 {
 var obj = "";
 var ns = ((Namespace)(Visit(context.exportStatement())));
-obj+=(new System.Text.StringBuilder("using Library;").Append(Wrap).Append("using static Library.Lib;").Append(Wrap).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("using Library;").Append(Wrap).Append("using static Library.Lib;").Append(Wrap).Append("")).to_str();
 obj+=ns.imports+Wrap;
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-obj+=(new System.Text.StringBuilder("namespace ").Append(ns.name+Wrap+BlockLeft+Wrap).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("namespace ").Append(ns.name+Wrap+BlockLeft+Wrap).Append("")).to_str();
 var content = "";
 var contentStatic = "";
 foreach (var item in context.namespaceSupportStatement()){
@@ -37,7 +37,7 @@ content+=Visit(item);
 }
 obj+=content;
 if ( contentStatic!="" ) {
-obj+=(new System.Text.StringBuilder("public partial class ").Append(ns.name.sub_Str(ns.name.last_index_of(".")+1)).Append("_Static")).to_Str()+BlockLeft+Wrap+contentStatic+BlockRight+Wrap;
+obj+=(new System.Text.StringBuilder("public partial class ").Append(ns.name.sub_str(ns.name.last_index_of(".")+1)).Append("_Static")).to_str()+BlockLeft+Wrap+contentStatic+BlockRight+Wrap;
 }
 obj+=BlockRight+Wrap;
 return(obj);
@@ -45,7 +45,7 @@ return(obj);
 public  override  object VisitExportStatement( ExportStatementContext context )
 {
 var name = context.TextLiteral().GetText();
-name=name.sub_Str(1, name.len()-2);
+name=name.sub_str(1, name.len()-2);
 name=name.replace("/", ".");
 var obj = (new Namespace(){name = name});
 foreach (var item in context.importStatement()){
@@ -60,7 +60,7 @@ if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
 var ns = context.TextLiteral().GetText();
-ns=ns.sub_Str(1, ns.len()-2);
+ns=ns.sub_str(1, ns.len()-2);
 ns=ns.replace("/", ".");
 if ( context.call()!=null ) {
 obj+="using static "+ns+"."+((Result)(Visit(context.id()))).text;
@@ -77,7 +77,7 @@ return(obj);
 public  override  object VisitNameSpaceItem( NameSpaceItemContext context )
 {
 var obj = "";
-foreach (var i in Range(0,context.id().Length,1,true,false)){
+foreach (var i in range(0,context.id().Length,1,true,false)){
 var id = ((Result)(Visit(context.id(i))));
 if ( i==0 ) {
 obj+=""+id.text;
@@ -91,7 +91,7 @@ return(obj);
 public  override  object VisitName( NameContext context )
 {
 var obj = "";
-foreach (var i in Range(0,context.id().Length,1,true,false)){
+foreach (var i in range(0,context.id().Length,1,true,false)){
 var id = ((Result)(Visit(context.id(i))));
 if ( i==0 ) {
 obj+=""+id.text;
@@ -113,7 +113,7 @@ header+=Visit(context.annotationSupport());
 }
 header+=id.permission+" enum "+id.text+":"+typ;
 header+=Wrap+BlockLeft+Wrap;
-foreach (var i in Range(0,context.enumSupportStatement().Length,1,true,false)){
+foreach (var i in range(0,context.enumSupportStatement().Length,1,true,false)){
 obj+=Visit(context.enumSupportStatement(i));
 }
 obj+=BlockRight+Terminate+Wrap;
@@ -142,15 +142,15 @@ obj+=Visit(context.annotationSupport());
 if ( context.t.Type==Right_Flow ) {
 var pout = ((string)(Visit(context.parameterClauseOut())));
 if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_Str();
+pout=(new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
 }
 else {
 pout=Task;
 }
-obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" async static ").Append(pout).Append(" ").Append(id.text).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" async static ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
 }
 else {
-obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" static ").Append(Visit(context.parameterClauseOut())).Append(" ").Append(id.text).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" static ").Append(Visit(context.parameterClauseOut())).Append(" ").Append(id.text).Append("")).to_str();
 }
 var templateContract = "";
 if ( context.templateDefine()!=null ) {
@@ -178,7 +178,7 @@ var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" const ").Append(typ).Append(" ").Append(id.text).Append(" = ").Append(expr.text).Append(" ").Append(Terminate+Wrap).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" const ").Append(typ).Append(" ").Append(id.text).Append(" = ").Append(expr.text).Append(" ").Append(Terminate+Wrap).Append("")).to_str();
 return(obj);
 }
 public  override  object VisitNamespaceVariableStatement( NamespaceVariableStatementContext context )
@@ -198,9 +198,9 @@ var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append("")).to_str();
 if ( r2!=null ) {
-obj+=(new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate+Wrap).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate+Wrap).Append("")).to_str();
 }
 else {
 obj+=Terminate+Wrap;
@@ -217,10 +217,10 @@ var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text+BlockLeft).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text+BlockLeft).Append("")).to_str();
 if ( context.expression()!=null ) {
 var expr = ((Result)(this.Visit(context.expression())));
-obj+=(new System.Text.StringBuilder("get{return ").Append(expr.text).Append("; }set{").Append(expr.text).Append("=value;}")).to_Str();
+obj+=(new System.Text.StringBuilder("get{return ").Append(expr.text).Append("; }set{").Append(expr.text).Append("=value;}")).to_str();
 }
 else {
 foreach (var item in context.packageControlSubStatement()){

@@ -39,13 +39,13 @@ r.permission=first.permission;
 r.text=first.text;
 r.isVirtual=first.isVirtual;
 if ( context.ChildCount>=2 ) {
-foreach (var i in Range(1,context.ChildCount,1,true,false)){
+foreach (var i in range(1,context.ChildCount,1,true,false)){
 var other = ((Result)(Visit(context.GetChild(i))));
-r.text+=(new System.Text.StringBuilder("_").Append(other.text).Append("")).to_Str();
+r.text+=(new System.Text.StringBuilder("_").Append(other.text).Append("")).to_str();
 }
 }
 if ( keywords.Exists((t)=>t==r.text) ) {
-r.text=(new System.Text.StringBuilder("@").Append(r.text).Append("")).to_Str();
+r.text=(new System.Text.StringBuilder("@").Append(r.text).Append("")).to_str();
 }
 if ( r.text==selfID ) {
 r.text="this";
@@ -110,18 +110,18 @@ public  override  object VisitAnnotation( AnnotationContext context )
 var obj = "";
 var id = "";
 if ( context.id()!=null ) {
-id=(new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).text).Append(":")).to_Str();
+id=(new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).text).Append(":")).to_str();
 }
 var r = ((string)(Visit(context.annotationList())));
-obj+=(new System.Text.StringBuilder("[").Append(id).Append("").Append(r).Append("]")).to_Str();
+obj+=(new System.Text.StringBuilder("[").Append(id).Append("").Append(r).Append("]")).to_str();
 return(obj);
 }
 public  override  object VisitAnnotationList( AnnotationListContext context )
 {
 var obj = "";
-foreach (var i in Range(0,context.annotationItem().Length,1,true,false)){
+foreach (var i in range(0,context.annotationItem().Length,1,true,false)){
 if ( i>0 ) {
-obj+=(new System.Text.StringBuilder(",").Append(Visit(context.annotationItem(i))).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder(",").Append(Visit(context.annotationItem(i))).Append("")).to_str();
 }
 else {
 obj+=Visit(context.annotationItem(i));
@@ -133,12 +133,12 @@ public  override  object VisitAnnotationItem( AnnotationItemContext context )
 {
 var obj = "";
 obj+=((Result)(Visit(context.id()))).text;
-foreach (var i in Range(0,context.annotationAssign().Length,1,true,false)){
+foreach (var i in range(0,context.annotationAssign().Length,1,true,false)){
 if ( i>0 ) {
-obj+=(new System.Text.StringBuilder(",").Append(Visit(context.annotationAssign(i))).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder(",").Append(Visit(context.annotationAssign(i))).Append("")).to_str();
 }
 else {
-obj+=(new System.Text.StringBuilder("(").Append(Visit(context.annotationAssign(i))).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("(").Append(Visit(context.annotationAssign(i))).Append("")).to_str();
 }
 }
 if ( context.annotationAssign().Length>0 ) {
@@ -151,7 +151,7 @@ public  override  object VisitAnnotationAssign( AnnotationAssignContext context 
 var obj = "";
 var id = "";
 if ( context.id()!=null ) {
-id=(new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).text).Append("=")).to_Str();
+id=(new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).text).Append("=")).to_str();
 }
 var r = ((Result)(Visit(context.expression())));
 obj=id+r.text;
@@ -179,9 +179,9 @@ public const string T = "true" ;
 public const string F = "false" ;
 public const string Chr = "char" ;
 public const string Str = "string" ;
-public const string Lst = "Lst" ;
-public const string Set = "Set" ;
-public const string Dic = "Dic" ;
+public const string Lst = "list" ;
+public const string Set = "hashset" ;
+public const string Dic = "dictionary" ;
 public const string BlockLeft = "{" ;
 public const string BlockRight = "}" ;
 public const string Task = "System.Threading.Tasks.Task" ;

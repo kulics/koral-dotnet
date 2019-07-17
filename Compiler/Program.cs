@@ -22,8 +22,8 @@ _ReadPath=".\\";
 _PathLine="\\";
 }
 Compiled(_ReadPath);
-Prt("Completed");
-Rd();
+print("Completed");
+read();
 }
 public static void Compiled( string path )
 {
@@ -32,7 +32,7 @@ foreach (var file in Files){
 using (var fsRead = (new FileStream(file, FileMode.Open))) { 
 try {
 var FSLength = ((int)(fsRead.Length));
-var ByteBlock = Array<byte>(FSLength);
+var ByteBlock = array<byte>(FSLength);
 var r = fsRead.Read(ByteBlock, 0, ByteBlock.Length);
 var Input = Encoding.UTF8.GetString(ByteBlock);
 Input.Replace("\r", "");
@@ -46,13 +46,13 @@ Parser.AddErrorListener((new ErrorListener(){FileDir = file}));
 var AST = Parser.program();
 var Visitor = (new LiteLangVisitor());
 var Result = Visitor.Visit(AST);
-var ByteResult = Encoding.UTF8.GetBytes(Result.to_Str());
-using (var fsWrite = (new FileStream(_ReadPath+file.sub_Str(0, file.Length-5)+".cs", FileMode.Create))) { 
+var ByteResult = Encoding.UTF8.GetBytes(Result.to_str());
+using (var fsWrite = (new FileStream(_ReadPath+file.sub_str(0, file.Length-5)+".cs", FileMode.Create))) { 
 fsWrite.Write(ByteResult, 0, ByteResult.Length);
 }}
 catch( Exception err )
 {
-Prt(err);
+print(err);
 return;
 }
 }}

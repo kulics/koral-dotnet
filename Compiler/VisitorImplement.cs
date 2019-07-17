@@ -19,7 +19,7 @@ var extends = "";
 if ( context.typeType()!=null ) {
 extends+=":"+Visit(context.typeType());
 }
-obj+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type+extends+BlockLeft+Wrap).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type+extends+BlockLeft+Wrap).Append("")).to_str();
 foreach (var item in context.implementSupportStatement()){
 obj+=Visit(item);
 }
@@ -35,19 +35,19 @@ if ( id.isVirtual ) {
 isVirtual=" virtual ";
 }
 var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" ")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" ")).to_str();
 if ( context.t.Type==Right_Flow ) {
 var pout = ((string)(Visit(context.parameterClauseOut())));
 if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_Str();
+pout=(new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
 }
 else {
 pout=Task;
 }
-obj+=(new System.Text.StringBuilder("").Append(isVirtual).Append(" async ").Append(pout).Append(" ").Append(id.text).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(isVirtual).Append(" async ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
 }
 else {
-obj+=(new System.Text.StringBuilder("").Append(isVirtual).Append(" ").Append(Visit(context.parameterClauseOut())).Append(" ").Append(id.text).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(isVirtual).Append(" ").Append(Visit(context.parameterClauseOut())).Append(" ").Append(id.text).Append("")).to_str();
 }
 var templateContract = "";
 if ( context.templateDefine()!=null ) {
@@ -74,10 +74,10 @@ var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(isVirtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("").Append(BlockLeft).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(isVirtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("").Append(BlockLeft).Append("")).to_str();
 if ( context.expression()!=null ) {
 var expr = ((Result)(this.Visit(context.expression())));
-obj+=(new System.Text.StringBuilder("get{return ").Append(expr.text).Append("; }set{").Append(expr.text).Append("=value;}")).to_Str();
+obj+=(new System.Text.StringBuilder("get{return ").Append(expr.text).Append("; }set{").Append(expr.text).Append("=value;}")).to_str();
 }
 else {
 foreach (var item in context.packageControlSubStatement()){
@@ -94,7 +94,7 @@ var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
 selfID=Self.id;
 superID=((Result)(Visit(context.id()))).text;
 var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type).Append("").Append(BlockLeft+Wrap).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type).Append("").Append(BlockLeft+Wrap).Append("")).to_str();
 foreach (var item in context.overrideSupportStatement()){
 obj+=Visit(item);
 }
@@ -112,20 +112,20 @@ if ( context.n!=null ) {
 obj+="protected ";
 }
 else {
-obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" ")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" ")).to_str();
 }
 if ( context.t.Type==Right_Flow ) {
 var pout = ((string)(Visit(context.parameterClauseOut())));
 if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_Str();
+pout=(new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
 }
 else {
 pout=Task;
 }
-obj+=(new System.Text.StringBuilder("").Append(isVirtual).Append(" async ").Append(pout).Append(" ").Append(id.text).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(isVirtual).Append(" async ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
 }
 else {
-obj+=(new System.Text.StringBuilder("").Append(isVirtual).Append(" ").Append(Visit(context.parameterClauseOut())).Append(" ").Append(id.text).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(isVirtual).Append(" ").Append(Visit(context.parameterClauseOut())).Append(" ").Append(id.text).Append("")).to_str();
 }
 var templateContract = "";
 if ( context.templateDefine()!=null ) {
@@ -151,7 +151,7 @@ var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(isVirtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("").Append(BlockLeft).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(isVirtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("").Append(BlockLeft).Append("")).to_str();
 foreach (var item in context.packageControlSubStatement()){
 var temp = ((Result)(Visit(item)));
 obj+=temp.text;

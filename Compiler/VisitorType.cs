@@ -30,7 +30,7 @@ public  override  object VisitTypeNullable( TypeNullableContext context )
 {
 var obj = "";
 obj=((string)(Visit(context.typeNotNull())));
-if ( (context.typeNotNull().GetChild(0) is TypeBasicContext)&&context.typeNotNull().GetChild(0).GetText()!="Any"&&context.typeNotNull().GetChild(0).GetText()!="Str" ) {
+if ( (context.typeNotNull().GetChild(0) is TypeBasicContext)&&context.typeNotNull().GetChild(0).GetText()!="any"&&context.typeNotNull().GetChild(0).GetText()!="str" ) {
 obj+="?";
 }
 return(obj);
@@ -39,12 +39,12 @@ public  override  object VisitTypeTuple( TypeTupleContext context )
 {
 var obj = "";
 obj+="(";
-foreach (var i in Range(0,context.typeType().Length,1,true,false)){
+foreach (var i in range(0,context.typeType().Length,1,true,false)){
 if ( i==0 ) {
 obj+=Visit(context.typeType(i));
 }
 else {
-obj+=(new System.Text.StringBuilder(",").Append(Visit(context.typeType(i))).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder(",").Append(Visit(context.typeType(i))).Append("")).to_str();
 }
 }
 obj+=")";
@@ -54,35 +54,35 @@ public  override  object VisitGetType( GetTypeContext context )
 {
 var r = (new Result(){data = "System.Type"});
 if ( context.typeType()==null ) {
-r.text=(new System.Text.StringBuilder("").Append(((Result)(Visit(context.expression()))).text).Append(".GetType()")).to_Str();
+r.text=(new System.Text.StringBuilder("").Append(((Result)(Visit(context.expression()))).text).Append(".GetType()")).to_str();
 }
 else {
-r.text=(new System.Text.StringBuilder("typeof(").Append(Visit(context.typeType())).Append(")")).to_Str();
+r.text=(new System.Text.StringBuilder("typeof(").Append(Visit(context.typeType())).Append(")")).to_str();
 }
 return(r);
 }
 public  override  object VisitTypeArray( TypeArrayContext context )
 {
 var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(Visit(context.typeType())).Append("[]")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(Visit(context.typeType())).Append("[]")).to_str();
 return(obj);
 }
 public  override  object VisitTypeList( TypeListContext context )
 {
 var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(Lst).Append("<").Append(Visit(context.typeType())).Append(">")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(Lst).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
 return(obj);
 }
 public  override  object VisitTypeSet( TypeSetContext context )
 {
 var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(Set).Append("<").Append(Visit(context.typeType())).Append(">")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(Set).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
 return(obj);
 }
 public  override  object VisitTypeDictionary( TypeDictionaryContext context )
 {
 var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(Dic).Append("<").Append(Visit(context.typeType(0))).Append(",").Append(Visit(context.typeType(1))).Append(">")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(Dic).Append("<").Append(Visit(context.typeType(0))).Append(",").Append(Visit(context.typeType(1))).Append(">")).to_str();
 return(obj);
 }
 public  override  object VisitTypePackage( TypePackageContext context )
@@ -105,36 +105,36 @@ if ( @in.Length==0 ) {
 obj="Action";
 }
 else {
-obj=(new System.Text.StringBuilder("Action<").Append(@in).Append(">")).to_Str();
+obj=(new System.Text.StringBuilder("Action<").Append(@in).Append(">")).to_str();
 }
 }
 else {
 if ( @out.first_index_of(",")>=0 ) {
-@out=(new System.Text.StringBuilder("(").Append(@out).Append(")")).to_Str();
+@out=(new System.Text.StringBuilder("(").Append(@out).Append(")")).to_str();
 }
 if ( @in.Length==0 ) {
-obj=(new System.Text.StringBuilder("Func<").Append(@out).Append(">")).to_Str();
+obj=(new System.Text.StringBuilder("Func<").Append(@out).Append(">")).to_str();
 }
 else {
-obj=(new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(@out).Append(">")).to_Str();
+obj=(new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(@out).Append(">")).to_str();
 }
 }
 }
 else {
 if ( @out.Length==0 ) {
 if ( @in.Length==0 ) {
-obj=(new System.Text.StringBuilder("Func<").Append(Task).Append(">")).to_Str();
+obj=(new System.Text.StringBuilder("Func<").Append(Task).Append(">")).to_str();
 }
 else {
-obj=(new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(Task).Append(">")).to_Str();
+obj=(new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(Task).Append(">")).to_str();
 }
 }
 else {
 if ( @in.Length==0 ) {
-obj=(new System.Text.StringBuilder("Func<").Append(Task).Append("<").Append(@out).Append(">>")).to_Str();
+obj=(new System.Text.StringBuilder("Func<").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
 }
 else {
-obj=(new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).to_Str();
+obj=(new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
 }
 }
 }
@@ -147,13 +147,13 @@ return(Any);
 public  override  object VisitTypeFunctionParameterClause( TypeFunctionParameterClauseContext context )
 {
 var obj = "";
-foreach (var i in Range(0,context.typeType().Length-1,1,true,true)){
+foreach (var i in range(0,context.typeType().Length-1,1,true,true)){
 var p = ((string)(Visit(context.typeType(i))));
 if ( i==0 ) {
 obj+=p;
 }
 else {
-obj+=(new System.Text.StringBuilder(", ").Append(p).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder(", ").Append(p).Append("")).to_str();
 }
 }
 return(obj);

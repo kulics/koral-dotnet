@@ -36,7 +36,7 @@ var header = "";
 if ( context.annotationSupport()!=null ) {
 header+=Visit(context.annotationSupport());
 }
-header+=(new System.Text.StringBuilder("").Append(id.permission).Append(" partial class ").Append(id.text).Append("")).to_Str();
+header+=(new System.Text.StringBuilder("").Append(id.permission).Append(" partial class ").Append(id.text).Append("")).to_str();
 var template = "";
 var templateContract = "";
 if ( context.templateDefine()!=null ) {
@@ -72,9 +72,9 @@ var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("")).to_str();
 if ( r2!=null ) {
-obj+=(new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate).Append(" ").Append(Wrap).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate).Append(" ").Append(Wrap).Append("")).to_str();
 }
 else {
 obj+=Terminate+Wrap;
@@ -108,11 +108,11 @@ public  override  object VisitPackageNewStatement( PackageNewStatementContext co
 var text = "";
 var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
 selfID=Self.id;
-text+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type).Append("").Append(BlockLeft+Wrap).Append("")).to_Str();
-text+=(new System.Text.StringBuilder("public ").Append(Self.type).Append(" ")).to_Str();
+text+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type).Append("").Append(BlockLeft+Wrap).Append("")).to_str();
+text+=(new System.Text.StringBuilder("public ").Append(Self.type).Append(" ")).to_str();
 text+=((string)(Visit(context.parameterClauseIn())));
 if ( context.expressionList()!=null ) {
-text+=(new System.Text.StringBuilder(":base(").Append(((Result)(Visit(context.expressionList()))).text).Append(")")).to_Str();
+text+=(new System.Text.StringBuilder(":base(").Append(((Result)(Visit(context.expressionList()))).text).Append(")")).to_str();
 }
 text+=BlockLeft+ProcessFunctionSupport(context.functionSupportStatement())+BlockRight+Wrap;
 text+=BlockRight+Wrap;
@@ -124,7 +124,7 @@ public  override  object VisitPackageEventStatement( PackageEventStatementContex
 var obj = "";
 var id = ((Result)(Visit(context.id())));
 var nameSpace = Visit(context.nameSpaceItem());
-obj+=(new System.Text.StringBuilder("public event ").Append(nameSpace).Append(" ").Append(id.text+Terminate+Wrap).Append("")).to_Str();
+obj+=(new System.Text.StringBuilder("public event ").Append(nameSpace).Append(" ").Append(id.text+Terminate+Wrap).Append("")).to_str();
 return(obj);
 }
 public  override  object VisitProtocolStatement( ProtocolStatementContext context )
@@ -192,7 +192,7 @@ r.permission="public";
 if ( context.t.Type==Right_Flow ) {
 var pout = ((string)(Visit(context.parameterClauseOut())));
 if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_Str();
+pout=(new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
 }
 else {
 pout=Task;

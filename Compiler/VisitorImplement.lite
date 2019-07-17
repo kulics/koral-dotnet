@@ -8,13 +8,13 @@
 }
 
 (base)me: LiteLangVisitor -> { 
-    VisitImplementStatement(context: ImplementStatementContext -> v: Any) {
+    VisitImplementStatement(context: ImplementStatementContext -> v: any) {
         Self := Visit(context.parameterClauseSelf()):(Parameter)
         selfID = Self.id
         isVirtual := ""
         obj := ""
         extends := ""
-        ? context.typeType() >< Nil {
+        ? context.typeType() >< nil {
             extends += ":" + Visit(context.typeType())
         }
         obj += ""Self.permission" partial class "Self.type + extends + BlockLeft + Wrap""
@@ -26,7 +26,7 @@
         <- obj
     }
 
-    VisitImplementFunctionStatement(context: ImplementFunctionStatementContext -> v: Any) {
+    VisitImplementFunctionStatement(context: ImplementFunctionStatementContext -> v: any) {
         id := Visit(context.id()):(Result)
         isVirtual := ""
         ? id.isVirtual {
@@ -36,7 +36,7 @@
         # 异步 #
         obj += ""id.permission" "
         ? context.t.Type == Right_Flow {
-            pout := Visit(context.parameterClauseOut()):(Str)
+            pout := Visit(context.parameterClauseOut()):(str)
             ? pout >< "void" {
                 pout = ""Task"<"pout">"
             } _ {
@@ -48,7 +48,7 @@
         }
         # 泛型 #
         templateContract := ""
-        ? context.templateDefine() >< Nil {
+        ? context.templateDefine() >< nil {
             template := Visit(context.templateDefine()):(TemplateItem)
             obj += template.Template
             templateContract = template.Contract
@@ -59,21 +59,21 @@
         <- obj
     }
 
-    VisitImplementControlStatement(context: ImplementControlStatementContext -> v: Any) {
+    VisitImplementControlStatement(context: ImplementControlStatementContext -> v: any) {
         r1 := Visit(context.id()):(Result)
-        isMutable := True # r1.isVirtual #
+        isMutable := true # r1.isVirtual #
         isVirtual := ""
         ? r1.isVirtual {
             isVirtual = " virtual "
         }
         typ := ""
-        typ = Visit(context.typeType()):(Str)
+        typ = Visit(context.typeType()):(str)
         obj := ""
-        ? context.annotationSupport() >< Nil {
+        ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
         obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""
-        ? context.expression() >< Nil {
+        ? context.expression() >< nil {
             expr := me.Visit(context.expression()):(Result)
             obj += "get{return "expr.text"; }set{"expr.text"=value;}"
         } _ {
@@ -86,7 +86,7 @@
         <- obj
     }
 
-    VisitOverrideStatement(context: OverrideStatementContext -> v: Any) {
+    VisitOverrideStatement(context: OverrideStatementContext -> v: any) {
         Self := Visit(context.parameterClauseSelf()):(Parameter)
         selfID = Self.id
         superID = Visit(context.id()):(Result).text
@@ -101,18 +101,18 @@
         <- obj
     }
 
-    VisitOverrideFunctionStatement(context: OverrideFunctionStatementContext -> v: Any) {
+    VisitOverrideFunctionStatement(context: OverrideFunctionStatementContext -> v: any) {
         id := Visit(context.id()):(Result)
         isVirtual := " override "
         obj := ""
         # 异步 #
-        ? context.n >< Nil {
+        ? context.n >< nil {
             obj += "protected "
         } _ {
             obj += ""id.permission" "
         }
         ? context.t.Type == Right_Flow {
-            pout := Visit(context.parameterClauseOut()):(Str)
+            pout := Visit(context.parameterClauseOut()):(str)
             ? pout >< "void" {
                 pout = ""Task"<"pout">"
             } _ {
@@ -124,7 +124,7 @@
         }
         # 泛型 #
         templateContract := ""
-        ? context.templateDefine() >< Nil {
+        ? context.templateDefine() >< nil {
             template := Visit(context.templateDefine()):(TemplateItem)
             obj += template.Template
             templateContract = template.Contract
@@ -135,16 +135,16 @@
         <- obj
     }
 
-    VisitOverrideControlStatement(context: OverrideControlStatementContext -> v: Any) {
+    VisitOverrideControlStatement(context: OverrideControlStatementContext -> v: any) {
         r1 := Visit(context.id()):(Result)
-        isMutable := True # r1.isVirtual #
+        isMutable := true # r1.isVirtual #
         isVirtual := " override "
         typ := ""
-        ? context.typeType() >< Nil {
-            typ = Visit(context.typeType()):(Str)
+        ? context.typeType() >< nil {
+            typ = Visit(context.typeType()):(str)
         }
         obj := ""
-        ? context.annotationSupport() >< Nil {
+        ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
         obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""

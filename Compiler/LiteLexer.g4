@@ -81,27 +81,27 @@ And:    '&';
 Or:     '|';
 Xor:    '^';
 
-TypeI8: 'I8';
-TypeU8: 'U8';
-TypeI16: 'I16';
-TypeU16: 'U16';
-TypeI32: 'I32';
-TypeU32: 'U32';
-TypeI64: 'I64';
-TypeU64: 'U64';
-TypeF32: 'F32';
-TypeF64: 'F64';
-TypeChr: 'Chr';
-TypeStr: 'Str';
-TypeBool: 'Bool';
-TypeInt: 'Int';
-TypeNum: 'Num';
-TypeByte: 'Byte';
-TypeAny: 'Any';
-NilLiteral: 'Nil';
-TrueLiteral: 'True';
-FalseLiteral: 'False';
-UndefinedLiteral: 'Undefined';
+TypeI8: 'i8';
+TypeU8: 'u8';
+TypeI16: 'i16';
+TypeU16: 'u16';
+TypeI32: 'i32';
+TypeU32: 'u32';
+TypeI64: 'i64';
+TypeU64: 'u64';
+TypeF32: 'f32';
+TypeF64: 'f64';
+TypeChr: 'chr';
+TypeStr: 'str';
+TypeBool: 'bool';
+TypeInt: 'int';
+TypeNum: 'num';
+TypeByte: 'byte';
+TypeAny: 'any';
+NilLiteral: 'nil';
+TrueLiteral: 'true';
+FalseLiteral: 'false';
+UndefinedLiteral: 'undef';
 
 NumberLiteral: DIGIT+ ; // 整数
 fragment DIGIT: [0-9] ;   // 单个数字

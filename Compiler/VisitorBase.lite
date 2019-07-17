@@ -32,9 +32,9 @@ F :: "false"
 
 Chr :: "char"
 Str :: "string"
-Lst :: "Lst"
-Set :: "Set"
-Dic :: "Dic"
+Lst :: "list"
+Set :: "hashset"
+Dic :: "dictionary"
 
 BlockLeft :: "{"
 BlockRight :: "}"
@@ -42,21 +42,21 @@ BlockRight :: "}"
 Task :: "System.Threading.Tasks.Task"
 
 Result -> {
-    data: Any
-    text: Str
-    permission: Str
-    isVirtual: Bool
+    data: any
+    text: str
+    permission: str
+    isVirtual: bool
 }
 
 LiteLangVisitor -> {
-    :LiteParserBaseVisitor<Any> 
+    :LiteParserBaseVisitor<any> 
 
     selfID := ""
     superID := ""
     setID := ""
 }
 (base)me: LiteLangVisitor -> {
-    VisitProgram(context: ProgramContext -> v: Any) {
+    VisitProgram(context: ProgramContext -> v: any) {
         StatementList := context.statement()
         Result := ""
         StatementList @ item {
@@ -65,7 +65,7 @@ LiteLangVisitor -> {
         <- Result
     }
 
-    VisitId(context: IdContext -> v: Any) {
+    VisitId(context: IdContext -> v: any) {
         r := Result{data = "var"}
         first := Visit(context.GetChild(0)):(Result)
         r.permission = first.permission
@@ -91,33 +91,33 @@ LiteLangVisitor -> {
         <- r
     }
 
-    VisitIdItem(context: IdItemContext -> v: Any) {
+    VisitIdItem(context: IdItemContext -> v: any) {
         r := Result{data = "var"}
-        ? context.typeBasic() >< Nil {
+        ? context.typeBasic() >< nil {
             r.permission = "public"
             r.text += context.typeBasic().GetText()
-            r.isVirtual = True
-        } context.typeAny() >< Nil {
+            r.isVirtual = true
+        } context.typeAny() >< nil {
             r.permission = "public"
             r.text += context.typeAny().GetText()
-            r.isVirtual = True
-        } context.linqKeyword() >< Nil {
+            r.isVirtual = true
+        } context.linqKeyword() >< nil {
             r.permission = "public"
             r.text += Visit(context.linqKeyword())
-            r.isVirtual = True
+            r.isVirtual = true
         } context.op.Type == IDPublic {
             r.permission = "public"
             r.text += context.op.Text
-            r.isVirtual = True
+            r.isVirtual = true
         } context.op.Type == IDPrivate {
             r.permission = "protected"
             r.text += context.op.Text
-            r.isVirtual = True
+            r.isVirtual = true
         }
         <- r
     }
 
-    VisitBoolExpr(context: BoolExprContext -> v: Any) {
+    VisitBoolExpr(context: BoolExprContext -> v: any) {
         r := Result{}
         ? context.t.Type == TrueLiteral {
             r.data = Bool
@@ -129,23 +129,23 @@ LiteLangVisitor -> {
         <- r
     }
 
-    VisitAnnotationSupport(context: AnnotationSupportContext -> v: Any) {
-        <- Visit(context.annotation()):(Str)
+    VisitAnnotationSupport(context: AnnotationSupportContext -> v: any) {
+        <- Visit(context.annotation()):(str)
     }
 
-    VisitAnnotation(context: AnnotationContext -> v: Any) {
+    VisitAnnotation(context: AnnotationContext -> v: any) {
         obj := ""
         id := ""
-        ? context.id() >< Nil {
+        ? context.id() >< nil {
             id = ""Visit(context.id()):(Result).text":"
         }
 
-        r := Visit(context.annotationList()):(Str)
+        r := Visit(context.annotationList()):(str)
         obj += "[" id "" r "]"
         <- obj
     }
 
-    VisitAnnotationList(context: AnnotationListContext -> v: Any) {
+    VisitAnnotationList(context: AnnotationListContext -> v: any) {
         obj := ""
         [0 < context.annotationItem().Length] @ i {
             ? i > 0 {
@@ -157,7 +157,7 @@ LiteLangVisitor -> {
         <- obj
     }
 
-    VisitAnnotationItem(context: AnnotationItemContext -> v: Any) {
+    VisitAnnotationItem(context: AnnotationItemContext -> v: any) {
         obj := ""
         obj += Visit(context.id()):(Result).text
         [0 < context.annotationAssign().Length] @ i {
@@ -173,10 +173,10 @@ LiteLangVisitor -> {
         <- obj
     }
 
-    VisitAnnotationAssign(context: AnnotationAssignContext -> v: Any) {
+    VisitAnnotationAssign(context: AnnotationAssignContext -> v: any) {
         obj := ""
         id := ""
-        ? context.id() >< Nil {
+        ? context.id() >< nil {
             id = "" Visit(context.id()):(Result).text "="
         }
         r := Visit(context.expression()):(Result)
