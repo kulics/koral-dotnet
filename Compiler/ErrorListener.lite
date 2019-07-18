@@ -8,13 +8,13 @@
 }
 
 ErrorListener -> {
-    :BaseErrorListener
-    FileDir: str
+    _ BaseErrorListener
+    FileDir str
 } 
-(super)me: ErrorListener -> {
-    SyntaxError(recognizer: IRecognizer, offendingSymbol: ?IToken, 
-    line: int, charPositionInLine: int, msg: str, 
-    e: ?RecognitionException->) {
+(super)me ErrorListener -> {
+    SyntaxError(recognizer IRecognizer, offendingSymbol ?IToken, 
+    line int, charPositionInLine int, msg str, 
+    e ?RecognitionException->) {
             super.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
             print("------Syntax Error------")
             print("File: "me.FileDir"")
