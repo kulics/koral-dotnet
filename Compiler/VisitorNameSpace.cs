@@ -4,7 +4,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;
 using static Compiler.LiteParser;
-using static Compiler.Compiler_Static;
+using static Compiler.Compiler_static;
 
 namespace Compiler
 {
@@ -232,7 +232,7 @@ obj+=BlockRight+Wrap;
 return(obj);
 }
 }
-public partial class Compiler_Static{
+public partial class Compiler_static{
 public static (  string id ,  string type  ) GetControlSub( string id )
 {
 var typ = "";

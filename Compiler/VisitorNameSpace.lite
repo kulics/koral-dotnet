@@ -4,7 +4,7 @@
     "System"
 
     "Compiler" LiteParser.
-    "Compiler" Compiler_Static.
+    "Compiler" Compiler_static.
 }
 
 Namespace -> {

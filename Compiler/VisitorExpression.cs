@@ -4,7 +4,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;
 using static Compiler.LiteParser;
-using static Compiler.Compiler_Static;
+using static Compiler.Compiler_static;
 
 namespace Compiler
 {
@@ -62,24 +62,12 @@ public  override  object VisitExpression( ExpressionContext context )
 {
 var count = context.ChildCount;
 var r = (new Result());
-if ( count==3 ) {
-var e1 = ((Result)(Visit(context.GetChild(0))));
+switch (count) {
+case 3 :
+{ var e1 = ((Result)(Visit(context.GetChild(0))));
 var e2 = Visit(context.GetChild(2));
 var op = Visit(context.GetChild(1));
 switch (context.GetChild(1)) {
-case JudgeTypeContext it :
-{ r.data=Bool;
-var e3 = ((string)(Visit(context.GetChild(2))));
-switch (op) {
-case "==" :
-{ r.text=(new System.Text.StringBuilder("(").Append(e1.text).Append(" is ").Append(e3).Append(")")).to_str();
-}break;
-case "><" :
-{ r.text=(new System.Text.StringBuilder("!(").Append(e1.text).Append(" is ").Append(e3).Append(")")).to_str();
-}break;
-} 
-return(r);
-}break;
 case JudgeContext it :
 { r.data=Bool;
 }break;
@@ -120,9 +108,9 @@ return(r);
 }break;
 } 
 r.text=e1.text+op+((Result)(e2)).text;
-}
-else if ( count==2 ) {
-r=((Result)(Visit(context.GetChild(0))));
+}break;
+case 2 :
+{ r=((Result)(Visit(context.GetChild(0))));
 if ( context.GetChild(1).GetType()==typeof(TypeConversionContext) ) {
 var e2 = ((string)(Visit(context.GetChild(1))));
 r.data=e2;
@@ -148,9 +136,24 @@ else if ( context.op.Type==LiteParser.Question ) {
 r.text+="?";
 } 
 }
+}break;
+case 1 :
+{ r=((Result)(Visit(context.GetChild(0))));
+}break;
+case 5 :
+{ var e1 = ((Result)(Visit(context.GetChild(0))));
+var op = Visit(context.GetChild(1));
+r.data=Bool;
+var e3 = ((string)(Visit(context.typeType())));
+switch (op) {
+case "==" :
+{ r.text=(new System.Text.StringBuilder("(").Append(e1.text).Append(" is ").Append(e3).Append(")")).to_str();
+}break;
+case "><" :
+{ r.text=(new System.Text.StringBuilder("!(").Append(e1.text).Append(" is ").Append(e3).Append(")")).to_str();
+}break;
 } 
-else if ( count==1 ) {
-r=((Result)(Visit(context.GetChild(0))));
+}break;
 } 
 return(r);
 }
@@ -760,7 +763,7 @@ r.text="~"+expr.text;
 return(r);
 }
 }
-public partial class Compiler_Static{
+public partial class Compiler_static{
 public static list<string> keywords = (new list<string>(){"abstract","as","base","bool","break","byte","case","catch","char","checked","class","const","continue","decimal","default","delegate","do","double","_","enum","event","explicit","extern","false","finally","fixed","float","for","foreach","goto","?","implicit","in","int","interface","internal","is","lock","long","namespace","new","null","object","operator","out","override","params","private","protected","public","readonly","ref","return","sbyte","sealed","short","sizeof","stackalloc","static","string","struct","switch","this","throw","true","try","typeof","uint","ulong","unchecked","unsafe","ushort","using","virtual","void","volatile","while"}) ;
 }
 }

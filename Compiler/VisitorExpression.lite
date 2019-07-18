@@ -4,7 +4,7 @@
     "System"
 
     "Compiler" LiteParser.
-    "Compiler" Compiler_Static.
+    "Compiler" Compiler_static.
 }
 
 keywords := []str{
@@ -70,21 +70,12 @@ DicEle -> {
     VisitExpression(context: ExpressionContext -> v: any) {
         count := context.ChildCount
         r := Result{}
-        ? count == 3 {
+        count ? 3 {
             e1 := Visit(context.GetChild(0)):(Result)
             e2 := Visit(context.GetChild(2))
             op := Visit(context.GetChild(1))
 
-            context.GetChild(1) ? :JudgeTypeContext {
-                r.data = Bool
-                e3 := Visit(context.GetChild(2)):(str)
-                op ? "==" {
-                    r.text = "("e1.text" is "e3")"
-                } "><" {
-                    r.text = "!("e1.text" is "e3")"
-                }
-                <- r
-            } :JudgeContext {
+            context.GetChild(1) ? :JudgeContext {
                 # todo 如果左右不是bool类型值，报错 #
                 r.data = Bool
             } :AddContext {
@@ -117,7 +108,7 @@ DicEle -> {
                 <- r
             }
             r.text = e1.text + op + e2:(Result).text
-        } count == 2 {
+        } 2 {
             r = Visit(context.GetChild(0)):(Result)
             ? context.GetChild(1).GetType() == ?(:TypeConversionContext) {
                 e2 := Visit(context.GetChild(1)):(str)
@@ -139,9 +130,19 @@ DicEle -> {
                     r.text += "?"
                 }
             }
-        } count == 1 {
+        } 1 {
             r = Visit(context.GetChild(0)):(Result)
-        }
+        } 5 {
+            e1 := Visit(context.GetChild(0)):(Result)
+            op := Visit(context.GetChild(1))
+            r.data = Bool
+            e3 := Visit(context.typeType()):(str)
+            op ? "==" {
+                r.text = "("e1.text" is "e3")"
+            } "><" {
+                r.text = "!("e1.text" is "e3")"
+            }
+        } 
         <- r
     }
 

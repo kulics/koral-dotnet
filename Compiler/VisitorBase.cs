@@ -4,7 +4,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;
 using static Compiler.LiteParser;
-using static Compiler.Compiler_Static;
+using static Compiler.Compiler_static;
 
 namespace Compiler
 {
@@ -182,7 +182,7 @@ obj=id+r.text;
 return(obj);
 }
 }
-public partial class Compiler_Static{
+public partial class Compiler_static{
 public const string Terminate = ";" ;
 public const string Wrap = "\r\n" ;
 public const string Any = "object" ;

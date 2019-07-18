@@ -4,7 +4,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;
 using static Compiler.LiteParser;
-using static Compiler.Compiler_Static;
+using static Compiler.Compiler_static;
 
 namespace Compiler
 {

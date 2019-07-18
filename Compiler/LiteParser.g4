@@ -39,12 +39,12 @@ enumStatement: (annotationSupport)? id Right_Arrow New_Line* typeType left_brack
 
 enumSupportStatement: id (Equal (add)? integerExpr)? end;
 // 命名空间变量
-namespaceVariableStatement: (annotationSupport)? id (Discard Equal expression| typeType (Equal expression)?) end;
+namespaceVariableStatement: (annotationSupport)? id (Equal expression| typeType (Equal expression)?) end;
 // 命名空间控制
 namespaceControlStatement: (annotationSupport)? id left_paren expression? right_paren typeType
 (left_brace (packageControlSubStatement)+ right_brace)? end;
 // 命名空间常量
-namespaceConstantStatement: (annotationSupport)? id (Colon typeType Colon|Colon_Colon) expression end;
+namespaceConstantStatement: (annotationSupport)? id (typeType)? Colon expression end;
 // 命名空间函数
 namespaceFunctionStatement: (annotationSupport)? id (templateDefine)? left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
@@ -66,7 +66,7 @@ includeStatement: Discard typeType end;
 packageNewStatement: (annotationSupport)? parameterClauseSelf Less Greater left_paren parameterClauseIn right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
 // 定义变量
-packageVariableStatement: (annotationSupport)? id (Discard Equal expression| typeType (Equal expression)?) end;
+packageVariableStatement: (annotationSupport)? id (Equal expression| typeType (Equal expression)?) end;
 
 // 定义子方法
 packageControlSubStatement: id (left_paren id right_paren)? left_brace (functionSupportStatement)+ right_brace end;
@@ -246,7 +246,7 @@ linq // 联合查询
 | expression callChannel // 调用通道
 | expression callElement // 访问元素
 | expression callExpression // 链式调用
-| expression judgeType typeType // 类型判断表达式
+| expression judgeType Less typeType Greater // 类型判断表达式
 | expression bitwise expression // 位运算表达式
 | expression judge expression // 判断型表达式
 | expression add expression // 和型表达式
@@ -427,7 +427,7 @@ nilExpr: NilLiteral;
 // bool值
 boolExpr: t=TrueLiteral|t=FalseLiteral;
 
-judgeType: op=(Equal_Equal|Not_Equal) Colon;
+judgeType: op=(Equal_Equal|Not_Equal);
 bitwise: (bitwiseAnd | bitwiseOr | bitwiseXor 
 | bitwiseLeftShift | bitwiseRightShift) (New_Line)?;
 bitwiseAnd: And And;
