@@ -5,12 +5,12 @@
     "System/Text"
 }
 
-_ReadPath: str
-_PathLine: str
+_ReadPath str
+_PathLine str
 
-Main(args: [:]str->) {
+Main(args [:]str->) {
     # 检查系统平台，区分路径字符 #
-    os := Environment.OSVersion.Platform
+    os = Environment.OSVersion.Platform
     ? os == PlatformID.Unix | os == PlatformID.MacOSX {
         _ReadPath = "./"
         _PathLine = "/"
@@ -25,44 +25,44 @@ Main(args: [:]str->) {
     read()
 }
 
-Compiled(path: str->) {
+Compiled(path str->) {
     # 获取相对路径下所有文件 #
-    Files := Directory.GetFiles(path, "*.lite")
+    Files = Directory.GetFiles(path, "*.lite")
     Files @ file {
         # 文件流读文件 #
         <FileStream>(file, FileMode.Open) ! fsRead
         ! {
-            FSLength := fsRead.Length:(int)
-            ByteBlock := array<u8>(FSLength)
-            r := fsRead.Read(ByteBlock, 0, ByteBlock.Length)
-            Input := Encoding.UTF8.GetString(ByteBlock)
+            FSLength = fsRead.Length.(int)
+            ByteBlock = array<u8>(FSLength)
+            r = fsRead.Read(ByteBlock, 0, ByteBlock.Length)
+            Input = Encoding.UTF8.GetString(ByteBlock)
             # 移除平台差异 #
             Input.Replace("\r", "")
 
-            Stream := <AntlrInputStream>(Input)
-            Lexer := <LiteLexer>(Stream)
-            Tokens := <CommonTokenStream>(Lexer)
-            Parser := <LiteParser>(Tokens)
+            Stream = <AntlrInputStream>(Input)
+            Lexer = <LiteLexer>(Stream)
+            Tokens = <CommonTokenStream>(Lexer)
+            Parser = <LiteParser>(Tokens)
             Parser.BuildParseTree = true
             Parser.RemoveErrorListeners()
             Parser.AddErrorListener(ErrorListener{ FileDir = file })
 
-            AST := Parser.program()
+            AST = Parser.program()
 
-            Visitor := LiteLangVisitor{}
-            Result := Visitor.Visit(AST)
+            Visitor = LiteLangVisitor{}
+            Result = Visitor.Visit(AST)
 
             # 文件流写文件,使用覆盖模式 #
-            ByteResult := Encoding.UTF8.GetBytes(Result.to_str())  # 转换为字节 #
+            ByteResult = Encoding.UTF8.GetBytes(Result.to_str())  # 转换为字节 #
             <FileStream>(_ReadPath + file.sub_str(0, file.Length - 5) + ".cs", FileMode.Create) ! fsWrite
             fsWrite.Write(ByteResult, 0, ByteResult.Length)
-        } err: Exception {
+        } err Exception {
             print(err)
             <-
         }
     }
 
-    Folders := Directory.GetDirectories(path)
+    Folders = Directory.GetDirectories(path)
     Folders @ folder {
         Compiled(folder)
     }
