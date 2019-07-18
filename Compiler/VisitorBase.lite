@@ -46,6 +46,7 @@ Result -> {
     text: str
     permission: str
     isVirtual: bool
+    isDefine: bool
 }
 
 LiteLangVisitor -> {
@@ -54,6 +55,8 @@ LiteLangVisitor -> {
     selfID := ""
     superID := ""
     setID := ""
+
+    IDMap := [str]bool{}
 }
 (base)me: LiteLangVisitor -> {
     VisitProgram(context: ProgramContext -> v: any) {
@@ -78,7 +81,7 @@ LiteLangVisitor -> {
             }
         }
 
-        ? keywords.Exists({t -> t == r.text}) {
+        ? keywords.Exists{t -> t == r.text} {
             r.text = "@"r.text""
         }
         ? r.text == selfID {
@@ -122,15 +125,26 @@ LiteLangVisitor -> {
         ? context.idExprItem().Length > 1 {
             r.text = "("
             context.idExprItem() @ [i]v {
+                subID := Visit(v):(Result).text
                 ? i >< 0 {
-                    r.text += ", " + Visit(v):(Result).text
+                    r.text += ", " + subID
                 } _ {
-                    r.text += Visit(v):(Result).text
+                    r.text += subID
+                }
+                ? me.IDMap.has_key(subID) {
+                    r.isDefine = true
+                } _ {
+                    me.IDMap[subID] = true
                 }
             }
             r.text += ")"
         } _ {
             r = Visit(context.idExprItem(0)):(Result)
+            ? me.IDMap.has_key(r.text) {
+                r.isDefine = true
+            } _ {
+                me.IDMap[r.text] = true
+            }
         }
         <- r
     }

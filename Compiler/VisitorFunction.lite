@@ -34,6 +34,8 @@ me: LiteLangVisitor -> {
             }
         }
         obj += content
+        # clear IDMap #
+        me.IDMap.clear()
         <- obj
     }
 }
@@ -111,6 +113,7 @@ me: LiteLangVisitor -> {
         [context.parameter().Length - 1 >= 0] @ i {
             p := Visit(context.parameter(i)):(Parameter)
             temp.add(""p.annotation" "p.type" "p.id" "p.value"")
+            me.IDMap[p.id] = true
         }
         [temp.Count - 1 >= 0] @ i {
             ? i == temp.Count - 1 {

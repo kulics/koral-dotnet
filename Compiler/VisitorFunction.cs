@@ -37,6 +37,7 @@ content+=BlockRight;
 }
 }
 obj+=content;
+this.IDMap.clear();
 return(obj);
 }
 }
@@ -116,6 +117,7 @@ var temp = (new list<string>());
 foreach (var i in range(context.parameter().Length-1,0,1,false,true)){
 var p = ((Parameter)(Visit(context.parameter(i))));
 temp.add((new System.Text.StringBuilder("").Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value).Append("")).to_str());
+this.IDMap[p.id]=true;
 }
 foreach (var i in range(temp.Count-1,0,1,false,true)){
 if ( i==temp.Count-1 ) {

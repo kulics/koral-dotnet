@@ -30,7 +30,12 @@ var Type = ((string)(Visit(context.typeType())));
 obj=(new System.Text.StringBuilder("").Append(Type).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str()+Terminate+Wrap;
 }
 else {
+if ( r1.isDefine||r1.text==this.selfID||r1.text==this.superID||r1.text==setID ) {
+obj=(new System.Text.StringBuilder("").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str()+Terminate+Wrap;
+}
+else {
 obj=(new System.Text.StringBuilder("var ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str()+Terminate+Wrap;
+}
 }
 return(obj);
 }
@@ -734,6 +739,7 @@ obj+=r.text;
 else {
 obj+=", "+r.text;
 }
+this.IDMap[r.text]=true;
 }
 return(obj);
 }

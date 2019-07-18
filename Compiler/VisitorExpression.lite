@@ -38,7 +38,11 @@ DicEle -> {
             Type := Visit(context.typeType()):(str)
             obj = ""Type" "r1.text" = "r2.text"" + Terminate + Wrap
         } _ {
-            obj = "var "r1.text" = "r2.text"" + Terminate + Wrap
+            ? r1.isDefine | r1.text == me.selfID | r1.text == me.superID | r1.text == setID {
+                obj = ""r1.text" = "r2.text"" + Terminate + Wrap
+            } _ {
+                obj = "var "r1.text" = "r2.text"" + Terminate + Wrap
+            }
         }
         <- obj
     }
@@ -693,6 +697,7 @@ DicEle -> {
             } _ {
                 obj += ", " + r.text
             }
+            me.IDMap[r.text] = true
         }
         <- obj
     }

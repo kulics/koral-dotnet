@@ -200,7 +200,7 @@ iteratorStatement: Left_Brack expression op=(Less|Less_Equal|Greater|Greater_Equ
  more expression Right_Brack | Left_Brack expression op=(Less|Less_Equal|Greater|Greater_Equal) expression Right_Brack;
 
 // 定义变量
-variableStatement: idExpression (Discard Equal| typeType Equal) expression end;
+variableStatement: idExpression typeType? Equal expression end;
 // 声明变量
 variableDeclaredStatement: idExpression typeType end;
 // 通道赋值

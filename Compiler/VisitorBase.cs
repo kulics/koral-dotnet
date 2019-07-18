@@ -14,12 +14,14 @@ public object data;
 public string text;
 public string permission;
 public bool isVirtual;
+public bool isDefine;
 }
 public partial class LiteLangVisitor:LiteParserBaseVisitor<object>
 {
 public string selfID = "" ; 
 public string superID = "" ; 
 public string setID = "" ; 
+public dictionary<string,bool> IDMap = (new dictionary<string,bool>()) ; 
 }
 public partial class LiteLangVisitor{
 public  override  object VisitProgram( ProgramContext context )
@@ -94,17 +96,30 @@ var r = (new Result(){data = "var"});
 if ( context.idExprItem().Length>1 ) {
 r.text="(";
 foreach (var (i,v) in range(context.idExprItem())){
+var subID = ((Result)(Visit(v))).text;
 if ( i!=0 ) {
-r.text+=", "+((Result)(Visit(v))).text;
+r.text+=", "+subID;
 }
 else {
-r.text+=((Result)(Visit(v))).text;
+r.text+=subID;
+}
+if ( this.IDMap.has_key(subID) ) {
+r.isDefine=true;
+}
+else {
+this.IDMap[subID]=true;
 }
 }
 r.text+=")";
 }
 else {
 r=((Result)(Visit(context.idExprItem(0))));
+if ( this.IDMap.has_key(r.text) ) {
+r.isDefine=true;
+}
+else {
+this.IDMap[r.text]=true;
+}
 }
 return(r);
 }
