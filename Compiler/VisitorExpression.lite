@@ -697,7 +697,8 @@ DicEle -> {
             } _ {
                 obj += ", " + r.text
             }
-            me.IDMap[r.text] = true
+            me.AllIDSet.add(r.text)
+            me.CurrentIDSet.add(r.text)
         }
         <- obj
     }

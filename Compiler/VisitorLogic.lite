@@ -38,10 +38,11 @@ Iterator -> {
 
     VisitLoopStatement(context: LoopStatementContext -> v: any) {
         obj := ""
-        id := "ea"
-        ? context.id() >< nil {
-            id = Visit(context.id()):(Result).text
-        }
+        id := Visit(context.id()):(Result).text
+        me.CurrentIDSet = [str]{}
+        me.CurrentIDSet.add(id)
+        me.AllIDSet.add(id)
+        
         it := Visit(context.iteratorStatement()):(Iterator)
 
         obj += "foreach (var "id" in range("it.begin.text","it.end.text","it.step.text","it.order","it.attach"))"
@@ -118,6 +119,8 @@ Iterator -> {
             ? context.id() >< nil {
                 id = Visit(context.id()):(Result).text
             }
+            me.AllIDSet.add(id)
+            me.CurrentIDSet.add(id)
             type := Visit(context.typeType()):(str)
             obj += "case "type" "id" :"Wrap""
         } _ {
@@ -127,10 +130,11 @@ Iterator -> {
     }
 
     VisitCaseStatement(context: CaseStatementContext -> v: any) {
+        me.CurrentIDSet = [str]{}
         obj := ""
-        process := ""BlockLeft" "ProcessFunctionSupport(context.functionSupportStatement())"" BlockRight"break;"
         context.caseExprStatement() @ item {
             r := Visit(item):(str)
+            process := ""BlockLeft" "ProcessFunctionSupport(context.functionSupportStatement())"" BlockRight"break;"
             obj += r + process
         }
         <- obj
@@ -149,6 +153,8 @@ Iterator -> {
     }
 
     VisitJudgeIfStatement(context: JudgeIfStatementContext -> v: any) {
+        me.CurrentIDSet = [str]{}
+
         b := Visit(context.expression()):(Result)
         obj := "if ( "b.text" ) "BlockLeft+Wrap""
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -157,6 +163,8 @@ Iterator -> {
     }
 
     VisitJudgeElseIfStatement(context: JudgeElseIfStatementContext -> v: any) {
+        me.CurrentIDSet = [str]{}
+
         b := Visit(context.expression()):(Result)
         obj := "else if ( "b.text" ) "BlockLeft+Wrap""
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -165,6 +173,8 @@ Iterator -> {
     }
 
     VisitJudgeElseStatement(context: JudgeElseStatementContext -> v: any) {
+        me.CurrentIDSet = [str]{}
+
         obj := "else "BlockLeft+Wrap""
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += ""BlockRight""Wrap""
@@ -172,6 +182,8 @@ Iterator -> {
     }
 
     VisitCheckStatement(context: CheckStatementContext -> v: any) {
+        me.CurrentIDSet = [str]{}
+        
         obj := "try "BlockLeft+Wrap""
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += ""BlockRight+Wrap""
@@ -186,11 +198,12 @@ Iterator -> {
     }
 
     VisitCheckErrorStatement(context: CheckErrorStatementContext -> v: any) {
+        me.CurrentIDSet = [str]{}
+
         obj := ""
-        ID := "ex"
-        ? context.id() >< nil {
-            ID = Visit(context.id()):(Result).text
-        }
+        ID := Visit(context.id()):(Result).text
+        me.AllIDSet.add(ID)
+        me.CurrentIDSet.add(ID)
 
         Type := "Exception"
         ? context.typeType() >< nil {
@@ -204,6 +217,8 @@ Iterator -> {
     }
 
     VisitCheckFinallyStatment(context: CheckFinallyStatmentContext -> v: any) {
+        me.CurrentIDSet = [str]{}
+
         obj := "finally "Wrap+BlockLeft+Wrap""
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += ""BlockRight""Wrap""

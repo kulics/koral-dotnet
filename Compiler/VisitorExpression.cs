@@ -739,7 +739,8 @@ obj+=r.text;
 else {
 obj+=", "+r.text;
 }
-this.IDMap[r.text]=true;
+this.AllIDSet.add(r.text);
+this.CurrentIDSet.add(r.text);
 }
 return(obj);
 }

@@ -56,7 +56,8 @@ LiteLangVisitor -> {
     superID := ""
     setID := ""
 
-    IDMap := [str]bool{}
+    AllIDSet := [str]{}
+    CurrentIDSet := [str]{}
 }
 (base)me: LiteLangVisitor -> {
     VisitProgram(context: ProgramContext -> v: any) {
@@ -131,19 +132,21 @@ LiteLangVisitor -> {
                 } _ {
                     r.text += subID
                 }
-                ? me.IDMap.has_key(subID) {
+                ? me.AllIDSet.contains(subID) {
                     r.isDefine = true
                 } _ {
-                    me.IDMap[subID] = true
+                    me.AllIDSet.add(subID)
+                    me.CurrentIDSet.add(subID)
                 }
             }
             r.text += ")"
         } _ {
             r = Visit(context.idExprItem(0)):(Result)
-            ? me.IDMap.has_key(r.text) {
+            ? me.AllIDSet.contains(r.text) {
                 r.isDefine = true
             } _ {
-                me.IDMap[r.text] = true
+                me.AllIDSet.add(r.text)
+                me.CurrentIDSet.add(r.text)
             }
         }
         <- r

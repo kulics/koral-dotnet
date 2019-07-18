@@ -21,7 +21,8 @@ public partial class LiteLangVisitor:LiteParserBaseVisitor<object>
 public string selfID = "" ; 
 public string superID = "" ; 
 public string setID = "" ; 
-public dictionary<string,bool> IDMap = (new dictionary<string,bool>()) ; 
+public hashset<string> AllIDSet = (new hashset<string>()) ; 
+public hashset<string> CurrentIDSet = (new hashset<string>()) ; 
 }
 public partial class LiteLangVisitor{
 public  override  object VisitProgram( ProgramContext context )
@@ -103,22 +104,24 @@ r.text+=", "+subID;
 else {
 r.text+=subID;
 }
-if ( this.IDMap.has_key(subID) ) {
+if ( this.AllIDSet.contains(subID) ) {
 r.isDefine=true;
 }
 else {
-this.IDMap[subID]=true;
+this.AllIDSet.add(subID);
+this.CurrentIDSet.add(subID);
 }
 }
 r.text+=")";
 }
 else {
 r=((Result)(Visit(context.idExprItem(0))));
-if ( this.IDMap.has_key(r.text) ) {
+if ( this.AllIDSet.contains(r.text) ) {
 r.isDefine=true;
 }
 else {
-this.IDMap[r.text]=true;
+this.AllIDSet.add(r.text);
+this.CurrentIDSet.add(r.text);
 }
 }
 return(r);
