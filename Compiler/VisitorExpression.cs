@@ -23,8 +23,8 @@ public partial class LiteLangVisitor{
 public  override  object VisitVariableStatement( VariableStatementContext context )
 {
 var obj = "";
-var r1 = ((Result)(Visit(context.expression(0))));
-var r2 = ((Result)(Visit(context.expression(1))));
+var r1 = ((Result)(Visit(context.idExpression())));
+var r2 = ((Result)(Visit(context.expression())));
 if ( context.typeType()!=null ) {
 var Type = ((string)(Visit(context.typeType())));
 obj=(new System.Text.StringBuilder("").Append(Type).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str()+Terminate+Wrap;
@@ -38,7 +38,7 @@ public  override  object VisitVariableDeclaredStatement( VariableDeclaredStateme
 {
 var obj = "";
 var Type = ((string)(Visit(context.typeType())));
-var r = ((Result)(Visit(context.expression())));
+var r = ((Result)(Visit(context.idExpression())));
 obj=(new System.Text.StringBuilder("").Append(Type).Append(" ").Append(r.text).Append("")).to_str()+Terminate+Wrap;
 return(obj);
 }

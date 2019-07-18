@@ -117,6 +117,28 @@ LiteLangVisitor -> {
         <- r
     }
 
+    VisitIdExpression(context: IdExpressionContext -> v: any) {
+        r := Result{data = "var"}
+        ? context.idExprItem().Length > 1 {
+            r.text = "("
+            context.idExprItem() @ [i]v {
+                ? i >< 0 {
+                    r.text += ", " + Visit(v):(Result).text
+                } _ {
+                    r.text += Visit(v):(Result).text
+                }
+            }
+            r.text += ")"
+        } _ {
+            r = Visit(context.idExprItem(0)):(Result)
+        }
+        <- r
+    }
+
+    VisitIdExprItem(context: IdExprItemContext -> v: any) {
+        <- Visit(context.GetChild(0))
+    }
+
     VisitBoolExpr(context: BoolExprContext -> v: any) {
         r := Result{}
         ? context.t.Type == TrueLiteral {

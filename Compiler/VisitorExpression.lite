@@ -32,8 +32,8 @@ DicEle -> {
 (base)me: LiteLangVisitor -> {
     VisitVariableStatement(context: VariableStatementContext -> v: any) {
         obj := ""
-        r1 := Visit(context.expression(0)):(Result)
-        r2 := Visit(context.expression(1)):(Result)
+        r1 := Visit(context.idExpression()):(Result)
+        r2 := Visit(context.expression()):(Result)
         ? context.typeType() >< nil {
             Type := Visit(context.typeType()):(str)
             obj = ""Type" "r1.text" = "r2.text"" + Terminate + Wrap
@@ -46,7 +46,7 @@ DicEle -> {
     VisitVariableDeclaredStatement(context: VariableDeclaredStatementContext -> v: any) {
         obj := ""
         Type := Visit(context.typeType()):(str)
-        r := Visit(context.expression()):(Result)
+        r := Visit(context.idExpression()):(Result)
         obj = ""Type" "r.text"" + Terminate + Wrap
         <- obj
     }

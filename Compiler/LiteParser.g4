@@ -39,9 +39,9 @@ enumStatement: (annotationSupport)? id Right_Arrow New_Line* typeType left_brack
 
 enumSupportStatement: id (Equal (add)? integerExpr)? end;
 // 命名空间变量
-namespaceVariableStatement: (annotationSupport)? id (Colon_Equal expression|Colon typeType (Equal expression)?) end;
+namespaceVariableStatement: (annotationSupport)? id (Discard Equal expression| typeType (Equal expression)?) end;
 // 命名空间控制
-namespaceControlStatement: (annotationSupport)? id left_paren expression? right_paren Colon typeType
+namespaceControlStatement: (annotationSupport)? id left_paren expression? right_paren typeType
 (left_brace (packageControlSubStatement)+ right_brace)? end;
 // 命名空间常量
 namespaceConstantStatement: (annotationSupport)? id (Colon typeType Colon|Colon_Colon) expression end;
@@ -61,17 +61,17 @@ includeStatement
 ;
 
 // 包含
-includeStatement: Colon typeType end;
+includeStatement: Discard typeType end;
 // 包构造方法
 packageNewStatement: (annotationSupport)? parameterClauseSelf Less Greater left_paren parameterClauseIn right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
 // 定义变量
-packageVariableStatement: (annotationSupport)? id (Colon_Equal expression|Colon typeType (Equal expression)?) end;
+packageVariableStatement: (annotationSupport)? id (Discard Equal expression| typeType (Equal expression)?) end;
 
 // 定义子方法
 packageControlSubStatement: id (left_paren id right_paren)? left_brace (functionSupportStatement)+ right_brace end;
 // 定义包事件
-packageEventStatement: id Colon left_brack Question right_brack nameSpaceItem end;
+packageEventStatement: id left_brack Question right_brack nameSpaceItem end;
 
 // 实现
 implementStatement: parameterClauseSelf Right_Arrow (typeType)? New_Line* left_brace (implementSupportStatement)* right_brace end;
@@ -84,7 +84,7 @@ implementFunctionStatement: (annotationSupport)? id (templateDefine)? left_paren
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义控制
 implementControlStatement: (annotationSupport)? id left_paren expression? right_paren 
- Colon typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
+ typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
 
 // 重载
 overrideStatement: left_paren id right_paren parameterClauseSelf 
@@ -98,7 +98,7 @@ overrideFunctionStatement: (annotationSupport)? (n='_')? id (templateDefine)? le
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义控制
 overrideControlStatement: (annotationSupport)? (n='_')? id left_paren expression? right_paren
- Colon typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
+ typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
 
 // 协议
 protocolStatement: (annotationSupport)? id (templateDefine)? Left_Arrow left_brace (protocolSupportStatement)* right_brace end;
@@ -110,7 +110,7 @@ includeStatement
 |New_Line
 ;
 // 定义控制
-protocolControlStatement: (annotationSupport)? id left_paren right_paren Colon typeType
+protocolControlStatement: (annotationSupport)? id left_paren right_paren typeType
  (left_brace (protocolControlSubStatement)* right_brace)? end;
 // 定义子方法
 protocolControlSubStatement: id;
@@ -128,9 +128,9 @@ parameterClauseIn: parameter? (more parameter)*;
 // 出参
 parameterClauseOut: parameter? (more parameter)*;
 // 接收器
-parameterClauseSelf: id Colon typeType;
+parameterClauseSelf: id typeType;
 // 参数结构
-parameter: (annotationSupport)? id Colon typeType (Equal expression)?;
+parameter: (annotationSupport)? id typeType (Equal expression)?;
 
 // 函数支持的语句
 functionSupportStatement:
@@ -159,7 +159,7 @@ functionSupportStatement:
 judgeCaseStatement: expression Question (caseStatement)+ end;
 // 判断条件声明
 caseStatement: caseExprStatement (more caseExprStatement)* left_brace (functionSupportStatement)* right_brace;
-caseExprStatement: Discard | expression | (id)? Colon typeType;
+caseExprStatement: Discard | expression | (id|Discard) typeType;
 // 判断
 judgeStatement:
 judgeIfStatement (judgeElseIfStatement)* judgeElseStatement end
@@ -187,9 +187,9 @@ checkStatement:
 Bang left_brace (functionSupportStatement)* right_brace (checkErrorStatement)* checkFinallyStatment end
 |Bang left_brace (functionSupportStatement)* right_brace (checkErrorStatement)+ end;
 // 定义检查变量
-usingStatement: expression Bang expression (Colon typeType)? end;
+usingStatement: expression Bang expression (typeType)? end;
 // 错误处理
-checkErrorStatement: (id|id Colon typeType) left_brace (functionSupportStatement)* right_brace;
+checkErrorStatement: (id|id typeType) left_brace (functionSupportStatement)* right_brace;
 // 最终执行
 checkFinallyStatment: Discard left_brace (functionSupportStatement)* right_brace;
 
@@ -200,9 +200,9 @@ iteratorStatement: Left_Brack expression op=(Less|Less_Equal|Greater|Greater_Equ
  more expression Right_Brack | Left_Brack expression op=(Less|Less_Equal|Greater|Greater_Equal) expression Right_Brack;
 
 // 定义变量
-variableStatement: expression (Colon_Equal|Colon typeType Equal) expression end;
+variableStatement: idExpression (Discard Equal| typeType Equal) expression end;
 // 声明变量
-variableDeclaredStatement: expression Colon typeType end;
+variableDeclaredStatement: idExpression typeType end;
 // 通道赋值
 channelAssignStatement: expression Left_Brack Left_Arrow Right_Brack assign expression end;
 // 赋值
@@ -210,6 +210,8 @@ assignStatement: expression assign expression end;
 
 expressionStatement: expression end;
 
+idExpression: idExprItem | left_paren idExprItem (more idExprItem)* right_paren;
+idExprItem: id | Discard;
 // 基础表达式
 primaryExpression: 
 id (templateCall)?
@@ -279,9 +281,9 @@ callPkg: typeType left_brace (pkgAssign|listAssign|setAssign|dictionaryAssign)? 
 
 callNew: Less typeType Greater left_paren New_Line? expressionList? New_Line? right_paren; // 构造类对象
 
-getType: Question left_paren (expression|Colon typeType) right_paren;
+getType: Question (left_paren expression right_paren | Less typeType Greater );
 
-typeConversion: Colon left_paren typeType right_paren; // 类型转化
+typeConversion: Dot left_paren typeType right_paren; // 类型转化
 
 pkgAssign: pkgAssignElement (more pkgAssignElement)* ; // 简化赋值
 
@@ -315,7 +317,7 @@ name: id (call New_Line? id)* ;
 
 templateDefine: Less templateDefineItem (more templateDefineItem)* Greater;
 
-templateDefineItem: id (Colon id)?; 
+templateDefineItem: id (id)?; 
 
 templateCall: Less typeType (more typeType)* Greater;
 
@@ -383,11 +385,12 @@ typeAny
 | typeFunction
 ;
 
-typeReference: Bang (typeNotNull | typeNullable);
-typeNullable: Question typeNotNull;
 typeType: typeNotNull | typeNullable | typeReference;
 
-typeTuple: left_paren typeType (more typeType)+ right_paren;
+typeReference: Bang (typeNotNull | typeNullable);
+typeNullable: Question typeNotNull;
+
+typeTuple: Less typeType (more typeType)+ Greater;
 typeArray: Left_Brack Colon Right_Brack typeType;
 typeList: Left_Brack Right_Brack typeType;
 typeSet: Left_Brack typeType Right_Brack;

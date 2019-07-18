@@ -88,6 +88,30 @@ r.isVirtual=true;
 } 
 return(r);
 }
+public  override  object VisitIdExpression( IdExpressionContext context )
+{
+var r = (new Result(){data = "var"});
+if ( context.idExprItem().Length>1 ) {
+r.text="(";
+foreach (var (i,v) in range(context.idExprItem())){
+if ( i!=0 ) {
+r.text+=", "+((Result)(Visit(v))).text;
+}
+else {
+r.text+=((Result)(Visit(v))).text;
+}
+}
+r.text+=")";
+}
+else {
+r=((Result)(Visit(context.idExprItem(0))));
+}
+return(r);
+}
+public  override  object VisitIdExprItem( IdExprItemContext context )
+{
+return(Visit(context.GetChild(0)));
+}
 public  override  object VisitBoolExpr( BoolExprContext context )
 {
 var r = (new Result());
