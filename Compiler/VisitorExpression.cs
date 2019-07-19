@@ -703,7 +703,9 @@ if ( context.t.Type==Right_Flow ) {
 r.text+=" async ";
 }
 r.text+=Visit(context.parameterClauseIn())+" => "+BlockLeft+Wrap;
+this.add_current_set();
 r.text+=ProcessFunctionSupport(context.functionSupportStatement());
+this.delete_current_set();
 r.text+=BlockRight+Wrap;
 r.data="var";
 return(r);
@@ -724,7 +726,9 @@ if ( context.expressionList()!=null ) {
 r.text+=((Result)(Visit(context.expressionList()))).text;
 }
 else {
+this.add_current_set();
 r.text+="{"+ProcessFunctionSupport(context.functionSupportStatement())+"}";
+this.delete_current_set();
 }
 return(r);
 }
@@ -739,8 +743,7 @@ obj+=r.text;
 else {
 obj+=", "+r.text;
 }
-this.AllIDSet.add(r.text);
-this.CurrentIDSet.add(r.text);
+this.add_id(r.text);
 }
 return(obj);
 }
@@ -770,7 +773,7 @@ r.text="~"+expr.text;
 return(r);
 }
 }
-public partial class Compiler_static{
+public partial class Compiler_Static{
 public static list<string> keywords = (new list<string>(){"abstract","as","base","bool","break","byte","case","catch","char","checked","class","const","continue","decimal","default","delegate","do","double","_","enum","event","explicit","extern","false","finally","fixed","float","for","foreach","goto","?","implicit","in","int","interface","internal","is","lock","long","namespace","new","null","object","operator","out","override","params","private","protected","public","readonly","ref","return","sbyte","sealed","short","sizeof","stackalloc","static","string","struct","switch","this","throw","true","try","typeof","uint","ulong","unchecked","unsafe","ushort","using","virtual","void","volatile","while"}) ;
 }
 }

@@ -159,7 +159,9 @@ obj+=template.Template;
 templateContract=template.Contract;
 }
 obj+=Visit(context.parameterClauseIn())+templateContract+Wrap+BlockLeft+Wrap;
+this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
+this.delete_current_set();
 obj+=BlockRight+Wrap;
 return(obj);
 }
@@ -232,7 +234,7 @@ obj+=BlockRight+Wrap;
 return(obj);
 }
 }
-public partial class Compiler_static{
+public partial class Compiler_Static{
 public static (  string id ,  string type  ) GetControlSub( string id )
 {
 var typ = "";

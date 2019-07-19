@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Compiler
 {
-public partial class Compiler_static{
+public partial class Compiler_Static{
 protected static string _ReadPath;
 protected static string _PathLine;
 public static void Main( string[] args )

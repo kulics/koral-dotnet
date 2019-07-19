@@ -25,6 +25,25 @@ public hashset<string> AllIDSet = (new hashset<string>()) ;
 public hashset<string> CurrentIDSet = (new hashset<string>()) ; 
 }
 public partial class LiteLangVisitor{
+public  virtual  bool has_id( string id )
+{
+return(this.AllIDSet.contains(id));
+}
+public  virtual  void add_id( string id )
+{
+this.AllIDSet.add(id);
+this.CurrentIDSet.add(id);
+}
+public  virtual  void add_current_set()
+{
+this.CurrentIDSet=(new hashset<string>());
+}
+public  virtual  void delete_current_set()
+{
+this.AllIDSet.except_with(this.CurrentIDSet);
+}
+}
+public partial class LiteLangVisitor{
 public  override  object VisitProgram( ProgramContext context )
 {
 var StatementList = context.statement();
@@ -104,24 +123,22 @@ r.text+=", "+subID;
 else {
 r.text+=subID;
 }
-if ( this.AllIDSet.contains(subID) ) {
+if ( this.has_id(subID) ) {
 r.isDefine=true;
 }
 else {
-this.AllIDSet.add(subID);
-this.CurrentIDSet.add(subID);
+this.add_id(subID);
 }
 }
 r.text+=")";
 }
 else {
 r=((Result)(Visit(context.idExprItem(0))));
-if ( this.AllIDSet.contains(r.text) ) {
+if ( this.has_id(r.text) ) {
 r.isDefine=true;
 }
 else {
-this.AllIDSet.add(r.text);
-this.CurrentIDSet.add(r.text);
+this.add_id(r.text);
 }
 }
 return(r);
@@ -200,7 +217,7 @@ obj=id+r.text;
 return(obj);
 }
 }
-public partial class Compiler_static{
+public partial class Compiler_Static{
 public const string Terminate = ";" ;
 public const string Wrap = "\r\n" ;
 public const string Any = "object" ;

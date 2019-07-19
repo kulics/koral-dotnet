@@ -55,8 +55,10 @@ var template = ((TemplateItem)(Visit(context.templateDefine())));
 obj+=template.Template;
 templateContract=template.Contract;
 }
+this.add_current_set();
 obj+=Visit(context.parameterClauseIn())+templateContract+Wrap+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
+this.delete_current_set();
 obj+=BlockRight+Wrap;
 return(obj);
 }
@@ -133,8 +135,10 @@ var template = ((TemplateItem)(Visit(context.templateDefine())));
 obj+=template.Template;
 templateContract=template.Contract;
 }
+this.add_current_set();
 obj+=Visit(context.parameterClauseIn())+templateContract+Wrap+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
+this.delete_current_set();
 obj+=BlockRight+Wrap;
 return(obj);
 }

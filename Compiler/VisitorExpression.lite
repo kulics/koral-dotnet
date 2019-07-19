@@ -660,7 +660,9 @@ DicEle -> {
             r.text += " async "
         }
         r.text += Visit(context.parameterClauseIn()) + " => " + BlockLeft + Wrap
+        me.add_current_set()
         r.text += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
         r.text += BlockRight + Wrap
         r.data = "var"
         <- r
@@ -682,7 +684,9 @@ DicEle -> {
         ? context.expressionList() >< nil {
             r.text += Visit(context.expressionList()):(Result).text
         } _ {
+            me.add_current_set()
             r.text += "{" + ProcessFunctionSupport(context.functionSupportStatement()) + "}"
+            me.delete_current_set()
         }
 
         <- r
@@ -697,8 +701,7 @@ DicEle -> {
             } _ {
                 obj += ", " + r.text
             }
-            me.AllIDSet.add(r.text)
-            me.CurrentIDSet.add(r.text)
+            me.add_id(r.text)
         }
         <- obj
     }

@@ -59,6 +59,24 @@ LiteLangVisitor -> {
     AllIDSet := [str]{}
     CurrentIDSet := [str]{}
 }
+
+me: LiteLangVisitor -> {
+    has_id(id:str -> v:bool) {
+        <- me.AllIDSet.contains(id)
+    }
+    add_id(id: str ->) {
+        me.AllIDSet.add(id)
+        me.CurrentIDSet.add(id)
+    }
+    add_current_set(->) {
+        me.CurrentIDSet = [str]{}
+    }
+    delete_current_set(->) {
+        me.AllIDSet.except_with(me.CurrentIDSet)
+        # me.CurrentIDSet = me.AllIDSet #
+    }
+}
+
 (base)me: LiteLangVisitor -> {
     VisitProgram(context: ProgramContext -> v: any) {
         StatementList := context.statement()
@@ -132,21 +150,19 @@ LiteLangVisitor -> {
                 } _ {
                     r.text += subID
                 }
-                ? me.AllIDSet.contains(subID) {
+                ? me.has_id(subID) {
                     r.isDefine = true
                 } _ {
-                    me.AllIDSet.add(subID)
-                    me.CurrentIDSet.add(subID)
+                    me.add_id(subID)
                 }
             }
             r.text += ")"
         } _ {
             r = Visit(context.idExprItem(0)):(Result)
-            ? me.AllIDSet.contains(r.text) {
+            ? me.has_id(r.text) {
                 r.isDefine = true
             } _ {
-                me.AllIDSet.add(r.text)
-                me.CurrentIDSet.add(r.text)
+                me.add_id(r.text)
             }
         }
         <- r
