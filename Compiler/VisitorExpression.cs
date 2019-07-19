@@ -722,8 +722,8 @@ r.text+=Visit(context.lambdaIn());
 }
 r.text+=")";
 r.text+="=>";
-if ( context.expressionList()!=null ) {
-r.text+=((Result)(Visit(context.expressionList()))).text;
+if ( context.tupleExpression()!=null ) {
+r.text+=((Result)(Visit(context.tupleExpression()))).text;
 }
 else {
 this.add_current_set();

@@ -70,9 +70,9 @@ me LiteLangVisitor -> {
     }
 
     VisitReturnStatement(context ReturnStatementContext -> v any) {
-        ? context.expressionList() >< nil {
-            r = Visit(context.expressionList()).(Result)
-            <- "return("r.text")"Terminate""Wrap""
+        ? context.tupleExpression() >< nil {
+            r = Visit(context.tupleExpression()).(Result)
+            <- "return " + r.text + Terminate + Wrap
         }
         <- "return"Terminate""Wrap""
     }

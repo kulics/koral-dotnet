@@ -681,8 +681,8 @@ DicEle -> {
         r.text += ")"
         r.text += "=>"
 
-        ? context.expressionList() >< nil {
-            r.text += Visit(context.expressionList()).(Result).text
+        ? context.tupleExpression() >< nil {
+            r.text += Visit(context.tupleExpression()).(Result).text
         } _ {
             me.add_current_set()
             r.text += "{" + ProcessFunctionSupport(context.functionSupportStatement()) + "}"

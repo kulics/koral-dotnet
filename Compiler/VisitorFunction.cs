@@ -73,9 +73,9 @@ return(obj);
 }
 public  override  object VisitReturnStatement( ReturnStatementContext context )
 {
-if ( context.expressionList()!=null ) {
-var r = ((Result)(Visit(context.expressionList())));
-return((new System.Text.StringBuilder("return(").Append(r.text).Append(")").Append(Terminate).Append("").Append(Wrap).Append("")).to_str());
+if ( context.tupleExpression()!=null ) {
+var r = ((Result)(Visit(context.tupleExpression())));
+return("return "+r.text+Terminate+Wrap);
 }
 return((new System.Text.StringBuilder("return").Append(Terminate).Append("").Append(Wrap).Append("")).to_str());
 }

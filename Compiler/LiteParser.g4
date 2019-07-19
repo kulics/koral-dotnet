@@ -122,7 +122,7 @@ t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut right_paren end;
 functionStatement: id (templateDefine)? left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
  parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 返回
-returnStatement: Left_Arrow (expressionList)? end;
+returnStatement: Left_Arrow (tupleExpression)? end;
 // 入参
 parameterClauseIn: parameter? (more parameter)*;
 // 出参
@@ -322,7 +322,7 @@ templateDefineItem: id (id)?;
 
 templateCall: Less typeType (more typeType)* Greater;
 
-lambda: left_brace (lambdaIn)? t=(Right_Arrow|Right_Flow) New_Line* expressionList right_brace
+lambda: left_brace (lambdaIn)? t=(Right_Arrow|Right_Flow) New_Line* tupleExpression right_brace
 | left_brace (lambdaIn)? t=(Right_Arrow|Right_Flow) New_Line* 
 (functionSupportStatement)* right_brace;
 
