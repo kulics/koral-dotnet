@@ -2,6 +2,7 @@
     "Antlr4/Runtime"
     "Antlr4/Runtime/Misc"
     "System"
+    "System/Collections/Generic"
 
     "Compiler" LiteParser.
     "Compiler" Compiler_static.
@@ -57,23 +58,27 @@ LiteLangVisitor -> {
     setID := ""
 
     AllIDSet := [str]{}
-    CurrentIDSet := [str]{}
+    CurrentIDSet := Stack<[str]>{}
 }
-
+me: LiteLangVisitor <>() {
+    CurrentIDSet.Push(<[str]>())
+}
 me: LiteLangVisitor -> {
     has_id(id:str -> v:bool) {
-        <- me.AllIDSet.contains(id)
+        <- me.AllIDSet.contains(id) | me.CurrentIDSet.Peek().contains(id)
     }
     add_id(id: str ->) {
-        me.AllIDSet.add(id)
-        me.CurrentIDSet.add(id)
+        me.CurrentIDSet.Peek().add(id)
     }
     add_current_set(->) {
-        me.CurrentIDSet = [str]{}
+        CurrentIDSet.Peek() @ item {
+            AllIDSet.Add(item)
+        }
+        me.CurrentIDSet.Push(<[str]>())
     }
     delete_current_set(->) {
-        me.AllIDSet.except_with(me.CurrentIDSet)
-        # me.CurrentIDSet = me.AllIDSet #
+        me.AllIDSet.except_with(me.CurrentIDSet.Peek())
+        me.CurrentIDSet.Pop()
     }
 }
 

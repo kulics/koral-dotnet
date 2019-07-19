@@ -184,8 +184,8 @@ GetControlSub(id: str -> id: str, type:str) {
             obj += template.Template
             templateContract = template.Contract
         }
-        obj += Visit(context.parameterClauseIn()) + templateContract + Wrap + BlockLeft + Wrap
         me.add_current_set()
+        obj += Visit(context.parameterClauseIn()) + templateContract + Wrap + BlockLeft + Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight + Wrap

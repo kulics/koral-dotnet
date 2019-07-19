@@ -86,6 +86,7 @@
         obj := ""
         id := ""
         typ := ""
+        me.add_current_set()
         (id, typ) = GetControlSub(context.id(0).GetText())
         ? context.id(1) >< nil {
             me.setID = context.id(1).GetText()
@@ -99,6 +100,7 @@
         } _ {
             obj += id + Terminate
         }
+        me.delete_current_set()
         me.setID = ""
         <- Result{ text = obj, data = typ }
     }

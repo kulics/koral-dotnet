@@ -158,8 +158,8 @@ var template = ((TemplateItem)(Visit(context.templateDefine())));
 obj+=template.Template;
 templateContract=template.Contract;
 }
-obj+=Visit(context.parameterClauseIn())+templateContract+Wrap+BlockLeft+Wrap;
 this.add_current_set();
+obj+=Visit(context.parameterClauseIn())+templateContract+Wrap+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
@@ -234,7 +234,7 @@ obj+=BlockRight+Wrap;
 return(obj);
 }
 }
-public partial class Compiler_Static{
+public partial class Compiler_static{
 public static (  string id ,  string type  ) GetControlSub( string id )
 {
 var typ = "";

@@ -86,6 +86,7 @@ public  override  object VisitPackageControlSubStatement( PackageControlSubState
 var obj = "";
 var id = "";
 var typ = "";
+this.add_current_set();
 (id, typ)=GetControlSub(context.id(0).GetText());
 if ( context.id(1)!=null ) {
 this.setID=context.id(1).GetText();
@@ -100,6 +101,7 @@ obj+=BlockRight+Wrap;
 else {
 obj+=id+Terminate;
 }
+this.delete_current_set();
 this.setID="";
 return((new Result(){text = obj,data = typ}));
 }
