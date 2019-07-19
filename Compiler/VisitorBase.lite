@@ -59,27 +59,27 @@ LiteLangVisitor -> {
     setID = ""
 
     AllIDSet = [str]{}
-    CurrentIDSet = Stack<[str]>{}
+    CurrentIDSet = [^][str]{}
 }
 me LiteLangVisitor <>() {
-    CurrentIDSet.Push(<[str]>())
+    me.CurrentIDSet.push(<[str]>())
 }
 me LiteLangVisitor -> {
     has_id(id str -> v bool) {
-        <- me.AllIDSet.contains(id) | me.CurrentIDSet.Peek().contains(id)
+        <- me.AllIDSet.contains(id) | me.CurrentIDSet.peek().contains(id)
     }
     add_id(id str ->) {
-        me.CurrentIDSet.Peek().add(id)
+        me.CurrentIDSet.peek().add(id)
     }
     add_current_set(->) {
-        CurrentIDSet.Peek() @ item {
-            AllIDSet.Add(item)
+        CurrentIDSet.peek() @ item {
+            AllIDSet.add(item)
         }
-        me.CurrentIDSet.Push(<[str]>())
+        me.CurrentIDSet.push(<[str]>())
     }
     delete_current_set(->) {
-        me.AllIDSet.except_with(me.CurrentIDSet.Peek())
-        me.CurrentIDSet.Pop()
+        me.AllIDSet.except_with(me.CurrentIDSet.peek())
+        me.CurrentIDSet.pop()
     }
 }
 

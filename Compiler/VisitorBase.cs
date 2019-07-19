@@ -23,32 +23,32 @@ public string selfID = "" ;
 public string superID = "" ; 
 public string setID = "" ; 
 public hashset<string> AllIDSet = (new hashset<string>()) ; 
-public Stack<hashset<string>> CurrentIDSet = (new Stack<hashset<string>>()) ; 
+public stack<hashset<string>> CurrentIDSet = (new stack<hashset<string>>()) ; 
 }
 public partial class LiteLangVisitor{
-public LiteLangVisitor (){CurrentIDSet.Push((new hashset<string>()));
+public LiteLangVisitor (){this.CurrentIDSet.push((new hashset<string>()));
 }
 }
 public partial class LiteLangVisitor{
 public  virtual  bool has_id( string id )
 {
-return this.AllIDSet.contains(id)||this.CurrentIDSet.Peek().contains(id);
+return this.AllIDSet.contains(id)||this.CurrentIDSet.peek().contains(id);
 }
 public  virtual  void add_id( string id )
 {
-this.CurrentIDSet.Peek().add(id);
+this.CurrentIDSet.peek().add(id);
 }
 public  virtual  void add_current_set()
 {
-foreach (var item in CurrentIDSet.Peek()){
-AllIDSet.Add(item);
+foreach (var item in CurrentIDSet.peek()){
+AllIDSet.add(item);
 }
-this.CurrentIDSet.Push((new hashset<string>()));
+this.CurrentIDSet.push((new hashset<string>()));
 }
 public  virtual  void delete_current_set()
 {
-this.AllIDSet.except_with(this.CurrentIDSet.Peek());
-this.CurrentIDSet.Pop();
+this.AllIDSet.except_with(this.CurrentIDSet.peek());
+this.CurrentIDSet.pop();
 }
 }
 public partial class LiteLangVisitor{
