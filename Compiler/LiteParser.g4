@@ -210,7 +210,7 @@ assignStatement: tupleExpression assign tupleExpression end;
 
 expressionStatement: expression end;
 
-idExpression: idExprItem | left_paren idExprItem (more idExprItem)* right_paren;
+idExpression: idExprItem (more idExprItem)*;
 idExprItem: id | Discard;
 
 tupleExpression: expression (more expression)* ; // 元组
