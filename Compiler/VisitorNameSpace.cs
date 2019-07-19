@@ -45,8 +45,8 @@ return(obj);
 public  override  object VisitExportStatement( ExportStatementContext context )
 {
 var name = context.TextLiteral().GetText();
-name=name.sub_str(1, name.len()-2);
-name=name.replace("/", ".");
+name = name.sub_str(1, name.len()-2);
+name = name.replace("/", ".");
 var obj = (new Namespace(){name = name});
 foreach (var item in context.importStatement()){
 obj.imports+=((string)(Visit(item)));
@@ -60,8 +60,8 @@ if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
 var ns = context.TextLiteral().GetText();
-ns=ns.sub_str(1, ns.len()-2);
-ns=ns.replace("/", ".");
+ns = ns.sub_str(1, ns.len()-2);
+ns = ns.replace("/", ".");
 if ( context.call()!=null ) {
 obj+="using static "+ns+"."+((Result)(Visit(context.id()))).text;
 }
@@ -117,7 +117,7 @@ foreach (var i in range(0,context.enumSupportStatement().Length,1,true,false)){
 obj+=Visit(context.enumSupportStatement(i));
 }
 obj+=BlockRight+Terminate+Wrap;
-obj=header+obj;
+obj = header+obj;
 return(obj);
 }
 public  override  object VisitEnumSupportStatement( EnumSupportStatementContext context )
@@ -126,7 +126,7 @@ var id = ((Result)(Visit(context.id())));
 if ( context.integerExpr()!=null ) {
 var op = "";
 if ( context.add()!=null ) {
-op=((string)(Visit(context.add())));
+op = ((string)(Visit(context.add())));
 }
 id.text+=" = "+op+Visit(context.integerExpr());
 }
@@ -142,10 +142,10 @@ obj+=Visit(context.annotationSupport());
 if ( context.t.Type==Right_Flow ) {
 var pout = ((string)(Visit(context.parameterClauseOut())));
 if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
+pout = (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
 }
 else {
-pout=Task;
+pout = Task;
 }
 obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" async static ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
 }
@@ -156,7 +156,7 @@ var templateContract = "";
 if ( context.templateDefine()!=null ) {
 var template = ((TemplateItem)(Visit(context.templateDefine())));
 obj+=template.Template;
-templateContract=template.Contract;
+templateContract = template.Contract;
 }
 obj+=Visit(context.parameterClauseIn())+templateContract+Wrap+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -169,10 +169,10 @@ var id = ((Result)(Visit(context.id())));
 var expr = ((Result)(Visit(context.expression())));
 var typ = "";
 if ( context.typeType()!=null ) {
-typ=((string)(Visit(context.typeType())));
+typ = ((string)(Visit(context.typeType())));
 }
 else {
-typ=((string)(expr.data));
+typ = ((string)(expr.data));
 }
 var obj = "";
 if ( context.annotationSupport()!=null ) {
@@ -188,11 +188,11 @@ var isMutable = r1.isVirtual;
 var typ = "";
 Result r2 = null;
 if ( context.expression()!=null ) {
-r2=((Result)(Visit(context.expression())));
-typ=((string)(r2.data));
+r2 = ((Result)(Visit(context.expression())));
+typ = ((string)(r2.data));
 }
 if ( context.typeType()!=null ) {
-typ=((string)(Visit(context.typeType())));
+typ = ((string)(Visit(context.typeType())));
 }
 var obj = "";
 if ( context.annotationSupport()!=null ) {
@@ -212,7 +212,7 @@ public  override  object VisitNamespaceControlStatement( NamespaceControlStateme
 var r1 = ((Result)(Visit(context.id())));
 var isMutable = r1.isVirtual;
 var typ = "";
-typ=((string)(Visit(context.typeType())));
+typ = ((string)(Visit(context.typeType())));
 var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
@@ -238,28 +238,28 @@ public static (  string id ,  string type  ) GetControlSub( string id )
 var typ = "";
 switch (id) {
 case "get" :
-{ id=" get ";
-typ="get";
+{ id = " get ";
+typ = "get";
 }break;
 case "set" :
-{ id=" set ";
-typ="set";
+{ id = " set ";
+typ = "set";
 }break;
 case "_get" :
-{ id=" protected get ";
-typ="get";
+{ id = " protected get ";
+typ = "get";
 }break;
 case "_set" :
-{ id=" protected set ";
-typ="set";
+{ id = " protected set ";
+typ = "set";
 }break;
 case "add" :
-{ id=" add ";
-typ="add";
+{ id = " add ";
+typ = "add";
 }break;
 case "remove" :
-{ id=" remove ";
-typ="remove";
+{ id = " remove ";
+typ = "remove";
 }break;
 } 
 return(id, typ);

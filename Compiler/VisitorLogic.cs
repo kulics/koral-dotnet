@@ -40,6 +40,7 @@ return(it);
 }
 public  override  object VisitLoopStatement( LoopStatementContext context )
 {
+this.CurrentIDSet=(new hashset<string>());
 var obj = "";
 var id = ((Result)(Visit(context.id()))).text;
 this.CurrentIDSet=(new hashset<string>());
@@ -54,6 +55,7 @@ return(obj);
 }
 public  override  object VisitLoopInfiniteStatement( LoopInfiniteStatementContext context )
 {
+this.CurrentIDSet=(new hashset<string>());
 var obj = (new System.Text.StringBuilder("for (;;) ").Append(BlockLeft+Wrap).Append("")).to_str();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
@@ -61,16 +63,17 @@ return(obj);
 }
 public  override  object VisitLoopEachStatement( LoopEachStatementContext context )
 {
+this.CurrentIDSet=(new hashset<string>());
 var obj = "";
 var arr = ((Result)(Visit(context.expression())));
 var target = arr.text;
 var id = "ea";
 if ( context.id().Length==2 ) {
-target=(new System.Text.StringBuilder("range(").Append(target).Append(")")).to_str();
-id=(new System.Text.StringBuilder("(").Append(((Result)(Visit(context.id(0)))).text).Append(",").Append(((Result)(Visit(context.id(1)))).text).Append(")")).to_str();
+target = (new System.Text.StringBuilder("range(").Append(target).Append(")")).to_str();
+id = (new System.Text.StringBuilder("(").Append(((Result)(Visit(context.id(0)))).text).Append(",").Append(((Result)(Visit(context.id(1)))).text).Append(")")).to_str();
 }
 else if ( context.id().Length==1 ) {
-id=((Result)(Visit(context.id(0)))).text;
+id = ((Result)(Visit(context.id(0)))).text;
 } 
 obj+=(new System.Text.StringBuilder("foreach (var ").Append(id).Append(" in ").Append(target).Append(")")).to_str();
 obj+=BlockLeft+Wrap;
@@ -80,6 +83,7 @@ return(obj);
 }
 public  override  object VisitLoopCaseStatement( LoopCaseStatementContext context )
 {
+this.CurrentIDSet=(new hashset<string>());
 var obj = "";
 var expr = ((Result)(Visit(context.expression())));
 obj+=(new System.Text.StringBuilder("for ( ;").Append(expr.text).Append(" ;)")).to_str();
@@ -118,7 +122,7 @@ obj+=(new System.Text.StringBuilder("case ").Append(expr.text).Append(" :").Appe
 else if ( context.typeType()!=null ) {
 var id = "it";
 if ( context.id()!=null ) {
-id=((Result)(Visit(context.id()))).text;
+id = ((Result)(Visit(context.id()))).text;
 }
 this.AllIDSet.add(id);
 this.CurrentIDSet.add(id);
@@ -202,7 +206,7 @@ this.AllIDSet.add(ID);
 this.CurrentIDSet.add(ID);
 var Type = "Exception";
 if ( context.typeType()!=null ) {
-Type=((string)(Visit(context.typeType())));
+Type = ((string)(Visit(context.typeType())));
 }
 obj+=(new System.Text.StringBuilder("catch( ").Append(Type).Append(" ").Append(ID).Append(" )")).to_str()+Wrap+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -224,10 +228,10 @@ var r2 = ((Result)(Visit(context.expression(0))));
 var r1 = ((Result)(Visit(context.expression(1))));
 if ( context.typeType()!=null ) {
 var Type = ((string)(Visit(context.typeType())));
-obj=(new System.Text.StringBuilder("").Append(Type).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str();
+obj = (new System.Text.StringBuilder("").Append(Type).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str();
 }
 else {
-obj=(new System.Text.StringBuilder("var ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str();
+obj = (new System.Text.StringBuilder("var ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str();
 }
 return(obj);
 }

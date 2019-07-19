@@ -56,12 +56,8 @@ LiteLangVisitor -> {
     superID = ""
     setID = ""
 
-<<<<<<< HEAD
-    AllIDSet := [str]{}
-    CurrentIDSet := [str]{}
-=======
-    IDMap = [str]bool{}
->>>>>>> remove-colon
+    AllIDSet = [str]{}
+    CurrentIDSet = [str]{}
 }
 (base)me LiteLangVisitor -> {
     VisitProgram(context ProgramContext -> v any) {
@@ -145,13 +141,8 @@ LiteLangVisitor -> {
             }
             r.text += ")"
         } _ {
-<<<<<<< HEAD
-            r = Visit(context.idExprItem(0)):(Result)
-            ? me.AllIDSet.contains(r.text) {
-=======
             r = Visit(context.idExprItem(0)).(Result)
-            ? me.IDMap.has_key(r.text) {
->>>>>>> remove-colon
+            ? me.AllIDSet.contains(r.text) {
                 r.isDefine = true
             } _ {
                 me.AllIDSet.add(r.text)
@@ -188,7 +179,7 @@ LiteLangVisitor -> {
             id = ""Visit(context.id()).(Result).text":"
         }
 
-        r := Visit(context.annotationList()).(str)
+        r = Visit(context.annotationList()).(str)
         obj += "[" id "" r "]"
         <- obj
     }

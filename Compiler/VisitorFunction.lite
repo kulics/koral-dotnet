@@ -8,22 +8,22 @@
 }
 
 Parameter -> {
-    id: str
-    type: str
-    value: str
-    annotation: str
-    permission: str
+    id str
+    type str
+    value str
+    annotation str
+    permission str
 }
 
-me: LiteLangVisitor -> {
-    ProcessFunctionSupport(items: [:]FunctionSupportStatementContext -> v:str) {
-        obj := ""
-        content := ""
-        lazy := []str{}
+me LiteLangVisitor -> {
+    ProcessFunctionSupport(items [:]FunctionSupportStatementContext -> v str) {
+        obj = ""
+        content = ""
+        lazy = []str{}
         items @ item {
-            ? item.GetChild(0) == :UsingStatementContext {
+            ? item.GetChild(0) == <UsingStatementContext> {
                 lazy.add("}")
-                content += "using ("Visit(item):(str)") "BlockLeft" "Wrap""
+                content += "using ("Visit(item).(str)") "BlockLeft" "Wrap""
             } _ {
                 content += Visit(item)
             }
@@ -41,13 +41,13 @@ me: LiteLangVisitor -> {
     }
 }
 
-(base)me: LiteLangVisitor -> {
-    VisitFunctionStatement(context: FunctionStatementContext -> v: any) {
-        id := Visit(context.id()):(Result)
-        obj := ""
+(base)me LiteLangVisitor -> {
+    VisitFunctionStatement(context FunctionStatementContext -> v any) {
+        id = Visit(context.id()).(Result)
+        obj = ""
         # 异步 #
         ? context.t.Type == Right_Flow {
-            pout := Visit(context.parameterClauseOut()):(str)
+            pout = Visit(context.parameterClauseOut()).(str)
             ? pout >< "void" {
                 pout = ""Task"<"pout">"
             } _ {
@@ -58,9 +58,9 @@ me: LiteLangVisitor -> {
             obj += ""Visit(context.parameterClauseOut())" "id.text""
         }
         # 泛型 #
-        templateContract := ""
+        templateContract = ""
         ? context.templateDefine() >< nil {
-            template := Visit(context.templateDefine()):(TemplateItem)
+            template = Visit(context.templateDefine()).(TemplateItem)
             obj += template.Template
             templateContract = template.Contract
         }
@@ -70,18 +70,18 @@ me: LiteLangVisitor -> {
         <- obj
     }
 
-    VisitReturnStatement(context: ReturnStatementContext -> v: any) {
+    VisitReturnStatement(context ReturnStatementContext -> v any) {
         ? context.expressionList() >< nil {
-            r := Visit(context.expressionList()):(Result)
+            r = Visit(context.expressionList()).(Result)
             <- "return("r.text")"Terminate""Wrap""
         }
         <- "return"Terminate""Wrap""
     }
 
-    VisitTuple(context: TupleContext -> v: any) {
-        obj := "("
+    VisitTuple(context TupleContext -> v any) {
+        obj = "("
         [0 < context.expression().Length] @ i {
-            r := Visit(context.expression(i)):(Result)
+            r = Visit(context.expression(i)).(Result)
             ? i == 0 {
                 obj += r.text
             } _ {
@@ -89,14 +89,13 @@ me: LiteLangVisitor -> {
             }
         }
         obj += ")"
-        result := Result{ data = "var", text = obj }
-        <- result
+        <- Result{ data = "var", text = obj }
     }
 
-    VisitTupleExpression(context: TupleExpressionContext -> v: any) {
-        obj := "("
+    VisitTupleExpression(context TupleExpressionContext -> v any) {
+        obj = "("
         [0 < context.expression().Length] @ i {
-            r := Visit(context.expression(i)):(Result)
+            r = Visit(context.expression(i)).(Result)
             ? i == 0 {
                 obj += r.text
             } _ {
@@ -104,15 +103,14 @@ me: LiteLangVisitor -> {
             }
         }
         obj += ")"
-        result := Result{ data = "var", text = obj }
-        <- result
+        <- Result{ data = "var", text = obj }
     }
 
-    VisitParameterClauseIn(context: ParameterClauseInContext -> v: any) {
-        obj := "("
-        temp := []str{}
+    VisitParameterClauseIn(context ParameterClauseInContext -> v any) {
+        obj = "("
+        temp = []str{}
         [context.parameter().Length - 1 >= 0] @ i {
-            p := Visit(context.parameter(i)):(Parameter)
+            p = Visit(context.parameter(i)).(Parameter)
             temp.add(""p.annotation" "p.type" "p.id" "p.value"")
             me.AllIDSet.add(p.id)
             me.CurrentIDSet.add(p.id)
@@ -129,19 +127,19 @@ me: LiteLangVisitor -> {
         <- obj
     }
 
-    VisitParameterClauseOut(context: ParameterClauseOutContext -> v: any) {
-        obj := ""
+    VisitParameterClauseOut(context ParameterClauseOutContext -> v any) {
+        obj = ""
         ? context.parameter().Length == 0 {
             obj += "void"
         } context.parameter().Length == 1 {
-            p := Visit(context.parameter(0)):(Parameter)
+            p = Visit(context.parameter(0)).(Parameter)
             obj += p.type
         }
         ? context.parameter().Length > 1 {
             obj += "( "
-            temp := []str{}
+            temp = []str{}
             [context.parameter().Length - 1 >= 0] @ i {
-                p := Visit(context.parameter(i)):(Parameter)
+                p = Visit(context.parameter(i)).(Parameter)
                 temp.add(""p.annotation" "p.type" "p.id" "p.value"")
             }
             [temp.Count - 1 >= 0] @ i {
@@ -156,27 +154,27 @@ me: LiteLangVisitor -> {
         <- obj
     }
 
-    VisitParameterClauseSelf(context: ParameterClauseSelfContext -> v: any) {
-        p := Parameter{}
-        id := Visit(context.id()):(Result)
+    VisitParameterClauseSelf(context ParameterClauseSelfContext -> v any) {
+        p = Parameter{}
+        id = Visit(context.id()).(Result)
         p.id = id.text
         p.permission = id.permission
-        p.type = Visit(context.typeType()):(str)
+        p.type = Visit(context.typeType()).(str)
         <- p
     }
 
-    VisitParameter(context: ParameterContext -> v: any) {
-        p := Parameter{}
-        id := Visit(context.id()):(Result)
+    VisitParameter(context ParameterContext -> v any) {
+        p = Parameter{}
+        id = Visit(context.id()).(Result)
         p.id = id.text
         p.permission = id.permission
         ? context.annotationSupport() >< nil {
-            p.annotation = Visit(context.annotationSupport()):(str)
+            p.annotation = Visit(context.annotationSupport()).(str)
         }
         ? context.expression() >< nil {
-            p.value = "=" Visit(context.expression()):(Result).text ""
+            p.value = "=" Visit(context.expression()).(Result).text ""
         }
-        p.type = Visit(context.typeType()):(str)
+        p.type = Visit(context.typeType()).(str)
         <- p
     }
 }

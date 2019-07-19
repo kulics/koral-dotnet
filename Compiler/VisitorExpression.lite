@@ -30,7 +30,7 @@ DicEle -> {
 }
 
 (base)me LiteLangVisitor -> {
-    VisitVariableStatement(context: VariableStatementContext -> v any) {
+    VisitVariableStatement(context VariableStatementContext -> v any) {
         obj = ""
         r1 = Visit(context.idExpression()).(Result)
         r2 = Visit(context.expression()).(Result)
@@ -277,7 +277,7 @@ DicEle -> {
                     item.Contract += ","
                 }
             }
-            r := Visit(context.templateDefineItem(i)).(TemplateItem)
+            r = Visit(context.templateDefineItem(i)).(TemplateItem)
             item.Template += r.Template
             item.Contract += r.Contract
         }
@@ -452,7 +452,7 @@ DicEle -> {
         obj = ""
         obj += "{"
         [0 < context.expression().Length] @ i {
-            r := Visit(context.expression(i)).(Result)
+            r = Visit(context.expression(i)).(Result)
             ? i == 0 {
                 obj += r.text
             } _ {
@@ -467,7 +467,7 @@ DicEle -> {
         obj = ""
         obj += "{"
         [0 < context.dictionaryElement().Length] @ i {
-            r := Visit(context.dictionaryElement(i)).(DicEle)
+            r = Visit(context.dictionaryElement(i)).(DicEle)
             ? i == 0 {
                 obj += r.text
             } _ {
@@ -586,8 +586,8 @@ DicEle -> {
     }
 
     VisitDictionaryElement(context DictionaryElementContext -> v any) {
-        r1 = Visit(context.expression(0)):(Result)
-        r2 = Visit(context.expression(1)):(Result)
+        r1 = Visit(context.expression(0)).(Result)
+        r2 = Visit(context.expression(1)).(Result)
         result = DicEle{
             key = r1.data.(str),
             value = r2.data.(str),

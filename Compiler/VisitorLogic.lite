@@ -8,16 +8,16 @@
 }
 
 Iterator -> {
-    begin: Result
-    end: Result
-    step: Result
-    order:str = T
-    attach:str = F
+    begin Result
+    end Result
+    step Result
+    order str = T
+    attach str = F
 }
 
-(base)me: LiteLangVisitor -> {
-    VisitIteratorStatement(context: IteratorStatementContext -> v: any) {
-        it := Iterator{}
+(base)me LiteLangVisitor -> {
+    VisitIteratorStatement(context IteratorStatementContext -> v any) {
+        it = Iterator{}
         ? context.op.Text == ">=" | context.op.Text == "<=" {
             it.attach = T
         }
@@ -25,25 +25,27 @@ Iterator -> {
             it.order = F
         }
         ? context.expression().Length == 2 {
-            it.begin = Visit(context.expression(0)):(Result)
-            it.end = Visit(context.expression(1)):(Result)
+            it.begin = Visit(context.expression(0)).(Result)
+            it.end = Visit(context.expression(1)).(Result)
             it.step = Result{ data = I32, text = "1" }
         } _ {
-            it.begin = Visit(context.expression(0)):(Result)
-            it.end = Visit(context.expression(1)):(Result)
-            it.step = Visit(context.expression(2)):(Result)
+            it.begin = Visit(context.expression(0)).(Result)
+            it.end = Visit(context.expression(1)).(Result)
+            it.step = Visit(context.expression(2)).(Result)
         }
         <- it
     }
 
-    VisitLoopStatement(context: LoopStatementContext -> v: any) {
-        obj := ""
-        id := Visit(context.id()):(Result).text
+    VisitLoopStatement(context LoopStatementContext -> v any) {
+        me.CurrentIDSet = [str]{}
+
+        obj = ""
+        id = Visit(context.id()).(Result).text
         me.CurrentIDSet = [str]{}
         me.CurrentIDSet.add(id)
         me.AllIDSet.add(id)
         
-        it := Visit(context.iteratorStatement()):(Iterator)
+        it = Visit(context.iteratorStatement()).(Iterator)
 
         obj += "foreach (var "id" in range("it.begin.text","it.end.text","it.step.text","it.order","it.attach"))"
 
@@ -53,23 +55,27 @@ Iterator -> {
         <- obj
     }
 
-    VisitLoopInfiniteStatement(context: LoopInfiniteStatementContext -> v: any) {
-        obj := "for (;;) "BlockLeft+Wrap""
+    VisitLoopInfiniteStatement(context LoopInfiniteStatementContext -> v any) {
+        me.CurrentIDSet = [str]{}
+
+        obj = "for (;;) "BlockLeft+Wrap""
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += BlockRight+Wrap
         <- obj
     }
 
-    VisitLoopEachStatement(context: LoopEachStatementContext -> v: any) {
-        obj := ""
-        arr := Visit(context.expression()):(Result)
-        target := arr.text
-        id := "ea"
+    VisitLoopEachStatement(context LoopEachStatementContext -> v any) {
+        me.CurrentIDSet = [str]{}
+
+        obj = ""
+        arr = Visit(context.expression()).(Result)
+        target = arr.text
+        id = "ea"
         ? context.id().Length == 2 {
             target = "range("target")"
-            id = "("Visit(context.id(0)):(Result).text","Visit(context.id(1)):(Result).text")"
+            id = "("Visit(context.id(0)).(Result).text","Visit(context.id(1)).(Result).text")"
         } context.id().Length == 1 {
-            id = Visit(context.id(0)):(Result).text
+            id = Visit(context.id(0)).(Result).text
         }
 
         obj += "foreach (var "id" in "target")"
@@ -79,9 +85,11 @@ Iterator -> {
         <- obj
     }
 
-    VisitLoopCaseStatement(context: LoopCaseStatementContext -> v: any) {
-        obj := ""
-        expr := Visit(context.expression()):(Result)
+    VisitLoopCaseStatement(context LoopCaseStatementContext -> v any) {
+        me.CurrentIDSet = [str]{}
+
+        obj = ""
+        expr = Visit(context.expression()).(Result)
         obj += "for ( ;"expr.text" ;)"
         obj += BlockLeft+Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -89,39 +97,39 @@ Iterator -> {
         <- obj
     }
 
-    VisitLoopJumpStatement(context: LoopJumpStatementContext -> v: any) {
+    VisitLoopJumpStatement(context LoopJumpStatementContext -> v any) {
         <- "break "Terminate+Wrap""
     }
 
-    VisitLoopContinueStatement(context: LoopContinueStatementContext -> v: any) {
+    VisitLoopContinueStatement(context LoopContinueStatementContext -> v any) {
         <- "continue "Terminate+Wrap""
     }
 
-    VisitJudgeCaseStatement(context: JudgeCaseStatementContext -> v: any)  {
-        obj := ""
-        expr := Visit(context.expression()):(Result)
+    VisitJudgeCaseStatement(context JudgeCaseStatementContext -> v any)  {
+        obj = ""
+        expr = Visit(context.expression()).(Result)
         obj += "switch ("expr.text") "BlockLeft+Wrap""
         context.caseStatement() @ item {
-            r := Visit(item):(str)
+            r = Visit(item).(str)
             obj += r + Wrap
         }
         obj += ""BlockRight" "Wrap""
         <- obj
     }
 
-    VisitCaseExprStatement(context: CaseExprStatementContext -> v: any) {
-        obj := ""
+    VisitCaseExprStatement(context CaseExprStatementContext -> v any) {
+        obj = ""
         ? context.expression() >< nil  {
-            expr := Visit(context.expression()):(Result)
+            expr = Visit(context.expression()).(Result)
             obj += "case "expr.text" :"Wrap""
         } context.typeType() >< nil {
-            id := "it"
+            id = "it"
             ? context.id() >< nil {
-                id = Visit(context.id()):(Result).text
+                id = Visit(context.id()).(Result).text
             }
             me.AllIDSet.add(id)
             me.CurrentIDSet.add(id)
-            type := Visit(context.typeType()):(str)
+            type = Visit(context.typeType()).(str)
             obj += "case "type" "id" :"Wrap""
         } _ {
             obj += "default:"Wrap""
@@ -129,19 +137,19 @@ Iterator -> {
         <- obj
     }
 
-    VisitCaseStatement(context: CaseStatementContext -> v: any) {
+    VisitCaseStatement(context CaseStatementContext -> v any) {
         me.CurrentIDSet = [str]{}
-        obj := ""
+        obj = ""
         context.caseExprStatement() @ item {
-            r := Visit(item):(str)
-            process := ""BlockLeft" "ProcessFunctionSupport(context.functionSupportStatement())"" BlockRight"break;"
+            r = Visit(item).(str)
+            process = ""BlockLeft" "ProcessFunctionSupport(context.functionSupportStatement())"" BlockRight"break;"
             obj += r + process
         }
         <- obj
     }
 
-    VisitJudgeStatement(context: JudgeStatementContext -> v: any) {
-        obj := ""
+    VisitJudgeStatement(context JudgeStatementContext -> v any) {
+        obj = ""
         obj += Visit(context.judgeIfStatement())
         context.judgeElseIfStatement() @ it {
             obj += Visit(it)
@@ -152,39 +160,39 @@ Iterator -> {
         <- obj
     }
 
-    VisitJudgeIfStatement(context: JudgeIfStatementContext -> v: any) {
+    VisitJudgeIfStatement(context JudgeIfStatementContext -> v any) {
         me.CurrentIDSet = [str]{}
 
-        b := Visit(context.expression()):(Result)
-        obj := "if ( "b.text" ) "BlockLeft+Wrap""
+        b = Visit(context.expression()).(Result)
+        obj = "if ( "b.text" ) "BlockLeft+Wrap""
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += ""BlockRight""Wrap""
         <- obj
     }
 
-    VisitJudgeElseIfStatement(context: JudgeElseIfStatementContext -> v: any) {
+    VisitJudgeElseIfStatement(context JudgeElseIfStatementContext -> v any) {
         me.CurrentIDSet = [str]{}
 
-        b := Visit(context.expression()):(Result)
-        obj := "else if ( "b.text" ) "BlockLeft+Wrap""
+        b = Visit(context.expression()).(Result)
+        obj = "else if ( "b.text" ) "BlockLeft+Wrap""
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += ""BlockRight" "Wrap""
         <- obj
     }
 
-    VisitJudgeElseStatement(context: JudgeElseStatementContext -> v: any) {
+    VisitJudgeElseStatement(context JudgeElseStatementContext -> v any) {
         me.CurrentIDSet = [str]{}
 
-        obj := "else "BlockLeft+Wrap""
+        obj = "else "BlockLeft+Wrap""
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += ""BlockRight""Wrap""
         <- obj
     }
 
-    VisitCheckStatement(context: CheckStatementContext -> v: any) {
+    VisitCheckStatement(context CheckStatementContext -> v any) {
         me.CurrentIDSet = [str]{}
         
-        obj := "try "BlockLeft+Wrap""
+        obj = "try "BlockLeft+Wrap""
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += ""BlockRight+Wrap""
         context.checkErrorStatement() @ item {
@@ -197,17 +205,17 @@ Iterator -> {
         <- obj
     }
 
-    VisitCheckErrorStatement(context: CheckErrorStatementContext -> v: any) {
+    VisitCheckErrorStatement(context CheckErrorStatementContext -> v any) {
         me.CurrentIDSet = [str]{}
 
-        obj := ""
-        ID := Visit(context.id()):(Result).text
+        obj = ""
+        ID = Visit(context.id()).(Result).text
         me.AllIDSet.add(ID)
         me.CurrentIDSet.add(ID)
 
-        Type := "Exception"
+        Type = "Exception"
         ? context.typeType() >< nil {
-            Type = Visit(context.typeType()):(str)
+            Type = Visit(context.typeType()).(str)
         }
 
         obj += "catch( "Type" "ID" )"+Wrap+BlockLeft+Wrap
@@ -216,21 +224,21 @@ Iterator -> {
         <- obj
     }
 
-    VisitCheckFinallyStatment(context: CheckFinallyStatmentContext -> v: any) {
+    VisitCheckFinallyStatment(context CheckFinallyStatmentContext -> v any) {
         me.CurrentIDSet = [str]{}
 
-        obj := "finally "Wrap+BlockLeft+Wrap""
+        obj = "finally "Wrap+BlockLeft+Wrap""
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += ""BlockRight""Wrap""
         <- obj
     }
 
-    VisitUsingStatement(context: UsingStatementContext -> v: any) {
-        obj := ""
-        r2 := Visit(context.expression(0)):(Result)
-        r1 := Visit(context.expression(1)):(Result)
+    VisitUsingStatement(context UsingStatementContext -> v any) {
+        obj = ""
+        r2 = Visit(context.expression(0)).(Result)
+        r1 = Visit(context.expression(1)).(Result)
         ? context.typeType() >< nil {
-            Type := Visit(context.typeType()):(str)
+            Type = Visit(context.typeType()).(str)
             obj = ""Type" "r1.text" = "r2.text""
         } _ {
             obj = "var "r1.text" = "r2.text""
@@ -238,42 +246,42 @@ Iterator -> {
         <- obj
     }
 
-    VisitReportStatement(context: ReportStatementContext -> v: any) {
-        obj := ""
+    VisitReportStatement(context ReportStatementContext -> v any) {
+        obj = ""
         ? context.expression() >< nil {
-            r := Visit(context.expression()):(Result)
+            r = Visit(context.expression()).(Result)
             obj += r.text
         }
         <- "throw "obj+Terminate+Wrap""
     }
 
-    VisitLinq(context: LinqContext -> v: any) {
-        r := Result{data = "var"}
-        r.text += "from " Visit(context.expression(0)):(Result).text " "
+    VisitLinq(context LinqContext -> v any) {
+        r = Result{data = "var"}
+        r.text += "from " Visit(context.expression(0)).(Result).text " "
         context.linqItem() @ item {
             r.text += "" Visit(item) " "
         }
-        r.text += ""context.k.Text " " Visit(context.expression(1)):(Result).text ""
+        r.text += ""context.k.Text " " Visit(context.expression(1)).(Result).text ""
         <- r
     }
 
-    VisitLinqItem(context: LinqItemContext -> v: any) {
-        obj := Visit(context.linqKeyword()):(str)
+    VisitLinqItem(context LinqItemContext -> v any) {
+        obj = Visit(context.linqKeyword()).(str)
         ? context.expression() >< nil {
-            obj += " "Visit(context.expression()):(Result).text""
+            obj += " "Visit(context.expression()).(Result).text""
         }
         <- obj
     }
 
-    VisitLinqKeyword(context: LinqKeywordContext -> v: any) {
+    VisitLinqKeyword(context LinqKeywordContext -> v any) {
         <- Visit(context.GetChild(0))
     }
 
-    VisitLinqHeadKeyword(context: LinqHeadKeywordContext -> v: any) {
+    VisitLinqHeadKeyword(context LinqHeadKeywordContext -> v any) {
         <- context.k.Text
     }
 
-    VisitLinqBodyKeyword(context: LinqBodyKeywordContext -> v: any) {
+    VisitLinqBodyKeyword(context LinqBodyKeywordContext -> v any) {
         <- context.k.Text
     }
 }

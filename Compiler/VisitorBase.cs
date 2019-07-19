@@ -115,7 +115,7 @@ this.CurrentIDSet.add(subID);
 r.text+=")";
 }
 else {
-r=((Result)(Visit(context.idExprItem(0))));
+var r = ((Result)(Visit(context.idExprItem(0))));
 if ( this.AllIDSet.contains(r.text) ) {
 r.isDefine=true;
 }
@@ -152,7 +152,7 @@ public  override  object VisitAnnotation( AnnotationContext context )
 var obj = "";
 var id = "";
 if ( context.id()!=null ) {
-id=(new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).text).Append(":")).to_str();
+id = (new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).text).Append(":")).to_str();
 }
 var r = ((string)(Visit(context.annotationList())));
 obj+=(new System.Text.StringBuilder("[").Append(id).Append("").Append(r).Append("]")).to_str();
@@ -193,10 +193,10 @@ public  override  object VisitAnnotationAssign( AnnotationAssignContext context 
 var obj = "";
 var id = "";
 if ( context.id()!=null ) {
-id=(new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).text).Append("=")).to_str();
+id = (new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).text).Append("=")).to_str();
 }
 var r = ((Result)(Visit(context.expression())));
-obj=id+r.text;
+obj = id+r.text;
 return(obj);
 }
 }

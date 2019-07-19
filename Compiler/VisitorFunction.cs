@@ -50,10 +50,10 @@ var obj = "";
 if ( context.t.Type==Right_Flow ) {
 var pout = ((string)(Visit(context.parameterClauseOut())));
 if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
+pout = (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
 }
 else {
-pout=Task;
+pout = Task;
 }
 obj+=(new System.Text.StringBuilder(" async ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
 }
@@ -64,7 +64,7 @@ var templateContract = "";
 if ( context.templateDefine()!=null ) {
 var template = ((TemplateItem)(Visit(context.templateDefine())));
 obj+=template.Template;
-templateContract=template.Contract;
+templateContract = template.Contract;
 }
 obj+=(new System.Text.StringBuilder("").Append(Visit(context.parameterClauseIn())).Append(" ").Append(templateContract).Append(" ").Append(Wrap).Append(" ").Append(BlockLeft).Append(" ").Append(Wrap).Append("")).to_str();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -92,8 +92,7 @@ obj+=(new System.Text.StringBuilder(", ").Append(r.text).Append("")).to_str();
 }
 }
 obj+=")";
-var result = (new Result(){data = "var",text = obj});
-return(result);
+return((new Result(){data = "var",text = obj}));
 }
 public  override  object VisitTupleExpression( TupleExpressionContext context )
 {
@@ -108,8 +107,7 @@ obj+=(new System.Text.StringBuilder(", ").Append(r.text).Append("")).to_str();
 }
 }
 obj+=")";
-var result = (new Result(){data = "var",text = obj});
-return(result);
+return((new Result(){data = "var",text = obj}));
 }
 public  override  object VisitParameterClauseIn( ParameterClauseInContext context )
 {
