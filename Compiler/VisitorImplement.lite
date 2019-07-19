@@ -53,8 +53,10 @@
             obj += template.Template
             templateContract = template.Contract
         }
+        me.add_current_set()
         obj += Visit(context.parameterClauseIn()) + templateContract + Wrap + BlockLeft + Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
         obj += BlockRight + Wrap
         <- obj
     }
@@ -129,8 +131,10 @@
             obj += template.Template
             templateContract = template.Contract
         }
+        me.add_current_set()
         obj += Visit(context.parameterClauseIn()) + templateContract + Wrap + BlockLeft + Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
         obj += BlockRight + Wrap
         <- obj
     }

@@ -37,8 +37,6 @@ content+=BlockRight;
 }
 }
 obj+=content;
-this.AllIDSet.except_with(this.CurrentIDSet);
-this.CurrentIDSet=this.AllIDSet;
 return(obj);
 }
 }
@@ -66,9 +64,11 @@ var template = ((TemplateItem)(Visit(context.templateDefine())));
 obj+=template.Template;
 templateContract = template.Contract;
 }
+this.add_current_set();
 obj+=(new System.Text.StringBuilder("").Append(Visit(context.parameterClauseIn())).Append(" ").Append(templateContract).Append(" ").Append(Wrap).Append(" ").Append(BlockLeft).Append(" ").Append(Wrap).Append("")).to_str();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
+this.delete_current_set();
 return(obj);
 }
 public  override  object VisitReturnStatement( ReturnStatementContext context )
@@ -116,8 +116,7 @@ var temp = (new list<string>());
 foreach (var i in range(context.parameter().Length-1,0,1,false,true)){
 var p = ((Parameter)(Visit(context.parameter(i))));
 temp.add((new System.Text.StringBuilder("").Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value).Append("")).to_str());
-this.AllIDSet.add(p.id);
-this.CurrentIDSet.add(p.id);
+this.add_id(p.id);
 }
 foreach (var i in range(temp.Count-1,0,1,false,true)){
 if ( i==temp.Count-1 ) {

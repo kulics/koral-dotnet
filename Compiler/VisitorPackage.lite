@@ -82,10 +82,18 @@
         <- obj
     }
 
+<<<<<<< HEAD
     VisitPackageControlSubStatement(context PackageControlSubStatementContext -> v any) {
         obj = ""
         id = ""
         typ = ""
+=======
+    VisitPackageControlSubStatement(context: PackageControlSubStatementContext -> v: any) {
+        obj := ""
+        id := ""
+        typ := ""
+        me.add_current_set()
+>>>>>>> fix-define-bug
         (id, typ) = GetControlSub(context.id(0).GetText())
         ? context.id(1) >< nil {
             me.setID = context.id(1).GetText()
@@ -99,6 +107,7 @@
         } _ {
             obj += id + Terminate
         }
+        me.delete_current_set()
         me.setID = ""
         <- Result{ text = obj, data = typ }
     }
@@ -110,11 +119,17 @@
         text += ""Self.permission" partial class "Self.type""BlockLeft + Wrap""
         text += "public " Self.type " "
         # 获取构造数据 #
+<<<<<<< HEAD
         text += Visit(context.parameterClauseIn()).(str)
+=======
+        me.add_current_set()
+        text += Visit(context.parameterClauseIn()):(str)
+>>>>>>> fix-define-bug
         ? context.expressionList() >< nil {
             text += ":base(" Visit(context.expressionList()).(Result).text ")"
         }
         text += BlockLeft + ProcessFunctionSupport(context.functionSupportStatement()) + BlockRight + Wrap
+        me.delete_current_set()
         text += BlockRight + Wrap
         selfID = ""
         <- text

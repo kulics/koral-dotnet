@@ -34,9 +34,6 @@ me LiteLangVisitor -> {
             }
         }
         obj += content
-        # clear ID set #
-        me.AllIDSet.except_with(me.CurrentIDSet)
-        me.CurrentIDSet = me.AllIDSet
         <- obj
     }
 }
@@ -64,9 +61,11 @@ me LiteLangVisitor -> {
             obj += template.Template
             templateContract = template.Contract
         }
+        me.add_current_set()
         obj += ""Visit(context.parameterClauseIn())" "templateContract" "Wrap" "BlockLeft" "Wrap""
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += BlockRight + Wrap
+        me.delete_current_set()
         <- obj
     }
 
@@ -112,8 +111,7 @@ me LiteLangVisitor -> {
         [context.parameter().Length - 1 >= 0] @ i {
             p = Visit(context.parameter(i)).(Parameter)
             temp.add(""p.annotation" "p.type" "p.id" "p.value"")
-            me.AllIDSet.add(p.id)
-            me.CurrentIDSet.add(p.id)
+            me.add_id(p.id)
         }
         [temp.Count - 1 >= 0] @ i {
             ? i == temp.Count - 1 {

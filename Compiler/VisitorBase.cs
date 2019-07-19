@@ -3,6 +3,7 @@ using static Library.Lib;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;
+using System.Collections.Generic;
 using static Compiler.LiteParser;
 using static Compiler.Compiler_static;
 
@@ -22,7 +23,33 @@ public string selfID = "" ;
 public string superID = "" ; 
 public string setID = "" ; 
 public hashset<string> AllIDSet = (new hashset<string>()) ; 
-public hashset<string> CurrentIDSet = (new hashset<string>()) ; 
+public Stack<hashset<string>> CurrentIDSet = (new Stack<hashset<string>>()) ; 
+}
+public partial class LiteLangVisitor{
+public LiteLangVisitor (){CurrentIDSet.Push((new hashset<string>()));
+}
+}
+public partial class LiteLangVisitor{
+public  virtual  bool has_id( string id )
+{
+return(this.AllIDSet.contains(id)||this.CurrentIDSet.Peek().contains(id));
+}
+public  virtual  void add_id( string id )
+{
+this.CurrentIDSet.Peek().add(id);
+}
+public  virtual  void add_current_set()
+{
+foreach (var item in CurrentIDSet.Peek()){
+AllIDSet.Add(item);
+}
+this.CurrentIDSet.Push((new hashset<string>()));
+}
+public  virtual  void delete_current_set()
+{
+this.AllIDSet.except_with(this.CurrentIDSet.Peek());
+this.CurrentIDSet.Pop();
+}
 }
 public partial class LiteLangVisitor{
 public  override  object VisitProgram( ProgramContext context )
@@ -104,24 +131,27 @@ r.text+=", "+subID;
 else {
 r.text+=subID;
 }
-if ( this.AllIDSet.contains(subID) ) {
+if ( this.has_id(subID) ) {
 r.isDefine=true;
 }
 else {
-this.AllIDSet.add(subID);
-this.CurrentIDSet.add(subID);
+this.add_id(subID);
 }
 }
 r.text+=")";
 }
 else {
+<<<<<<< HEAD
 var r = ((Result)(Visit(context.idExprItem(0))));
 if ( this.AllIDSet.contains(r.text) ) {
+=======
+r=((Result)(Visit(context.idExprItem(0))));
+if ( this.has_id(r.text) ) {
+>>>>>>> fix-define-bug
 r.isDefine=true;
 }
 else {
-this.AllIDSet.add(r.text);
-this.CurrentIDSet.add(r.text);
+this.add_id(r.text);
 }
 }
 return(r);
