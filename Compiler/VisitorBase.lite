@@ -57,26 +57,17 @@ LiteLangVisitor -> {
     superID = ""
     setID = ""
 
-<<<<<<< HEAD
     AllIDSet = [str]{}
-    CurrentIDSet = [str]{}
+    CurrentIDSet = Stack<[str]>{}
 }
-(base)me LiteLangVisitor -> {
-    VisitProgram(context ProgramContext -> v any) {
-        StatementList = context.statement()
-        Result = ""
-=======
-    AllIDSet := [str]{}
-    CurrentIDSet := Stack<[str]>{}
-}
-me: LiteLangVisitor <>() {
+me LiteLangVisitor <>() {
     CurrentIDSet.Push(<[str]>())
 }
-me: LiteLangVisitor -> {
-    has_id(id:str -> v:bool) {
+me LiteLangVisitor -> {
+    has_id(id str -> v bool) {
         <- me.AllIDSet.contains(id) | me.CurrentIDSet.Peek().contains(id)
     }
-    add_id(id: str ->) {
+    add_id(id str ->) {
         me.CurrentIDSet.Peek().add(id)
     }
     add_current_set(->) {
@@ -91,11 +82,10 @@ me: LiteLangVisitor -> {
     }
 }
 
-(base)me: LiteLangVisitor -> {
-    VisitProgram(context: ProgramContext -> v: any) {
-        StatementList := context.statement()
-        Result := ""
->>>>>>> fix-define-bug
+(base)me LiteLangVisitor -> {
+    VisitProgram(context ProgramContext -> v any) {
+        StatementList = context.statement()
+        Result = ""
         StatementList @ item {
             Result += VisitStatement(item)
         }
@@ -173,13 +163,8 @@ me: LiteLangVisitor -> {
             }
             r.text += ")"
         } _ {
-<<<<<<< HEAD
             r = Visit(context.idExprItem(0)).(Result)
-            ? me.AllIDSet.contains(r.text) {
-=======
-            r = Visit(context.idExprItem(0)):(Result)
             ? me.has_id(r.text) {
->>>>>>> fix-define-bug
                 r.isDefine = true
             } _ {
                 me.add_id(r.text)

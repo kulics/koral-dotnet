@@ -141,13 +141,8 @@ this.add_id(subID);
 r.text+=")";
 }
 else {
-<<<<<<< HEAD
-var r = ((Result)(Visit(context.idExprItem(0))));
-if ( this.AllIDSet.contains(r.text) ) {
-=======
-r=((Result)(Visit(context.idExprItem(0))));
+r = ((Result)(Visit(context.idExprItem(0))));
 if ( this.has_id(r.text) ) {
->>>>>>> fix-define-bug
 r.isDefine=true;
 }
 else {

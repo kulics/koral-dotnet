@@ -40,7 +40,6 @@ return(it);
 }
 public  override  object VisitLoopStatement( LoopStatementContext context )
 {
-this.CurrentIDSet=(new hashset<string>());
 var obj = "";
 var id = ((Result)(Visit(context.id()))).text;
 var it = ((Iterator)(Visit(context.iteratorStatement())));
@@ -54,7 +53,6 @@ return(obj);
 }
 public  override  object VisitLoopInfiniteStatement( LoopInfiniteStatementContext context )
 {
-this.CurrentIDSet=(new hashset<string>());
 var obj = (new System.Text.StringBuilder("for (;;) ").Append(BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -64,7 +62,6 @@ return(obj);
 }
 public  override  object VisitLoopEachStatement( LoopEachStatementContext context )
 {
-this.CurrentIDSet=(new hashset<string>());
 var obj = "";
 var arr = ((Result)(Visit(context.expression())));
 var target = arr.text;
@@ -86,7 +83,6 @@ return(obj);
 }
 public  override  object VisitLoopCaseStatement( LoopCaseStatementContext context )
 {
-this.CurrentIDSet=(new hashset<string>());
 var obj = "";
 var expr = ((Result)(Visit(context.expression())));
 obj+=(new System.Text.StringBuilder("for ( ;").Append(expr.text).Append(" ;)")).to_str();

@@ -10,7 +10,7 @@
 (base)me LiteLangVisitor -> { 
     VisitImplementStatement(context ImplementStatementContext -> v any) {
         Self = Visit(context.parameterClauseSelf()).(Parameter)
-        selfID = Self.id
+        me.selfID = Self.id
         isVirtual = ""
         obj = ""
         extends = ""
@@ -22,7 +22,7 @@
             obj += Visit(item)
         }
         obj += BlockRight + Wrap
-        selfID = ""
+        me.selfID = ""
         <- obj
     }
 
@@ -90,16 +90,16 @@
 
     VisitOverrideStatement(context OverrideStatementContext -> v any) {
         Self = Visit(context.parameterClauseSelf()).(Parameter)
-        selfID = Self.id
-        superID = Visit(context.id()).(Result).text
+        me.selfID = Self.id
+        me.superID = Visit(context.id()).(Result).text
         obj = ""
         obj += ""Self.permission" partial class "Self.type""BlockLeft + Wrap""
         context.overrideSupportStatement() @ item {
             obj += Visit(item)
         }
         obj += BlockRight + Wrap
-        selfID = ""
-        superID = ""
+        me.selfID = ""
+        me.superID = ""
         <- obj
     }
 

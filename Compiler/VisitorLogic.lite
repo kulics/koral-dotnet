@@ -36,20 +36,9 @@ Iterator -> {
         <- it
     }
 
-<<<<<<< HEAD
     VisitLoopStatement(context LoopStatementContext -> v any) {
-        me.CurrentIDSet = [str]{}
-
         obj = ""
         id = Visit(context.id()).(Result).text
-        me.CurrentIDSet = [str]{}
-        me.CurrentIDSet.add(id)
-        me.AllIDSet.add(id)
-=======
-    VisitLoopStatement(context: LoopStatementContext -> v: any) {
-        obj := ""
-        id := Visit(context.id()):(Result).text
->>>>>>> fix-define-bug
         
         it = Visit(context.iteratorStatement()).(Iterator)
 
@@ -63,16 +52,9 @@ Iterator -> {
         <- obj
     }
 
-<<<<<<< HEAD
     VisitLoopInfiniteStatement(context LoopInfiniteStatementContext -> v any) {
-        me.CurrentIDSet = [str]{}
-
         obj = "for (;;) "BlockLeft+Wrap""
-=======
-    VisitLoopInfiniteStatement(context: LoopInfiniteStatementContext -> v: any) {
-        obj := "for (;;) "BlockLeft+Wrap""
         me.add_current_set()
->>>>>>> fix-define-bug
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight+Wrap
@@ -80,8 +62,6 @@ Iterator -> {
     }
 
     VisitLoopEachStatement(context LoopEachStatementContext -> v any) {
-        me.CurrentIDSet = [str]{}
-
         obj = ""
         arr = Visit(context.expression()).(Result)
         target = arr.text
@@ -103,8 +83,6 @@ Iterator -> {
     }
 
     VisitLoopCaseStatement(context LoopCaseStatementContext -> v any) {
-        me.CurrentIDSet = [str]{}
-
         obj = ""
         expr = Visit(context.expression()).(Result)
         obj += "for ( ;"expr.text" ;)"
@@ -146,14 +124,8 @@ Iterator -> {
             ? context.id() >< nil {
                 id = Visit(context.id()).(Result).text
             }
-<<<<<<< HEAD
-            me.AllIDSet.add(id)
-            me.CurrentIDSet.add(id)
-            type = Visit(context.typeType()).(str)
-=======
             me.add_id(id)
-            type := Visit(context.typeType()):(str)
->>>>>>> fix-define-bug
+            type = Visit(context.typeType()).(str)
             obj += "case "type" "id" :"Wrap""
         } _ {
             obj += "default:"Wrap""
@@ -161,22 +133,13 @@ Iterator -> {
         <- obj
     }
 
-<<<<<<< HEAD
     VisitCaseStatement(context CaseStatementContext -> v any) {
-        me.CurrentIDSet = [str]{}
         obj = ""
         context.caseExprStatement() @ item {
             r = Visit(item).(str)
-            process = ""BlockLeft" "ProcessFunctionSupport(context.functionSupportStatement())"" BlockRight"break;"
-=======
-    VisitCaseStatement(context: CaseStatementContext -> v: any) {
-        obj := ""
-        context.caseExprStatement() @ item {
-            r := Visit(item):(str)
             me.add_current_set()
-            process := ""BlockLeft" "ProcessFunctionSupport(context.functionSupportStatement())"" BlockRight"break;"
+            process = ""BlockLeft" "ProcessFunctionSupport(context.functionSupportStatement())"" BlockRight"break;"
             me.delete_current_set()
->>>>>>> fix-define-bug
             obj += r + process
         }
         <- obj
@@ -194,68 +157,38 @@ Iterator -> {
         <- obj
     }
 
-<<<<<<< HEAD
     VisitJudgeIfStatement(context JudgeIfStatementContext -> v any) {
-        me.CurrentIDSet = [str]{}
-
         b = Visit(context.expression()).(Result)
         obj = "if ( "b.text" ) "BlockLeft+Wrap""
-=======
-    VisitJudgeIfStatement(context: JudgeIfStatementContext -> v: any) {
-        b := Visit(context.expression()):(Result)
-        obj := "if ( "b.text" ) "BlockLeft+Wrap""
         me.add_current_set()
->>>>>>> fix-define-bug
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += ""BlockRight""Wrap""
         <- obj
     }
 
-<<<<<<< HEAD
     VisitJudgeElseIfStatement(context JudgeElseIfStatementContext -> v any) {
-        me.CurrentIDSet = [str]{}
-
         b = Visit(context.expression()).(Result)
         obj = "else if ( "b.text" ) "BlockLeft+Wrap""
-=======
-    VisitJudgeElseIfStatement(context: JudgeElseIfStatementContext -> v: any) {
-        b := Visit(context.expression()):(Result)
-        obj := "else if ( "b.text" ) "BlockLeft+Wrap""
         me.add_current_set()
->>>>>>> fix-define-bug
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += ""BlockRight" "Wrap""
         <- obj
     }
 
-<<<<<<< HEAD
     VisitJudgeElseStatement(context JudgeElseStatementContext -> v any) {
-        me.CurrentIDSet = [str]{}
-
         obj = "else "BlockLeft+Wrap""
-=======
-    VisitJudgeElseStatement(context: JudgeElseStatementContext -> v: any) {
-        obj := "else "BlockLeft+Wrap""
         me.add_current_set()
->>>>>>> fix-define-bug
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += ""BlockRight""Wrap""
         <- obj
     }
 
-<<<<<<< HEAD
     VisitCheckStatement(context CheckStatementContext -> v any) {
-        me.CurrentIDSet = [str]{}
-        
         obj = "try "BlockLeft+Wrap""
-=======
-    VisitCheckStatement(context: CheckStatementContext -> v: any) {
-        obj := "try "BlockLeft+Wrap""
         me.add_current_set()
->>>>>>> fix-define-bug
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += ""BlockRight+Wrap""
@@ -269,21 +202,11 @@ Iterator -> {
         <- obj
     }
 
-<<<<<<< HEAD
     VisitCheckErrorStatement(context CheckErrorStatementContext -> v any) {
-        me.CurrentIDSet = [str]{}
-
+        me.add_current_set()
         obj = ""
         ID = Visit(context.id()).(Result).text
-        me.AllIDSet.add(ID)
-        me.CurrentIDSet.add(ID)
-=======
-    VisitCheckErrorStatement(context: CheckErrorStatementContext -> v: any) {
-        me.add_current_set()
-        obj := ""
-        ID := Visit(context.id()):(Result).text
         me.add_id(ID)
->>>>>>> fix-define-bug
 
         Type = "Exception"
         ? context.typeType() >< nil {
@@ -297,16 +220,9 @@ Iterator -> {
         <- obj
     }
 
-<<<<<<< HEAD
     VisitCheckFinallyStatment(context CheckFinallyStatmentContext -> v any) {
-        me.CurrentIDSet = [str]{}
-
         obj = "finally "Wrap+BlockLeft+Wrap""
-=======
-    VisitCheckFinallyStatment(context: CheckFinallyStatmentContext -> v: any) {
-        obj := "finally "Wrap+BlockLeft+Wrap""
         me.add_current_set()
->>>>>>> fix-define-bug
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += ""BlockRight""Wrap""

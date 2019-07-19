@@ -26,6 +26,7 @@ obj+=Visit(context.annotationSupport());
 obj+=(new System.Text.StringBuilder("namespace ").Append(ns.name+Wrap+BlockLeft+Wrap).Append("")).to_str();
 var content = "";
 var contentStatic = "";
+this.add_current_set();
 foreach (var item in context.namespaceSupportStatement()){
 var type = item.GetChild(0).GetType();
 if ( type==typeof(NamespaceVariableStatementContext)||type==typeof(NamespaceControlStatementContext)||type==typeof(NamespaceFunctionStatementContext)||type==typeof(NamespaceConstantStatementContext) ) {
@@ -39,6 +40,7 @@ obj+=content;
 if ( contentStatic!="" ) {
 obj+=(new System.Text.StringBuilder("public partial class ").Append(ns.name.sub_str(ns.name.last_index_of(".")+1)).Append("_static")).to_str()+BlockLeft+Wrap+contentStatic+BlockRight+Wrap;
 }
+this.delete_current_set();
 obj+=BlockRight+Wrap;
 return(obj);
 }
@@ -186,6 +188,7 @@ return(obj);
 public  override  object VisitNamespaceVariableStatement( NamespaceVariableStatementContext context )
 {
 var r1 = ((Result)(Visit(context.id())));
+this.add_id(r1.text);
 var isMutable = r1.isVirtual;
 var typ = "";
 Result r2 = null;
@@ -212,6 +215,7 @@ return(obj);
 public  override  object VisitNamespaceControlStatement( NamespaceControlStatementContext context )
 {
 var r1 = ((Result)(Visit(context.id())));
+this.add_id(r1.text);
 var isMutable = r1.isVirtual;
 var typ = "";
 typ = ((string)(Visit(context.typeType())));

@@ -14,12 +14,12 @@ public static void Main( string[] args )
 {
 var os = Environment.OSVersion.Platform;
 if ( os==PlatformID.Unix||os==PlatformID.MacOSX ) {
-var _ReadPath = "./";
-var _PathLine = "/";
+_ReadPath = "./";
+_PathLine = "/";
 }
 else {
-var _ReadPath = ".\\";
-var _PathLine = "\\";
+_ReadPath = ".\\";
+_PathLine = "\\";
 }
 Compiled(_ReadPath);
 print("Completed");

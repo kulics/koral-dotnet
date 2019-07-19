@@ -50,6 +50,7 @@ GetControlSub(id str -> id str, type str) {
 
         content = ""
         contentStatic = ""
+        me.add_current_set()
         context.namespaceSupportStatement() @ item {
             type = item.GetChild(0).GetType()
             ? type == ?<NamespaceVariableStatementContext> |
@@ -66,6 +67,7 @@ GetControlSub(id str -> id str, type str) {
             obj += "public partial class "ns.name.sub_str(ns.name.last_index_of(".") + 1) "_static" +
                 BlockLeft + Wrap + contentStatic + BlockRight + Wrap
         }
+        me.delete_current_set()
         obj += BlockRight + Wrap
         <- obj
     }
@@ -213,6 +215,7 @@ GetControlSub(id str -> id str, type str) {
 
     VisitNamespaceVariableStatement(context NamespaceVariableStatementContext -> v any) {
         r1 = Visit(context.id()).(Result)
+        me.add_id(r1.text)
         isMutable = r1.isVirtual
         typ = ""
         r2 Result = nil
@@ -239,6 +242,7 @@ GetControlSub(id str -> id str, type str) {
 
     VisitNamespaceControlStatement(context NamespaceControlStatementContext -> v any) {
         r1 = Visit(context.id()).(Result)
+        me.add_id(r1.text)
         isMutable = r1.isVirtual
         typ = ""
         typ = Visit(context.typeType()).(str)
