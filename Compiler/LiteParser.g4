@@ -281,7 +281,7 @@ callPkg: typeType left_brace (pkgAssign|listAssign|setAssign|dictionaryAssign)? 
 
 callNew: Less typeType Greater left_paren New_Line? expressionList? New_Line? right_paren; // 构造类对象
 
-getType: Question (left_paren expression right_paren | Less typeType Greater );
+getType: Question left_paren typeType right_paren;
 
 typeConversion: Dot left_paren typeType right_paren; // 类型转化
 

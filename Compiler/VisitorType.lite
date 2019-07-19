@@ -51,11 +51,7 @@
 
     VisitGetType(context GetTypeContext -> v any) {
         r = Result{data = "System.Type"}
-        ? context.typeType() == nil {
-            r.text = ""Visit(context.expression()).(Result).text".GetType()"
-        } _ {
-            r.text = "typeof("Visit(context.typeType())")"
-        }
+        r.text = "typeof("Visit(context.typeType())")"
         <- r
     }
 

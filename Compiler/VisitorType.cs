@@ -53,12 +53,7 @@ return(obj);
 public  override  object VisitGetType( GetTypeContext context )
 {
 var r = (new Result(){data = "System.Type"});
-if ( context.typeType()==null ) {
-r.text=(new System.Text.StringBuilder("").Append(((Result)(Visit(context.expression()))).text).Append(".GetType()")).to_str();
-}
-else {
 r.text=(new System.Text.StringBuilder("typeof(").Append(Visit(context.typeType())).Append(")")).to_str();
-}
 return(r);
 }
 public  override  object VisitTypeArray( TypeArrayContext context )
