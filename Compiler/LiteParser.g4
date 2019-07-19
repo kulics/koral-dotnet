@@ -187,7 +187,7 @@ checkStatement:
 Bang left_brace (functionSupportStatement)* right_brace (checkErrorStatement)* checkFinallyStatment end
 |Bang left_brace (functionSupportStatement)* right_brace (checkErrorStatement)+ end;
 // 定义检查变量
-usingStatement: expression Bang expression (typeType)? end;
+usingStatement: Bang expression (typeType)? Equal expression end;
 // 错误处理
 checkErrorStatement: (id|id typeType) left_brace (functionSupportStatement)* right_brace;
 // 最终执行

@@ -230,8 +230,8 @@ return(obj);
 public  override  object VisitUsingStatement( UsingStatementContext context )
 {
 var obj = "";
-var r2 = ((Result)(Visit(context.expression(0))));
-var r1 = ((Result)(Visit(context.expression(1))));
+var r1 = ((Result)(Visit(context.expression(0))));
+var r2 = ((Result)(Visit(context.expression(1))));
 if ( context.typeType()!=null ) {
 var Type = ((string)(Visit(context.typeType())));
 obj = (new System.Text.StringBuilder("").Append(Type).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str();
