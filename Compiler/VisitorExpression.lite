@@ -114,17 +114,17 @@ DicEle -> {
             r.text = e1.text + op + e2.(Result).text
         } 2 {
             r = Visit(context.GetChild(0)).(Result)
-            ? context.GetChild(1).GetType() == ?<TypeConversionContext> {
+            ? context.GetChild(1).GetType() == ?(TypeConversionContext) {
                 e2 = Visit(context.GetChild(1)).(str)
                 r.data = e2
                 r.text = "(("e2")("r.text"))"
-            } context.GetChild(1).GetType() == ?<CallExpressionContext> {
+            } context.GetChild(1).GetType() == ?(CallExpressionContext) {
                 e2 = Visit(context.GetChild(1)).(Result)
                 r.text = r.text + e2.text
-            } context.GetChild(1).GetType() == ?<CallFuncContext> {
+            } context.GetChild(1).GetType() == ?(CallFuncContext) {
                 e2 = Visit(context.GetChild(1)).(Result)
                 r.text = r.text + e2.text
-            } context.GetChild(1).GetType() == ?<CallElementContext> {
+            } context.GetChild(1).GetType() == ?(CallElementContext) {
                 e2 = Visit(context.GetChild(1)).(Result)
                 r.text = r.text + e2.text
             } _ {
