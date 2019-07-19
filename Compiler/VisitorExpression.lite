@@ -56,8 +56,8 @@ DicEle -> {
     }
 
     VisitAssignStatement(context AssignStatementContext -> v any) {
-        r1 = Visit(context.expression(0)).(Result)
-        r2 = Visit(context.expression(1)).(Result)
+        r1 = Visit(context.tupleExpression(0)).(Result)
+        r2 = Visit(context.tupleExpression(1)).(Result)
         obj = r1.text + Visit(context.assign()) + r2.text + Terminate + Wrap
         <- obj
     }

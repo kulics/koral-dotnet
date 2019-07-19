@@ -92,7 +92,7 @@ me LiteLangVisitor -> {
     }
 
     VisitTupleExpression(context TupleExpressionContext -> v any) {
-        obj = "("
+        obj = ""
         [0 < context.expression().Length] @ i {
             r = Visit(context.expression(i)).(Result)
             ? i == 0 {
@@ -101,7 +101,9 @@ me LiteLangVisitor -> {
                 obj += ", " r.text ""
             }
         }
-        obj += ")"
+        ? context.expression().Length > 1 {
+            obj = "(" obj ")"
+        }
         <- Result{ data = "var", text = obj }
     }
 

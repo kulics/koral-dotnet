@@ -206,12 +206,14 @@ variableDeclaredStatement: idExpression typeType end;
 // 通道赋值
 channelAssignStatement: expression Left_Brack Left_Arrow Right_Brack assign expression end;
 // 赋值
-assignStatement: expression assign expression end;
+assignStatement: tupleExpression assign tupleExpression end;
 
 expressionStatement: expression end;
 
 idExpression: idExprItem | left_paren idExprItem (more idExprItem)* right_paren;
 idExprItem: id | Discard;
+
+tupleExpression: expression (more expression)* ; // 元组
 // 基础表达式
 primaryExpression: 
 id (templateCall)?
@@ -234,7 +236,6 @@ linq // 联合查询
 | lambda // lambda表达式
 | functionExpression // 函数
 | pkgAnonymous // 匿名包
-| tupleExpression //元组表达式
 | plusMinus // 正负处理
 | bitwiseNotExpression // 位运算取反
 | negate // 取反
@@ -335,8 +336,6 @@ pkgAnonymousAssignElement: name Equal expression; // 简化赋值元素
 
 functionExpression: left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace;
-
-tupleExpression: left_paren expression (more expression)*  right_paren; // 元组
 
 plusMinus: add expression;
 

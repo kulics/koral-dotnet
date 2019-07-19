@@ -96,7 +96,7 @@ return((new Result(){data = "var",text = obj}));
 }
 public  override  object VisitTupleExpression( TupleExpressionContext context )
 {
-var obj = "(";
+var obj = "";
 foreach (var i in range(0,context.expression().Length,1,true,false)){
 var r = ((Result)(Visit(context.expression(i))));
 if ( i==0 ) {
@@ -106,7 +106,9 @@ else {
 obj+=(new System.Text.StringBuilder(", ").Append(r.text).Append("")).to_str();
 }
 }
-obj+=")";
+if ( context.expression().Length>1 ) {
+obj = (new System.Text.StringBuilder("(").Append(obj).Append(")")).to_str();
+}
 return((new Result(){data = "var",text = obj}));
 }
 public  override  object VisitParameterClauseIn( ParameterClauseInContext context )

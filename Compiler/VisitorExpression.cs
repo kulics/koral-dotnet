@@ -49,8 +49,8 @@ return(obj);
 }
 public  override  object VisitAssignStatement( AssignStatementContext context )
 {
-var r1 = ((Result)(Visit(context.expression(0))));
-var r2 = ((Result)(Visit(context.expression(1))));
+var r1 = ((Result)(Visit(context.tupleExpression(0))));
+var r2 = ((Result)(Visit(context.tupleExpression(1))));
 var obj = r1.text+Visit(context.assign())+r2.text+Terminate+Wrap;
 return(obj);
 }
