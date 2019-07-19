@@ -37,7 +37,7 @@ content+=BlockRight;
 }
 }
 obj+=content;
-return(obj);
+return obj;
 }
 }
 public partial class LiteLangVisitor{
@@ -69,15 +69,15 @@ obj+=(new System.Text.StringBuilder("").Append(Visit(context.parameterClauseIn()
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 this.delete_current_set();
-return(obj);
+return obj;
 }
 public  override  object VisitReturnStatement( ReturnStatementContext context )
 {
 if ( context.tupleExpression()!=null ) {
 var r = ((Result)(Visit(context.tupleExpression())));
-return("return "+r.text+Terminate+Wrap);
+return "return "+r.text+Terminate+Wrap;
 }
-return((new System.Text.StringBuilder("return").Append(Terminate).Append("").Append(Wrap).Append("")).to_str());
+return (new System.Text.StringBuilder("return").Append(Terminate).Append("").Append(Wrap).Append("")).to_str();
 }
 public  override  object VisitTuple( TupleContext context )
 {
@@ -92,7 +92,7 @@ obj+=(new System.Text.StringBuilder(", ").Append(r.text).Append("")).to_str();
 }
 }
 obj+=")";
-return((new Result(){data = "var",text = obj}));
+return (new Result(){data = "var",text = obj});
 }
 public  override  object VisitTupleExpression( TupleExpressionContext context )
 {
@@ -109,7 +109,7 @@ obj+=(new System.Text.StringBuilder(", ").Append(r.text).Append("")).to_str();
 if ( context.expression().Length>1 ) {
 obj = (new System.Text.StringBuilder("(").Append(obj).Append(")")).to_str();
 }
-return((new Result(){data = "var",text = obj}));
+return (new Result(){data = "var",text = obj});
 }
 public  override  object VisitParameterClauseIn( ParameterClauseInContext context )
 {
@@ -129,7 +129,7 @@ obj+=(new System.Text.StringBuilder(", ").Append(temp[i]).Append("")).to_str();
 }
 }
 obj+=")";
-return(obj);
+return obj;
 }
 public  override  object VisitParameterClauseOut( ParameterClauseOutContext context )
 {
@@ -158,7 +158,7 @@ obj+=(new System.Text.StringBuilder(", ").Append(temp[i]).Append("")).to_str();
 }
 obj+=" )";
 }
-return(obj);
+return obj;
 }
 public  override  object VisitParameterClauseSelf( ParameterClauseSelfContext context )
 {
@@ -167,7 +167,7 @@ var id = ((Result)(Visit(context.id())));
 p.id=id.text;
 p.permission=id.permission;
 p.type=((string)(Visit(context.typeType())));
-return(p);
+return p;
 }
 public  override  object VisitParameter( ParameterContext context )
 {
@@ -182,7 +182,7 @@ if ( context.expression()!=null ) {
 p.value=(new System.Text.StringBuilder("=").Append(((Result)(Visit(context.expression()))).text).Append("")).to_str();
 }
 p.type=((string)(Visit(context.typeType())));
-return(p);
+return p;
 }
 }
 }

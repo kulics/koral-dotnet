@@ -11,7 +11,7 @@ namespace Compiler
 public partial class LiteLangVisitor{
 public  override  object VisitIncludeStatement( IncludeStatementContext context )
 {
-return(Visit(context.typeType()));
+return Visit(context.typeType());
 }
 public  override  object VisitPackageStatement( PackageStatementContext context )
 {
@@ -53,7 +53,7 @@ header+=extend;
 }
 header+=templateContract+Wrap+BlockLeft+Wrap;
 obj = header+obj;
-return(obj);
+return obj;
 }
 public  override  object VisitPackageVariableStatement( PackageVariableStatementContext context )
 {
@@ -79,7 +79,7 @@ obj+=(new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Te
 else {
 obj+=Terminate+Wrap;
 }
-return(obj);
+return obj;
 }
 public  override  object VisitPackageControlSubStatement( PackageControlSubStatementContext context )
 {
@@ -103,7 +103,7 @@ obj+=id+Terminate;
 }
 this.delete_current_set();
 this.setID="";
-return((new Result(){text = obj,data = typ}));
+return (new Result(){text = obj,data = typ});
 }
 public  override  object VisitPackageNewStatement( PackageNewStatementContext context )
 {
@@ -121,7 +121,7 @@ text+=BlockLeft+ProcessFunctionSupport(context.functionSupportStatement())+Block
 this.delete_current_set();
 text+=BlockRight+Wrap;
 this.selfID="";
-return(text);
+return text;
 }
 public  override  object VisitPackageEventStatement( PackageEventStatementContext context )
 {
@@ -129,7 +129,7 @@ var obj = "";
 var id = ((Result)(Visit(context.id())));
 var nameSpace = Visit(context.nameSpaceItem());
 obj+=(new System.Text.StringBuilder("public event ").Append(nameSpace).Append(" ").Append(id.text+Terminate+Wrap).Append("")).to_str();
-return(obj);
+return obj;
 }
 public  override  object VisitProtocolStatement( ProtocolStatementContext context )
 {
@@ -154,7 +154,7 @@ templateContract = template.Contract;
 obj+=templateContract+Wrap+BlockLeft+Wrap;
 obj+=interfaceProtocol;
 obj+=BlockRight+Wrap;
-return(obj);
+return obj;
 }
 public  override  object VisitProtocolControlStatement( ProtocolControlStatementContext context )
 {
@@ -177,13 +177,13 @@ else {
 r.text+="get;set;";
 }
 r.text+=BlockRight+Wrap;
-return(r);
+return r;
 }
 public  override  object VisitProtocolControlSubStatement( ProtocolControlSubStatementContext context )
 {
 var obj = "";
 obj = GetControlSub(context.id().GetText()).id+Terminate;
-return(obj);
+return obj;
 }
 public  override  object VisitProtocolFunctionStatement( ProtocolFunctionStatementContext context )
 {
@@ -213,7 +213,7 @@ r.text+=template.Template;
 templateContract = template.Contract;
 }
 r.text+=Visit(context.parameterClauseIn())+templateContract+Terminate+Wrap;
-return(r);
+return r;
 }
 }
 }

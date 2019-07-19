@@ -79,6 +79,12 @@
         <- obj
     }
 
+    VisitTypeStack(context TypeStackContext -> v any) {
+        obj = ""
+        obj += ""Stk"<"Visit(context.typeType())">"
+        <- obj
+    }
+
     VisitTypePackage(context TypePackageContext -> v any) {
         obj = ""
         obj += Visit(context.nameSpaceItem())

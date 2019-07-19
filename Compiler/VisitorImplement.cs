@@ -25,7 +25,7 @@ obj+=Visit(item);
 }
 obj+=BlockRight+Wrap;
 this.selfID="";
-return(obj);
+return obj;
 }
 public  override  object VisitImplementFunctionStatement( ImplementFunctionStatementContext context )
 {
@@ -60,7 +60,7 @@ obj+=Visit(context.parameterClauseIn())+templateContract+Wrap+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
-return(obj);
+return obj;
 }
 public  override  object VisitImplementControlStatement( ImplementControlStatementContext context )
 {
@@ -88,7 +88,7 @@ obj+=temp.text;
 }
 }
 obj+=BlockRight+Wrap;
-return(obj);
+return obj;
 }
 public  override  object VisitOverrideStatement( OverrideStatementContext context )
 {
@@ -103,7 +103,7 @@ obj+=Visit(item);
 obj+=BlockRight+Wrap;
 this.selfID="";
 this.superID="";
-return(obj);
+return obj;
 }
 public  override  object VisitOverrideFunctionStatement( OverrideFunctionStatementContext context )
 {
@@ -140,7 +140,7 @@ obj+=Visit(context.parameterClauseIn())+templateContract+Wrap+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
-return(obj);
+return obj;
 }
 public  override  object VisitOverrideControlStatement( OverrideControlStatementContext context )
 {
@@ -161,7 +161,7 @@ var temp = ((Result)(Visit(item)));
 obj+=temp.text;
 }
 obj+=BlockRight+Wrap;
-return(obj);
+return obj;
 }
 }
 }

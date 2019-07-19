@@ -36,7 +36,7 @@ it.begin=((Result)(Visit(context.expression(0))));
 it.end=((Result)(Visit(context.expression(1))));
 it.step=((Result)(Visit(context.expression(2))));
 }
-return(it);
+return it;
 }
 public  override  object VisitLoopStatement( LoopStatementContext context )
 {
@@ -49,7 +49,7 @@ this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
-return(obj);
+return obj;
 }
 public  override  object VisitLoopInfiniteStatement( LoopInfiniteStatementContext context )
 {
@@ -58,7 +58,7 @@ this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
-return(obj);
+return obj;
 }
 public  override  object VisitLoopEachStatement( LoopEachStatementContext context )
 {
@@ -79,7 +79,7 @@ this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
-return(obj);
+return obj;
 }
 public  override  object VisitLoopCaseStatement( LoopCaseStatementContext context )
 {
@@ -91,15 +91,15 @@ this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
-return(obj);
+return obj;
 }
 public  override  object VisitLoopJumpStatement( LoopJumpStatementContext context )
 {
-return((new System.Text.StringBuilder("break ").Append(Terminate+Wrap).Append("")).to_str());
+return (new System.Text.StringBuilder("break ").Append(Terminate+Wrap).Append("")).to_str();
 }
 public  override  object VisitLoopContinueStatement( LoopContinueStatementContext context )
 {
-return((new System.Text.StringBuilder("continue ").Append(Terminate+Wrap).Append("")).to_str());
+return (new System.Text.StringBuilder("continue ").Append(Terminate+Wrap).Append("")).to_str();
 }
 public  override  object VisitJudgeCaseStatement( JudgeCaseStatementContext context )
 {
@@ -111,7 +111,7 @@ var r = ((string)(Visit(item)));
 obj+=r+Wrap;
 }
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append(" ").Append(Wrap).Append("")).to_str();
-return(obj);
+return obj;
 }
 public  override  object VisitCaseExprStatement( CaseExprStatementContext context )
 {
@@ -132,7 +132,7 @@ obj+=(new System.Text.StringBuilder("case ").Append(type).Append(" ").Append(id)
 else {
 obj+=(new System.Text.StringBuilder("default:").Append(Wrap).Append("")).to_str();
 }
-return(obj);
+return obj;
 }
 public  override  object VisitCaseStatement( CaseStatementContext context )
 {
@@ -144,7 +144,7 @@ var process = (new System.Text.StringBuilder("").Append(BlockLeft).Append(" ").A
 this.delete_current_set();
 obj+=r+process;
 }
-return(obj);
+return obj;
 }
 public  override  object VisitJudgeStatement( JudgeStatementContext context )
 {
@@ -156,7 +156,7 @@ obj+=Visit(it);
 if ( context.judgeElseStatement()!=null ) {
 obj+=Visit(context.judgeElseStatement());
 }
-return(obj);
+return obj;
 }
 public  override  object VisitJudgeIfStatement( JudgeIfStatementContext context )
 {
@@ -166,7 +166,7 @@ this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append("").Append(Wrap).Append("")).to_str();
-return(obj);
+return obj;
 }
 public  override  object VisitJudgeElseIfStatement( JudgeElseIfStatementContext context )
 {
@@ -176,7 +176,7 @@ this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append(" ").Append(Wrap).Append("")).to_str();
-return(obj);
+return obj;
 }
 public  override  object VisitJudgeElseStatement( JudgeElseStatementContext context )
 {
@@ -185,7 +185,7 @@ this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append("").Append(Wrap).Append("")).to_str();
-return(obj);
+return obj;
 }
 public  override  object VisitCheckStatement( CheckStatementContext context )
 {
@@ -200,7 +200,7 @@ obj+=(new System.Text.StringBuilder("").Append(Visit(item)).Append("").Append(Wr
 if ( context.checkFinallyStatment()!=null ) {
 obj+=Visit(context.checkFinallyStatment());
 }
-return(obj);
+return obj;
 }
 public  override  object VisitCheckErrorStatement( CheckErrorStatementContext context )
 {
@@ -216,7 +216,7 @@ obj+=(new System.Text.StringBuilder("catch( ").Append(Type).Append(" ").Append(I
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight;
-return(obj);
+return obj;
 }
 public  override  object VisitCheckFinallyStatment( CheckFinallyStatmentContext context )
 {
@@ -225,7 +225,7 @@ this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append("").Append(Wrap).Append("")).to_str();
-return(obj);
+return obj;
 }
 public  override  object VisitUsingStatement( UsingStatementContext context )
 {
@@ -239,7 +239,7 @@ obj = (new System.Text.StringBuilder("").Append(Type).Append(" ").Append(r1.text
 else {
 obj = (new System.Text.StringBuilder("var ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str();
 }
-return(obj);
+return obj;
 }
 public  override  object VisitReportStatement( ReportStatementContext context )
 {
@@ -248,7 +248,7 @@ if ( context.expression()!=null ) {
 var r = ((Result)(Visit(context.expression())));
 obj+=r.text;
 }
-return((new System.Text.StringBuilder("throw ").Append(obj+Terminate+Wrap).Append("")).to_str());
+return (new System.Text.StringBuilder("throw ").Append(obj+Terminate+Wrap).Append("")).to_str();
 }
 public  override  object VisitLinq( LinqContext context )
 {
@@ -258,7 +258,7 @@ foreach (var item in context.linqItem()){
 r.text+=(new System.Text.StringBuilder("").Append(Visit(item)).Append(" ")).to_str();
 }
 r.text+=(new System.Text.StringBuilder("").Append(context.k.Text).Append(" ").Append(((Result)(Visit(context.expression(1)))).text).Append("")).to_str();
-return(r);
+return r;
 }
 public  override  object VisitLinqItem( LinqItemContext context )
 {
@@ -266,19 +266,19 @@ var obj = ((string)(Visit(context.linqKeyword())));
 if ( context.expression()!=null ) {
 obj+=(new System.Text.StringBuilder(" ").Append(((Result)(Visit(context.expression()))).text).Append("")).to_str();
 }
-return(obj);
+return obj;
 }
 public  override  object VisitLinqKeyword( LinqKeywordContext context )
 {
-return(Visit(context.GetChild(0)));
+return Visit(context.GetChild(0));
 }
 public  override  object VisitLinqHeadKeyword( LinqHeadKeywordContext context )
 {
-return(context.k.Text);
+return context.k.Text;
 }
 public  override  object VisitLinqBodyKeyword( LinqBodyKeywordContext context )
 {
-return(context.k.Text);
+return context.k.Text;
 }
 }
 }

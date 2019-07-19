@@ -32,7 +32,7 @@ public LiteLangVisitor (){CurrentIDSet.Push((new hashset<string>()));
 public partial class LiteLangVisitor{
 public  virtual  bool has_id( string id )
 {
-return(this.AllIDSet.contains(id)||this.CurrentIDSet.Peek().contains(id));
+return this.AllIDSet.contains(id)||this.CurrentIDSet.Peek().contains(id);
 }
 public  virtual  void add_id( string id )
 {
@@ -59,7 +59,7 @@ var Result = "";
 foreach (var item in StatementList){
 Result+=VisitStatement(item);
 }
-return(Result);
+return Result;
 }
 public  override  object VisitId( IdContext context )
 {
@@ -86,7 +86,7 @@ r.text="base";
 else if ( r.text==setID ) {
 r.text="value";
 } 
-return(r);
+return r;
 }
 public  override  object VisitIdItem( IdItemContext context )
 {
@@ -116,7 +116,7 @@ r.permission="protected";
 r.text+=context.op.Text;
 r.isVirtual=true;
 } 
-return(r);
+return r;
 }
 public  override  object VisitIdExpression( IdExpressionContext context )
 {
@@ -149,11 +149,11 @@ else {
 this.add_id(r.text);
 }
 }
-return(r);
+return r;
 }
 public  override  object VisitIdExprItem( IdExprItemContext context )
 {
-return(Visit(context.GetChild(0)));
+return Visit(context.GetChild(0));
 }
 public  override  object VisitBoolExpr( BoolExprContext context )
 {
@@ -166,11 +166,11 @@ else if ( context.t.Type==FalseLiteral ) {
 r.data=Bool;
 r.text=F;
 } 
-return(r);
+return r;
 }
 public  override  object VisitAnnotationSupport( AnnotationSupportContext context )
 {
-return(((string)(Visit(context.annotation()))));
+return ((string)(Visit(context.annotation())));
 }
 public  override  object VisitAnnotation( AnnotationContext context )
 {
@@ -181,7 +181,7 @@ id = (new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).t
 }
 var r = ((string)(Visit(context.annotationList())));
 obj+=(new System.Text.StringBuilder("[").Append(id).Append("").Append(r).Append("]")).to_str();
-return(obj);
+return obj;
 }
 public  override  object VisitAnnotationList( AnnotationListContext context )
 {
@@ -194,7 +194,7 @@ else {
 obj+=Visit(context.annotationItem(i));
 }
 }
-return(obj);
+return obj;
 }
 public  override  object VisitAnnotationItem( AnnotationItemContext context )
 {
@@ -211,7 +211,7 @@ obj+=(new System.Text.StringBuilder("(").Append(Visit(context.annotationAssign(i
 if ( context.annotationAssign().Length>0 ) {
 obj+=")";
 }
-return(obj);
+return obj;
 }
 public  override  object VisitAnnotationAssign( AnnotationAssignContext context )
 {
@@ -222,7 +222,7 @@ id = (new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).t
 }
 var r = ((Result)(Visit(context.expression())));
 obj = id+r.text;
-return(obj);
+return obj;
 }
 }
 public partial class Compiler_static{
@@ -249,6 +249,7 @@ public const string Str = "string" ;
 public const string Lst = "list" ;
 public const string Set = "hashset" ;
 public const string Dic = "dictionary" ;
+public const string Stk = "stack" ;
 public const string BlockLeft = "{" ;
 public const string BlockRight = "}" ;
 public const string Task = "System.Threading.Tasks.Task" ;

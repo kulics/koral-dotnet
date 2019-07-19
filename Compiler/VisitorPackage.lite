@@ -87,7 +87,7 @@
         id = ""
         typ = ""
         me.add_current_set()
-        (id, typ) = GetControlSub(context.id(0).GetText())
+        id, typ = GetControlSub(context.id(0).GetText())
         ? context.id(1) >< nil {
             me.setID = context.id(1).GetText()
         }

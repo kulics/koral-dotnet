@@ -42,7 +42,7 @@ obj+=(new System.Text.StringBuilder("public partial class ").Append(ns.name.sub_
 }
 this.delete_current_set();
 obj+=BlockRight+Wrap;
-return(obj);
+return obj;
 }
 public  override  object VisitExportStatement( ExportStatementContext context )
 {
@@ -53,7 +53,7 @@ var obj = (new Namespace(){name = name});
 foreach (var item in context.importStatement()){
 obj.imports+=((string)(Visit(item)));
 }
-return(obj);
+return obj;
 }
 public  override  object VisitImportStatement( ImportStatementContext context )
 {
@@ -74,7 +74,7 @@ else {
 obj+="using "+ns;
 }
 obj+=Terminate+Wrap;
-return(obj);
+return obj;
 }
 public  override  object VisitNameSpaceItem( NameSpaceItemContext context )
 {
@@ -88,7 +88,7 @@ else {
 obj+="."+id.text;
 }
 }
-return(obj);
+return obj;
 }
 public  override  object VisitName( NameContext context )
 {
@@ -102,7 +102,7 @@ else {
 obj+="."+id.text;
 }
 }
-return(obj);
+return obj;
 }
 public  override  object VisitEnumStatement( EnumStatementContext context )
 {
@@ -120,7 +120,7 @@ obj+=Visit(context.enumSupportStatement(i));
 }
 obj+=BlockRight+Terminate+Wrap;
 obj = header+obj;
-return(obj);
+return obj;
 }
 public  override  object VisitEnumSupportStatement( EnumSupportStatementContext context )
 {
@@ -132,7 +132,7 @@ op = ((string)(Visit(context.add())));
 }
 id.text+=" = "+op+Visit(context.integerExpr());
 }
-return(id.text+",");
+return id.text+",";
 }
 public  override  object VisitNamespaceFunctionStatement( NamespaceFunctionStatementContext context )
 {
@@ -165,7 +165,7 @@ obj+=Visit(context.parameterClauseIn())+templateContract+Wrap+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
-return(obj);
+return obj;
 }
 public  override  object VisitNamespaceConstantStatement( NamespaceConstantStatementContext context )
 {
@@ -183,7 +183,7 @@ if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
 obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" const ").Append(typ).Append(" ").Append(id.text).Append(" = ").Append(expr.text).Append(" ").Append(Terminate+Wrap).Append("")).to_str();
-return(obj);
+return obj;
 }
 public  override  object VisitNamespaceVariableStatement( NamespaceVariableStatementContext context )
 {
@@ -210,7 +210,7 @@ obj+=(new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Te
 else {
 obj+=Terminate+Wrap;
 }
-return(obj);
+return obj;
 }
 public  override  object VisitNamespaceControlStatement( NamespaceControlStatementContext context )
 {
@@ -235,7 +235,7 @@ obj+=temp.text;
 }
 }
 obj+=BlockRight+Wrap;
-return(obj);
+return obj;
 }
 }
 public partial class Compiler_static{
@@ -268,7 +268,7 @@ case "remove" :
 typ = "remove";
 }break;
 } 
-return(id, typ);
+return (id, typ);
 }
 }
 }

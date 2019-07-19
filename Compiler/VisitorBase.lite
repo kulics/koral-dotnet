@@ -36,6 +36,7 @@ Str : "string"
 Lst : "list"
 Set : "hashset"
 Dic : "dictionary"
+Stk : "stack"
 
 BlockLeft : "{"
 BlockRight : "}"

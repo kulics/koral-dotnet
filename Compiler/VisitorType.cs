@@ -13,7 +13,7 @@ public  override  object VisitTypeType( TypeTypeContext context )
 {
 var obj = "";
 obj = ((string)(Visit(context.GetChild(0))));
-return(obj);
+return obj;
 }
 public  override  object VisitTypeReference( TypeReferenceContext context )
 {
@@ -24,7 +24,7 @@ obj+=Visit(context.typeNullable());
 else if ( context.typeNotNull()!=null ) {
 obj+=Visit(context.typeNotNull());
 } 
-return(obj);
+return obj;
 }
 public  override  object VisitTypeNullable( TypeNullableContext context )
 {
@@ -33,7 +33,7 @@ obj = ((string)(Visit(context.typeNotNull())));
 if ( (context.typeNotNull().GetChild(0) is TypeBasicContext)&&context.typeNotNull().GetChild(0).GetText()!="any"&&context.typeNotNull().GetChild(0).GetText()!="str" ) {
 obj+="?";
 }
-return(obj);
+return obj;
 }
 public  override  object VisitTypeTuple( TypeTupleContext context )
 {
@@ -48,37 +48,43 @@ obj+=(new System.Text.StringBuilder(",").Append(Visit(context.typeType(i))).Appe
 }
 }
 obj+=")";
-return(obj);
+return obj;
 }
 public  override  object VisitGetType( GetTypeContext context )
 {
 var r = (new Result(){data = "System.Type"});
 r.text=(new System.Text.StringBuilder("typeof(").Append(Visit(context.typeType())).Append(")")).to_str();
-return(r);
+return r;
 }
 public  override  object VisitTypeArray( TypeArrayContext context )
 {
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Visit(context.typeType())).Append("[]")).to_str();
-return(obj);
+return obj;
 }
 public  override  object VisitTypeList( TypeListContext context )
 {
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Lst).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
-return(obj);
+return obj;
 }
 public  override  object VisitTypeSet( TypeSetContext context )
 {
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Set).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
-return(obj);
+return obj;
 }
 public  override  object VisitTypeDictionary( TypeDictionaryContext context )
 {
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Dic).Append("<").Append(Visit(context.typeType(0))).Append(",").Append(Visit(context.typeType(1))).Append(">")).to_str();
-return(obj);
+return obj;
+}
+public  override  object VisitTypeStack( TypeStackContext context )
+{
+var obj = "";
+obj+=(new System.Text.StringBuilder("").Append(Stk).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
+return obj;
 }
 public  override  object VisitTypePackage( TypePackageContext context )
 {
@@ -87,7 +93,7 @@ obj+=Visit(context.nameSpaceItem());
 if ( context.templateCall()!=null ) {
 obj+=Visit(context.templateCall());
 }
-return(obj);
+return obj;
 }
 public  override  object VisitTypeFunction( TypeFunctionContext context )
 {
@@ -133,11 +139,11 @@ obj = (new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(Ta
 }
 }
 }
-return(obj);
+return obj;
 }
 public  override  object VisitTypeAny( TypeAnyContext context )
 {
-return(Any);
+return Any;
 }
 public  override  object VisitTypeFunctionParameterClause( TypeFunctionParameterClauseContext context )
 {
@@ -151,7 +157,7 @@ else {
 obj+=(new System.Text.StringBuilder(", ").Append(p).Append("")).to_str();
 }
 }
-return(obj);
+return obj;
 }
 public  override  object VisitTypeBasic( TypeBasicContext context )
 {
@@ -209,7 +215,7 @@ default:
 { obj = Any;
 }break;
 } 
-return(obj);
+return obj;
 }
 }
 }

@@ -160,6 +160,21 @@ namespace Library {
         public void union_with(IEnumerable<T> other) => UnionWith(other);
     }
 
+    public class stack<T> : Stack<T> {
+        public stack() : base() { }
+        public stack(IEnumerable<T> collection) : base(collection) { }
+        public stack(int capacity) : base(capacity) { }
+        public int count => Count;
+        public void clear() => Clear();
+        public bool contains(T item) => Contains(item);
+        public void copy_to(T[] array, int arrayIndex) => CopyTo(array, arrayIndex);
+        public T peek() => Peek();
+        public T pop() => Pop();
+        public void push(T item) => Push(item);
+        public T[] to_array() => ToArray();
+        public void trim_excess() => TrimExcess();
+    }
+
     public static partial class CollectionsExtension {
         public static bool is_empty<T>(this ICollection<T> it) => !it.not_empty();
         public static bool not_empty<T>(this ICollection<T> it) => it.Count > 0;

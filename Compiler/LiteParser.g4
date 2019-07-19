@@ -379,6 +379,7 @@ typeAny
 | typeSet
 | typeDictionary
 | typeChannel
+| typeStack
 | typeBasic
 | typePackage
 | typeFunction
@@ -395,6 +396,7 @@ typeList: Left_Brack Right_Brack typeType;
 typeSet: Left_Brack typeType Right_Brack;
 typeDictionary: Left_Brack typeType Right_Brack typeType;
 typeChannel: Left_Brack Right_Arrow Right_Brack typeType;
+typeStack: Left_Brack Xor Right_Brack typeType;
 typePackage: nameSpaceItem (templateCall)? ;
 typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) New_Line* typeFunctionParameterClause right_paren;
 typeAny: TypeAny;
