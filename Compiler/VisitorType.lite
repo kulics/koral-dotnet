@@ -27,7 +27,7 @@
     VisitTypeNullable(context TypeNullableContext -> v any) {
         obj = ""
         obj = Visit(context.typeNotNull()).(str)
-        ? context.typeNotNull().GetChild(0) == <TypeBasicContext> &
+        ? context.typeNotNull().GetChild(0).is<TypeBasicContext>() &
             context.typeNotNull().GetChild(0).GetText() >< "any" &
             context.typeNotNull().GetChild(0).GetText() >< "str" {
             obj += "?"

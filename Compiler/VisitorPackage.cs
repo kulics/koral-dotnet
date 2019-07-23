@@ -19,7 +19,7 @@ var id = ((Result)(Visit(context.id())));
 var obj = "";
 var extend = "";
 foreach (var item in context.packageSupportStatement()){
-if ( item.GetChild(0).GetType()==typeof(IncludeStatementContext) ) {
+if ( item.GetChild(0).GetType()==@typeof<IncludeStatementContext>() ) {
 if ( extend=="" ) {
 extend+=Visit(item);
 }

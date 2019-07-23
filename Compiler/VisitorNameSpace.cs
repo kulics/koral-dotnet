@@ -29,7 +29,7 @@ var contentStatic = "";
 this.add_current_set();
 foreach (var item in context.namespaceSupportStatement()){
 var type = item.GetChild(0).GetType();
-if ( type==typeof(NamespaceVariableStatementContext)||type==typeof(NamespaceControlStatementContext)||type==typeof(NamespaceFunctionStatementContext)||type==typeof(NamespaceConstantStatementContext) ) {
+if ( type==@typeof<NamespaceVariableStatementContext>()||type==@typeof<NamespaceControlStatementContext>()||type==@typeof<NamespaceFunctionStatementContext>()||type==@typeof<NamespaceConstantStatementContext>() ) {
 contentStatic+=Visit(item);
 }
 else {

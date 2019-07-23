@@ -116,20 +116,20 @@ r.text=e1.text+op+((Result)(e2)).text;
 }break;
 case 2 :
 { r = ((Result)(Visit(context.GetChild(0))));
-if ( context.GetChild(1).GetType()==typeof(TypeConversionContext) ) {
+if ( context.GetChild(1).GetType()==@typeof<TypeConversionContext>() ) {
 var e2 = ((string)(Visit(context.GetChild(1))));
 r.data=e2;
 r.text=(new System.Text.StringBuilder("((").Append(e2).Append(")(").Append(r.text).Append("))")).to_str();
 }
-else if ( context.GetChild(1).GetType()==typeof(CallExpressionContext) ) {
+else if ( context.GetChild(1).GetType()==@typeof<CallExpressionContext>() ) {
 var e2 = ((Result)(Visit(context.GetChild(1))));
 r.text=r.text+e2.text;
 } 
-else if ( context.GetChild(1).GetType()==typeof(CallFuncContext) ) {
+else if ( context.GetChild(1).GetType()==@typeof<CallFuncContext>() ) {
 var e2 = ((Result)(Visit(context.GetChild(1))));
 r.text=r.text+e2.text;
 } 
-else if ( context.GetChild(1).GetType()==typeof(CallElementContext) ) {
+else if ( context.GetChild(1).GetType()==@typeof<CallElementContext>() ) {
 var e2 = ((Result)(Visit(context.GetChild(1))));
 r.text=r.text+e2.text;
 } 
@@ -238,10 +238,10 @@ public  override  object VisitPrimaryExpression( PrimaryExpressionContext contex
 {
 if ( context.ChildCount==1 ) {
 var c = context.GetChild(0);
-if ( (c is DataStatementContext) ) {
+if ( c.@is<DataStatementContext>() ) {
 return Visit(context.dataStatement());
 }
-else if ( (c is IdContext) ) {
+else if ( c.@is<IdContext>() ) {
 return Visit(context.id());
 } 
 else if ( context.t.Type==Discard ) {

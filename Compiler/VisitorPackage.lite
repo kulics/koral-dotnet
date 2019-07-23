@@ -18,7 +18,7 @@
         extend = ""
 
         item @ context.packageSupportStatement() {
-            ? item.GetChild(0).GetType() == ?(IncludeStatementContext) {
+            ? item.GetChild(0).GetType() == typeof<IncludeStatementContext>() {
                 ? extend == "" {
                     extend += Visit(item)
                 } _ {

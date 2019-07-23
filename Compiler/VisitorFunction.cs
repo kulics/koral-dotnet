@@ -23,7 +23,7 @@ var obj = "";
 var content = "";
 var lazy = (new list<string>());
 foreach (var item in items){
-if ( (item.GetChild(0) is UsingStatementContext) ) {
+if ( item.GetChild(0).@is<UsingStatementContext>() ) {
 lazy.add("}");
 content+=(new System.Text.StringBuilder("using (").Append(((string)(Visit(item)))).Append(") ").Append(BlockLeft).Append(" ").Append(Wrap).Append("")).to_str();
 }

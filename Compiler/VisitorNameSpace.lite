@@ -53,10 +53,10 @@ GetControlSub(id str -> id str, type str) {
         me.add_current_set()
         item @ context.namespaceSupportStatement() {
             type = item.GetChild(0).GetType()
-            ? type == ?(NamespaceVariableStatementContext) |
-                type == ?(NamespaceControlStatementContext) |
-                type == ?(NamespaceFunctionStatementContext) |
-                type == ?(NamespaceConstantStatementContext) {
+            ? type == typeof<NamespaceVariableStatementContext>() |
+                type == typeof<NamespaceControlStatementContext>() |
+                type == typeof<NamespaceFunctionStatementContext>() |
+                type == typeof<NamespaceConstantStatementContext>() {
                 contentStatic += Visit(item)
             } _ {
                 content += Visit(item)

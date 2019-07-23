@@ -21,7 +21,7 @@ me LiteLangVisitor -> {
         content = ""
         lazy = []str{}
         item @ items {
-            ? item.GetChild(0) == <UsingStatementContext> {
+            ? item.GetChild(0).is<UsingStatementContext>() {
                 lazy.add("}")
                 content += "using ("Visit(item).(str)") "BlockLeft" "Wrap""
             } _ {
