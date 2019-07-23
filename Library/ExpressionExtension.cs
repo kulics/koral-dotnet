@@ -12,6 +12,7 @@ namespace Library {
         public static T @as<T>(this object it) where T : class => it as T;
         public static T or_else<T>(this T it, T value) where T : class => it != null ? it : value;
         public static T or_else<T>(this T? it, T value) where T : struct => it ?? value;
+        public static System.Type get_type(this object it) => it.GetType();
 
         public static int to_int(this object it) => Convert.ToInt32(it);
         public static double to_num(this object it) => Convert.ToDouble(it);

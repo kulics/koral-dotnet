@@ -8,6 +8,10 @@ namespace Library {
 
     public static partial class Lib {
 
+        public static System.Type @typeof<T>() => typeof(T);
+
+        public static void @throw(Exception it) => throw it;
+
         public static T[] array_of<T>(params T[] item) => item;
 
         public static T[] array<T>(int cap, params T[] item) {
