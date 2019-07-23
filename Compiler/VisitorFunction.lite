@@ -20,7 +20,7 @@ me LiteLangVisitor -> {
         obj = ""
         content = ""
         lazy = []str{}
-        items @ item {
+        item @ items {
             ? item.GetChild(0) == <UsingStatementContext> {
                 lazy.add("}")
                 content += "using ("Visit(item).(str)") "BlockLeft" "Wrap""
@@ -29,7 +29,7 @@ me LiteLangVisitor -> {
             }
         }
         ? lazy.Count > 0 {
-            [lazy.Count - 1 >= 0] @ i {
+            i @ [lazy.Count - 1 >= 0] {
                 content += BlockRight
             }
         }
@@ -79,7 +79,7 @@ me LiteLangVisitor -> {
 
     VisitTuple(context TupleContext -> v any) {
         obj = "("
-        [0 < context.expression().Length] @ i {
+        i @ [0 < context.expression().Length] {
             r = Visit(context.expression(i)).(Result)
             ? i == 0 {
                 obj += r.text
@@ -93,7 +93,7 @@ me LiteLangVisitor -> {
 
     VisitTupleExpression(context TupleExpressionContext -> v any) {
         obj = ""
-        [0 < context.expression().Length] @ i {
+        i @ [0 < context.expression().Length] {
             r = Visit(context.expression(i)).(Result)
             ? i == 0 {
                 obj += r.text
@@ -110,12 +110,12 @@ me LiteLangVisitor -> {
     VisitParameterClauseIn(context ParameterClauseInContext -> v any) {
         obj = "("
         temp = []str{}
-        [context.parameter().Length - 1 >= 0] @ i {
+        i @ [context.parameter().Length - 1 >= 0] {
             p = Visit(context.parameter(i)).(Parameter)
             temp.add(""p.annotation" "p.type" "p.id" "p.value"")
             me.add_id(p.id)
         }
-        [temp.Count - 1 >= 0] @ i {
+        i @ [temp.Count - 1 >= 0] {
             ? i == temp.Count - 1 {
                 obj += temp[i]
             } _ {
@@ -138,11 +138,11 @@ me LiteLangVisitor -> {
         ? context.parameter().Length > 1 {
             obj += "( "
             temp = []str{}
-            [context.parameter().Length - 1 >= 0] @ i {
+            i @ [context.parameter().Length - 1 >= 0] {
                 p = Visit(context.parameter(i)).(Parameter)
                 temp.add(""p.annotation" "p.type" "p.id" "p.value"")
             }
-            [temp.Count - 1 >= 0] @ i {
+            i @ [temp.Count - 1 >= 0] {
                 ? i == temp.Count - 1 {
                     obj += temp[i]
                 } _ {

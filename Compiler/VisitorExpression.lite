@@ -254,7 +254,7 @@ DicEle -> {
     VisitExpressionList(context ExpressionListContext -> v any) {
         r = Result{}
         obj = ""
-        [0 < context.expression().Length] @ i {
+        i @ [0 < context.expression().Length] {
             temp = Visit(context.expression(i)).(Result)
             ? i == 0 {
                 obj += temp.text
@@ -270,7 +270,7 @@ DicEle -> {
     VisitTemplateDefine(context TemplateDefineContext -> v any) {
         item = TemplateItem{}
         item.Template += "<"
-        [0 < context.templateDefineItem().Length] @ i {
+        i @ [0 < context.templateDefineItem().Length] {
             ? i > 0 {
                 item.Template += ","
                 ? item.Contract.len() > 0 {
@@ -302,7 +302,7 @@ DicEle -> {
     VisitTemplateCall(context TemplateCallContext -> v any) {
         obj = ""
         obj += "<"
-        [0 < context.typeType().Length] @ i {
+        i @ [0 < context.typeType().Length] {
             ? i > 0 {
                 obj += ","
             }
@@ -422,7 +422,7 @@ DicEle -> {
     VisitPkgAssign(context PkgAssignContext -> v any) {
         obj = ""
         obj += "{"
-        [0 < context.pkgAssignElement().Length] @ i {
+        i @ [0 < context.pkgAssignElement().Length] {
             ? i == 0 {
                 obj += Visit(context.pkgAssignElement(i))
             } _ {
@@ -436,7 +436,7 @@ DicEle -> {
     VisitListAssign(context ListAssignContext -> v any) {
         obj = ""
         obj += "{"
-        [0 < context.expression().Length] @ i {
+        i @ [0 < context.expression().Length] {
             r = Visit(context.expression(i)).(Result)
             ? i == 0 {
                 obj += r.text
@@ -451,7 +451,7 @@ DicEle -> {
     VisitSetAssign(context SetAssignContext -> v any) {
         obj = ""
         obj += "{"
-        [0 < context.expression().Length] @ i {
+        i @ [0 < context.expression().Length] {
             r = Visit(context.expression(i)).(Result)
             ? i == 0 {
                 obj += r.text
@@ -466,7 +466,7 @@ DicEle -> {
     VisitDictionaryAssign(context DictionaryAssignContext -> v any) {
         obj = ""
         obj += "{"
-        [0 < context.dictionaryElement().Length] @ i {
+        i @ [0 < context.dictionaryElement().Length] {
             r = Visit(context.dictionaryElement(i)).(DicEle)
             ? i == 0 {
                 obj += r.text
@@ -494,7 +494,7 @@ DicEle -> {
     VisitPkgAnonymousAssign(context PkgAnonymousAssignContext -> v any) {
         obj = ""
         obj += "{"
-        [0 < context.pkgAnonymousAssignElement().Length] @ i {
+        i @ [0 < context.pkgAnonymousAssignElement().Length] {
             ? i == 0 {
                 obj += Visit(context.pkgAnonymousAssignElement(i))
             } _ {
@@ -522,7 +522,7 @@ DicEle -> {
     VisitList(context ListContext -> v any) {
         type = "object"
         result = Result{}
-        [0 < context.expression().Length] @ i {
+        i @ [0 < context.expression().Length] {
             r = Visit(context.expression(i)).(Result)
             ? i == 0 {
                 type = r.data.(str)
@@ -542,7 +542,7 @@ DicEle -> {
     VisitSet(context SetContext -> v any) {
         type = "object"
         result = Result{}
-        [0 < context.expression().Length] @ i {
+        i @ [0 < context.expression().Length] {
             r = Visit(context.expression(i)).(Result)
             ? i == 0 {
                 type = r.data.(str)
@@ -563,7 +563,7 @@ DicEle -> {
         key = Any
         value = Any
         result = Result{}
-        [0 < context.dictionaryElement().Length] @ i {
+        i @ [0 < context.dictionaryElement().Length] {
             r = Visit(context.dictionaryElement(i)).(DicEle)
             ? i == 0 {
                 key = r.key
@@ -598,7 +598,7 @@ DicEle -> {
 
     VisitStringExpression(context StringExpressionContext -> v any) {
         text = "(new System.Text.StringBuilder("context.TextLiteral().GetText()")"
-        context.stringExpressionElement() @ item {
+        item @ context.stringExpressionElement() {
             text += Visit(item)
         }
         text += ").to_str()"
@@ -694,7 +694,7 @@ DicEle -> {
 
     VisitLambdaIn(context LambdaInContext -> v any) {
         obj = ""
-        [0 < context.id().Length] @ i {
+        i @ [0 < context.id().Length] {
             r = Visit(context.id(i)).(Result)
             ? i == 0 {
                 obj += r.text

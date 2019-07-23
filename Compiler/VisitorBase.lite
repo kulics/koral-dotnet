@@ -61,7 +61,7 @@ LiteLangVisitor -> {
     AllIDSet = [str]{}
     CurrentIDSet = [^][str]{}
 }
-me LiteLangVisitor <>() {
+me LiteLangVisitor() {
     me.CurrentIDSet.push(<[str]>())
 }
 me LiteLangVisitor -> {
@@ -72,7 +72,7 @@ me LiteLangVisitor -> {
         me.CurrentIDSet.peek().add(id)
     }
     add_current_set(->) {
-        CurrentIDSet.peek() @ item {
+        item @ CurrentIDSet.peek() {
             AllIDSet.add(item)
         }
         me.CurrentIDSet.push(<[str]>())
@@ -87,7 +87,7 @@ me LiteLangVisitor -> {
     VisitProgram(context ProgramContext -> v any) {
         StatementList = context.statement()
         Result = ""
-        StatementList @ item {
+        item @ StatementList {
             Result += VisitStatement(item)
         }
         <- Result
@@ -100,7 +100,7 @@ me LiteLangVisitor -> {
         r.text = first.text
         r.isVirtual = first.isVirtual
         ? context.ChildCount >= 2 {
-            [1 < context.ChildCount] @ i {
+            i @ [1 < context.ChildCount] {
                 other = Visit(context.GetChild(i)).(Result)
                 r.text += "_"other.text""
             }
@@ -149,7 +149,7 @@ me LiteLangVisitor -> {
         r = Result{data = "var"}
         ? context.idExprItem().Length > 1 {
             r.text = "("
-            context.idExprItem() @ [i]v {
+            [i]v @ context.idExprItem() {
                 subID = Visit(v).(Result).text
                 ? i >< 0 {
                     r.text += ", " + subID
@@ -208,7 +208,7 @@ me LiteLangVisitor -> {
 
     VisitAnnotationList(context AnnotationListContext -> v any) {
         obj = ""
-        [0 < context.annotationItem().Length] @ i {
+        i @ [0 < context.annotationItem().Length] {
             ? i > 0 {
                 obj += "," Visit(context.annotationItem(i)) ""
             } _ {
@@ -221,7 +221,7 @@ me LiteLangVisitor -> {
     VisitAnnotationItem(context AnnotationItemContext -> v any) {
         obj = ""
         obj += Visit(context.id()).(Result).text
-        [0 < context.annotationAssign().Length] @ i {
+        i @ [0 < context.annotationAssign().Length] {
             ? i > 0 {
                 obj += "," Visit(context.annotationAssign(i)) ""
             } _ {

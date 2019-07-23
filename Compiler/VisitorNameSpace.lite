@@ -51,7 +51,7 @@ GetControlSub(id str -> id str, type str) {
         content = ""
         contentStatic = ""
         me.add_current_set()
-        context.namespaceSupportStatement() @ item {
+        item @ context.namespaceSupportStatement() {
             type = item.GetChild(0).GetType()
             ? type == ?(NamespaceVariableStatementContext) |
                 type == ?(NamespaceControlStatementContext) |
@@ -79,7 +79,7 @@ GetControlSub(id str -> id str, type str) {
         obj = Namespace{
             name = name
         }
-        context.importStatement() @ item {
+        item @ context.importStatement() {
             obj.imports += Visit(item).(str)
         }
         <- obj
@@ -106,7 +106,7 @@ GetControlSub(id str -> id str, type str) {
 
     VisitNameSpaceItem(context NameSpaceItemContext -> v any) {
         obj = ""
-        [0 < context.id().Length] @ i {
+        i @ [0 < context.id().Length] {
             id = Visit(context.id(i)).(Result)
             ? i == 0 {
                 obj += "" + id.text
@@ -119,7 +119,7 @@ GetControlSub(id str -> id str, type str) {
 
     VisitName(context NameContext -> v any) {
         obj = ""
-        [0 < context.id().Length] @ i {
+        i @ [0 < context.id().Length] {
             id = Visit(context.id(i)).(Result)
             ? i == 0 {
                 obj += "" + id.text
@@ -140,7 +140,7 @@ GetControlSub(id str -> id str, type str) {
         }
         header += id.permission + " enum " + id.text + ":" + typ
         header += Wrap + BlockLeft + Wrap
-        [0 < context.enumSupportStatement().Length] @ i {
+        i @ [0 < context.enumSupportStatement().Length] {
             obj += Visit(context.enumSupportStatement(i))
         }
         obj += BlockRight + Terminate + Wrap
@@ -256,7 +256,7 @@ GetControlSub(id str -> id str, type str) {
             expr = me.Visit(context.expression()).(Result)
             obj += "get{return "expr.text"; }set{"expr.text"=value;}"
         } _ {
-            context.packageControlSubStatement() @ item {
+            item @ context.packageControlSubStatement() {
                 temp = Visit(item).(Result)
                 obj += temp.text
             }

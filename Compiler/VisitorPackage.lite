@@ -17,7 +17,7 @@
         obj = ""
         extend = ""
 
-        context.packageSupportStatement() @ item {
+        item @ context.packageSupportStatement() {
             ? item.GetChild(0).GetType() == ?(IncludeStatementContext) {
                 ? extend == "" {
                     extend += Visit(item)
@@ -93,7 +93,7 @@
         }
         ? context.functionSupportStatement().Length > 0 {
             obj += id + BlockLeft
-            context.functionSupportStatement() @ item {
+            item @ context.functionSupportStatement() {
                 obj += Visit(item)
             }
             obj += BlockRight + Wrap
@@ -140,7 +140,7 @@
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
-        context.protocolSupportStatement() @ item {
+        item @ context.protocolSupportStatement() {
             r = Visit(item).(Result)
             interfaceProtocol += r.text
         }
@@ -170,7 +170,7 @@
         r.text += type + " " + id.text
         r.text += BlockLeft
         ? context.protocolControlSubStatement().Length > 0 {
-            context.protocolControlSubStatement() @ item {
+            item @ context.protocolControlSubStatement() {
                 r.text += Visit(item)
             }
         } _ {

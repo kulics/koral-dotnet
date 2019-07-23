@@ -106,7 +106,7 @@ Iterator -> {
         obj = ""
         expr = Visit(context.expression()).(Result)
         obj += "switch ("expr.text") "BlockLeft+Wrap""
-        context.caseStatement() @ item {
+        item @ context.caseStatement() {
             r = Visit(item).(str)
             obj += r + Wrap
         }
@@ -135,7 +135,7 @@ Iterator -> {
 
     VisitCaseStatement(context CaseStatementContext -> v any) {
         obj = ""
-        context.caseExprStatement() @ item {
+        item @ context.caseExprStatement() {
             r = Visit(item).(str)
             me.add_current_set()
             process = ""BlockLeft" "ProcessFunctionSupport(context.functionSupportStatement())"" BlockRight"break;"
@@ -148,7 +148,7 @@ Iterator -> {
     VisitJudgeStatement(context JudgeStatementContext -> v any) {
         obj = ""
         obj += Visit(context.judgeIfStatement())
-        context.judgeElseIfStatement() @ it {
+        it @ context.judgeElseIfStatement() {
             obj += Visit(it)
         }
         ? context.judgeElseStatement() >< nil {
@@ -192,7 +192,7 @@ Iterator -> {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += ""BlockRight+Wrap""
-        context.checkErrorStatement() @ item {
+        item @ context.checkErrorStatement() {
             obj += ""Visit(item)"" Wrap""
         }
 
@@ -254,7 +254,7 @@ Iterator -> {
     VisitLinq(context LinqContext -> v any) {
         r = Result{data = "var"}
         r.text += "from " Visit(context.expression(0)).(Result).text " "
-        context.linqItem() @ item {
+        item @ context.linqItem() {
             r.text += "" Visit(item) " "
         }
         r.text += ""context.k.Text " " Visit(context.expression(1)).(Result).text ""

@@ -38,7 +38,7 @@
     VisitTypeTuple(context TypeTupleContext -> v any) {
         obj = ""
         obj += "("
-        [0 < context.typeType().Length] @ i {
+        i @ [0 < context.typeType().Length] {
             ? i == 0 {
                 obj += Visit(context.typeType(i))
             } _ {
@@ -139,7 +139,7 @@
 
     VisitTypeFunctionParameterClause(context TypeFunctionParameterClauseContext -> v any) {
         obj = ""
-        [0 <= context.typeType().Length - 1] @ i {
+        i @ [0 <= context.typeType().Length - 1] {
             p = Visit(context.typeType(i)).(str)
             ? i == 0 {
                 obj += p

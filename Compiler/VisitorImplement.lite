@@ -18,7 +18,7 @@
             extends += ":" + Visit(context.typeType())
         }
         obj += ""Self.permission" partial class "Self.type + extends + BlockLeft + Wrap""
-        context.implementSupportStatement() @ item {
+        item @ context.implementSupportStatement() {
             obj += Visit(item)
         }
         obj += BlockRight + Wrap
@@ -79,7 +79,7 @@
             expr = me.Visit(context.expression()).(Result)
             obj += "get{return "expr.text"; }set{"expr.text"=value;}"
         } _ {
-            context.packageControlSubStatement() @ item {
+            item @ context.packageControlSubStatement() {
                 temp = Visit(item).(Result)
                 obj += temp.text
             }
@@ -94,7 +94,7 @@
         me.superID = Visit(context.id()).(Result).text
         obj = ""
         obj += ""Self.permission" partial class "Self.type""BlockLeft + Wrap""
-        context.overrideSupportStatement() @ item {
+        item @ context.overrideSupportStatement() {
             obj += Visit(item)
         }
         obj += BlockRight + Wrap
@@ -152,7 +152,7 @@
             obj += Visit(context.annotationSupport())
         }
         obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""
-        context.packageControlSubStatement() @ item {
+        item @ context.packageControlSubStatement() {
             temp = Visit(item).(Result)
             obj += temp.text
         }
