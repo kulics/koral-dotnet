@@ -242,15 +242,6 @@ Iterator -> {
         <- obj
     }
 
-    VisitReportStatement(context ReportStatementContext -> v any) {
-        obj = ""
-        ? context.expression() >< nil {
-            r = Visit(context.expression()).(Result)
-            obj += r.text
-        }
-        <- "throw "obj+Terminate+Wrap""
-    }
-
     VisitLinq(context LinqContext -> v any) {
         r = Result{data = "var"}
         r.text += "from " Visit(context.expression(0)).(Result).text " "

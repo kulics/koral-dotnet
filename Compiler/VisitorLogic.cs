@@ -241,15 +241,6 @@ obj = (new System.Text.StringBuilder("var ").Append(r1.text).Append(" = ").Appen
 }
 return obj;
 }
-public  override  object VisitReportStatement( ReportStatementContext context )
-{
-var obj = "";
-if ( context.expression()!=null ) {
-var r = ((Result)(Visit(context.expression())));
-obj+=r.text;
-}
-return (new System.Text.StringBuilder("throw ").Append(obj+Terminate+Wrap).Append("")).to_str();
-}
 public  override  object VisitLinq( LinqContext context )
 {
 var r = (new Result(){data = "var"});

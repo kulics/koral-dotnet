@@ -50,12 +50,6 @@ obj+=(new System.Text.StringBuilder(",").Append(Visit(context.typeType(i))).Appe
 obj+=")";
 return obj;
 }
-public  override  object VisitGetType( GetTypeContext context )
-{
-var r = (new Result(){data = "System.Type"});
-r.text=(new System.Text.StringBuilder("typeof(").Append(Visit(context.typeType())).Append(")")).to_str();
-return r;
-}
 public  override  object VisitTypeArray( TypeArrayContext context )
 {
 var obj = "";

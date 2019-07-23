@@ -145,7 +145,6 @@ functionSupportStatement:
 | loopContinueStatement
 | usingStatement
 | checkStatement
-| reportStatement
 | functionStatement
 | variableStatement
 | variableDeclaredStatement
@@ -193,8 +192,6 @@ checkErrorStatement: (id|id typeType) left_brace (functionSupportStatement)* rig
 // 最终执行
 checkFinallyStatment: Discard left_brace (functionSupportStatement)* right_brace;
 
-// 报告错误
-reportStatement: Bang left_paren (expression)? right_paren end;
 // 迭代器
 iteratorStatement: Left_Brack expression op=(Less|Less_Equal|Greater|Greater_Equal) expression
  more expression Right_Brack | Left_Brack expression op=(Less|Less_Equal|Greater|Greater_Equal) expression Right_Brack;
@@ -228,7 +225,6 @@ linq // 联合查询
 | primaryExpression
 | callNew // 构造类对象
 | callPkg // 新建包
-| getType // 获取类型
 | callAwait // 异步等待调用
 | list // 列表
 | set // 集合
@@ -281,8 +277,6 @@ callElement: Left_Brack (slice | expression) Right_Brack; // 元素调用
 callPkg: typeType left_brace (pkgAssign|listAssign|setAssign|dictionaryAssign)? right_brace; // 新建包
 
 callNew: Less typeType Greater left_paren New_Line? expressionList? New_Line? right_paren; // 构造类对象
-
-getType: Question left_paren typeType right_paren;
 
 typeConversion: Dot left_paren typeType right_paren; // 类型转化
 

@@ -49,12 +49,6 @@
         <- obj
     }
 
-    VisitGetType(context GetTypeContext -> v any) {
-        r = Result{data = "System.Type"}
-        r.text = "typeof("Visit(context.typeType())")"
-        <- r
-    }
-
     VisitTypeArray(context TypeArrayContext -> v any) {
         obj = ""
         obj += ""Visit(context.typeType())"[]"
