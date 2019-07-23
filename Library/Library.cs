@@ -29,6 +29,7 @@ namespace Library {
         public static T to<T>(object it) => (T)it;
 
         public static bool @is<T>(object it) => it is T;
+        public static bool is_not<T>(object it) => !(it is T);
 
         public static T @as<T>(object it) where T : class => it as T;
 

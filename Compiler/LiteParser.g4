@@ -243,7 +243,6 @@ linq // 联合查询
 | expression callChannel // 调用通道
 | expression callElement // 访问元素
 | expression callExpression // 链式调用
-| expression judgeType Less typeType Greater // 类型判断表达式
 | expression bitwise expression // 位运算表达式
 | expression judge expression // 判断型表达式
 | expression add expression // 和型表达式

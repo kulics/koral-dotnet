@@ -145,20 +145,6 @@ r.text+="?";
 case 1 :
 { r = ((Result)(Visit(context.GetChild(0))));
 }break;
-case 5 :
-{ var e1 = ((Result)(Visit(context.GetChild(0))));
-var op = Visit(context.GetChild(1));
-r.data=Bool;
-var e3 = ((string)(Visit(context.typeType())));
-switch (op) {
-case "==" :
-{ r.text=(new System.Text.StringBuilder("(").Append(e1.text).Append(" is ").Append(e3).Append(")")).to_str();
-}break;
-case "><" :
-{ r.text=(new System.Text.StringBuilder("!(").Append(e1.text).Append(" is ").Append(e3).Append(")")).to_str();
-}break;
-} 
-}break;
 } 
 return r;
 }

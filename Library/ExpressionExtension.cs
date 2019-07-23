@@ -9,6 +9,7 @@ namespace Library {
         public static string to_str(this object it) => it.ToString();
         public static T to<T>(this object it) => (T)it;
         public static bool @is<T>(this object it) => it is T;
+        public static bool is_not<T>(this object it) => !(it is T);
         public static T @as<T>(this object it) where T : class => it as T;
         public static T or_else<T>(this T it, T value) where T : class => it != null ? it : value;
         public static T or_else<T>(this T? it, T value) where T : struct => it ?? value;

@@ -136,17 +136,7 @@ DicEle -> {
             }
         } 1 {
             r = Visit(context.GetChild(0)).(Result)
-        } 5 {
-            e1 = Visit(context.GetChild(0)).(Result)
-            op = Visit(context.GetChild(1))
-            r.data = Bool
-            e3 = Visit(context.typeType()).(str)
-            op ? "==" {
-                r.text = "("e1.text" is "e3")"
-            } "><" {
-                r.text = "!("e1.text" is "e3")"
-            }
-        } 
+        }
         <- r
     }
 
