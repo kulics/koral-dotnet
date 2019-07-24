@@ -123,6 +123,9 @@ functionStatement: id (templateDefine)? left_paren parameterClauseIn t=(Right_Ar
  parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 返回
 returnStatement: Left_Arrow (tupleExpression)? end;
+// 生成器
+yieldReturnStatement: Left_Arrow At tupleExpression end;
+yieldBreakStatement: Left_Arrow At end;
 // 入参
 parameterClauseIn: parameter? (more parameter)*;
 // 出参
@@ -135,6 +138,8 @@ parameter: (annotationSupport)? id typeType (Equal expression)?;
 // 函数支持的语句
 functionSupportStatement:
  returnStatement
+| yieldReturnStatement
+| yieldBreakStatement
 | judgeCaseStatement
 | judgeStatement
 | loopStatement
@@ -178,9 +183,9 @@ loopCaseStatement: At expression left_brace (functionSupportStatement)* right_br
 // 无限循环
 loopInfiniteStatement: At left_brace (functionSupportStatement)* right_brace end;
 // 跳出循环
-loopJumpStatement: Left_Arrow At end;
+loopJumpStatement: At Dot_Dot end;
 // 跳出当前循环
-loopContinueStatement: Right_Arrow At end;
+loopContinueStatement: Dot_Dot At end;
 // 检查
 checkStatement: 
 Bang left_brace (functionSupportStatement)* right_brace (checkErrorStatement)* checkFinallyStatment end

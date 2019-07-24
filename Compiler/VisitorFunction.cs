@@ -79,6 +79,15 @@ return "return "+r.text+Terminate+Wrap;
 }
 return (new System.Text.StringBuilder("return").Append(Terminate).Append("").Append(Wrap).Append("")).to_str();
 }
+public  override  object VisitYieldReturnStatement( YieldReturnStatementContext context )
+{
+var r = ((Result)(Visit(context.tupleExpression())));
+return "yield return "+r.text+Terminate+Wrap;
+}
+public  override  object VisitYieldBreakStatement( YieldBreakStatementContext context )
+{
+return (new System.Text.StringBuilder("yield break").Append(Terminate).Append("").Append(Wrap).Append("")).to_str();
+}
 public  override  object VisitTuple( TupleContext context )
 {
 var obj = "(";

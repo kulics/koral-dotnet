@@ -77,6 +77,15 @@ me LiteLangVisitor -> {
         <- "return"Terminate""Wrap""
     }
 
+    VisitYieldReturnStatement(context YieldReturnStatementContext -> v any) {
+        r = Visit(context.tupleExpression()).(Result)
+        <- "yield return " + r.text + Terminate + Wrap
+    }
+
+    VisitYieldBreakStatement(context YieldBreakStatementContext -> v any) {
+        <- "yield break"Terminate""Wrap""
+    }
+
     VisitTuple(context TupleContext -> v any) {
         obj = "("
         i @ [0 < context.expression().Length] {
