@@ -124,8 +124,8 @@ functionStatement: id (templateDefine)? left_paren parameterClauseIn t=(Right_Ar
 // 返回
 returnStatement: Left_Arrow (tupleExpression)? end;
 // 生成器
-yieldReturnStatement: Left_Arrow At tupleExpression end;
-yieldBreakStatement: Left_Arrow At end;
+yieldReturnStatement: At Left_Arrow tupleExpression end;
+yieldBreakStatement: At Left_Arrow end;
 // 入参
 parameterClauseIn: parameter? (more parameter)*;
 // 出参
