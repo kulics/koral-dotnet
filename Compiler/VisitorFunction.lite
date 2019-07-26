@@ -29,7 +29,7 @@ me LiteLangVisitor -> {
             }
         }
         ? lazy.Count > 0 {
-            i @ [lazy.Count - 1 >= 0] {
+            i @ lazy.Count-1 ..>= 0 {
                 content += BlockRight
             }
         }
@@ -88,7 +88,7 @@ me LiteLangVisitor -> {
 
     VisitTuple(context TupleContext -> v any) {
         obj = "("
-        i @ [0 < context.expression().Length] {
+        i @ 0 ..< context.expression().Length {
             r = Visit(context.expression(i)).(Result)
             ? i == 0 {
                 obj += r.text
@@ -102,7 +102,7 @@ me LiteLangVisitor -> {
 
     VisitTupleExpression(context TupleExpressionContext -> v any) {
         obj = ""
-        i @ [0 < context.expression().Length] {
+        i @ 0 ..< context.expression().Length {
             r = Visit(context.expression(i)).(Result)
             ? i == 0 {
                 obj += r.text
@@ -119,12 +119,12 @@ me LiteLangVisitor -> {
     VisitParameterClauseIn(context ParameterClauseInContext -> v any) {
         obj = "("
         temp = []str{}
-        i @ [context.parameter().Length - 1 >= 0] {
+        i @ context.parameter().Length-1 ..>= 0 {
             p = Visit(context.parameter(i)).(Parameter)
             temp.add(""p.annotation" "p.type" "p.id" "p.value"")
             me.add_id(p.id)
         }
-        i @ [temp.Count - 1 >= 0] {
+        i @ temp.Count-1 ..>= 0 {
             ? i == temp.Count - 1 {
                 obj += temp[i]
             } _ {
@@ -147,11 +147,11 @@ me LiteLangVisitor -> {
         ? context.parameter().Length > 1 {
             obj += "( "
             temp = []str{}
-            i @ [context.parameter().Length - 1 >= 0] {
+            i @ context.parameter().Length-1 ..>= 0 {
                 p = Visit(context.parameter(i)).(Parameter)
                 temp.add(""p.annotation" "p.type" "p.id" "p.value"")
             }
-            i @ [temp.Count - 1 >= 0] {
+            i @ temp.Count-1 ..>= 0 {
                 ? i == temp.Count - 1 {
                     obj += temp[i]
                 } _ {

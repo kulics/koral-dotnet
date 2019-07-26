@@ -100,7 +100,7 @@ me LiteLangVisitor -> {
         r.text = first.text
         r.isVirtual = first.isVirtual
         ? context.ChildCount >= 2 {
-            i @ [1 < context.ChildCount] {
+            i @ 1 ..< context.ChildCount {
                 other = Visit(context.GetChild(i)).(Result)
                 r.text += "_"other.text""
             }
@@ -208,7 +208,7 @@ me LiteLangVisitor -> {
 
     VisitAnnotationList(context AnnotationListContext -> v any) {
         obj = ""
-        i @ [0 < context.annotationItem().Length] {
+        i @ 0 ..< context.annotationItem().Length {
             ? i > 0 {
                 obj += "," Visit(context.annotationItem(i)) ""
             } _ {
@@ -221,7 +221,7 @@ me LiteLangVisitor -> {
     VisitAnnotationItem(context AnnotationItemContext -> v any) {
         obj = ""
         obj += Visit(context.id()).(Result).text
-        i @ [0 < context.annotationAssign().Length] {
+        i @ 0 ..< context.annotationAssign().Length {
             ? i > 0 {
                 obj += "," Visit(context.annotationAssign(i)) ""
             } _ {
