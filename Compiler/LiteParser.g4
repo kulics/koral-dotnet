@@ -11,7 +11,7 @@ exportStatement (New_Line)* namespaceSupportStatement*;
 exportStatement: TextLiteral left_brace (importStatement|New_Line)* right_brace end;
 
 // 导入命名空间
-importStatement: (annotationSupport)? TextLiteral (id call?)? end;
+importStatement: (annotationSupport)? (id call?)? TextLiteral end;
 
 namespaceSupportStatement:
 namespaceVariableStatement
