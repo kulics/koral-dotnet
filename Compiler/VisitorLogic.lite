@@ -3,8 +3,8 @@
     "Antlr4/Runtime/Misc"
     "System"
 
-    "Compiler" LiteParser.
-    "Compiler" Compiler_static.
+    LiteParser. "Compiler" 
+    Compiler_static. "Compiler" 
 }
 
 Iterator -> {
