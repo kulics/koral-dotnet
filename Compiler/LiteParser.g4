@@ -71,7 +71,7 @@ packageVariableStatement: (annotationSupport)? id (Equal expression| typeType (E
 // 定义子方法
 packageControlSubStatement: id (left_paren id right_paren)? left_brace (functionSupportStatement)+ right_brace end;
 // 定义包事件
-packageEventStatement: id left_brack Question right_brack nameSpaceItem end;
+packageEventStatement: id left_brack Question nameSpaceItem right_brack end;
 
 // 实现
 implementStatement: parameterClauseSelf Right_Arrow (typeType)? New_Line* left_brace (implementSupportStatement)* right_brace end;
