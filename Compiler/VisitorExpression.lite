@@ -7,7 +7,7 @@
     Compiler_static. "Compiler" 
 }
 
-keywords = []str{
+keywords = [str]{
     "abstract", "as", "base", "bool", "break" , "byte", "case" , "catch",
     "char","checked","class","const","continue","decimal","default","delegate","do","double","_",
     "enum","event","explicit","extern","false","finally","fixed","float","for","foreach","goto",
@@ -29,13 +29,13 @@ DicEle -> {
     text str
 }
 
-(base)me LiteLangVisitor -> {
+base me LiteLangVisitor -> {
     VisitVariableStatement(context VariableStatementContext -> v any) {
         obj = ""
-        r1 = Visit(context.idExpression()).(Result)
-        r2 = Visit(context.expression()).(Result)
+        r1 = Visit(context.idExpression()).[Result]
+        r2 = Visit(context.expression()).[Result]
         ? context.typeType() >< nil {
-            Type = Visit(context.typeType()).(str)
+            Type = Visit(context.typeType()).[str]
             obj = ""Type" "r1.text" = "r2.text"" + Terminate + Wrap
         } _ {
             ? r1.isDefine | r1.text == me.selfID | r1.text == me.superID | r1.text == setID {
@@ -49,15 +49,15 @@ DicEle -> {
 
     VisitVariableDeclaredStatement(context VariableDeclaredStatementContext -> v any) {
         obj = ""
-        Type = Visit(context.typeType()).(str)
-        r = Visit(context.idExpression()).(Result)
+        Type = Visit(context.typeType()).[str]
+        r = Visit(context.idExpression()).[Result]
         obj = ""Type" "r.text"" + Terminate + Wrap
         <- obj
     }
 
     VisitAssignStatement(context AssignStatementContext -> v any) {
-        r1 = Visit(context.tupleExpression(0)).(Result)
-        r2 = Visit(context.tupleExpression(1)).(Result)
+        r1 = Visit(context.tupleExpression(0)).[Result]
+        r2 = Visit(context.tupleExpression(1)).[Result]
         obj = r1.text + Visit(context.assign()) + r2.text + Terminate + Wrap
         <- obj
     }
@@ -67,7 +67,7 @@ DicEle -> {
     }
 
     VisitExpressionStatement(context ExpressionStatementContext -> v any) {
-        r = Visit(context.expression()).(Result)
+        r = Visit(context.expression()).[Result]
         <- r.text + Terminate + Wrap
     }
 
@@ -75,7 +75,7 @@ DicEle -> {
         count = context.ChildCount
         r = Result{}
         count ? 3 {
-            e1 = Visit(context.GetChild(0)).(Result)
+            e1 = Visit(context.GetChild(0)).[Result]
             e2 = Visit(context.GetChild(2))
             op = Visit(context.GetChild(1))
 
@@ -84,16 +84,16 @@ DicEle -> {
                 r.data = Bool
             } _ AddContext {
                 # todo 如果左右不是number或text类型值，报错 #
-                ? e1.data.(str) == Str | e2.(Result).data.(str) == Str {
+                ? e1.data.[str] == Str | e2.[Result].data.[str] == Str {
                     r.data = Str
-                }  e1.data.(str) == I32 & e2.(Result).data.(str) == I32 {
+                }  e1.data.[str] == I32 & e2.[Result].data.[str] == I32 {
                     r.data = I32
                 } _ {
                     r.data = F64
                 }
             } _ MulContext {
                 # todo 如果左右不是number类型值，报错 #
-                ? e1.data.(str) == I32 & e2.(Result).data.(str) == I32 {
+                ? e1.data.[str] == I32 & e2.[Result].data.[str] == I32 {
                     r.data = I32
                 } _ {
                     r.data = F64
@@ -108,24 +108,24 @@ DicEle -> {
                 } "%%" {
                     op = "log"
                 }
-                r.text = ""op"("e1.text", "e2.(Result).text")"
+                r.text = ""op"("e1.text", "e2.[Result].text")"
                 <- r
             }
-            r.text = e1.text + op + e2.(Result).text
+            r.text = e1.text + op + e2.[Result].text
         } 2 {
-            r = Visit(context.GetChild(0)).(Result)
-            ? context.GetChild(1).GetType() == typeof<TypeConversionContext>() {
-                e2 = Visit(context.GetChild(1)).(str)
+            r = Visit(context.GetChild(0)).[Result]
+            ? context.GetChild(1).GetType() == typeof[TypeConversionContext]() {
+                e2 = Visit(context.GetChild(1)).[str]
                 r.data = e2
                 r.text = "(("e2")("r.text"))"
-            } context.GetChild(1).GetType() == typeof<CallExpressionContext>() {
-                e2 = Visit(context.GetChild(1)).(Result)
+            } context.GetChild(1).GetType() == typeof[CallExpressionContext]() {
+                e2 = Visit(context.GetChild(1)).[Result]
                 r.text = r.text + e2.text
-            } context.GetChild(1).GetType() == typeof<CallFuncContext>() {
-                e2 = Visit(context.GetChild(1)).(Result)
+            } context.GetChild(1).GetType() == typeof[CallFuncContext]() {
+                e2 = Visit(context.GetChild(1)).[Result]
                 r.text = r.text + e2.text
-            } context.GetChild(1).GetType() == typeof<CallElementContext>() {
-                e2 = Visit(context.GetChild(1)).(Result)
+            } context.GetChild(1).GetType() == typeof[CallElementContext]() {
+                e2 = Visit(context.GetChild(1)).[Result]
                 r.text = r.text + e2.text
             } _ {
                 ? context.op.Type == LiteParser.Bang {
@@ -135,32 +135,32 @@ DicEle -> {
                 }
             }
         } 1 {
-            r = Visit(context.GetChild(0)).(Result)
+            r = Visit(context.GetChild(0)).[Result]
         }
         <- r
     }
 
     VisitCallExpression(context CallExpressionContext -> v any) {
-        r = Visit(context.id()).(Result)
+        r = Visit(context.id()).[Result]
         r.text = "." + r.text
         ? context.templateCall() >< nil {
-            r.text += Visit(context.templateCall()).(str)
+            r.text += Visit(context.templateCall()).[str]
         }
         ? context.callFunc() >< nil {
-            e2 = Visit(context.callFunc()).(Result)
+            e2 = Visit(context.callFunc()).[Result]
             r.text = r.text + e2.text
         } context.callElement() >< nil {
-            e2 = Visit(context.callElement()).(Result)
+            e2 = Visit(context.callElement()).[Result]
             r.text = r.text + e2.text
         } context.callChannel() >< nil {
-            e2 = Visit(context.callChannel()).(Result)
+            e2 = Visit(context.callChannel()).[Result]
             r.text = r.text + e2.text
         }
         <- r
     }
 
     VisitTypeConversion(context TypeConversionContext -> v any) {
-        <- Visit(context.typeType()).(str)
+        <- Visit(context.typeType()).[str]
     }
 
     VisitCall(context CallContext -> v any) {
@@ -176,7 +176,7 @@ DicEle -> {
     }
 
     VisitBitwise(context BitwiseContext -> v any) {
-        <- me.Visit(context.GetChild(0)).(str)
+        <- me.Visit(context.GetChild(0)).[str]
     }
 
     VisitBitwiseAnd(context BitwiseAndContext -> v any) {
@@ -225,19 +225,19 @@ DicEle -> {
     VisitPrimaryExpression(context PrimaryExpressionContext -> v any) {
         ? context.ChildCount == 1 {
             c = context.GetChild(0)
-            ? c.is<DataStatementContext>() {
+            ? c.is[DataStatementContext]() {
                 <- Visit(context.dataStatement())
-            } c.is<IdContext>() {
+            } c.is[IdContext]() {
                 <- Visit(context.id())
             } context.t.Type == Discard {
                 <- Result{ text = "_", data = "var" }
             }
         } context.ChildCount == 2 {
-            id = Visit(context.id()).(Result)
-            template = Visit(context.templateCall()).(str)
+            id = Visit(context.id()).[Result]
+            template = Visit(context.templateCall()).[str]
             <- Result{ text = id.text + template, data = id.text + template }
         }
-        r = Visit(context.expression()).(Result)
+        r = Visit(context.expression()).[Result]
         <- Result{ text = "(" + r.text + ")", data = r.data }
     }
 
@@ -245,7 +245,7 @@ DicEle -> {
         r = Result{}
         obj = ""
         i @ 0 ..< context.expression().Length {
-            temp = Visit(context.expression(i)).(Result)
+            temp = Visit(context.expression(i)).[Result]
             ? i == 0 {
                 obj += temp.text
             } _ {
@@ -267,7 +267,7 @@ DicEle -> {
                     item.Contract += ","
                 }
             }
-            r = Visit(context.templateDefineItem(i)).(TemplateItem)
+            r = Visit(context.templateDefineItem(i)).[TemplateItem]
             item.Template += r.Template
             item.Contract += r.Contract
         }
@@ -305,15 +305,15 @@ DicEle -> {
 
     VisitCallElement(context CallElementContext -> v any) {
         ? context.expression() == nil {
-            <- (Result{ text = Visit(context.slice()).(str) })
+            <- (Result{ text = Visit(context.slice()).[str] })
         }
-        r = Visit(context.expression()).(Result)
+        r = Visit(context.expression()).[Result]
         r.text = "[" r.text "]"
         <- r
     }
 
     VisitSlice(context SliceContext -> v any) {
-        <- Visit(context.GetChild(0)).(str)
+        <- Visit(context.GetChild(0)).[str]
     }
 
     VisitSliceFull(context SliceFullContext -> v any) {
@@ -330,8 +330,8 @@ DicEle -> {
         } ">" {
             order = "false"
         }
-        expr1 = Visit(context.expression(0)).(Result)
-        expr2 = Visit(context.expression(1)).(Result)
+        expr1 = Visit(context.expression(0)).[Result]
+        expr2 = Visit(context.expression(1)).[Result]
         <- ".slice("expr1.text", "expr2.text", "order", "attach")"
     }
 
@@ -349,7 +349,7 @@ DicEle -> {
         } ">" {
             order = "false"
         }
-        expr = Visit(context.expression()).(Result)
+        expr = Visit(context.expression()).[Result]
         <- ".slice("expr.text", null, "order", "attach")"
     }
 
@@ -367,16 +367,16 @@ DicEle -> {
         } ">" {
             order = "false"
         }
-        expr = Visit(context.expression()).(Result)
+        expr = Visit(context.expression()).[Result]
         <- ".slice(null, "expr.text", "order", "attach")"
     }
 
     VisitCallFunc(context CallFuncContext -> v any) {
         r = Result{data = "var"}
         ? context.tuple() >< nil {
-            r.text += Visit(context.tuple()).(Result).text
+            r.text += Visit(context.tuple()).[Result].text
         } _ {
-            r.text += "(" Visit(context.lambda()).(Result).text ")"
+            r.text += "(" Visit(context.lambda()).[Result].text ")"
         }
 
         <- r
@@ -402,7 +402,7 @@ DicEle -> {
         r = Result{data = Visit(context.typeType())}
         param = ""
         ? context.expressionList() >< nil {
-            param = Visit(context.expressionList()).(Result).text
+            param = Visit(context.expressionList()).[Result].text
         }
         r.text = "(new "Visit(context.typeType())"("param")"
         r.text += ")"
@@ -427,7 +427,7 @@ DicEle -> {
         obj = ""
         obj += "{"
         i @ 0 ..< context.expression().Length {
-            r = Visit(context.expression(i)).(Result)
+            r = Visit(context.expression(i)).[Result]
             ? i == 0 {
                 obj += r.text
             } _ {
@@ -442,7 +442,7 @@ DicEle -> {
         obj = ""
         obj += "{"
         i @ 0 ..< context.expression().Length {
-            r = Visit(context.expression(i)).(Result)
+            r = Visit(context.expression(i)).[Result]
             ? i == 0 {
                 obj += r.text
             } _ {
@@ -457,7 +457,7 @@ DicEle -> {
         obj = ""
         obj += "{"
         i @ 0 ..< context.dictionaryElement().Length {
-            r = Visit(context.dictionaryElement(i)).(DicEle)
+            r = Visit(context.dictionaryElement(i)).[DicEle]
             ? i == 0 {
                 obj += r.text
             } _ {
@@ -470,14 +470,14 @@ DicEle -> {
 
     VisitPkgAssignElement(context PkgAssignElementContext -> v any) {
         obj = ""
-        obj += Visit(context.name()) + " = " + Visit(context.expression()).(Result).text
+        obj += Visit(context.name()) + " = " + Visit(context.expression()).[Result].text
         <- obj
     }
 
     VisitPkgAnonymous(context PkgAnonymousContext -> v any) {
         <- Result{
             data = "var",
-            text = "new" + Visit(context.pkgAnonymousAssign()).(str)
+            text = "new" + Visit(context.pkgAnonymousAssign()).[str]
         }
     }
 
@@ -497,13 +497,13 @@ DicEle -> {
 
     VisitPkgAnonymousAssignElement(context PkgAnonymousAssignElementContext -> v any) {
         obj = ""
-        obj += Visit(context.name()) + " = " + Visit(context.expression()).(Result).text
+        obj += Visit(context.name()) + " = " + Visit(context.expression()).[Result].text
         <- obj
     }
 
     VisitCallAwait(context CallAwaitContext -> v any) {
         r = Result{}
-        expr = Visit(context.expression()).(Result)
+        expr = Visit(context.expression()).[Result]
         r.data = "var"
         r.text = "await " + expr.text
         <- r
@@ -513,12 +513,12 @@ DicEle -> {
         type = "object"
         result = Result{}
         i @ 0 ..< context.expression().Length {
-            r = Visit(context.expression(i)).(Result)
+            r = Visit(context.expression(i)).[Result]
             ? i == 0 {
-                type = r.data.(str)
+                type = r.data.[str]
                 result.text += r.text
             } _ {
-                ? type >< r.data.(str) {
+                ? type >< r.data.[str] {
                     type = "object"
                 }
                 result.text += "," + r.text
@@ -533,12 +533,12 @@ DicEle -> {
         type = "object"
         result = Result{}
         i @ 0 ..< context.expression().Length {
-            r = Visit(context.expression(i)).(Result)
+            r = Visit(context.expression(i)).[Result]
             ? i == 0 {
-                type = r.data.(str)
+                type = r.data.[str]
                 result.text += r.text
             } _ {
-                ? type >< r.data.(str) {
+                ? type >< r.data.[str] {
                     type = "object"
                 }
                 result.text += "," + r.text
@@ -554,7 +554,7 @@ DicEle -> {
         value = Any
         result = Result{}
         i @ 0 ..< context.dictionaryElement().Length {
-            r = Visit(context.dictionaryElement(i)).(DicEle)
+            r = Visit(context.dictionaryElement(i)).[DicEle]
             ? i == 0 {
                 key = r.key
                 value = r.value
@@ -576,11 +576,11 @@ DicEle -> {
     }
 
     VisitDictionaryElement(context DictionaryElementContext -> v any) {
-        r1 = Visit(context.expression(0)).(Result)
-        r2 = Visit(context.expression(1)).(Result)
+        r1 = Visit(context.expression(0)).[Result]
+        r2 = Visit(context.expression(1)).[Result]
         result = DicEle{
-            key = r1.data.(str),
-            value = r2.data.(str),
+            key = r1.data.[str],
+            value = r2.data.[str],
             text = "{" + r1.text + "," + r2.text + "}"
         }
         <- result
@@ -599,7 +599,7 @@ DicEle -> {
     }
 
     VisitStringExpressionElement(context StringExpressionElementContext -> v any) {
-        r = Visit(context.expression()).(Result)
+        r = Visit(context.expression()).[Result]
         text = context.TextLiteral().GetText()
         <- ".Append("r.text").Append("text")"
     }
@@ -611,10 +611,10 @@ DicEle -> {
             r.text = "null"
         } context.floatExpr() >< nil {
             r.data = F64
-            r.text = Visit(context.floatExpr()).(str)
+            r.text = Visit(context.floatExpr()).[str]
         } context.integerExpr() >< nil {
             r.data = I32
-            r.text = Visit(context.integerExpr()).(str)
+            r.text = Visit(context.integerExpr()).[str]
         } context.t.Type == TextLiteral {
             r.data = Str
             r.text = context.TextLiteral().GetText()
@@ -672,7 +672,7 @@ DicEle -> {
         r.text += "=>"
 
         ? context.tupleExpression() >< nil {
-            r.text += Visit(context.tupleExpression()).(Result).text
+            r.text += Visit(context.tupleExpression()).[Result].text
         } _ {
             me.add_current_set()
             r.text += "{" + ProcessFunctionSupport(context.functionSupportStatement()) + "}"
@@ -685,7 +685,7 @@ DicEle -> {
     VisitLambdaIn(context LambdaInContext -> v any) {
         obj = ""
         i @ 0 ..< context.id().Length {
-            r = Visit(context.id(i)).(Result)
+            r = Visit(context.id(i)).[Result]
             ? i == 0 {
                 obj += r.text
             } _ {
@@ -698,7 +698,7 @@ DicEle -> {
 
     VisitPlusMinus(context PlusMinusContext -> v any) {
         r = Result{}
-        expr = Visit(context.expression()).(Result)
+        expr = Visit(context.expression()).[Result]
         op = Visit(context.add())
         r.data = expr.data
         r.text = op + expr.text
@@ -707,7 +707,7 @@ DicEle -> {
 
     VisitNegate(context NegateContext -> v any) {
         r = Result{}
-        expr = Visit(context.expression()).(Result)
+        expr = Visit(context.expression()).[Result]
         r.data = expr.data
         r.text = "!" + expr.text
         <- r
@@ -715,7 +715,7 @@ DicEle -> {
 
     VisitBitwiseNotExpression(context BitwiseNotExpressionContext -> v any) {
         r = Result{}
-        expr = Visit(context.expression()).(Result)
+        expr = Visit(context.expression()).[Result]
         r.data = expr.data
         r.text = "~" + expr.text
         <- r

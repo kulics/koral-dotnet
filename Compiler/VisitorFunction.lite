@@ -16,14 +16,14 @@ Parameter -> {
 }
 
 me LiteLangVisitor -> {
-    ProcessFunctionSupport(items [:]FunctionSupportStatementContext -> v str) {
+    ProcessFunctionSupport(items []FunctionSupportStatementContext -> v str) {
         obj = ""
         content = ""
-        lazy = []str{}
+        lazy = [str]{}
         item @ items {
-            ? item.GetChild(0).is<UsingStatementContext>() {
+            ? item.GetChild(0).is[UsingStatementContext]() {
                 lazy.add("}")
-                content += "using ("Visit(item).(str)") "BlockLeft" "Wrap""
+                content += "using ("Visit(item).[str]") "BlockLeft" "Wrap""
             } _ {
                 content += Visit(item)
             }
@@ -38,13 +38,13 @@ me LiteLangVisitor -> {
     }
 }
 
-(base)me LiteLangVisitor -> {
+base me LiteLangVisitor -> {
     VisitFunctionStatement(context FunctionStatementContext -> v any) {
-        id = Visit(context.id()).(Result)
+        id = Visit(context.id()).[Result]
         obj = ""
         # 异步 #
         ? context.t.Type == Right_Flow {
-            pout = Visit(context.parameterClauseOut()).(str)
+            pout = Visit(context.parameterClauseOut()).[str]
             ? pout >< "void" {
                 pout = ""Task"<"pout">"
             } _ {
@@ -57,7 +57,7 @@ me LiteLangVisitor -> {
         # 泛型 #
         templateContract = ""
         ? context.templateDefine() >< nil {
-            template = Visit(context.templateDefine()).(TemplateItem)
+            template = Visit(context.templateDefine()).[TemplateItem]
             obj += template.Template
             templateContract = template.Contract
         }
@@ -71,14 +71,14 @@ me LiteLangVisitor -> {
 
     VisitReturnStatement(context ReturnStatementContext -> v any) {
         ? context.tupleExpression() >< nil {
-            r = Visit(context.tupleExpression()).(Result)
+            r = Visit(context.tupleExpression()).[Result]
             <- "return " + r.text + Terminate + Wrap
         }
         <- "return"Terminate""Wrap""
     }
 
     VisitYieldReturnStatement(context YieldReturnStatementContext -> v any) {
-        r = Visit(context.tupleExpression()).(Result)
+        r = Visit(context.tupleExpression()).[Result]
         <- "yield return " + r.text + Terminate + Wrap
     }
 
@@ -89,7 +89,7 @@ me LiteLangVisitor -> {
     VisitTuple(context TupleContext -> v any) {
         obj = "("
         i @ 0 ..< context.expression().Length {
-            r = Visit(context.expression(i)).(Result)
+            r = Visit(context.expression(i)).[Result]
             ? i == 0 {
                 obj += r.text
             } _ {
@@ -103,7 +103,7 @@ me LiteLangVisitor -> {
     VisitTupleExpression(context TupleExpressionContext -> v any) {
         obj = ""
         i @ 0 ..< context.expression().Length {
-            r = Visit(context.expression(i)).(Result)
+            r = Visit(context.expression(i)).[Result]
             ? i == 0 {
                 obj += r.text
             } _ {
@@ -118,17 +118,17 @@ me LiteLangVisitor -> {
 
     VisitParameterClauseIn(context ParameterClauseInContext -> v any) {
         obj = "("
-        temp = []str{}
+        temp = [str]{}
         i @ context.parameter().Length-1 ..>= 0 {
-            p = Visit(context.parameter(i)).(Parameter)
+            p = Visit(context.parameter(i)).[Parameter]
             temp.add(""p.annotation" "p.type" "p.id" "p.value"")
             me.add_id(p.id)
         }
         i @ temp.Count-1 ..>= 0 {
             ? i == temp.Count - 1 {
-                obj += temp[i]
+                obj += temp.(i)
             } _ {
-                obj += ", "temp[i]""
+                obj += ", "temp.(i)""
             }
         }
 
@@ -141,21 +141,21 @@ me LiteLangVisitor -> {
         ? context.parameter().Length == 0 {
             obj += "void"
         } context.parameter().Length == 1 {
-            p = Visit(context.parameter(0)).(Parameter)
+            p = Visit(context.parameter(0)).[Parameter]
             obj += p.type
         }
         ? context.parameter().Length > 1 {
             obj += "( "
-            temp = []str{}
+            temp = [str]{}
             i @ context.parameter().Length-1 ..>= 0 {
-                p = Visit(context.parameter(i)).(Parameter)
+                p = Visit(context.parameter(i)).[Parameter]
                 temp.add(""p.annotation" "p.type" "p.id" "p.value"")
             }
             i @ temp.Count-1 ..>= 0 {
                 ? i == temp.Count - 1 {
-                    obj += temp[i]
+                    obj += temp.(i)
                 } _ {
-                    obj += ", "temp[i]""
+                    obj += ", "temp.(i)""
                 }
             }
             obj += " )"
@@ -165,25 +165,25 @@ me LiteLangVisitor -> {
 
     VisitParameterClauseSelf(context ParameterClauseSelfContext -> v any) {
         p = Parameter{}
-        id = Visit(context.id()).(Result)
+        id = Visit(context.id()).[Result]
         p.id = id.text
         p.permission = id.permission
-        p.type = Visit(context.typeType()).(str)
+        p.type = Visit(context.typeType()).[str]
         <- p
     }
 
     VisitParameter(context ParameterContext -> v any) {
         p = Parameter{}
-        id = Visit(context.id()).(Result)
+        id = Visit(context.id()).[Result]
         p.id = id.text
         p.permission = id.permission
         ? context.annotationSupport() >< nil {
-            p.annotation = Visit(context.annotationSupport()).(str)
+            p.annotation = Visit(context.annotationSupport()).[str]
         }
         ? context.expression() >< nil {
-            p.value = "=" Visit(context.expression()).(Result).text ""
+            p.value = "=" Visit(context.expression()).[Result].text ""
         }
-        p.type = Visit(context.typeType()).(str)
+        p.type = Visit(context.typeType()).[str]
         <- p
     }
 }

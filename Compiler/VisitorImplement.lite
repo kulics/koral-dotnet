@@ -7,9 +7,9 @@
     Compiler_static. "Compiler" 
 }
 
-(base)me LiteLangVisitor -> { 
+base me LiteLangVisitor -> { 
     VisitImplementStatement(context ImplementStatementContext -> v any) {
-        Self = Visit(context.parameterClauseSelf()).(Parameter)
+        Self = Visit(context.parameterClauseSelf()).[Parameter]
         me.selfID = Self.id
         isVirtual = ""
         obj = ""
@@ -27,7 +27,7 @@
     }
 
     VisitImplementFunctionStatement(context ImplementFunctionStatementContext -> v any) {
-        id = Visit(context.id()).(Result)
+        id = Visit(context.id()).[Result]
         isVirtual = ""
         ? id.isVirtual {
             isVirtual = " virtual "
@@ -36,7 +36,7 @@
         # 异步 #
         obj += ""id.permission" "
         ? context.t.Type == Right_Flow {
-            pout = Visit(context.parameterClauseOut()).(str)
+            pout = Visit(context.parameterClauseOut()).[str]
             ? pout >< "void" {
                 pout = ""Task"<"pout">"
             } _ {
@@ -49,7 +49,7 @@
         # 泛型 #
         templateContract = ""
         ? context.templateDefine() >< nil {
-            template = Visit(context.templateDefine()).(TemplateItem)
+            template = Visit(context.templateDefine()).[TemplateItem]
             obj += template.Template
             templateContract = template.Contract
         }
@@ -62,25 +62,25 @@
     }
 
     VisitImplementControlStatement(context ImplementControlStatementContext -> v any) {
-        r1 = Visit(context.id()).(Result)
+        r1 = Visit(context.id()).[Result]
         isMutable = true # r1.isVirtual #
         isVirtual = ""
         ? r1.isVirtual {
             isVirtual = " virtual "
         }
         typ = ""
-        typ = Visit(context.typeType()).(str)
+        typ = Visit(context.typeType()).[str]
         obj = ""
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
         obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""
         ? context.expression() >< nil {
-            expr = me.Visit(context.expression()).(Result)
+            expr = me.Visit(context.expression()).[Result]
             obj += "get{return "expr.text"; }set{"expr.text"=value;}"
         } _ {
             item @ context.packageControlSubStatement() {
-                temp = Visit(item).(Result)
+                temp = Visit(item).[Result]
                 obj += temp.text
             }
         }
@@ -89,9 +89,9 @@
     }
 
     VisitOverrideStatement(context OverrideStatementContext -> v any) {
-        Self = Visit(context.parameterClauseSelf()).(Parameter)
+        Self = Visit(context.parameterClauseSelf()).[Parameter]
         me.selfID = Self.id
-        me.superID = Visit(context.id()).(Result).text
+        me.superID = Visit(context.id()).[Result].text
         obj = ""
         obj += ""Self.permission" partial class "Self.type""BlockLeft + Wrap""
         item @ context.overrideSupportStatement() {
@@ -104,7 +104,7 @@
     }
 
     VisitOverrideFunctionStatement(context OverrideFunctionStatementContext -> v any) {
-        id = Visit(context.id()).(Result)
+        id = Visit(context.id()).[Result]
         isVirtual = " override "
         obj = ""
         # 异步 #
@@ -114,7 +114,7 @@
             obj += ""id.permission" "
         }
         ? context.t.Type == Right_Flow {
-            pout = Visit(context.parameterClauseOut()).(str)
+            pout = Visit(context.parameterClauseOut()).[str]
             ? pout >< "void" {
                 pout = ""Task"<"pout">"
             } _ {
@@ -127,7 +127,7 @@
         # 泛型 #
         templateContract = ""
         ? context.templateDefine() >< nil {
-            template = Visit(context.templateDefine()).(TemplateItem)
+            template = Visit(context.templateDefine()).[TemplateItem]
             obj += template.Template
             templateContract = template.Contract
         }
@@ -140,12 +140,12 @@
     }
 
     VisitOverrideControlStatement(context OverrideControlStatementContext -> v any) {
-        r1 = Visit(context.id()).(Result)
+        r1 = Visit(context.id()).[Result]
         isMutable = true # r1.isVirtual #
         isVirtual = " override "
         typ = ""
         ? context.typeType() >< nil {
-            typ = Visit(context.typeType()).(str)
+            typ = Visit(context.typeType()).[str]
         }
         obj = ""
         ? context.annotationSupport() >< nil {
@@ -153,7 +153,7 @@
         }
         obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""
         item @ context.packageControlSubStatement() {
-            temp = Visit(item).(Result)
+            temp = Visit(item).[Result]
             obj += temp.text
         }
         obj += BlockRight + Wrap

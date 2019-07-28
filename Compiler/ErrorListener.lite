@@ -11,7 +11,7 @@ ErrorListener -> {
     BaseErrorListener
     FileDir str
 } 
-(super)me ErrorListener -> {
+super me ErrorListener -> {
     SyntaxError(recognizer IRecognizer, offendingSymbol ?IToken, 
     line int, charPositionInLine int, msg str, 
     e ?RecognitionException->) {

@@ -7,10 +7,10 @@
     Compiler_static. "Compiler" 
 }
 
-(base)me LiteLangVisitor -> {
+base me LiteLangVisitor -> {
     VisitTypeType(context TypeTypeContext -> v any) {
         obj = ""
-        obj = Visit(context.GetChild(0)).(str)
+        obj = Visit(context.GetChild(0)).[str]
         <- obj
     }
 
@@ -26,8 +26,8 @@
 
     VisitTypeNullable(context TypeNullableContext -> v any) {
         obj = ""
-        obj = Visit(context.typeNotNull()).(str)
-        ? context.typeNotNull().GetChild(0).is<TypeBasicContext>() &
+        obj = Visit(context.typeNotNull()).[str]
+        ? context.typeNotNull().GetChild(0).is[TypeBasicContext]() &
             context.typeNotNull().GetChild(0).GetText() >< "any" &
             context.typeNotNull().GetChild(0).GetText() >< "str" {
             obj += "?"
@@ -90,8 +90,8 @@
 
     VisitTypeFunction(context TypeFunctionContext -> v any) {
         obj = ""
-        in = Visit(context.typeFunctionParameterClause(0)).(str)
-        out = Visit(context.typeFunctionParameterClause(1)).(str)
+        in = Visit(context.typeFunctionParameterClause(0)).[str]
+        out = Visit(context.typeFunctionParameterClause(1)).[str]
         ? context.t.Type == Right_Arrow {
             ? out.Length == 0 {
                 ? in.Length == 0 {
@@ -134,7 +134,7 @@
     VisitTypeFunctionParameterClause(context TypeFunctionParameterClauseContext -> v any) {
         obj = ""
         i @ 0 ..<= context.typeType().Length - 1 {
-            p = Visit(context.typeType(i)).(str)
+            p = Visit(context.typeType(i)).[str]
             ? i == 0 {
                 obj += p
             } _ {

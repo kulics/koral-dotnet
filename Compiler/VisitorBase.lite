@@ -52,17 +52,17 @@ Result -> {
 }
 
 LiteLangVisitor -> {
-    LiteParserBaseVisitor<any> 
+    LiteParserBaseVisitor[any]
 
     selfID = ""
     superID = ""
     setID = ""
 
-    AllIDSet = [][str]{}
-    CurrentIDSet = [^][][str]{}
+    AllIDSet = [:str]{}
+    CurrentIDSet = [^[:str]]{}
 }
 me LiteLangVisitor() {
-    me.CurrentIDSet.push(<[][str]>())
+    me.CurrentIDSet.push([[:str]]())
 }
 me LiteLangVisitor -> {
     has_id(id str -> v bool) {
@@ -75,7 +75,7 @@ me LiteLangVisitor -> {
         item @ CurrentIDSet.peek() {
             AllIDSet.add(item)
         }
-        me.CurrentIDSet.push(<[][str]>())
+        me.CurrentIDSet.push([[:str]]())
     }
     delete_current_set(->) {
         me.AllIDSet.except_with(me.CurrentIDSet.peek())
@@ -83,7 +83,7 @@ me LiteLangVisitor -> {
     }
 }
 
-(base)me LiteLangVisitor -> {
+base me LiteLangVisitor -> {
     VisitProgram(context ProgramContext -> v any) {
         StatementList = context.statement()
         Result = ""
@@ -95,13 +95,13 @@ me LiteLangVisitor -> {
 
     VisitId(context IdContext -> v any) {
         r = Result{data = "var"}
-        first = Visit(context.GetChild(0)).(Result)
+        first = Visit(context.GetChild(0)).[Result]
         r.permission = first.permission
         r.text = first.text
         r.isVirtual = first.isVirtual
         ? context.ChildCount >= 2 {
             i @ 1 ..< context.ChildCount {
-                other = Visit(context.GetChild(i)).(Result)
+                other = Visit(context.GetChild(i)).[Result]
                 r.text += "_"other.text""
             }
         }
@@ -149,8 +149,8 @@ me LiteLangVisitor -> {
         r = Result{data = "var"}
         ? context.idExprItem().Length > 1 {
             r.text = "("
-            [i]v @ context.idExprItem() {
-                subID = Visit(v).(Result).text
+            i:v @ context.idExprItem() {
+                subID = Visit(v).[Result].text
                 ? i >< 0 {
                     r.text += ", " + subID
                 } _ {
@@ -164,7 +164,7 @@ me LiteLangVisitor -> {
             }
             r.text += ")"
         } _ {
-            r = Visit(context.idExprItem(0)).(Result)
+            r = Visit(context.idExprItem(0)).[Result]
             ? me.has_id(r.text) {
                 r.isDefine = true
             } _ {
@@ -191,17 +191,17 @@ me LiteLangVisitor -> {
     }
 
     VisitAnnotationSupport(context AnnotationSupportContext -> v any) {
-        <- Visit(context.annotation()).(str)
+        <- Visit(context.annotation()).[str]
     }
 
     VisitAnnotation(context AnnotationContext -> v any) {
         obj = ""
         id = ""
         ? context.id() >< nil {
-            id = ""Visit(context.id()).(Result).text":"
+            id = ""Visit(context.id()).[Result].text":"
         }
 
-        r = Visit(context.annotationList()).(str)
+        r = Visit(context.annotationList()).[str]
         obj += "[" id "" r "]"
         <- obj
     }
@@ -220,7 +220,7 @@ me LiteLangVisitor -> {
 
     VisitAnnotationItem(context AnnotationItemContext -> v any) {
         obj = ""
-        obj += Visit(context.id()).(Result).text
+        obj += Visit(context.id()).[Result].text
         i @ 0 ..< context.annotationAssign().Length {
             ? i > 0 {
                 obj += "," Visit(context.annotationAssign(i)) ""
@@ -238,9 +238,9 @@ me LiteLangVisitor -> {
         obj = ""
         id = ""
         ? context.id() >< nil {
-            id = "" Visit(context.id()).(Result).text "="
+            id = "" Visit(context.id()).[Result].text "="
         }
-        r = Visit(context.expression()).(Result)
+        r = Visit(context.expression()).[Result]
         obj = id + r.text
         <- obj
     }
