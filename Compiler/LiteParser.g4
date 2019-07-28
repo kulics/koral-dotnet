@@ -35,7 +35,7 @@ typeAliasStatement: id Equal_Arrow typeType end;
 typeRedefineStatement: id Right_Arrow typeType end;
 
 // 枚举
-enumStatement: (annotationSupport)? id Right_Arrow New_Line* typeType left_brack enumSupportStatement* right_brack end;
+enumStatement: (annotationSupport)? id Right_Arrow New_Line* typeType Colon left_brace enumSupportStatement* right_brace end;
 
 enumSupportStatement: id (Equal (add)? integerExpr)? end;
 // 命名空间变量
@@ -87,7 +87,7 @@ implementControlStatement: (annotationSupport)? id left_paren expression? right_
  typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
 
 // 重载
-overrideStatement: left_paren id right_paren parameterClauseSelf 
+overrideStatement: id parameterClauseSelf 
  Right_Arrow New_Line* left_brace (overrideSupportStatement)* right_brace end;
 
 // 实现支持的语句
@@ -177,7 +177,7 @@ judgeElseIfStatement: expression left_brace (functionSupportStatement)* right_br
 // 循环
 loopStatement: id At iteratorStatement left_brace (functionSupportStatement)* right_brace end;
 // 集合循环
-loopEachStatement: (Left_Brack id Right_Brack)? id At expression left_brace (functionSupportStatement)* right_brace end;
+loopEachStatement: (id Colon)? id At expression left_brace (functionSupportStatement)* right_brace end;
 // 条件循环
 loopCaseStatement: At expression left_brace (functionSupportStatement)* right_brace end;
 // 无限循环
@@ -264,7 +264,7 @@ expressionList: expression (more expression)* ; // 表达式列
 
 annotationSupport: annotation (New_Line)?;
 
-annotation: Left_Brack (id Right_Arrow)? annotationList Right_Brack; // 注解
+annotation: left_paren (id Right_Arrow)? annotationList right_paren; // 注解
 
 annotationList: annotationItem (more annotationItem)*;
 
@@ -274,15 +274,15 @@ annotationAssign: (id Equal)? expression ;
 
 callFunc: (tuple|lambda); // 函数调用
 
-callChannel: Left_Brack Left_Arrow Right_Brack; // 通道调用
+callChannel: Dot left_paren Left_Arrow right_paren; // 通道调用
 
-callElement: Left_Brack (slice | expression) Right_Brack; // 元素调用
+callElement: Dot left_paren (slice | expression) right_paren; // 元素调用
 
 callPkg: typeType left_brace (pkgAssign|listAssign|setAssign|dictionaryAssign)? right_brace; // 新建包
 
-callNew: Less typeType Greater left_paren New_Line? expressionList? New_Line? right_paren; // 构造类对象
+callNew: left_brack typeType right_brack left_paren New_Line? expressionList? New_Line? right_paren; // 构造类对象
 
-typeConversion: Dot left_paren typeType right_paren; // 类型转化
+typeConversion: Dot left_brack typeType right_brack; // 类型转化
 
 pkgAssign: pkgAssignElement (more pkgAssignElement)* ; // 简化赋值
 
@@ -290,7 +290,7 @@ pkgAssignElement: name Equal expression; // 简化赋值元素
 
 listAssign: expression (more expression)* ;
 
-setAssign: Left_Brack expression Right_Brack (more Left_Brack expression Right_Brack)* ;
+setAssign: Colon expression (more Colon expression)* ;
 
 dictionaryAssign: dictionaryElement (more dictionaryElement)* ;
 
@@ -298,11 +298,11 @@ callAwait: Left_Flow expression; // 异步调用
 
 list: left_brace expression (more expression)* right_brace; // 列表
 
-set: left_brace Left_Brack expression Right_Brack (more Left_Brack expression Right_Brack)* right_brace; // 无序集合
+set: left_brace Colon expression (more Colon expression)* right_brace; // 无序集合
 
 dictionary:  left_brace dictionaryElement (more dictionaryElement)* right_brace; // 字典
 
-dictionaryElement: Left_Brack expression Right_Brack expression; // 字典元素
+dictionaryElement: expression Colon expression; // 字典元素
 
 slice: sliceFull | sliceStart | sliceEnd;
 
@@ -314,11 +314,11 @@ nameSpaceItem: (id call New_Line?)* id;
 
 name: id (call New_Line? id)* ;
 
-templateDefine: Less templateDefineItem (more templateDefineItem)* Greater;
+templateDefine: left_brack templateDefineItem (more templateDefineItem)* right_brack;
 
 templateDefineItem: id (id)?; 
 
-templateCall: Less typeType (more typeType)* Greater;
+templateCall: left_brack typeType (more typeType)* right_brack;
 
 lambda: left_brace (lambdaIn)? t=(Right_Arrow|Right_Flow) New_Line* tupleExpression right_brace
 | left_brace (lambdaIn)? t=(Right_Arrow|Right_Flow) New_Line* 
@@ -389,12 +389,12 @@ typeReference: Bang (typeNotNull | typeNullable);
 typeNullable: Question typeNotNull;
 
 typeTuple: Less typeType (more typeType)+ Greater;
-typeArray: Left_Brack Colon Right_Brack typeType;
-typeList: Left_Brack Right_Brack typeType;
-typeSet: Left_Brack Right_Brack Left_Brack typeType Right_Brack;
-typeDictionary: Left_Brack typeType Right_Brack typeType;
-typeChannel: Left_Brack Right_Arrow Right_Brack typeType;
-typeStack: Left_Brack Xor Right_Brack typeType;
+typeArray: left_brack right_brack typeType;
+typeList: left_brack typeType right_brack;
+typeSet: left_brack Colon typeType right_brack;
+typeDictionary: left_brack typeType Colon typeType right_brack;
+typeChannel: left_brack Right_Arrow typeType right_brack;
+typeStack: left_brack Xor typeType right_brack;
 typePackage: nameSpaceItem (templateCall)? ;
 typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) New_Line* typeFunctionParameterClause right_paren;
 typeAny: TypeAny;
