@@ -61,7 +61,7 @@ includeStatement
 ;
 
 // 包含
-includeStatement: Discard typeType end;
+includeStatement: typeType end;
 // 包构造方法
 packageNewStatement: (annotationSupport)? parameterClauseSelf left_paren parameterClauseIn right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
