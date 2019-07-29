@@ -58,11 +58,11 @@ LiteLangVisitor -> {
     superID = ""
     setID = ""
 
-    AllIDSet = [:str]{}
-    CurrentIDSet = [^[:str]]{}
+    AllIDSet = []:str{}
+    CurrentIDSet = [^][]:str{}
 }
 me LiteLangVisitor() {
-    me.CurrentIDSet.push([[:str]]())
+    me.CurrentIDSet.push([[]:str]())
 }
 me LiteLangVisitor -> {
     has_id(id str -> v bool) {
@@ -75,7 +75,7 @@ me LiteLangVisitor -> {
         item @ CurrentIDSet.peek() {
             AllIDSet.add(item)
         }
-        me.CurrentIDSet.push([[:str]]())
+        me.CurrentIDSet.push([[]:str]())
     }
     delete_current_set(->) {
         me.AllIDSet.except_with(me.CurrentIDSet.peek())

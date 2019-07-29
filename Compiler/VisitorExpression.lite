@@ -7,7 +7,7 @@
     Compiler_static. "Compiler" 
 }
 
-keywords = [str]{
+keywords = []str{
     "abstract", "as", "base", "bool", "break" , "byte", "case" , "catch",
     "char","checked","class","const","continue","decimal","default","delegate","do","double","_",
     "enum","event","explicit","extern","false","finally","fixed","float","for","foreach","goto",

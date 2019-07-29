@@ -71,7 +71,7 @@ packageVariableStatement: (annotationSupport)? id (Equal expression| typeType (E
 // 定义子方法
 packageControlSubStatement: id (left_paren id right_paren)? left_brace (functionSupportStatement)+ right_brace end;
 // 定义包事件
-packageEventStatement: id left_brack Question nameSpaceItem right_brack end;
+packageEventStatement: id left_brack Question right_brack nameSpaceItem end;
 
 // 实现
 implementStatement: parameterClauseSelf Right_Arrow (typeType)? New_Line* left_brace (implementSupportStatement)* right_brace end;
@@ -389,12 +389,12 @@ typeReference: Bang (typeNotNull | typeNullable);
 typeNullable: Question typeNotNull;
 
 typeTuple: Less typeType (more typeType)+ Greater;
-typeArray: left_brack right_brack typeType;
-typeList: left_brack typeType right_brack;
-typeSet: left_brack Colon typeType right_brack;
-typeDictionary: left_brack typeType Colon typeType right_brack;
-typeChannel: left_brack Right_Arrow typeType right_brack;
-typeStack: left_brack Xor typeType right_brack;
+typeArray: left_brack Colon right_brack typeType;
+typeList: left_brack right_brack typeType;
+typeSet: left_brack right_brack Colon typeType;
+typeDictionary: left_brack right_brack typeType Colon typeType;
+typeChannel: left_brack Right_Arrow right_brack typeType;
+typeStack: left_brack Xor right_brack typeType;
 typePackage: nameSpaceItem (templateCall)? ;
 typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) New_Line* typeFunctionParameterClause right_paren;
 typeAny: TypeAny;
