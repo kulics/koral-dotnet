@@ -141,8 +141,8 @@ var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-if ( context.t.Type==Right_Flow ) {
 var pout = ((string)(Visit(context.parameterClauseOut())));
+if ( context.t.Type==Right_Flow ) {
 if ( pout!="void" ) {
 pout = (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
 }
@@ -152,7 +152,12 @@ pout = Task;
 obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" async static ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
 }
 else {
-obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" static ").Append(Visit(context.parameterClauseOut())).Append(" ").Append(id.text).Append("")).to_str();
+if ( context.y!=null ) {
+if ( pout!="void" ) {
+pout = (new System.Text.StringBuilder("").Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
+}
+}
+obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" static ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
 }
 var templateContract = "";
 if ( context.templateDefine()!=null ) {

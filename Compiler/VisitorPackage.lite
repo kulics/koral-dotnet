@@ -195,8 +195,8 @@ base me LiteLangVisitor -> {
         }
         r.permission = "public"
         # 异步 #
+        pout = Visit(context.parameterClauseOut()).[str]
         ? context.t.Type == Right_Flow {
-            pout = Visit(context.parameterClauseOut()).[str]
             ? pout >< "void" {
                 pout = ""Task"<"pout">"
             } _ {
@@ -204,7 +204,12 @@ base me LiteLangVisitor -> {
             }
             r.text += pout + " " + id.text
         } _ {
-            r.text += Visit(context.parameterClauseOut()) + " " + id.text
+            ? context.y >< nil {
+                ? pout >< "void" {
+                    pout = ""IEnum"<"pout">"
+                }
+            }
+            r.text += pout + " " + id.text
         }
         # 泛型 #
         templateContract = ""

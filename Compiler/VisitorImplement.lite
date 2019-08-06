@@ -35,8 +35,8 @@ base me LiteLangVisitor -> {
         obj = ""
         # 异步 #
         obj += ""id.permission" "
+        pout = Visit(context.parameterClauseOut()).[str]
         ? context.t.Type == Right_Flow {
-            pout = Visit(context.parameterClauseOut()).[str]
             ? pout >< "void" {
                 pout = ""Task"<"pout">"
             } _ {
@@ -44,7 +44,12 @@ base me LiteLangVisitor -> {
             }
             obj += ""isVirtual" async "pout" "id.text""
         } _ {
-            obj += ""isVirtual" " Visit(context.parameterClauseOut())" "id.text""
+            ? context.y >< nil {
+                ? pout >< "void" {
+                    pout = ""IEnum"<"pout">"
+                }
+            }
+            obj += ""isVirtual" "pout" "id.text""
         }
         # 泛型 #
         templateContract = ""
@@ -113,8 +118,8 @@ base me LiteLangVisitor -> {
         } _ {
             obj += ""id.permission" "
         }
+        pout = Visit(context.parameterClauseOut()).[str]
         ? context.t.Type == Right_Flow {
-            pout = Visit(context.parameterClauseOut()).[str]
             ? pout >< "void" {
                 pout = ""Task"<"pout">"
             } _ {
@@ -122,7 +127,12 @@ base me LiteLangVisitor -> {
             }
             obj += ""isVirtual" async "pout" "id.text""
         } _ {
-            obj += ""isVirtual" " Visit(context.parameterClauseOut())" "id.text""
+            ? context.y >< nil {
+                ? pout >< "void" {
+                    pout = ""IEnum"<"pout">"
+                }
+            }
+            obj += ""isVirtual" "pout" "id.text""
         }
         # 泛型 #
         templateContract = ""

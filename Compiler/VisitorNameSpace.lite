@@ -167,8 +167,8 @@ base me LiteLangVisitor -> {
             obj += Visit(context.annotationSupport())
         }
         # 异步 #
+        pout = Visit(context.parameterClauseOut()).[str]
         ? context.t.Type == Right_Flow {
-            pout = Visit(context.parameterClauseOut()).[str]
             ? pout >< "void" {
                 pout = ""Task"<"pout">"
             } _ {
@@ -176,7 +176,12 @@ base me LiteLangVisitor -> {
             }
             obj += ""id.permission" async static "pout" "id.text""
         } _ {
-            obj += ""id.permission" static "Visit(context.parameterClauseOut())" "id.text""
+            ? context.y >< nil {
+                ? pout >< "void" {
+                    pout = ""IEnum"<"pout">"
+                }
+            }
+            obj += ""id.permission" static "pout" "id.text""
         }
 
         # 泛型 #

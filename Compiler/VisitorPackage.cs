@@ -193,8 +193,8 @@ if ( context.annotationSupport()!=null ) {
 r.text+=Visit(context.annotationSupport());
 }
 r.permission="public";
-if ( context.t.Type==Right_Flow ) {
 var pout = ((string)(Visit(context.parameterClauseOut())));
+if ( context.t.Type==Right_Flow ) {
 if ( pout!="void" ) {
 pout = (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
 }
@@ -204,7 +204,12 @@ pout = Task;
 r.text+=pout+" "+id.text;
 }
 else {
-r.text+=Visit(context.parameterClauseOut())+" "+id.text;
+if ( context.y!=null ) {
+if ( pout!="void" ) {
+pout = (new System.Text.StringBuilder("").Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
+}
+}
+r.text+=pout+" "+id.text;
 }
 var templateContract = "";
 if ( context.templateDefine()!=null ) {

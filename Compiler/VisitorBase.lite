@@ -42,6 +42,7 @@ BlockLeft : "{"
 BlockRight : "}"
 
 Task : "System.Threading.Tasks.Task"
+IEnum : "System.Collections.Generic.IEnumerable"
 
 Result -> {
     data any

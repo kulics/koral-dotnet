@@ -103,6 +103,9 @@ base me LiteLangVisitor -> {
                 ? out.first_index_of(",") >= 0 {
                     out = "(" out ")"
                 }
+                ? context.y >< nil {
+                    out = ""IEnum"<"out">"
+                }
                 ? in.Length == 0 {
                     obj = "Func<"out">"
                 } _ {
@@ -117,6 +120,9 @@ base me LiteLangVisitor -> {
                     obj = "Func<"in", "Task">"
                 }
             } _ {
+                ? context.y >< nil {
+                    out = ""IEnum"<("out")>"
+                }
                 ? in.Length == 0 {
                     obj = "Func<"Task"<"out">>";
                 } _ {
