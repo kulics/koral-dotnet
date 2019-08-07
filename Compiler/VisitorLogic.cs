@@ -43,12 +43,17 @@ public  override  object VisitLoopStatement( LoopStatementContext context )
 var obj = "";
 var id = ((Result)(Visit(context.id()))).text;
 var it = ((Iterator)(Visit(context.iteratorStatement())));
-obj+=(new System.Text.StringBuilder("foreach (var ").Append(id).Append(" in range(").Append(it.begin.text).Append(",").Append(it.end.text).Append(",").Append(it.step.text).Append(",").Append(it.order).Append(",").Append(it.attach).Append("))")).to_str();
+var target = (new System.Text.StringBuilder("range(").Append(it.begin.text).Append(",").Append(it.end.text).Append(",").Append(it.step.text).Append(",").Append(it.order).Append(",").Append(it.attach).Append(")")).to_str();
+obj+=(new System.Text.StringBuilder("foreach (var ").Append(id).Append(" in ").Append(target).Append(" )")).to_str();
 obj+=BlockLeft+Wrap;
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
+if ( context.loopElseStatement()!=null ) {
+var elseContent = ((string)(Visit(context.loopElseStatement())));
+obj = (new System.Text.StringBuilder("if (!can_range(").Append(target).Append(")) ")).to_str()+elseContent+"else"+BlockLeft+Wrap+obj+BlockRight+Wrap;
+}
 return obj;
 }
 public  override  object VisitLoopEachStatement( LoopEachStatementContext context )
@@ -70,6 +75,10 @@ this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
+if ( context.loopElseStatement()!=null ) {
+var elseContent = ((string)(Visit(context.loopElseStatement())));
+obj = (new System.Text.StringBuilder("if (!can_range(").Append(target).Append(")) ")).to_str()+elseContent+"else"+BlockLeft+Wrap+obj+BlockRight+Wrap;
+}
 return obj;
 }
 public  override  object VisitLoopCaseStatement( LoopCaseStatementContext context )
@@ -78,6 +87,19 @@ var obj = "";
 var expr = ((Result)(Visit(context.expression())));
 obj+=(new System.Text.StringBuilder("for ( ;").Append(expr.text).Append(" ;)")).to_str();
 obj+=BlockLeft+Wrap;
+this.add_current_set();
+obj+=ProcessFunctionSupport(context.functionSupportStatement());
+this.delete_current_set();
+obj+=BlockRight+Wrap;
+if ( context.loopElseStatement()!=null ) {
+var elseContent = ((string)(Visit(context.loopElseStatement())));
+obj = (new System.Text.StringBuilder("if (!(").Append(expr.text).Append(")) ")).to_str()+elseContent+"else"+BlockLeft+Wrap+obj+BlockRight+Wrap;
+}
+return obj;
+}
+public  override  object VisitLoopElseStatement( LoopElseStatementContext context )
+{
+var obj = BlockLeft+Wrap;
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();

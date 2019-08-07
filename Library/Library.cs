@@ -94,6 +94,10 @@ namespace Library {
         public static IEnumerable<(TKey, TValue)> range<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> self)
    => self.Select((item) => (item.Key, item.Value));
 
+        public static bool can_range<T>(IEnumerable<T> self) => self.GetEnumerator().MoveNext();
+
+        public static bool can_range<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> self) => self.GetEnumerator().MoveNext();
+
         public static void todo(string it) => throw new Exception(it);
 
         public static decimal abs(decimal it) => Math.Abs(it);

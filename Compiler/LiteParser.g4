@@ -174,11 +174,13 @@ judgeIfStatement: Question expression left_brace (functionSupportStatement)* rig
 // else if 判断
 judgeElseIfStatement: expression left_brace (functionSupportStatement)* right_brace;
 // 循环
-loopStatement: id At iteratorStatement left_brace (functionSupportStatement)* right_brace end;
+loopStatement: id At iteratorStatement left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 集合循环
-loopEachStatement: (id Colon)? id At expression left_brace (functionSupportStatement)* right_brace end;
+loopEachStatement: (id Colon)? id At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 条件循环
-loopCaseStatement: At expression left_brace (functionSupportStatement)* right_brace end;
+loopCaseStatement: At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
+// else 判断
+loopElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
 // 跳出循环
 loopJumpStatement: At Dot_Dot end;
 // 跳出当前循环

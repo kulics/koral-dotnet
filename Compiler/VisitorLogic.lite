@@ -41,14 +41,20 @@ base me LiteLangVisitor -> {
         id = Visit(context.id()).[Result].text
         
         it = Visit(context.iteratorStatement()).[Iterator]
+        target = "range("it.begin.text","it.end.text","it.step.text","it.order","it.attach")"
 
-        obj += "foreach (var "id" in range("it.begin.text","it.end.text","it.step.text","it.order","it.attach"))"
+        obj += "foreach (var "id" in "target" )"
 
         obj += BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight+Wrap
+        ? context.loopElseStatement() >< nil {
+            elseContent = Visit(context.loopElseStatement()).[str]
+            obj = "if (!can_range(" target ")) " + elseContent + "else" + BlockLeft + 
+            Wrap + obj + BlockRight + Wrap
+        }
         <- obj
     }
 
@@ -70,6 +76,11 @@ base me LiteLangVisitor -> {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight+Wrap
+        ? context.loopElseStatement() >< nil {
+            elseContent = Visit(context.loopElseStatement()).[str]
+            obj = "if (!can_range(" target ")) " + elseContent + "else" + BlockLeft + 
+            Wrap + obj + BlockRight + Wrap
+        }
         <- obj
     }
 
@@ -78,6 +89,20 @@ base me LiteLangVisitor -> {
         expr = Visit(context.expression()).[Result]
         obj += "for ( ;"expr.text" ;)"
         obj += BlockLeft+Wrap
+        me.add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
+        obj += BlockRight+Wrap
+        ? context.loopElseStatement() >< nil {
+            elseContent = Visit(context.loopElseStatement()).[str]
+            obj = "if (!(" expr.text ")) " + elseContent + "else" + BlockLeft + 
+            Wrap + obj + BlockRight + Wrap
+        }
+        <- obj
+    }
+
+    VisitLoopElseStatement(context LoopElseStatementContext -> v any) {
+        obj = BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
