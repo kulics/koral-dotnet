@@ -51,15 +51,6 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitLoopInfiniteStatement( LoopInfiniteStatementContext context )
-{
-var obj = (new System.Text.StringBuilder("for (;;) ").Append(BlockLeft+Wrap).Append("")).to_str();
-this.add_current_set();
-obj+=ProcessFunctionSupport(context.functionSupportStatement());
-this.delete_current_set();
-obj+=BlockRight+Wrap;
-return obj;
-}
 public  override  object VisitLoopEachStatement( LoopEachStatementContext context )
 {
 var obj = "";

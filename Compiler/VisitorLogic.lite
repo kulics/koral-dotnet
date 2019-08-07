@@ -52,15 +52,6 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitLoopInfiniteStatement(context LoopInfiniteStatementContext -> v any) {
-        obj = "for (;;) "BlockLeft+Wrap""
-        me.add_current_set()
-        obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.delete_current_set()
-        obj += BlockRight+Wrap
-        <- obj
-    }
-
     VisitLoopEachStatement(context LoopEachStatementContext -> v any) {
         obj = ""
         arr = Visit(context.expression()).[Result]

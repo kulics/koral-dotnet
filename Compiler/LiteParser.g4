@@ -145,7 +145,6 @@ functionSupportStatement:
 | loopStatement
 | loopEachStatement
 | loopCaseStatement
-| loopInfiniteStatement
 | loopJumpStatement
 | loopContinueStatement
 | usingStatement
@@ -180,8 +179,6 @@ loopStatement: id At iteratorStatement left_brace (functionSupportStatement)* ri
 loopEachStatement: (id Colon)? id At expression left_brace (functionSupportStatement)* right_brace end;
 // 条件循环
 loopCaseStatement: At expression left_brace (functionSupportStatement)* right_brace end;
-// 无限循环
-loopInfiniteStatement: At left_brace (functionSupportStatement)* right_brace end;
 // 跳出循环
 loopJumpStatement: At Dot_Dot end;
 // 跳出当前循环
