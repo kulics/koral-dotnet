@@ -44,7 +44,7 @@ var obj = "";
 var id = ((Result)(Visit(context.id()))).text;
 var it = ((Iterator)(Visit(context.iteratorStatement())));
 var target = (new System.Text.StringBuilder("range(").Append(it.begin.text).Append(",").Append(it.end.text).Append(",").Append(it.step.text).Append(",").Append(it.order).Append(",").Append(it.attach).Append(")")).to_str();
-obj+=(new System.Text.StringBuilder("foreach (var ").Append(id).Append(" in ").Append(target).Append(" )")).to_str();
+obj+=(new System.Text.StringBuilder("foreach (var ").Append(id).Append(" in ").Append(target).Append(")")).to_str();
 obj+=BlockLeft+Wrap;
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());

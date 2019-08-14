@@ -230,15 +230,24 @@ base me LiteLangVisitor -> {
             } c.is[IdContext]() {
                 <- Visit(context.id())
             } context.t.Type == Discard {
-                <- Result{ text = "_", data = "var" }
+                <- Result{
+                    text = "_"
+                    data = "var"
+                }
             }
         } context.ChildCount == 2 {
             id = Visit(context.id()).[Result]
             template = Visit(context.templateCall()).[str]
-            <- Result{ text = id.text + template, data = id.text + template }
+            <- Result{
+                text = id.text + template
+                data = id.text + template
+            }
         }
         r = Visit(context.expression()).[Result]
-        <- Result{ text = "(" + r.text + ")", data = r.data }
+        <- Result{
+            text = "(" + r.text + ")"
+            data = r.data
+        }
     }
 
     VisitExpressionList(context ExpressionListContext -> v any) {
@@ -476,7 +485,7 @@ base me LiteLangVisitor -> {
 
     VisitPkgAnonymous(context PkgAnonymousContext -> v any) {
         <- Result{
-            data = "var",
+            data = "var"
             text = "new" + Visit(context.pkgAnonymousAssign()).[str]
         }
     }
@@ -579,8 +588,8 @@ base me LiteLangVisitor -> {
         r1 = Visit(context.expression(0)).[Result]
         r2 = Visit(context.expression(1)).[Result]
         result = DicEle{
-            key = r1.data.[str],
-            value = r2.data.[str],
+            key = r1.data.[str]
+            value = r2.data.[str]
             text = "{" + r1.text + "," + r2.text + "}"
         }
         <- result
@@ -593,7 +602,7 @@ base me LiteLangVisitor -> {
         }
         text += ").to_str()"
         <- Result{
-            data = Str,
+            data = Str
             text = text
         }
     }

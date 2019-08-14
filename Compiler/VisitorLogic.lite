@@ -27,7 +27,10 @@ base me LiteLangVisitor -> {
         ? context.expression().Length == 2 {
             it.begin = Visit(context.expression(0)).[Result]
             it.end = Visit(context.expression(1)).[Result]
-            it.step = Result{ data = I32, text = "1" }
+            it.step = Result{
+                data = I32
+                text = "1"
+            }
         } _ {
             it.begin = Visit(context.expression(0)).[Result]
             it.end = Visit(context.expression(1)).[Result]
@@ -43,7 +46,7 @@ base me LiteLangVisitor -> {
         it = Visit(context.iteratorStatement()).[Iterator]
         target = "range("it.begin.text","it.end.text","it.step.text","it.order","it.attach")"
 
-        obj += "foreach (var "id" in "target" )"
+        obj += "foreach (var "id" in "target")"
 
         obj += BlockLeft+Wrap
         me.add_current_set()
