@@ -283,7 +283,7 @@ callNew: left_brack typeType right_brack left_paren New_Line? expressionList? Ne
 
 typeConversion: Dot left_brack typeType right_brack; // 类型转化
 
-pkgAssign: pkgAssignElement (more pkgAssignElement)* ; // 简化赋值
+pkgAssign: (pkgAssignElement end)* pkgAssignElement ; // 简化赋值
 
 pkgAssignElement: name Equal expression; // 简化赋值元素
 
@@ -327,7 +327,7 @@ lambdaIn: id (more id)*;
 
 pkgAnonymous: pkgAnonymousAssign; // 匿名包
 
-pkgAnonymousAssign: left_brace pkgAnonymousAssignElement (more pkgAnonymousAssignElement)* right_brace; // 简化赋值
+pkgAnonymousAssign: left_brace (pkgAnonymousAssignElement end)* pkgAnonymousAssignElement right_brace; // 简化赋值
 
 pkgAnonymousAssignElement: name Equal expression; // 简化赋值元素
 
