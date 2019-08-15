@@ -102,7 +102,10 @@ base me LiteLangVisitor -> {
             }
         }
         obj += ")"
-        <- Result{ data = "var", text = obj }
+        <- Result{
+            data = "var"
+            text = obj
+        }
     }
 
     VisitTupleExpression(context TupleExpressionContext -> v any) {
@@ -118,7 +121,10 @@ base me LiteLangVisitor -> {
         ? context.expression().Length > 1 {
             obj = "(" obj ")"
         }
-        <- Result{ data = "var", text = obj }
+        <- Result{
+            data = "var"
+            text = obj
+        }
     }
 
     VisitParameterClauseIn(context ParameterClauseInContext -> v any) {
