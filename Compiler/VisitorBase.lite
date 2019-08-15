@@ -209,11 +209,11 @@ base me LiteLangVisitor -> {
 
     VisitAnnotationList(context AnnotationListContext -> v any) {
         obj = ""
-        i @ 0 ..< context.annotationItem().Length {
+        i:v @ context.annotationItem() {
             ? i > 0 {
-                obj += "," Visit(context.annotationItem(i)) ""
+                obj += "," Visit(v) ""
             } _ {
-                obj += Visit(context.annotationItem(i))
+                obj += Visit(v)
             }
         }
         <- obj
@@ -222,11 +222,11 @@ base me LiteLangVisitor -> {
     VisitAnnotationItem(context AnnotationItemContext -> v any) {
         obj = ""
         obj += Visit(context.id()).[Result].text
-        i @ 0 ..< context.annotationAssign().Length {
+        i:v @ context.annotationAssign() {
             ? i > 0 {
-                obj += "," Visit(context.annotationAssign(i)) ""
+                obj += "," Visit(v) ""
             } _ {
-                obj += "(" Visit(context.annotationAssign(i)) ""
+                obj += "(" Visit(v) ""
             }
         }
         ? context.annotationAssign().Length > 0 {
