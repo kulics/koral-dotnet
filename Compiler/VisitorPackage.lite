@@ -41,17 +41,14 @@ base me LiteLangVisitor -> {
             item = Visit(context.templateDefine()).[TemplateItem]
             template += item.Template
             templateContract = item.Contract
-            header += template;
+            header += template
         }
 
         ? extend.Length > 0 {
-            header += ":"
-            ? extend.Length > 0 {
-                header += extend
-            }
+            header += ":" + extend
         }
 
-        header += templateContract + Wrap + BlockLeft + Wrap
+        header += templateContract + BlockLeft + Wrap
         obj = header + obj
         <- obj
     }
@@ -155,7 +152,7 @@ base me LiteLangVisitor -> {
             obj += template.Template
             templateContract = template.Contract
         }
-        obj += templateContract + Wrap + BlockLeft + Wrap
+        obj += templateContract + BlockLeft + Wrap
         obj += interfaceProtocol
         obj += BlockRight + Wrap
         <- obj

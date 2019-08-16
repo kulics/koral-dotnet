@@ -38,11 +38,11 @@ base me LiteLangVisitor -> {
     VisitTypeTuple(context TypeTupleContext -> v any) {
         obj = ""
         obj += "("
-        i @ 0 ..< context.typeType().Length {
+        i:v @ context.typeType() {
             ? i == 0 {
-                obj += Visit(context.typeType(i))
+                obj += Visit(v)
             } _ {
-                obj += ","Visit(context.typeType(i))""
+                obj += ","Visit(v)""
             }
         }
         obj += ")"
@@ -139,7 +139,7 @@ base me LiteLangVisitor -> {
 
     VisitTypeFunctionParameterClause(context TypeFunctionParameterClauseContext -> v any) {
         obj = ""
-        i @ 0 ..<= context.typeType().Length - 1 {
+        i @ 0 ..< context.typeType().Length {
             p = Visit(context.typeType(i)).[str]
             ? i == 0 {
                 obj += p
