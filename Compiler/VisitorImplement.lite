@@ -59,7 +59,7 @@ base me LiteLangVisitor -> {
             templateContract = template.Contract
         }
         me.add_current_set()
-        obj += Visit(context.parameterClauseIn()) + templateContract + Wrap + BlockLeft + Wrap
+        obj += Visit(context.parameterClauseIn()) + templateContract + BlockLeft + Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight + Wrap
@@ -142,7 +142,7 @@ base me LiteLangVisitor -> {
             templateContract = template.Contract
         }
         me.add_current_set()
-        obj += Visit(context.parameterClauseIn()) + templateContract + Wrap + BlockLeft + Wrap
+        obj += Visit(context.parameterClauseIn()) + templateContract + BlockLeft + Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight + Wrap
