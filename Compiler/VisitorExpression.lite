@@ -519,7 +519,7 @@ base me LiteLangVisitor -> {
     }
 
     VisitList(context ListContext -> v any) {
-        type = "object"
+        type = Any
         result = Result{}
         i @ 0 ..< context.expression().Length {
             r = Visit(context.expression(i)).[Result]
@@ -528,7 +528,7 @@ base me LiteLangVisitor -> {
                 result.text += r.text
             } _ {
                 ? type >< r.data.[str] {
-                    type = "object"
+                    type = Any
                 }
                 result.text += "," + r.text
             }
@@ -539,7 +539,7 @@ base me LiteLangVisitor -> {
     }
 
     VisitSet(context SetContext -> v any) {
-        type = "object"
+        type = Any
         result = Result{}
         i @ 0 ..< context.expression().Length {
             r = Visit(context.expression(i)).[Result]
@@ -548,7 +548,7 @@ base me LiteLangVisitor -> {
                 result.text += r.text
             } _ {
                 ? type >< r.data.[str] {
-                    type = "object"
+                    type = Any
                 }
                 result.text += "," + r.text
             }
