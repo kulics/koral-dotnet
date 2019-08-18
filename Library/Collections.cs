@@ -81,15 +81,19 @@ namespace Library {
         public void add(T item) => Add(item);
         public void add_range(IEnumerable<T> collection) => AddRange(collection);
         public void remove(T item) => Remove(item);
-        public void remove_all(Predicate<T> match) => RemoveAll(match);
+        public void remove_all(Func<T, bool> match) => RemoveAll((it) => match(it));
         public void insert(int index, T item) => Insert(index, item);
         public void insert_range(int index, IEnumerable<T> collection) => InsertRange(index, collection);
         public void remove_at(int index) => RemoveAt(index);
         public void remove_range(int index, int count) => RemoveRange(index, count);
+        public void update(Func<T, bool> match, T item) {
+            remove_all(match);
+            add(item);
+        }
         public void clear() => Clear();
         public bool has(T item) => Contains(item);
 
-        public bool exists(Predicate<T> match) => Exists(match);
+        public bool exists(Func<T, bool> match) => Exists((it) => match(it));
         public T[] to_array() => ToArray();
         public void reverse() => Reverse();
         public void sort(Comparison<T> comparison) => Sort(comparison);
@@ -240,5 +244,6 @@ namespace Library {
         public static T[] to_array<T>(this List<T> it) => it.ToArray();
         public static void reverse<T>(this List<T> it) => it.Reverse();
         public static void sort<T>(this List<T> it, Comparison<T> comparison) => it.Sort(comparison);
+        public static list<T> to_list<T>(this IEnumerable<T> it) => new list<T>(it);
     }
 }
