@@ -39,6 +39,8 @@ namespace Library {
 
         public static void clear() => Cmd.clear();
 
+        public static T run<T>(Func<T> rn) => rn();
+
         public static Task<T> go<T>(Func<Task<T>> fn) => Task.Run(fn);
 
         public static Task go(Func<Task> fn) => fn();
