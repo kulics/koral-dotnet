@@ -39,12 +39,12 @@ public  override  object VisitTypeTuple( TypeTupleContext context )
 {
 var obj = "";
 obj+="(";
-foreach (var i in range(0,context.typeType().Length,1,true,false)){
+foreach (var (i,v) in range(context.typeType())){
 if ( i==0 ) {
-obj+=Visit(context.typeType(i));
+obj+=Visit(v);
 }
 else {
-obj+=(new System.Text.StringBuilder(",").Append(Visit(context.typeType(i))).Append("")).to_str();
+obj+=(new System.Text.StringBuilder(",").Append(Visit(v)).Append("")).to_str();
 }
 }
 obj+=")";
@@ -148,7 +148,7 @@ return Any;
 public  override  object VisitTypeFunctionParameterClause( TypeFunctionParameterClauseContext context )
 {
 var obj = "";
-foreach (var i in range(0,context.typeType().Length-1,1,true,true)){
+foreach (var i in range(0,context.typeType().Length,1,true,false)){
 var p = ((string)(Visit(context.typeType(i))));
 if ( i==0 ) {
 obj+=p;

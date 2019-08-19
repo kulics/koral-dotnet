@@ -1,0 +1,123 @@
+"Compiler" {
+    "Antlr4/Runtime"
+    "Antlr4/Runtime/Misc"
+    "System"
+
+    LiteParser. "Compiler" 
+    Compiler_static. "Compiler" 
+}
+
+Iterator -> {
+    begin Result
+    end Result
+    step Result
+    order str = T
+    attach str = F
+}
+
+base me LiteLangVisitor -> {
+    VisitIteratorStatement(context IteratorStatementContext -> v any) {
+        it = Iterator{}
+        ? context.op.Text == ">=" | context.op.Text == "<=" {
+            it.attach = T
+        }
+        ? context.op.Text == ">" | context.op.Text == ">=" {
+            it.order = F
+        }
+        ? context.expression().Length == 2 {
+            it.begin = Visit(context.expression(0)).[Result]
+            it.end = Visit(context.expression(1)).[Result]
+            it.step = Result{
+                data = I32
+                text = "1"
+            }
+        } _ {
+            it.begin = Visit(context.expression(0)).[Result]
+            it.end = Visit(context.expression(1)).[Result]
+            it.step = Visit(context.expression(2)).[Result]
+        }
+        <- it
+    }
+
+    VisitLoopStatement(context LoopStatementContext -> v any) {
+        obj = ""
+        id = Visit(context.id()).[Result].text
+        
+        it = Visit(context.iteratorStatement()).[Iterator]
+        target = "range("it.begin.text","it.end.text","it.step.text","it.order","it.attach")"
+
+        obj += "foreach (var "id" in "target")"
+
+        obj += BlockLeft+Wrap
+        me.add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
+        obj += BlockRight+Wrap
+        ? context.loopElseStatement() >< nil {
+            elseContent = Visit(context.loopElseStatement()).[str]
+            obj = "if (!can_range(" target ")) " + elseContent + "else" + BlockLeft + 
+            Wrap + obj + BlockRight + Wrap
+        }
+        <- obj
+    }
+
+    VisitLoopEachStatement(context LoopEachStatementContext -> v any) {
+        obj = ""
+        arr = Visit(context.expression()).[Result]
+        target = arr.text
+        id = "ea"
+        ? context.id().Length == 2 {
+            target = "range("target")"
+            id = "("Visit(context.id(0)).[Result].text","Visit(context.id(1)).[Result].text")"
+        } context.id().Length == 1 {
+            id = Visit(context.id(0)).[Result].text
+        }
+
+        obj += "foreach (var "id" in "target")"
+        obj += BlockLeft+Wrap
+        me.add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
+        obj += BlockRight+Wrap
+        ? context.loopElseStatement() >< nil {
+            elseContent = Visit(context.loopElseStatement()).[str]
+            obj = "if (!can_range(" target ")) " + elseContent + "else" + BlockLeft + 
+            Wrap + obj + BlockRight + Wrap
+        }
+        <- obj
+    }
+
+    VisitLoopCaseStatement(context LoopCaseStatementContext -> v any) {
+        obj = ""
+        expr = Visit(context.expression()).[Result]
+        obj += "for ( ;"expr.text" ;)"
+        obj += BlockLeft+Wrap
+        me.add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
+        obj += BlockRight+Wrap
+        ? context.loopElseStatement() >< nil {
+            elseContent = Visit(context.loopElseStatement()).[str]
+            obj = "if (!(" expr.text ")) " + elseContent + "else" + BlockLeft + 
+            Wrap + obj + BlockRight + Wrap
+        }
+        <- obj
+    }
+
+    VisitLoopElseStatement(context LoopElseStatementContext -> v any) {
+        obj = BlockLeft+Wrap
+        me.add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
+        obj += BlockRight+Wrap
+        <- obj
+    }
+
+    VisitLoopJumpStatement(context LoopJumpStatementContext -> v any) {
+        <- "break "Terminate+Wrap""
+    }
+
+    VisitLoopContinueStatement(context LoopContinueStatementContext -> v any) {
+        <- "continue "Terminate+Wrap""
+    }
+}

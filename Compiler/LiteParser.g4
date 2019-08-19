@@ -239,6 +239,8 @@ linq // 联合查询
 | plusMinus // 正负处理
 | bitwiseNotExpression // 位运算取反
 | negate // 取反
+| judgeExpression // 判断表达式
+| expression judgeCaseExpression // 条件判断表达式
 | expression op=Bang // 引用判断
 | expression op=Question // 可空判断
 | expression op=Left_Flow // 异步执行
@@ -351,6 +353,21 @@ linqBodyKeyword: k=(LinqSelect|LinqBy|LinqWhere|LinqGroup|LinqInto|LinqOrderby|L
 stringExpression: TextLiteral (stringExpressionElement)+;
 
 stringExpressionElement: expression TextLiteral;
+
+// 判断表达式
+judgeExpression: judgeExpressionIfStatement (judgeExpressionElseIfStatement)* judgeExpressionElseStatement;
+
+// else 判断
+judgeExpressionElseStatement: Discard left_brace (functionSupportStatement)* expression right_brace;
+// if 判断
+judgeExpressionIfStatement: Question Right_Arrow expression left_brace (functionSupportStatement)* expression right_brace;
+// else if 判断
+judgeExpressionElseIfStatement: expression left_brace (functionSupportStatement)* expression right_brace;
+
+// 条件判断表达式
+judgeCaseExpression: Question Right_Arrow (caseExpressionStatement)+;
+// 判断条件声明
+caseExpressionStatement: caseExprStatement (more caseExprStatement)* left_brace (functionSupportStatement)* expression right_brace;
 
 // 基础数据
 dataStatement:

@@ -166,7 +166,7 @@ obj+=template.Template;
 templateContract = template.Contract;
 }
 this.add_current_set();
-obj+=Visit(context.parameterClauseIn())+templateContract+Wrap+BlockLeft+Wrap;
+obj+=Visit(context.parameterClauseIn())+templateContract+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;

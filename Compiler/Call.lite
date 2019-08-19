@@ -1,0 +1,365 @@
+"Compiler" {
+    "Antlr4/Runtime"
+    "Antlr4/Runtime/Misc"
+    "System"
+
+    LiteParser. "Compiler" 
+    Compiler_static. "Compiler" 
+}
+
+base me LiteLangVisitor -> {
+    VisitCallExpression(context CallExpressionContext -> v any) {
+        r = Visit(context.id()).[Result]
+        r.text = "." + r.text
+        ? context.templateCall() >< nil {
+            r.text += Visit(context.templateCall()).[str]
+        }
+        ? context.callFunc() >< nil {
+            e2 = Visit(context.callFunc()).[Result]
+            r.text = r.text + e2.text
+        } context.callElement() >< nil {
+            e2 = Visit(context.callElement()).[Result]
+            r.text = r.text + e2.text
+        } context.callChannel() >< nil {
+            e2 = Visit(context.callChannel()).[Result]
+            r.text = r.text + e2.text
+        }
+        <- r
+    }
+
+    VisitCallElement(context CallElementContext -> v any) {
+        ? context.expression() == nil {
+            <- (Result{ text = Visit(context.slice()).[str] })
+        }
+        r = Visit(context.expression()).[Result]
+        r.text = "[" r.text "]"
+        <- r
+    }
+
+    VisitSlice(context SliceContext -> v any) {
+        <- Visit(context.GetChild(0)).[str]
+    }
+
+    VisitSliceFull(context SliceFullContext -> v any) {
+        order = ""
+        attach = ""
+        context.op.Text ? "<=" {
+            order = "true"
+            attach = "true"
+        } "<" {
+            order = "true"
+        } ">=" {
+            order = "false"
+            attach = "true"
+        } ">" {
+            order = "false"
+        }
+        expr1 = Visit(context.expression(0)).[Result]
+        expr2 = Visit(context.expression(1)).[Result]
+        <- ".slice("expr1.text", "expr2.text", "order", "attach")"
+    }
+
+    VisitSliceStart(context SliceStartContext -> v any) {
+        order = ""
+        attach = ""
+        context.op.Text ? "<=" {
+            order = "true"
+            attach = "true"
+        } "<" {
+            order = "true"
+        } ">=" {
+            order = "false"
+            attach = "true"
+        } ">" {
+            order = "false"
+        }
+        expr = Visit(context.expression()).[Result]
+        <- ".slice("expr.text", null, "order", "attach")"
+    }
+
+    VisitSliceEnd(context SliceEndContext -> v any) {
+        order = ""
+        attach = "false"
+        context.op.Text ? "<=" {
+            order = "true"
+            attach = "true"
+        } "<" {
+            order = "true"
+        } ">=" {
+            order = "false"
+            attach = "true"
+        } ">" {
+            order = "false"
+        }
+        expr = Visit(context.expression()).[Result]
+        <- ".slice(null, "expr.text", "order", "attach")"
+    }
+
+    VisitCallFunc(context CallFuncContext -> v any) {
+        r = Result{data = "var"}
+        ? context.tuple() >< nil {
+            r.text += Visit(context.tuple()).[Result].text
+        } _ {
+            r.text += "(" Visit(context.lambda()).[Result].text ")"
+        }
+
+        <- r
+    }
+
+    VisitCallPkg(context CallPkgContext -> v any) {
+        r = Result{data = Visit(context.typeType())}
+        r.text = "(new "Visit(context.typeType())"()"
+        ? context.pkgAssign() >< nil {
+            r.text += Visit(context.pkgAssign())
+        } context.listAssign() >< nil {
+            r.text += Visit(context.listAssign())
+        } context.setAssign() >< nil {
+            r.text += Visit(context.setAssign())
+        } context.dictionaryAssign() >< nil {
+            r.text += Visit(context.dictionaryAssign())
+        }
+        r.text += ")"
+        <- r
+    }
+
+    VisitCallNew(context CallNewContext -> v any) {
+        r = Result{data = Visit(context.typeType())}
+        param = ""
+        ? context.expressionList() >< nil {
+            param = Visit(context.expressionList()).[Result].text
+        }
+        r.text = "(new "Visit(context.typeType())"("param")"
+        r.text += ")"
+        <- r
+    }
+
+    VisitPkgAssign(context PkgAssignContext -> v any) {
+        obj = ""
+        obj += "{"
+        i @ 0 ..< context.pkgAssignElement().Length {
+            ? i == 0 {
+                obj += Visit(context.pkgAssignElement(i))
+            } _ {
+                obj += "," + Visit(context.pkgAssignElement(i))
+            }
+        }
+        obj += "}"
+        <- obj
+    }
+
+    VisitListAssign(context ListAssignContext -> v any) {
+        obj = ""
+        obj += "{"
+        i @ 0 ..< context.expression().Length {
+            r = Visit(context.expression(i)).[Result]
+            ? i == 0 {
+                obj += r.text
+            } _ {
+                obj += "," + r.text
+            }
+        }
+        obj += "}"
+        <- obj
+    }
+
+    VisitSetAssign(context SetAssignContext -> v any) {
+        obj = ""
+        obj += "{"
+        i @ 0 ..< context.expression().Length {
+            r = Visit(context.expression(i)).[Result]
+            ? i == 0 {
+                obj += r.text
+            } _ {
+                obj += "," + r.text
+            }
+        }
+        obj += "}"
+        <- obj
+    }
+
+    VisitDictionaryAssign(context DictionaryAssignContext -> v any) {
+        obj = ""
+        obj += "{"
+        i @ 0 ..< context.dictionaryElement().Length {
+            r = Visit(context.dictionaryElement(i)).[DicEle]
+            ? i == 0 {
+                obj += r.text
+            } _ {
+                obj += "," + r.text
+            }
+        }
+        obj += "}"
+        <- obj
+    }
+
+    VisitPkgAssignElement(context PkgAssignElementContext -> v any) {
+        obj = ""
+        obj += Visit(context.name()) + " = " + Visit(context.expression()).[Result].text
+        <- obj
+    }
+
+    VisitPkgAnonymous(context PkgAnonymousContext -> v any) {
+        <- Result{
+            data = "var"
+            text = "new" + Visit(context.pkgAnonymousAssign()).[str]
+        }
+    }
+
+    VisitPkgAnonymousAssign(context PkgAnonymousAssignContext -> v any) {
+        obj = ""
+        obj += "{"
+        i @ 0 ..< context.pkgAnonymousAssignElement().Length {
+            ? i == 0 {
+                obj += Visit(context.pkgAnonymousAssignElement(i))
+            } _ {
+                obj += "," + Visit(context.pkgAnonymousAssignElement(i))
+            }
+        }
+        obj += "}"
+        <- obj
+    }
+
+    VisitPkgAnonymousAssignElement(context PkgAnonymousAssignElementContext -> v any) {
+        obj = ""
+        obj += Visit(context.name()) + " = " + Visit(context.expression()).[Result].text
+        <- obj
+    }
+
+    VisitCallAwait(context CallAwaitContext -> v any) {
+        r = Result{}
+        expr = Visit(context.expression()).[Result]
+        r.data = "var"
+        r.text = "await " + expr.text
+        <- r
+    }
+
+    VisitList(context ListContext -> v any) {
+        type = Any
+        result = Result{}
+        i @ 0 ..< context.expression().Length {
+            r = Visit(context.expression(i)).[Result]
+            ? i == 0 {
+                type = r.data.[str]
+                result.text += r.text
+            } _ {
+                ? type >< r.data.[str] {
+                    type = Any
+                }
+                result.text += "," + r.text
+            }
+        }
+        result.data = "" Lst "<"type">"
+        result.text = "(new "result.data"(){ "result.text" })"
+        <- result
+    }
+
+    VisitSet(context SetContext -> v any) {
+        type = Any
+        result = Result{}
+        i @ 0 ..< context.expression().Length {
+            r = Visit(context.expression(i)).[Result]
+            ? i == 0 {
+                type = r.data.[str]
+                result.text += r.text
+            } _ {
+                ? type >< r.data.[str] {
+                    type = Any
+                }
+                result.text += "," + r.text
+            }
+        }
+        result.data = "" Set "<"type">"
+        result.text = "(new "result.data"(){ "result.text" })"
+        <- result
+    }
+
+    VisitDictionary(context DictionaryContext -> v any) {
+        key = Any
+        value = Any
+        result = Result{}
+        i @ 0 ..< context.dictionaryElement().Length {
+            r = Visit(context.dictionaryElement(i)).[DicEle]
+            ? i == 0 {
+                key = r.key
+                value = r.value
+                result.text += r.text
+            } _ {
+                ? key >< r.key {
+                    key = Any
+                }
+                ? value >< r.value {
+                    value = Any
+                }
+                result.text += "," + r.text
+            }
+        }
+        type = key + "," + value
+        result.data = "" Dic "<"type">"
+        result.text = "(new "result.data"(){ "result.text" })"
+        <- result
+    }
+
+    VisitDictionaryElement(context DictionaryElementContext -> v any) {
+        r1 = Visit(context.expression(0)).[Result]
+        r2 = Visit(context.expression(1)).[Result]
+        result = DicEle{
+            key = r1.data.[str]
+            value = r2.data.[str]
+            text = "{" + r1.text + "," + r2.text + "}"
+        }
+        <- result
+    }
+
+    VisitFunctionExpression(context FunctionExpressionContext -> v any) {
+        r = Result{}
+        # 异步 #
+        ? context.t.Type == Right_Flow {
+            r.text += " async "
+        }
+        r.text += Visit(context.parameterClauseIn()) + " => " + BlockLeft + Wrap
+        me.add_current_set()
+        r.text += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
+        r.text += BlockRight + Wrap
+        r.data = "var"
+        <- r
+    }
+
+    VisitLambda(context LambdaContext -> v any) {
+        r = Result{data = "var"}
+        # 异步 #
+        ? context.t.Type == Right_Flow {
+            r.text += "async "
+        }
+        r.text += "("
+        ? context.lambdaIn() >< nil {
+            r.text += Visit(context.lambdaIn())
+        }
+        r.text += ")"
+        r.text += "=>"
+
+        ? context.tupleExpression() >< nil {
+            r.text += Visit(context.tupleExpression()).[Result].text
+        } _ {
+            me.add_current_set()
+            r.text += "{" + ProcessFunctionSupport(context.functionSupportStatement()) + "}"
+            me.delete_current_set()
+        }
+
+        <- r
+    }
+
+    VisitLambdaIn(context LambdaInContext -> v any) {
+        obj = ""
+        i @ 0 ..< context.id().Length {
+            r = Visit(context.id(i)).[Result]
+            ? i == 0 {
+                obj += r.text
+            } _ {
+                obj += ", " + r.text
+            }
+            me.add_id(r.text)
+        }
+        <- obj
+    }
+}

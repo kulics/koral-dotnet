@@ -186,12 +186,12 @@ return obj;
 public  override  object VisitAnnotationList( AnnotationListContext context )
 {
 var obj = "";
-foreach (var i in range(0,context.annotationItem().Length,1,true,false)){
+foreach (var (i,v) in range(context.annotationItem())){
 if ( i>0 ) {
-obj+=(new System.Text.StringBuilder(",").Append(Visit(context.annotationItem(i))).Append("")).to_str();
+obj+=(new System.Text.StringBuilder(",").Append(Visit(v)).Append("")).to_str();
 }
 else {
-obj+=Visit(context.annotationItem(i));
+obj+=Visit(v);
 }
 }
 return obj;
@@ -200,12 +200,12 @@ public  override  object VisitAnnotationItem( AnnotationItemContext context )
 {
 var obj = "";
 obj+=((Result)(Visit(context.id()))).text;
-foreach (var i in range(0,context.annotationAssign().Length,1,true,false)){
+foreach (var (i,v) in range(context.annotationAssign())){
 if ( i>0 ) {
-obj+=(new System.Text.StringBuilder(",").Append(Visit(context.annotationAssign(i))).Append("")).to_str();
+obj+=(new System.Text.StringBuilder(",").Append(Visit(v)).Append("")).to_str();
 }
 else {
-obj+=(new System.Text.StringBuilder("(").Append(Visit(context.annotationAssign(i))).Append("")).to_str();
+obj+=(new System.Text.StringBuilder("(").Append(Visit(v)).Append("")).to_str();
 }
 }
 if ( context.annotationAssign().Length>0 ) {

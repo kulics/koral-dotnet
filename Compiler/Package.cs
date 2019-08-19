@@ -46,12 +46,9 @@ templateContract = item.Contract;
 header+=template;
 }
 if ( extend.Length>0 ) {
-header+=":";
-if ( extend.Length>0 ) {
-header+=extend;
+header+=":"+extend;
 }
-}
-header+=templateContract+Wrap+BlockLeft+Wrap;
+header+=templateContract+BlockLeft+Wrap;
 obj = header+obj;
 return obj;
 }
@@ -151,7 +148,7 @@ var template = ((TemplateItem)(Visit(context.templateDefine())));
 obj+=template.Template;
 templateContract = template.Contract;
 }
-obj+=templateContract+Wrap+BlockLeft+Wrap;
+obj+=templateContract+BlockLeft+Wrap;
 obj+=interfaceProtocol;
 obj+=BlockRight+Wrap;
 return obj;
