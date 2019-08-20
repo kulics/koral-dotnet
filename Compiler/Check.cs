@@ -50,13 +50,12 @@ public  override  object VisitUsingStatement( UsingStatementContext context ){
 var obj = "";
 var r1 = ((Result)(Visit(context.expression(0))));
 var r2 = ((Result)(Visit(context.expression(1))));
-if ( context.typeType()!=null ) {
+obj = run(()=>{if ( context.typeType()!=null ) {
 var Type = ((string)(Visit(context.typeType())));
-obj = (new System.Text.StringBuilder("").Append(Type).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str();
-}
+return (new System.Text.StringBuilder("").Append(Type).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str();}
 else {
-obj = (new System.Text.StringBuilder("var ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str();
-}
+return (new System.Text.StringBuilder("var ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str();}
+});
 return obj;
 }
 }

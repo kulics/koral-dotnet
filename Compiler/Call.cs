@@ -109,12 +109,11 @@ return (new System.Text.StringBuilder(".slice(null, ").Append(expr.text).Append(
 }
 public  override  object VisitCallFunc( CallFuncContext context ){
 var r = (new Result(){data = "var"});
-if ( context.tuple()!=null ) {
-r.text+=((Result)(Visit(context.tuple()))).text;
-}
+r.text+=run(()=>{if ( context.tuple()!=null ) {
+return ((Result)(Visit(context.tuple()))).text;}
 else {
-r.text+=(new System.Text.StringBuilder("(").Append(((Result)(Visit(context.lambda()))).text).Append(")")).to_str();
-}
+return (new System.Text.StringBuilder("(").Append(((Result)(Visit(context.lambda()))).text).Append(")")).to_str();}
+});
 return r;
 }
 public  override  object VisitCallPkg( CallPkgContext context ){
@@ -149,12 +148,11 @@ public  override  object VisitPkgAssign( PkgAssignContext context ){
 var obj = "";
 obj+="{";
 foreach (var i in range(0,context.pkgAssignElement().Length,1,true,false)){
-if ( i==0 ) {
-obj+=Visit(context.pkgAssignElement(i));
-}
+obj+=run(()=>{if ( i==0 ) {
+return Visit(context.pkgAssignElement(i));}
 else {
-obj+=","+Visit(context.pkgAssignElement(i));
-}
+return ","+Visit(context.pkgAssignElement(i));}
+});
 }
 obj+="}";
 return obj;
@@ -164,12 +162,11 @@ var obj = "";
 obj+="{";
 foreach (var i in range(0,context.expression().Length,1,true,false)){
 var r = ((Result)(Visit(context.expression(i))));
-if ( i==0 ) {
-obj+=r.text;
-}
+obj+=run(()=>{if ( i==0 ) {
+return r.text;}
 else {
-obj+=","+r.text;
-}
+return ","+r.text;}
+});
 }
 obj+="}";
 return obj;
@@ -179,12 +176,11 @@ var obj = "";
 obj+="{";
 foreach (var i in range(0,context.expression().Length,1,true,false)){
 var r = ((Result)(Visit(context.expression(i))));
-if ( i==0 ) {
-obj+=r.text;
-}
+obj+=run(()=>{if ( i==0 ) {
+return r.text;}
 else {
-obj+=","+r.text;
-}
+return ","+r.text;}
+});
 }
 obj+="}";
 return obj;
@@ -194,12 +190,11 @@ var obj = "";
 obj+="{";
 foreach (var i in range(0,context.dictionaryElement().Length,1,true,false)){
 var r = ((DicEle)(Visit(context.dictionaryElement(i))));
-if ( i==0 ) {
-obj+=r.text;
-}
+obj+=run(()=>{if ( i==0 ) {
+return r.text;}
 else {
-obj+=","+r.text;
-}
+return ","+r.text;}
+});
 }
 obj+="}";
 return obj;
@@ -216,12 +211,11 @@ public  override  object VisitPkgAnonymousAssign( PkgAnonymousAssignContext cont
 var obj = "";
 obj+="{";
 foreach (var i in range(0,context.pkgAnonymousAssignElement().Length,1,true,false)){
-if ( i==0 ) {
-obj+=Visit(context.pkgAnonymousAssignElement(i));
-}
+obj+=run(()=>{if ( i==0 ) {
+return Visit(context.pkgAnonymousAssignElement(i));}
 else {
-obj+=","+Visit(context.pkgAnonymousAssignElement(i));
-}
+return ","+Visit(context.pkgAnonymousAssignElement(i));}
+});
 }
 obj+="}";
 return obj;
@@ -243,16 +237,15 @@ var type = Any;
 var result = (new Result());
 foreach (var i in range(0,context.expression().Length,1,true,false)){
 var r = ((Result)(Visit(context.expression(i))));
-if ( i==0 ) {
+result.text+=run(()=>{if ( i==0 ) {
 type = ((string)(r.data));
-result.text+=r.text;
-}
+return r.text;}
 else {
 if ( type!=((string)(r.data)) ) {
 type = Any;
 }
-result.text+=","+r.text;
-}
+return ","+r.text;}
+});
 }
 result.data=(new System.Text.StringBuilder("").Append(Lst).Append("<").Append(type).Append(">")).to_str();
 result.text=(new System.Text.StringBuilder("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
@@ -263,16 +256,15 @@ var type = Any;
 var result = (new Result());
 foreach (var i in range(0,context.expression().Length,1,true,false)){
 var r = ((Result)(Visit(context.expression(i))));
-if ( i==0 ) {
+result.text+=run(()=>{if ( i==0 ) {
 type = ((string)(r.data));
-result.text+=r.text;
-}
+return r.text;}
 else {
 if ( type!=((string)(r.data)) ) {
 type = Any;
 }
-result.text+=","+r.text;
-}
+return ","+r.text;}
+});
 }
 result.data=(new System.Text.StringBuilder("").Append(Set).Append("<").Append(type).Append(">")).to_str();
 result.text=(new System.Text.StringBuilder("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
@@ -284,11 +276,10 @@ var value = Any;
 var result = (new Result());
 foreach (var i in range(0,context.dictionaryElement().Length,1,true,false)){
 var r = ((DicEle)(Visit(context.dictionaryElement(i))));
-if ( i==0 ) {
+result.text+=run(()=>{if ( i==0 ) {
 key = r.key;
 value = r.value;
-result.text+=r.text;
-}
+return r.text;}
 else {
 if ( key!=r.key ) {
 key = Any;
@@ -296,8 +287,8 @@ key = Any;
 if ( value!=r.value ) {
 value = Any;
 }
-result.text+=","+r.text;
-}
+return ","+r.text;}
+});
 }
 var type = key+","+value;
 result.data=(new System.Text.StringBuilder("").Append(Dic).Append("<").Append(type).Append(">")).to_str();
@@ -348,12 +339,11 @@ public  override  object VisitLambdaIn( LambdaInContext context ){
 var obj = "";
 foreach (var i in range(0,context.id().Length,1,true,false)){
 var r = ((Result)(Visit(context.id(i))));
-if ( i==0 ) {
-obj+=r.text;
-}
+obj+=run(()=>{if ( i==0 ) {
+return r.text;}
 else {
-obj+=", "+r.text;
-}
+return ", "+r.text;}
+});
 this.add_id(r.text);
 }
 return obj;

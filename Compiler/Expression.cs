@@ -27,12 +27,11 @@ var Type = ((string)(Visit(context.typeType())));
 obj = (new System.Text.StringBuilder("").Append(Type).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str()+Terminate+Wrap;
 }
 else {
-if ( r1.isDefine||r1.text==this.selfID||r1.text==this.superID||r1.text==setID ) {
-obj = (new System.Text.StringBuilder("").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str()+Terminate+Wrap;
-}
+obj = run(()=>{if ( r1.isDefine||r1.text==this.selfID||r1.text==this.superID||r1.text==setID ) {
+return (new System.Text.StringBuilder("").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str()+Terminate+Wrap;}
 else {
-obj = (new System.Text.StringBuilder("var ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str()+Terminate+Wrap;
-}
+return (new System.Text.StringBuilder("var ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str()+Terminate+Wrap;}
+});
 }
 return obj;
 }
@@ -69,23 +68,20 @@ case JudgeContext it :
 { r.data=Bool;
 }break;
 case AddContext it :
-{ if ( ((string)(e1.data))==Str||((string)(((Result)(e2)).data))==Str ) {
-r.data=Str;
-}
+{ r.data=run(()=>{if ( ((string)(e1.data))==Str||((string)(((Result)(e2)).data))==Str ) {
+return Str;}
 else if ( ((string)(e1.data))==I32&&((string)(((Result)(e2)).data))==I32 ) {
-r.data=I32;
-}
+return I32;}
 else {
-r.data=F64;
-}
+return F64;}
+});
 }break;
 case MulContext it :
-{ if ( ((string)(e1.data))==I32&&((string)(((Result)(e2)).data))==I32 ) {
-r.data=I32;
-}
+{ r.data=run(()=>{if ( ((string)(e1.data))==I32&&((string)(((Result)(e2)).data))==I32 ) {
+return I32;}
 else {
-r.data=F64;
-}
+return F64;}
+});
 }break;
 case PowContext it :
 { r.data=F64;
@@ -221,12 +217,11 @@ var r = (new Result());
 var obj = "";
 foreach (var i in range(0,context.expression().Length,1,true,false)){
 var temp = ((Result)(Visit(context.expression(i))));
-if ( i==0 ) {
-obj+=temp.text;
-}
+obj+=run(()=>{if ( i==0 ) {
+return temp.text;}
 else {
-obj+=", "+temp.text;
-}
+return ", "+temp.text;}
+});
 }
 r.text=obj;
 r.data="var";

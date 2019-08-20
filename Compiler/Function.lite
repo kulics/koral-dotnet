@@ -21,11 +21,11 @@ me LiteLangVisitor -> {
         content = ""
         lazy = []str{}
         item @ items {
-            ? item.GetChild(0).is[UsingStatementContext]() {
+            content += ? -> item.GetChild(0).is[UsingStatementContext]() {
                 lazy.add("}")
-                content += "using ("Visit(item).[str]") "BlockLeft" "Wrap""
+                "using ("Visit(item).[str]") "BlockLeft" "Wrap""
             } _ {
-                content += Visit(item)
+                Visit(item)
             }
         }
         ? lazy.Count > 0 {
@@ -45,10 +45,10 @@ base me LiteLangVisitor -> {
         # 异步 #
         pout = Visit(context.parameterClauseOut()).[str]
         ? context.t.Type == Right_Flow {
-            ? pout >< "void" {
-                pout = ""Task"<"pout">"
+            pout = ? -> pout >< "void" {
+                ""Task"<"pout">"
             } _ {
-                pout = Task
+                Task
             }
             obj += " async "pout" "id.text""
         } _ {
@@ -95,10 +95,10 @@ base me LiteLangVisitor -> {
         obj = "("
         i @ 0 ..< context.expression().Length {
             r = Visit(context.expression(i)).[Result]
-            ? i == 0 {
-                obj += r.text
+            obj += ? -> i == 0 {
+                r.text
             } _ {
-                obj += ", " r.text ""
+                ", " r.text ""
             }
         }
         obj += ")"
@@ -112,10 +112,10 @@ base me LiteLangVisitor -> {
         obj = ""
         i @ 0 ..< context.expression().Length {
             r = Visit(context.expression(i)).[Result]
-            ? i == 0 {
-                obj += r.text
+            obj += ? -> i == 0 {
+                r.text
             } _ {
-                obj += ", " r.text ""
+                ", " r.text ""
             }
         }
         ? context.expression().Length > 1 {
@@ -136,10 +136,10 @@ base me LiteLangVisitor -> {
             me.add_id(p.id)
         }
         i @ temp.Count-1 ..>= 0 {
-            ? i == temp.Count - 1 {
-                obj += temp.(i)
+            obj += ? -> i == temp.Count - 1 {
+                temp.(i)
             } _ {
-                obj += ", "temp.(i)""
+                ", "temp.(i)""
             }
         }
 
@@ -163,10 +163,10 @@ base me LiteLangVisitor -> {
                 temp.add(""p.annotation" "p.type" "p.id" "p.value"")
             }
             i @ temp.Count-1 ..>= 0 {
-                ? i == temp.Count - 1 {
-                    obj += temp.(i)
+                obj += ? -> i == temp.Count - 1 {
+                    temp.(i)
                 } _ {
-                    obj += ", "temp.(i)""
+                    ", "temp.(i)""
                 }
             }
             obj += " )"

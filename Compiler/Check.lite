@@ -55,11 +55,11 @@ base me LiteLangVisitor -> {
         obj = ""
         r1 = Visit(context.expression(0)).[Result]
         r2 = Visit(context.expression(1)).[Result]
-        ? context.typeType() >< nil {
+        obj = ? -> context.typeType() >< nil {
             Type = Visit(context.typeType()).[str]
-            obj = ""Type" "r1.text" = "r2.text""
+            ""Type" "r1.text" = "r2.text""
         } _ {
-            obj = "var "r1.text" = "r2.text""
+            "var "r1.text" = "r2.text""
         }
         <- obj
     }

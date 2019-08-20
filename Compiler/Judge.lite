@@ -21,10 +21,9 @@ base me LiteLangVisitor -> {
     }
 
     VisitCaseExprStatement(context CaseExprStatementContext -> v any) {
-        obj = ""
-        ? context.expression() >< nil  {
+        <- ? -> context.expression() >< nil  {
             expr = Visit(context.expression()).[Result]
-            obj += "case "expr.text" :"Wrap""
+            "case "expr.text" :"Wrap""
         } context.typeType() >< nil {
             id = "it"
             ? context.id() >< nil {
@@ -32,11 +31,10 @@ base me LiteLangVisitor -> {
             }
             me.add_id(id)
             type = Visit(context.typeType()).[str]
-            obj += "case "type" "id" :"Wrap""
+            "case "type" "id" :"Wrap""
         } _ {
-            obj += "default:"Wrap""
+            "default:"Wrap""
         }
-        <- obj
     }
 
     VisitCaseStatement(context CaseStatementContext -> v any) {
@@ -123,7 +121,7 @@ base me LiteLangVisitor -> {
         obj = "else if ( "b.text" ) "BlockLeft+Wrap""
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return" Visit(context.expression(1)).[Result].text ";"
+        obj += "return " Visit(context.expression(1)).[Result].text ";"
         me.delete_current_set()
         obj += BlockRight+Wrap
         <- obj

@@ -14,24 +14,27 @@ Namespace -> {
 
 GetControlSub(id str -> id str, type str) {
     typ = ""
-    id ? "get" {
+    typ = id ? -> "get" {
         id = " get "
-        typ = "get"
+        "get"
     } "set" {
         id = " set "
-        typ = "set"
+        "set"
     } "_get" {
         id = " protected get "
-        typ = "get"
+        "get"
     } "_set" {
         id = " protected set "
-        typ = "set"
+        "set"
     } "add" {
         id = " add "
-        typ = "add"
+        "add"
     } "remove" {
         id = " remove "
-        typ = "remove"
+        "remove"
+    } _ {
+        throw(Exception{})
+        ""
     }
     <- id, typ
 }
@@ -93,12 +96,12 @@ base me LiteLangVisitor -> {
         ns = context.TextLiteral().GetText()
         ns = ns.sub_str(1, ns.len()-2)
         ns = ns.replace("/", ".")
-        ? context.call() >< nil {
-            obj += "using static " + ns + "." + Visit(context.id()).[Result].text
+        obj += ? -> context.call() >< nil {
+            "using static " + ns + "." + Visit(context.id()).[Result].text
         } context.id() >< nil {
-            obj += "using " + ns + "." + Visit(context.id()).[Result].text
+            "using " + ns + "." + Visit(context.id()).[Result].text
         } _ {
-            obj += "using " + ns
+            "using " + ns
         }
         obj += Terminate + Wrap
         <- obj
@@ -108,10 +111,10 @@ base me LiteLangVisitor -> {
         obj = ""
         i @ 0 ..< context.id().Length {
             id = Visit(context.id(i)).[Result]
-            ? i == 0 {
-                obj += "" + id.text
+            obj += ? -> i == 0 {
+                "" + id.text
             } _ {
-                obj += "." + id.text
+                "." + id.text
             }
         }
         <- obj
@@ -121,10 +124,10 @@ base me LiteLangVisitor -> {
         obj = ""
         i @ 0 ..< context.id().Length {
             id = Visit(context.id(i)).[Result]
-            ? i == 0 {
-                obj += "" + id.text
+            obj += ? -> i == 0 {
+                "" + id.text
             } _ {
-                obj += "." + id.text
+                "." + id.text
             }
         }
         <- obj
@@ -169,10 +172,10 @@ base me LiteLangVisitor -> {
         # 异步 #
         pout = Visit(context.parameterClauseOut()).[str]
         ? context.t.Type == Right_Flow {
-            ? pout >< "void" {
-                pout = ""Task"<"pout">"
+            pout = ? -> pout >< "void" {
+                ""Task"<"pout">"
             } _ {
-                pout = Task
+                Task
             }
             obj += ""id.permission" async static "pout" "id.text""
         } _ {
@@ -202,11 +205,10 @@ base me LiteLangVisitor -> {
     VisitNamespaceConstantStatement(context NamespaceConstantStatementContext -> v any) {
         id = Visit(context.id()).[Result]
         expr = Visit(context.expression()).[Result]
-        typ = ""
-        ? context.typeType() >< nil {
-            typ = Visit(context.typeType()).[str]
+        typ = ? -> context.typeType() >< nil {
+            Visit(context.typeType()).[str]
         } _ {
-            typ = expr.data.[str]
+            expr.data.[str]
         }
 
         obj = ""
@@ -237,10 +239,10 @@ base me LiteLangVisitor -> {
         }
 
         obj += ""r1.permission" static "typ" "r1.text""
-        ? r2 >< nil {
-            obj += " = "r2.text" "Terminate+Wrap""
+        obj += ? -> r2 >< nil {
+            " = "r2.text" "Terminate+Wrap""
         } _ {
-            obj += Terminate + Wrap
+            Terminate + Wrap
         }
         <- obj
     }

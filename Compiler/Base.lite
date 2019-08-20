@@ -152,10 +152,10 @@ base me LiteLangVisitor -> {
             r.text = "("
             i:v @ context.idExprItem() {
                 subID = Visit(v).[Result].text
-                ? i >< 0 {
-                    r.text += ", " + subID
+                r.text += ? -> i >< 0 {
+                    ", " + subID
                 } _ {
-                    r.text += subID
+                    subID
                 }
                 ? me.has_id(subID) {
                     r.isDefine = true
@@ -223,10 +223,10 @@ base me LiteLangVisitor -> {
         obj = ""
         obj += Visit(context.id()).[Result].text
         i:v @ context.annotationAssign() {
-            ? i > 0 {
-                obj += "," Visit(v) ""
+            obj += ? -> i > 0 {
+                "," Visit(v) ""
             } _ {
-                obj += "(" Visit(v) ""
+                "(" Visit(v) ""
             }
         }
         ? context.annotationAssign().Length > 0 {

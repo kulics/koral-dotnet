@@ -37,10 +37,10 @@ base me LiteLangVisitor -> {
         obj += ""id.permission" "
         pout = Visit(context.parameterClauseOut()).[str]
         ? context.t.Type == Right_Flow {
-            ? pout >< "void" {
-                pout = ""Task"<"pout">"
+            pout = ? -> pout >< "void" {
+                ""Task"<"pout">"
             } _ {
-                pout = Task
+                Task
             }
             obj += ""isVirtual" async "pout" "id.text""
         } _ {
@@ -113,17 +113,17 @@ base me LiteLangVisitor -> {
         isVirtual = " override "
         obj = ""
         # 异步 #
-        ? context.n >< nil {
-            obj += "protected "
+        obj += ? -> context.n >< nil {
+            "protected "
         } _ {
-            obj += ""id.permission" "
+            ""id.permission" "
         }
         pout = Visit(context.parameterClauseOut()).[str]
         ? context.t.Type == Right_Flow {
-            ? pout >< "void" {
-                pout = ""Task"<"pout">"
+            pout = ? -> pout >< "void" {
+                ""Task"<"pout">"
             } _ {
-                pout = Task
+                Task
             }
             obj += ""isVirtual" async "pout" "id.text""
         } _ {

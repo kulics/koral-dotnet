@@ -19,10 +19,10 @@ base me LiteLangVisitor -> {
 
         item @ context.packageSupportStatement() {
             ? item.GetChild(0).GetType() == typeof[IncludeStatementContext]() {
-                ? extend == "" {
-                    extend += Visit(item)
+                extend += ? -> extend == "" {
+                    Visit(item)
                 } _ {
-                    extend += "," + Visit(item)
+                    "," + Visit(item)
                 }
             } _ {
                 obj += Visit(item)
@@ -71,10 +71,10 @@ base me LiteLangVisitor -> {
         }
 
         obj += ""r1.permission" "typ" "r1.text""
-        ? r2 >< nil {
-            obj += " = "r2.text" "Terminate" "Wrap""
+        obj += ? -> r2 >< nil {
+            " = "r2.text" "Terminate" "Wrap""
         } _ {
-            obj += Terminate + Wrap
+            Terminate + Wrap
         }
         <- obj
     }
@@ -197,10 +197,10 @@ base me LiteLangVisitor -> {
         # 异步 #
         pout = Visit(context.parameterClauseOut()).[str]
         ? context.t.Type == Right_Flow {
-            ? pout >< "void" {
-                pout = ""Task"<"pout">"
+            pout = ? -> pout >< "void" {
+                ""Task"<"pout">"
             } _ {
-                pout = Task
+                Task
             }
             r.text += pout + " " + id.text
         } _ {

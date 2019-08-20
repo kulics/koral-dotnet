@@ -36,12 +36,11 @@ public  override  object VisitTypeTuple( TypeTupleContext context ){
 var obj = "";
 obj+="(";
 foreach (var (i,v) in range(context.typeType())){
-if ( i==0 ) {
-obj+=Visit(v);
-}
+obj+=run(()=>{if ( i==0 ) {
+return Visit(v);}
 else {
-obj+=(new System.Text.StringBuilder(",").Append(Visit(v)).Append("")).to_str();
-}
+return (new System.Text.StringBuilder(",").Append(Visit(v)).Append("")).to_str();}
+});
 }
 obj+=")";
 return obj;
@@ -85,12 +84,11 @@ var @in = ((string)(Visit(context.typeFunctionParameterClause(0))));
 var @out = ((string)(Visit(context.typeFunctionParameterClause(1))));
 if ( context.t.Type==Right_Arrow ) {
 if ( @out.Length==0 ) {
-if ( @in.Length==0 ) {
-obj = "Action";
-}
+obj = run(()=>{if ( @in.Length==0 ) {
+return "Action";}
 else {
-obj = (new System.Text.StringBuilder("Action<").Append(@in).Append(">")).to_str();
-}
+return (new System.Text.StringBuilder("Action<").Append(@in).Append(">")).to_str();}
+});
 }
 else {
 if ( @out.first_index_of(",")>=0 ) {
@@ -99,33 +97,30 @@ if ( @out.first_index_of(",")>=0 ) {
 if ( context.y!=null ) {
 @out = (new System.Text.StringBuilder("").Append(IEnum).Append("<").Append(@out).Append(">")).to_str();
 }
-if ( @in.Length==0 ) {
-obj = (new System.Text.StringBuilder("Func<").Append(@out).Append(">")).to_str();
-}
+obj = run(()=>{if ( @in.Length==0 ) {
+return (new System.Text.StringBuilder("Func<").Append(@out).Append(">")).to_str();}
 else {
-obj = (new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(@out).Append(">")).to_str();
-}
+return (new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(@out).Append(">")).to_str();}
+});
 }
 }
 else {
 if ( @out.Length==0 ) {
-if ( @in.Length==0 ) {
-obj = (new System.Text.StringBuilder("Func<").Append(Task).Append(">")).to_str();
-}
+obj = run(()=>{if ( @in.Length==0 ) {
+return (new System.Text.StringBuilder("Func<").Append(Task).Append(">")).to_str();}
 else {
-obj = (new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(Task).Append(">")).to_str();
-}
+return (new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(Task).Append(">")).to_str();}
+});
 }
 else {
 if ( context.y!=null ) {
 @out = (new System.Text.StringBuilder("").Append(IEnum).Append("<(").Append(@out).Append(")>")).to_str();
 }
-if ( @in.Length==0 ) {
-obj = (new System.Text.StringBuilder("Func<").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
-}
+obj = run(()=>{if ( @in.Length==0 ) {
+return (new System.Text.StringBuilder("Func<").Append(Task).Append("<").Append(@out).Append(">>")).to_str();}
 else {
-obj = (new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
-}
+return (new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).to_str();}
+});
 }
 }
 return obj;
@@ -137,71 +132,52 @@ public  override  object VisitTypeFunctionParameterClause( TypeFunctionParameter
 var obj = "";
 foreach (var i in range(0,context.typeType().Length,1,true,false)){
 var p = ((string)(Visit(context.typeType(i))));
-if ( i==0 ) {
-obj+=p;
-}
+obj+=run(()=>{if ( i==0 ) {
+return p;}
 else {
-obj+=(new System.Text.StringBuilder(", ").Append(p).Append("")).to_str();
-}
+return (new System.Text.StringBuilder(", ").Append(p).Append("")).to_str();}
+});
 }
 return obj;
 }
 public  override  object VisitTypeBasic( TypeBasicContext context ){
-var obj = "";
-switch (context.t.Type) {
+return run(()=> { switch (context.t.Type) {
 case TypeI8 :
-{ obj = I8;
-}break;
+{return I8;}break;
 case TypeU8 :
-{ obj = U8;
-}break;
+{return U8;}break;
 case TypeI16 :
-{ obj = I16;
-}break;
+{return I16;}break;
 case TypeU16 :
-{ obj = U16;
-}break;
+{return U16;}break;
 case TypeI32 :
-{ obj = I32;
-}break;
+{return I32;}break;
 case TypeU32 :
-{ obj = U32;
-}break;
+{return U32;}break;
 case TypeI64 :
-{ obj = I64;
-}break;
+{return I64;}break;
 case TypeU64 :
-{ obj = U64;
-}break;
+{return U64;}break;
 case TypeF32 :
-{ obj = F32;
-}break;
+{return F32;}break;
 case TypeF64 :
-{ obj = F64;
-}break;
+{return F64;}break;
 case TypeChr :
-{ obj = Chr;
-}break;
+{return Chr;}break;
 case TypeStr :
-{ obj = Str;
-}break;
+{return Str;}break;
 case TypeBool :
-{ obj = Bool;
-}break;
+{return Bool;}break;
 case TypeInt :
-{ obj = Int;
-}break;
+{return Int;}break;
 case TypeNum :
-{ obj = Num;
-}break;
+{return Num;}break;
 case TypeByte :
-{ obj = U8;
-}break;
+{return U8;}break;
 default:
-{ obj = Any;
-}break;
+{return Any;}break;
 }
-return obj;
+});
 }
 }
 }

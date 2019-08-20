@@ -36,12 +36,11 @@ var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" ")).to_str();
 var pout = ((string)(Visit(context.parameterClauseOut())));
 if ( context.t.Type==Right_Flow ) {
-if ( pout!="void" ) {
-pout = (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
-}
+pout = run(()=>{if ( pout!="void" ) {
+return (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();}
 else {
-pout = Task;
-}
+return Task;}
+});
 obj+=(new System.Text.StringBuilder("").Append(isVirtual).Append(" async ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
 }
 else {
@@ -110,20 +109,18 @@ public  override  object VisitOverrideFunctionStatement( OverrideFunctionStateme
 var id = ((Result)(Visit(context.id())));
 var isVirtual = " override ";
 var obj = "";
-if ( context.n!=null ) {
-obj+="protected ";
-}
+obj+=run(()=>{if ( context.n!=null ) {
+return "protected ";}
 else {
-obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" ")).to_str();
-}
+return (new System.Text.StringBuilder("").Append(id.permission).Append(" ")).to_str();}
+});
 var pout = ((string)(Visit(context.parameterClauseOut())));
 if ( context.t.Type==Right_Flow ) {
-if ( pout!="void" ) {
-pout = (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
-}
+pout = run(()=>{if ( pout!="void" ) {
+return (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();}
 else {
-pout = Task;
-}
+return Task;}
+});
 obj+=(new System.Text.StringBuilder("").Append(isVirtual).Append(" async ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
 }
 else {

@@ -60,15 +60,13 @@ obj+=Visit(context.annotationSupport());
 var ns = context.TextLiteral().GetText();
 ns = ns.sub_str(1, ns.len()-2);
 ns = ns.replace("/", ".");
-if ( context.call()!=null ) {
-obj+="using static "+ns+"."+((Result)(Visit(context.id()))).text;
-}
+obj+=run(()=>{if ( context.call()!=null ) {
+return "using static "+ns+"."+((Result)(Visit(context.id()))).text;}
 else if ( context.id()!=null ) {
-obj+="using "+ns+"."+((Result)(Visit(context.id()))).text;
-}
+return "using "+ns+"."+((Result)(Visit(context.id()))).text;}
 else {
-obj+="using "+ns;
-}
+return "using "+ns;}
+});
 obj+=Terminate+Wrap;
 return obj;
 }
@@ -76,12 +74,11 @@ public  override  object VisitNameSpaceItem( NameSpaceItemContext context ){
 var obj = "";
 foreach (var i in range(0,context.id().Length,1,true,false)){
 var id = ((Result)(Visit(context.id(i))));
-if ( i==0 ) {
-obj+=""+id.text;
-}
+obj+=run(()=>{if ( i==0 ) {
+return ""+id.text;}
 else {
-obj+="."+id.text;
-}
+return "."+id.text;}
+});
 }
 return obj;
 }
@@ -89,12 +86,11 @@ public  override  object VisitName( NameContext context ){
 var obj = "";
 foreach (var i in range(0,context.id().Length,1,true,false)){
 var id = ((Result)(Visit(context.id(i))));
-if ( i==0 ) {
-obj+=""+id.text;
-}
+obj+=run(()=>{if ( i==0 ) {
+return ""+id.text;}
 else {
-obj+="."+id.text;
-}
+return "."+id.text;}
+});
 }
 return obj;
 }
@@ -134,12 +130,11 @@ obj+=Visit(context.annotationSupport());
 }
 var pout = ((string)(Visit(context.parameterClauseOut())));
 if ( context.t.Type==Right_Flow ) {
-if ( pout!="void" ) {
-pout = (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
-}
+pout = run(()=>{if ( pout!="void" ) {
+return (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();}
 else {
-pout = Task;
-}
+return Task;}
+});
 obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" async static ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
 }
 else {
@@ -166,13 +161,11 @@ return obj;
 public  override  object VisitNamespaceConstantStatement( NamespaceConstantStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var expr = ((Result)(Visit(context.expression())));
-var typ = "";
-if ( context.typeType()!=null ) {
-typ = ((string)(Visit(context.typeType())));
-}
+var typ = run(()=>{if ( context.typeType()!=null ) {
+return ((string)(Visit(context.typeType())));}
 else {
-typ = ((string)(expr.data));
-}
+return ((string)(expr.data));}
+});
 var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
@@ -198,12 +191,11 @@ if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
 obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append("")).to_str();
-if ( r2!=null ) {
-obj+=(new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate+Wrap).Append("")).to_str();
-}
+obj+=run(()=>{if ( r2!=null ) {
+return (new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate+Wrap).Append("")).to_str();}
 else {
-obj+=Terminate+Wrap;
-}
+return Terminate+Wrap;}
+});
 return obj;
 }
 public  override  object VisitNamespaceControlStatement( NamespaceControlStatementContext context ){
@@ -234,32 +226,30 @@ return obj;
 public partial class Compiler_static{
 public static (  string id ,  string type  ) GetControlSub( string id ){
 var typ = "";
-switch (id) {
+typ = run(()=> { switch (id) {
 case "get" :
-{ id = " get ";
-typ = "get";
-}break;
+{id = " get ";
+return "get";}break;
 case "set" :
-{ id = " set ";
-typ = "set";
-}break;
+{id = " set ";
+return "set";}break;
 case "_get" :
-{ id = " protected get ";
-typ = "get";
-}break;
+{id = " protected get ";
+return "get";}break;
 case "_set" :
-{ id = " protected set ";
-typ = "set";
-}break;
+{id = " protected set ";
+return "set";}break;
 case "add" :
-{ id = " add ";
-typ = "add";
-}break;
+{id = " add ";
+return "add";}break;
 case "remove" :
-{ id = " remove ";
-typ = "remove";
-}break;
+{id = " remove ";
+return "remove";}break;
+default:
+{@throw((new Exception()));
+return "";}break;
 }
+});
 return (id, typ);
 }
 }

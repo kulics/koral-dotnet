@@ -97,10 +97,10 @@ base me LiteLangVisitor -> {
 
     VisitCallFunc(context CallFuncContext -> v any) {
         r = Result{data = "var"}
-        ? context.tuple() >< nil {
-            r.text += Visit(context.tuple()).[Result].text
+        r.text += ? -> context.tuple() >< nil {
+            Visit(context.tuple()).[Result].text
         } _ {
-            r.text += "(" Visit(context.lambda()).[Result].text ")"
+            "(" Visit(context.lambda()).[Result].text ")"
         }
 
         <- r
@@ -137,10 +137,10 @@ base me LiteLangVisitor -> {
         obj = ""
         obj += "{"
         i @ 0 ..< context.pkgAssignElement().Length {
-            ? i == 0 {
-                obj += Visit(context.pkgAssignElement(i))
+            obj += ? -> i == 0 {
+                Visit(context.pkgAssignElement(i))
             } _ {
-                obj += "," + Visit(context.pkgAssignElement(i))
+                "," + Visit(context.pkgAssignElement(i))
             }
         }
         obj += "}"
@@ -152,10 +152,10 @@ base me LiteLangVisitor -> {
         obj += "{"
         i @ 0 ..< context.expression().Length {
             r = Visit(context.expression(i)).[Result]
-            ? i == 0 {
-                obj += r.text
+            obj += ? -> i == 0 {
+                r.text
             } _ {
-                obj += "," + r.text
+                "," + r.text
             }
         }
         obj += "}"
@@ -167,10 +167,10 @@ base me LiteLangVisitor -> {
         obj += "{"
         i @ 0 ..< context.expression().Length {
             r = Visit(context.expression(i)).[Result]
-            ? i == 0 {
-                obj += r.text
+            obj += ? -> i == 0 {
+                r.text
             } _ {
-                obj += "," + r.text
+                "," + r.text
             }
         }
         obj += "}"
@@ -182,10 +182,10 @@ base me LiteLangVisitor -> {
         obj += "{"
         i @ 0 ..< context.dictionaryElement().Length {
             r = Visit(context.dictionaryElement(i)).[DicEle]
-            ? i == 0 {
-                obj += r.text
+            obj += ? -> i == 0 {
+                r.text
             } _ {
-                obj += "," + r.text
+                "," + r.text
             }
         }
         obj += "}"
@@ -209,10 +209,10 @@ base me LiteLangVisitor -> {
         obj = ""
         obj += "{"
         i @ 0 ..< context.pkgAnonymousAssignElement().Length {
-            ? i == 0 {
-                obj += Visit(context.pkgAnonymousAssignElement(i))
+            obj += ? -> i == 0 {
+                Visit(context.pkgAnonymousAssignElement(i))
             } _ {
-                obj += "," + Visit(context.pkgAnonymousAssignElement(i))
+                "," + Visit(context.pkgAnonymousAssignElement(i))
             }
         }
         obj += "}"
@@ -238,14 +238,14 @@ base me LiteLangVisitor -> {
         result = Result{}
         i @ 0 ..< context.expression().Length {
             r = Visit(context.expression(i)).[Result]
-            ? i == 0 {
+            result.text += ? -> i == 0 {
                 type = r.data.[str]
-                result.text += r.text
+                r.text
             } _ {
                 ? type >< r.data.[str] {
                     type = Any
                 }
-                result.text += "," + r.text
+                "," + r.text
             }
         }
         result.data = "" Lst "<"type">"
@@ -258,14 +258,14 @@ base me LiteLangVisitor -> {
         result = Result{}
         i @ 0 ..< context.expression().Length {
             r = Visit(context.expression(i)).[Result]
-            ? i == 0 {
+            result.text += ? -> i == 0 {
                 type = r.data.[str]
-                result.text += r.text
+                r.text
             } _ {
                 ? type >< r.data.[str] {
                     type = Any
                 }
-                result.text += "," + r.text
+                "," + r.text
             }
         }
         result.data = "" Set "<"type">"
@@ -279,10 +279,10 @@ base me LiteLangVisitor -> {
         result = Result{}
         i @ 0 ..< context.dictionaryElement().Length {
             r = Visit(context.dictionaryElement(i)).[DicEle]
-            ? i == 0 {
+            result.text += ? -> i == 0 {
                 key = r.key
                 value = r.value
-                result.text += r.text
+                r.text
             } _ {
                 ? key >< r.key {
                     key = Any
@@ -290,7 +290,7 @@ base me LiteLangVisitor -> {
                 ? value >< r.value {
                     value = Any
                 }
-                result.text += "," + r.text
+                "," + r.text
             }
         }
         type = key + "," + value
@@ -353,10 +353,10 @@ base me LiteLangVisitor -> {
         obj = ""
         i @ 0 ..< context.id().Length {
             r = Visit(context.id(i)).[Result]
-            ? i == 0 {
-                obj += r.text
+            obj += ? -> i == 0 {
+                r.text
             } _ {
-                obj += ", " + r.text
+                ", " + r.text
             }
             me.add_id(r.text)
         }

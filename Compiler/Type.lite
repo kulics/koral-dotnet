@@ -39,10 +39,10 @@ base me LiteLangVisitor -> {
         obj = ""
         obj += "("
         i:v @ context.typeType() {
-            ? i == 0 {
-                obj += Visit(v)
+            obj += ? -> i == 0 {
+                Visit(v)
             } _ {
-                obj += ","Visit(v)""
+                ","Visit(v)""
             }
         }
         obj += ")"
@@ -94,10 +94,10 @@ base me LiteLangVisitor -> {
         out = Visit(context.typeFunctionParameterClause(1)).[str]
         ? context.t.Type == Right_Arrow {
             ? out.Length == 0 {
-                ? in.Length == 0 {
-                    obj = "Action"
+                obj = ? -> in.Length == 0 {
+                    "Action"
                 } _ {
-                    obj = "Action<"in">"
+                    "Action<"in">"
                 }
             } _ {
                 ? out.first_index_of(",") >= 0 {
@@ -106,27 +106,27 @@ base me LiteLangVisitor -> {
                 ? context.y >< nil {
                     out = ""IEnum"<"out">"
                 }
-                ? in.Length == 0 {
-                    obj = "Func<"out">"
+                obj = ? -> in.Length == 0 {
+                    "Func<"out">"
                 } _ {
-                    obj = "Func<"in", "out">"
+                    "Func<"in", "out">"
                 }
             }
         } _ {
             ? out.Length == 0 {
-                ? in.Length == 0 {
-                    obj = "Func<"Task">"
+                obj = ? -> in.Length == 0 {
+                    "Func<"Task">"
                 } _ {
-                    obj = "Func<"in", "Task">"
+                    "Func<"in", "Task">"
                 }
             } _ {
                 ? context.y >< nil {
                     out = ""IEnum"<("out")>"
                 }
-                ? in.Length == 0 {
-                    obj = "Func<"Task"<"out">>";
+                obj = ? -> in.Length == 0 {
+                    "Func<"Task"<"out">>"
                 } _ {
-                    obj = "Func<"in", "Task"<"out">>"
+                    "Func<"in", "Task"<"out">>"
                 }
             }
         }
@@ -141,52 +141,50 @@ base me LiteLangVisitor -> {
         obj = ""
         i @ 0 ..< context.typeType().Length {
             p = Visit(context.typeType(i)).[str]
-            ? i == 0 {
-                obj += p
+            obj += ? -> i == 0 {
+                p
             } _ {
-                obj += ", "p""
+                ", "p""
             }
         }
         <- obj
     }
 
     VisitTypeBasic(context TypeBasicContext -> v any) {
-        obj = ""
-        context.t.Type ? TypeI8 {
-            obj = I8
+        <- context.t.Type ? -> TypeI8 {
+            I8
         } TypeU8 {
-            obj = U8
+            U8
         } TypeI16 {
-            obj = I16
+            I16
         } TypeU16 {
-            obj = U16
+            U16
         } TypeI32 {
-            obj = I32
+            I32
         } TypeU32 {
-            obj = U32
+            U32
         } TypeI64 {
-            obj = I64
+            I64
         } TypeU64 {
-            obj = U64
+            U64
         } TypeF32 {
-            obj = F32
+            F32
         } TypeF64 {
-            obj = F64
+            F64
         } TypeChr {
-            obj = Chr
+            Chr
         } TypeStr {
-            obj = Str
+            Str
         } TypeBool {
-            obj = Bool
+            Bool
         } TypeInt {
-            obj = Int
+            Int
         } TypeNum {
-            obj = Num
+            Num
         } TypeByte {
-            obj = U8
+            U8
         } _ {
-            obj = Any
+            Any
         }
-        <- obj
     }
 }

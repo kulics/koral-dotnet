@@ -18,12 +18,11 @@ var obj = "";
 var extend = "";
 foreach (var item in context.packageSupportStatement()){
 if ( item.GetChild(0).GetType()==@typeof<IncludeStatementContext>() ) {
-if ( extend=="" ) {
-extend+=Visit(item);
-}
+extend+=run(()=>{if ( extend=="" ) {
+return Visit(item);}
 else {
-extend+=","+Visit(item);
-}
+return ","+Visit(item);}
+});
 }
 else {
 obj+=Visit(item);
@@ -67,12 +66,11 @@ if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
 obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("")).to_str();
-if ( r2!=null ) {
-obj+=(new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate).Append(" ").Append(Wrap).Append("")).to_str();
-}
+obj+=run(()=>{if ( r2!=null ) {
+return (new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate).Append(" ").Append(Wrap).Append("")).to_str();}
 else {
-obj+=Terminate+Wrap;
-}
+return Terminate+Wrap;}
+});
 return obj;
 }
 public  override  object VisitPackageControlSubStatement( PackageControlSubStatementContext context ){
@@ -182,12 +180,11 @@ r.text+=Visit(context.annotationSupport());
 r.permission="public";
 var pout = ((string)(Visit(context.parameterClauseOut())));
 if ( context.t.Type==Right_Flow ) {
-if ( pout!="void" ) {
-pout = (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
-}
+pout = run(()=>{if ( pout!="void" ) {
+return (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();}
 else {
-pout = Task;
-}
+return Task;}
+});
 r.text+=pout+" "+id.text;
 }
 else {

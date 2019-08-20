@@ -115,12 +115,11 @@ if ( context.idExprItem().Length>1 ) {
 r.text="(";
 foreach (var (i,v) in range(context.idExprItem())){
 var subID = ((Result)(Visit(v))).text;
-if ( i!=0 ) {
-r.text+=", "+subID;
-}
+r.text+=run(()=>{if ( i!=0 ) {
+return ", "+subID;}
 else {
-r.text+=subID;
-}
+return subID;}
+});
 if ( this.has_id(subID) ) {
 r.isDefine=true;
 }
@@ -185,12 +184,11 @@ public  override  object VisitAnnotationItem( AnnotationItemContext context ){
 var obj = "";
 obj+=((Result)(Visit(context.id()))).text;
 foreach (var (i,v) in range(context.annotationAssign())){
-if ( i>0 ) {
-obj+=(new System.Text.StringBuilder(",").Append(Visit(v)).Append("")).to_str();
-}
+obj+=run(()=>{if ( i>0 ) {
+return (new System.Text.StringBuilder(",").Append(Visit(v)).Append("")).to_str();}
 else {
-obj+=(new System.Text.StringBuilder("(").Append(Visit(v)).Append("")).to_str();
-}
+return (new System.Text.StringBuilder("(").Append(Visit(v)).Append("")).to_str();}
+});
 }
 if ( context.annotationAssign().Length>0 ) {
 obj+=")";
