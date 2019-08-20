@@ -18,7 +18,7 @@ foreach (var item in context.caseStatement()){
 var r = ((string)(Visit(item)));
 obj+=r+Wrap;
 }
-obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append(" ").Append(Wrap).Append("")).to_str();
+obj+=BlockRight+Wrap;
 return obj;
 }
 public  override  object VisitCaseExprStatement( CaseExprStatementContext context )
@@ -73,7 +73,7 @@ var obj = (new System.Text.StringBuilder("if ( ").Append(b.text).Append(" ) ").A
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
-obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append("").Append(Wrap).Append("")).to_str();
+obj+=BlockRight+Wrap;
 return obj;
 }
 public  override  object VisitJudgeElseIfStatement( JudgeElseIfStatementContext context )
@@ -83,7 +83,7 @@ var obj = (new System.Text.StringBuilder("else if ( ").Append(b.text).Append(" )
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
-obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append(" ").Append(Wrap).Append("")).to_str();
+obj+=BlockRight+Wrap;
 return obj;
 }
 public  override  object VisitJudgeElseStatement( JudgeElseStatementContext context )
@@ -92,7 +92,79 @@ var obj = (new System.Text.StringBuilder("else ").Append(BlockLeft+Wrap).Append(
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
+obj+=BlockRight+Wrap;
+return obj;
+}
+public  override  object VisitJudgeExpression( JudgeExpressionContext context )
+{
+var r = (new Result());
+r.data="var";
+r.text="run(()=>"+BlockLeft;
+r.text+=Visit(context.judgeExpressionIfStatement());
+foreach (var it in context.judgeExpressionElseIfStatement()){
+r.text+=Visit(it);
+}
+if ( context.judgeExpressionElseStatement()!=null ) {
+r.text+=Visit(context.judgeExpressionElseStatement());
+}
+r.text+=BlockRight+")";
+return r;
+}
+public  override  object VisitJudgeExpressionIfStatement( JudgeExpressionIfStatementContext context )
+{
+var b = ((Result)(Visit(context.expression(0))));
+var obj = (new System.Text.StringBuilder("if ( ").Append(b.text).Append(" ) ").Append(BlockLeft+Wrap).Append("")).to_str();
+this.add_current_set();
+obj+=ProcessFunctionSupport(context.functionSupportStatement());
+obj+=(new System.Text.StringBuilder("return ").Append(((Result)(Visit(context.expression(1)))).text).Append(";")).to_str();
+this.delete_current_set();
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append("").Append(Wrap).Append("")).to_str();
+return obj;
+}
+public  override  object VisitJudgeExpressionElseIfStatement( JudgeExpressionElseIfStatementContext context )
+{
+var b = ((Result)(Visit(context.expression(0))));
+var obj = (new System.Text.StringBuilder("else if ( ").Append(b.text).Append(" ) ").Append(BlockLeft+Wrap).Append("")).to_str();
+this.add_current_set();
+obj+=ProcessFunctionSupport(context.functionSupportStatement());
+obj+=(new System.Text.StringBuilder("return").Append(((Result)(Visit(context.expression(1)))).text).Append(";")).to_str();
+this.delete_current_set();
+obj+=BlockRight+Wrap;
+return obj;
+}
+public  override  object VisitJudgeExpressionElseStatement( JudgeExpressionElseStatementContext context )
+{
+var obj = (new System.Text.StringBuilder("else ").Append(BlockLeft+Wrap).Append("")).to_str();
+this.add_current_set();
+obj+=ProcessFunctionSupport(context.functionSupportStatement());
+obj+=(new System.Text.StringBuilder("return ").Append(((Result)(Visit(context.expression()))).text).Append(";")).to_str();
+this.delete_current_set();
+obj+=BlockRight+Wrap;
+return obj;
+}
+public  override  object VisitJudgeCaseExpression( JudgeCaseExpressionContext context )
+{
+var r = (new Result());
+r.text+=BlockLeft+Wrap;
+foreach (var item in context.caseExpressionStatement()){
+var temp = ((string)(Visit(item)));
+r.text+=temp+Wrap;
+}
+r.text+=BlockRight+Wrap;
+return r;
+}
+public  override  object VisitCaseExpressionStatement( CaseExpressionStatementContext context )
+{
+var obj = "";
+foreach (var item in context.caseExprStatement()){
+var r = ((string)(Visit(item)));
+this.add_current_set();
+var process = BlockLeft+ProcessFunctionSupport(context.functionSupportStatement());
+process+=(new System.Text.StringBuilder("return ").Append(((Result)(Visit(context.expression()))).text).Append(";")).to_str();
+process+=(new System.Text.StringBuilder("").Append(BlockRight).Append("break;")).to_str();
+this.delete_current_set();
+obj+=r+process;
+}
 return obj;
 }
 }

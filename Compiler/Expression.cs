@@ -133,6 +133,10 @@ else if ( context.GetChild(1).GetType()==@typeof<CallElementContext>() ) {
 var e2 = ((Result)(Visit(context.GetChild(1))));
 r.text=r.text+e2.text;
 } 
+else if ( context.GetChild(1).GetType()==@typeof<JudgeCaseExpressionContext>() ) {
+var e2 = ((Result)(Visit(context.GetChild(1))));
+r.text=(new System.Text.StringBuilder("run(()=> { switch (").Append(r.text).Append(") ").Append(e2.text).Append("})")).to_str();
+} 
 else {
 if ( context.op.Type==LiteParser.Bang ) {
 r.text=(new System.Text.StringBuilder("ref ").Append(r.text).Append("")).to_str();

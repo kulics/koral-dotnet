@@ -127,6 +127,9 @@ base me LiteLangVisitor -> {
             } context.GetChild(1).GetType() == typeof[CallElementContext]() {
                 e2 = Visit(context.GetChild(1)).[Result]
                 r.text = r.text + e2.text
+            } context.GetChild(1).GetType() == typeof[JudgeCaseExpressionContext]() {
+                e2 = Visit(context.GetChild(1)).[Result]
+                r.text = "run(()=> { switch ("r.text") " e2.text "})"
             } _ {
                 ? context.op.Type == LiteParser.Bang {
                     r.text = "ref "r.text""
