@@ -210,10 +210,10 @@ base me LiteLangVisitor -> {
     VisitAnnotationList(context AnnotationListContext -> v any) {
         obj = ""
         i:v @ context.annotationItem() {
-            ? i > 0 {
-                obj += "," Visit(v) ""
+            obj += ? -> i > 0 {
+                "," Visit(v) ""
             } _ {
-                obj += Visit(v)
+                Visit(v)
             }
         }
         <- obj

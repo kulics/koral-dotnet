@@ -13,30 +13,22 @@ Namespace -> {
 }
 
 GetControlSub(id str -> id str, type str) {
-    typ = ""
-    typ = id ? -> "get" {
-        id = " get "
-        "get"
+    <- id ? -> "get" {
+        " get ", "get"
     } "set" {
-        id = " set "
-        "set"
+        " set ", "set"
     } "_get" {
-        id = " protected get "
-        "get"
+        " protected get ", "get"
     } "_set" {
-        id = " protected set "
-        "set"
+        " protected set ", "set"
     } "add" {
-        id = " add "
-        "add"
+        " add ", "add"
     } "remove" {
-        id = " remove "
-        "remove"
+        " remove ", "remove"
     } _ {
         throw(Exception{})
-        ""
+        "", ""
     }
-    <- id, typ
 }
 
 base me LiteLangVisitor -> {

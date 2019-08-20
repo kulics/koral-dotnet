@@ -225,32 +225,24 @@ return obj;
 }
 public partial class Compiler_static{
 public static (  string id ,  string type  ) GetControlSub( string id ){
-var typ = "";
-typ = run(()=> { switch (id) {
+return run(()=> { switch (id) {
 case "get" :
-{id = " get ";
-return "get";}break;
+{return (" get ", "get");}break;
 case "set" :
-{id = " set ";
-return "set";}break;
+{return (" set ", "set");}break;
 case "_get" :
-{id = " protected get ";
-return "get";}break;
+{return (" protected get ", "get");}break;
 case "_set" :
-{id = " protected set ";
-return "set";}break;
+{return (" protected set ", "set");}break;
 case "add" :
-{id = " add ";
-return "add";}break;
+{return (" add ", "add");}break;
 case "remove" :
-{id = " remove ";
-return "remove";}break;
+{return (" remove ", "remove");}break;
 default:
 {@throw((new Exception()));
-return "";}break;
+return ("", "");}break;
 }
 });
-return (id, typ);
 }
 }
 }
