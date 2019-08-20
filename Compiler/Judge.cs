@@ -99,21 +99,21 @@ r.text+=BlockRight+")";
 return r;
 }
 public  override  object VisitJudgeExpressionIfStatement( JudgeExpressionIfStatementContext context ){
-var b = ((Result)(Visit(context.expression(0))));
+var b = ((Result)(Visit(context.expression())));
 var obj = (new System.Text.StringBuilder("if ( ").Append(b.text).Append(" ) ").Append(BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=(new System.Text.StringBuilder("return ").Append(((Result)(Visit(context.expression(1)))).text).Append(";")).to_str();
+obj+=(new System.Text.StringBuilder("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).to_str();
 this.delete_current_set();
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append("").Append(Wrap).Append("")).to_str();
 return obj;
 }
 public  override  object VisitJudgeExpressionElseIfStatement( JudgeExpressionElseIfStatementContext context ){
-var b = ((Result)(Visit(context.expression(0))));
+var b = ((Result)(Visit(context.expression())));
 var obj = (new System.Text.StringBuilder("else if ( ").Append(b.text).Append(" ) ").Append(BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=(new System.Text.StringBuilder("return ").Append(((Result)(Visit(context.expression(1)))).text).Append(";")).to_str();
+obj+=(new System.Text.StringBuilder("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).to_str();
 this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
@@ -122,7 +122,7 @@ public  override  object VisitJudgeExpressionElseStatement( JudgeExpressionElseS
 var obj = (new System.Text.StringBuilder("else ").Append(BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=(new System.Text.StringBuilder("return ").Append(((Result)(Visit(context.expression()))).text).Append(";")).to_str();
+obj+=(new System.Text.StringBuilder("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).to_str();
 this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
@@ -143,7 +143,7 @@ foreach (var item in context.caseExprStatement()){
 var r = ((string)(Visit(item)));
 this.add_current_set();
 var process = BlockLeft+ProcessFunctionSupport(context.functionSupportStatement());
-process+=(new System.Text.StringBuilder("return ").Append(((Result)(Visit(context.expression()))).text).Append(";")).to_str();
+process+=(new System.Text.StringBuilder("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).to_str();
 process+=(new System.Text.StringBuilder("").Append(BlockRight).Append("break;")).to_str();
 this.delete_current_set();
 obj+=r+process;

@@ -358,16 +358,16 @@ stringExpressionElement: expression TextLiteral;
 judgeExpression: judgeExpressionIfStatement (judgeExpressionElseIfStatement)* judgeExpressionElseStatement;
 
 // else 判断
-judgeExpressionElseStatement: Discard left_brace (functionSupportStatement)* expression right_brace;
+judgeExpressionElseStatement: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
 // if 判断
-judgeExpressionIfStatement: Question Right_Arrow expression left_brace (functionSupportStatement)* expression right_brace;
+judgeExpressionIfStatement: Question Right_Arrow expression left_brace (functionSupportStatement)* tupleExpression right_brace;
 // else if 判断
-judgeExpressionElseIfStatement: expression left_brace (functionSupportStatement)* expression right_brace;
+judgeExpressionElseIfStatement: expression left_brace (functionSupportStatement)* tupleExpression right_brace;
 
 // 条件判断表达式
 judgeCaseExpression: Question Right_Arrow (caseExpressionStatement)+;
 // 判断条件声明
-caseExpressionStatement: caseExprStatement (more caseExprStatement)* left_brace (functionSupportStatement)* expression right_brace;
+caseExpressionStatement: caseExprStatement (more caseExprStatement)* left_brace (functionSupportStatement)* tupleExpression right_brace;
 
 // 基础数据
 dataStatement:
