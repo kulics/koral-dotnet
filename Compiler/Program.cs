@@ -10,8 +10,7 @@ namespace Compiler
 public partial class Compiler_static{
 protected static string _ReadPath;
 protected static string _PathLine;
-public static void Main( string[] args )
-{
+public static void Main( string[] args ){
 var os = Environment.OSVersion.Platform;
 if ( os==PlatformID.Unix||os==PlatformID.MacOSX ) {
 _ReadPath = "./";
@@ -25,8 +24,7 @@ Compiled(_ReadPath);
 print("Completed");
 read();
 }
-public static void Compiled( string path )
-{
+public static void Compiled( string path ){
 var Files = Directory.GetFiles(path, "*.lite");
 foreach (var file in Files){
 using (var fsRead = (new FileStream(file, FileMode.Open))) { 

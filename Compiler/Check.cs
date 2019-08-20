@@ -9,8 +9,7 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class LiteLangVisitor{
-public  override  object VisitCheckStatement( CheckStatementContext context )
-{
+public  override  object VisitCheckStatement( CheckStatementContext context ){
 var obj = (new System.Text.StringBuilder("try ").Append(BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -24,8 +23,7 @@ obj+=Visit(context.checkFinallyStatment());
 }
 return obj;
 }
-public  override  object VisitCheckErrorStatement( CheckErrorStatementContext context )
-{
+public  override  object VisitCheckErrorStatement( CheckErrorStatementContext context ){
 this.add_current_set();
 var obj = "";
 var ID = ((Result)(Visit(context.id()))).text;
@@ -40,8 +38,7 @@ this.delete_current_set();
 obj+=BlockRight;
 return obj;
 }
-public  override  object VisitCheckFinallyStatment( CheckFinallyStatmentContext context )
-{
+public  override  object VisitCheckFinallyStatment( CheckFinallyStatmentContext context ){
 var obj = (new System.Text.StringBuilder("finally ").Append(Wrap+BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -49,8 +46,7 @@ this.delete_current_set();
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append("").Append(Wrap).Append("")).to_str();
 return obj;
 }
-public  override  object VisitUsingStatement( UsingStatementContext context )
-{
+public  override  object VisitUsingStatement( UsingStatementContext context ){
 var obj = "";
 var r1 = ((Result)(Visit(context.expression(0))));
 var r2 = ((Result)(Visit(context.expression(1))));

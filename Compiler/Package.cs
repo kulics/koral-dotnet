@@ -9,12 +9,10 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class LiteLangVisitor{
-public  override  object VisitIncludeStatement( IncludeStatementContext context )
-{
+public  override  object VisitIncludeStatement( IncludeStatementContext context ){
 return Visit(context.typeType());
 }
-public  override  object VisitPackageStatement( PackageStatementContext context )
-{
+public  override  object VisitPackageStatement( PackageStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var obj = "";
 var extend = "";
@@ -52,8 +50,7 @@ header+=templateContract+BlockLeft+Wrap;
 obj = header+obj;
 return obj;
 }
-public  override  object VisitPackageVariableStatement( PackageVariableStatementContext context )
-{
+public  override  object VisitPackageVariableStatement( PackageVariableStatementContext context ){
 var r1 = ((Result)(Visit(context.id())));
 var isMutable = r1.isVirtual;
 var typ = "";
@@ -78,8 +75,7 @@ obj+=Terminate+Wrap;
 }
 return obj;
 }
-public  override  object VisitPackageControlSubStatement( PackageControlSubStatementContext context )
-{
+public  override  object VisitPackageControlSubStatement( PackageControlSubStatementContext context ){
 var obj = "";
 var id = "";
 var typ = "";
@@ -102,8 +98,7 @@ this.delete_current_set();
 this.setID="";
 return (new Result(){text = obj,data = typ});
 }
-public  override  object VisitPackageNewStatement( PackageNewStatementContext context )
-{
+public  override  object VisitPackageNewStatement( PackageNewStatementContext context ){
 var text = "";
 var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
 this.selfID=Self.id;
@@ -120,16 +115,14 @@ text+=BlockRight+Wrap;
 this.selfID="";
 return text;
 }
-public  override  object VisitPackageEventStatement( PackageEventStatementContext context )
-{
+public  override  object VisitPackageEventStatement( PackageEventStatementContext context ){
 var obj = "";
 var id = ((Result)(Visit(context.id())));
 var nameSpace = Visit(context.nameSpaceItem());
 obj+=(new System.Text.StringBuilder("public event ").Append(nameSpace).Append(" ").Append(id.text+Terminate+Wrap).Append("")).to_str();
 return obj;
 }
-public  override  object VisitProtocolStatement( ProtocolStatementContext context )
-{
+public  override  object VisitProtocolStatement( ProtocolStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var obj = "";
 var interfaceProtocol = "";
@@ -153,8 +146,7 @@ obj+=interfaceProtocol;
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitProtocolControlStatement( ProtocolControlStatementContext context )
-{
+public  override  object VisitProtocolControlStatement( ProtocolControlStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var isMutable = id.isVirtual;
 var r = (new Result());
@@ -176,14 +168,12 @@ r.text+="get;set;";
 r.text+=BlockRight+Wrap;
 return r;
 }
-public  override  object VisitProtocolControlSubStatement( ProtocolControlSubStatementContext context )
-{
+public  override  object VisitProtocolControlSubStatement( ProtocolControlSubStatementContext context ){
 var obj = "";
 obj = GetControlSub(context.id().GetText()).id+Terminate;
 return obj;
 }
-public  override  object VisitProtocolFunctionStatement( ProtocolFunctionStatementContext context )
-{
+public  override  object VisitProtocolFunctionStatement( ProtocolFunctionStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var r = (new Result());
 if ( context.annotationSupport()!=null ) {

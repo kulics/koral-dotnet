@@ -8,8 +8,7 @@ using static Compiler.Compiler_static;
 
 namespace Compiler
 {
-public partial class Iterator
-{
+public partial class Iterator{
 public Result begin;
 public Result end;
 public Result step;
@@ -17,8 +16,7 @@ public string order = T ;
 public string attach = F ; 
 }
 public partial class LiteLangVisitor{
-public  override  object VisitIteratorStatement( IteratorStatementContext context )
-{
+public  override  object VisitIteratorStatement( IteratorStatementContext context ){
 var it = (new Iterator());
 if ( context.op.Text==">="||context.op.Text=="<=" ) {
 it.attach=T;
@@ -38,8 +36,7 @@ it.step=((Result)(Visit(context.expression(2))));
 }
 return it;
 }
-public  override  object VisitLoopStatement( LoopStatementContext context )
-{
+public  override  object VisitLoopStatement( LoopStatementContext context ){
 var obj = "";
 var id = ((Result)(Visit(context.id()))).text;
 var it = ((Iterator)(Visit(context.iteratorStatement())));
@@ -56,8 +53,7 @@ obj = (new System.Text.StringBuilder("if (!can_range(").Append(target).Append(")
 }
 return obj;
 }
-public  override  object VisitLoopEachStatement( LoopEachStatementContext context )
-{
+public  override  object VisitLoopEachStatement( LoopEachStatementContext context ){
 var obj = "";
 var arr = ((Result)(Visit(context.expression())));
 var target = arr.text;
@@ -68,7 +64,7 @@ id = (new System.Text.StringBuilder("(").Append(((Result)(Visit(context.id(0))))
 }
 else if ( context.id().Length==1 ) {
 id = ((Result)(Visit(context.id(0)))).text;
-} 
+}
 obj+=(new System.Text.StringBuilder("foreach (var ").Append(id).Append(" in ").Append(target).Append(")")).to_str();
 obj+=BlockLeft+Wrap;
 this.add_current_set();
@@ -81,8 +77,7 @@ obj = (new System.Text.StringBuilder("if (!can_range(").Append(target).Append(")
 }
 return obj;
 }
-public  override  object VisitLoopCaseStatement( LoopCaseStatementContext context )
-{
+public  override  object VisitLoopCaseStatement( LoopCaseStatementContext context ){
 var obj = "";
 var expr = ((Result)(Visit(context.expression())));
 obj+=(new System.Text.StringBuilder("for ( ;").Append(expr.text).Append(" ;)")).to_str();
@@ -97,8 +92,7 @@ obj = (new System.Text.StringBuilder("if (!(").Append(expr.text).Append(")) ")).
 }
 return obj;
 }
-public  override  object VisitLoopElseStatement( LoopElseStatementContext context )
-{
+public  override  object VisitLoopElseStatement( LoopElseStatementContext context ){
 var obj = BlockLeft+Wrap;
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -106,12 +100,10 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitLoopJumpStatement( LoopJumpStatementContext context )
-{
+public  override  object VisitLoopJumpStatement( LoopJumpStatementContext context ){
 return (new System.Text.StringBuilder("break ").Append(Terminate+Wrap).Append("")).to_str();
 }
-public  override  object VisitLoopContinueStatement( LoopContinueStatementContext context )
-{
+public  override  object VisitLoopContinueStatement( LoopContinueStatementContext context ){
 return (new System.Text.StringBuilder("continue ").Append(Terminate+Wrap).Append("")).to_str();
 }
 }

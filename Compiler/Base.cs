@@ -9,16 +9,14 @@ using static Compiler.Compiler_static;
 
 namespace Compiler
 {
-public partial class Result
-{
+public partial class Result{
 public object data;
 public string text;
 public string permission;
 public bool isVirtual;
 public bool isDefine;
 }
-public partial class LiteLangVisitor:LiteParserBaseVisitor<object>
-{
+public partial class LiteLangVisitor:LiteParserBaseVisitor<object>{
 public string selfID = "" ; 
 public string superID = "" ; 
 public string setID = "" ; 
@@ -30,30 +28,25 @@ public LiteLangVisitor (){this.CurrentIDSet.push((new hashset<string>()));
 }
 }
 public partial class LiteLangVisitor{
-public  virtual  bool has_id( string id )
-{
+public  virtual  bool has_id( string id ){
 return this.AllIDSet.contains(id)||this.CurrentIDSet.peek().contains(id);
 }
-public  virtual  void add_id( string id )
-{
+public  virtual  void add_id( string id ){
 this.CurrentIDSet.peek().add(id);
 }
-public  virtual  void add_current_set()
-{
+public  virtual  void add_current_set(){
 foreach (var item in CurrentIDSet.peek()){
 AllIDSet.add(item);
 }
 this.CurrentIDSet.push((new hashset<string>()));
 }
-public  virtual  void delete_current_set()
-{
+public  virtual  void delete_current_set(){
 this.AllIDSet.except_with(this.CurrentIDSet.peek());
 this.CurrentIDSet.pop();
 }
 }
 public partial class LiteLangVisitor{
-public  override  object VisitProgram( ProgramContext context )
-{
+public  override  object VisitProgram( ProgramContext context ){
 var StatementList = context.statement();
 var Result = "";
 foreach (var item in StatementList){
@@ -61,8 +54,7 @@ Result+=VisitStatement(item);
 }
 return Result;
 }
-public  override  object VisitId( IdContext context )
-{
+public  override  object VisitId( IdContext context ){
 var r = (new Result(){data = "var"});
 var first = ((Result)(Visit(context.GetChild(0))));
 r.permission=first.permission;
@@ -82,14 +74,13 @@ r.text="this";
 }
 else if ( r.text==superID ) {
 r.text="base";
-} 
+}
 else if ( r.text==setID ) {
 r.text="value";
-} 
+}
 return r;
 }
-public  override  object VisitIdItem( IdItemContext context )
-{
+public  override  object VisitIdItem( IdItemContext context ){
 var r = (new Result(){data = "var"});
 if ( context.typeBasic()!=null ) {
 r.permission="public";
@@ -100,26 +91,25 @@ else if ( context.typeAny()!=null ) {
 r.permission="public";
 r.text+=context.typeAny().GetText();
 r.isVirtual=true;
-} 
+}
 else if ( context.linqKeyword()!=null ) {
 r.permission="public";
 r.text+=Visit(context.linqKeyword());
 r.isVirtual=true;
-} 
+}
 else if ( context.op.Type==IDPublic ) {
 r.permission="public";
 r.text+=context.op.Text;
 r.isVirtual=true;
-} 
+}
 else if ( context.op.Type==IDPrivate ) {
 r.permission="protected";
 r.text+=context.op.Text;
 r.isVirtual=true;
-} 
+}
 return r;
 }
-public  override  object VisitIdExpression( IdExpressionContext context )
-{
+public  override  object VisitIdExpression( IdExpressionContext context ){
 var r = (new Result(){data = "var"});
 if ( context.idExprItem().Length>1 ) {
 r.text="(";
@@ -151,12 +141,10 @@ this.add_id(r.text);
 }
 return r;
 }
-public  override  object VisitIdExprItem( IdExprItemContext context )
-{
+public  override  object VisitIdExprItem( IdExprItemContext context ){
 return Visit(context.GetChild(0));
 }
-public  override  object VisitBoolExpr( BoolExprContext context )
-{
+public  override  object VisitBoolExpr( BoolExprContext context ){
 var r = (new Result());
 if ( context.t.Type==TrueLiteral ) {
 r.data=Bool;
@@ -165,15 +153,13 @@ r.text=T;
 else if ( context.t.Type==FalseLiteral ) {
 r.data=Bool;
 r.text=F;
-} 
+}
 return r;
 }
-public  override  object VisitAnnotationSupport( AnnotationSupportContext context )
-{
+public  override  object VisitAnnotationSupport( AnnotationSupportContext context ){
 return ((string)(Visit(context.annotation())));
 }
-public  override  object VisitAnnotation( AnnotationContext context )
-{
+public  override  object VisitAnnotation( AnnotationContext context ){
 var obj = "";
 var id = "";
 if ( context.id()!=null ) {
@@ -183,8 +169,7 @@ var r = ((string)(Visit(context.annotationList())));
 obj+=(new System.Text.StringBuilder("[").Append(id).Append("").Append(r).Append("]")).to_str();
 return obj;
 }
-public  override  object VisitAnnotationList( AnnotationListContext context )
-{
+public  override  object VisitAnnotationList( AnnotationListContext context ){
 var obj = "";
 foreach (var (i,v) in range(context.annotationItem())){
 if ( i>0 ) {
@@ -196,8 +181,7 @@ obj+=Visit(v);
 }
 return obj;
 }
-public  override  object VisitAnnotationItem( AnnotationItemContext context )
-{
+public  override  object VisitAnnotationItem( AnnotationItemContext context ){
 var obj = "";
 obj+=((Result)(Visit(context.id()))).text;
 foreach (var (i,v) in range(context.annotationAssign())){
@@ -213,8 +197,7 @@ obj+=")";
 }
 return obj;
 }
-public  override  object VisitAnnotationAssign( AnnotationAssignContext context )
-{
+public  override  object VisitAnnotationAssign( AnnotationAssignContext context ){
 var obj = "";
 var id = "";
 if ( context.id()!=null ) {

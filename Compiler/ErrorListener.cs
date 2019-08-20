@@ -8,13 +8,11 @@ using static Compiler.Compiler_static;
 
 namespace Compiler
 {
-public partial class ErrorListener:BaseErrorListener
-{
+public partial class ErrorListener:BaseErrorListener{
 public string FileDir;
 }
 public partial class ErrorListener{
-public  override  void SyntaxError( IRecognizer recognizer ,  IToken offendingSymbol ,  int line ,  int charPositionInLine ,  string msg ,  RecognitionException e )
-{
+public  override  void SyntaxError( IRecognizer recognizer ,  IToken offendingSymbol ,  int line ,  int charPositionInLine ,  string msg ,  RecognitionException e ){
 base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e);
 print("------Syntax Error------");
 print((new System.Text.StringBuilder("File: ").Append(this.FileDir).Append("")).to_str());

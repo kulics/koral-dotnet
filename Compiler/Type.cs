@@ -9,25 +9,22 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class LiteLangVisitor{
-public  override  object VisitTypeType( TypeTypeContext context )
-{
+public  override  object VisitTypeType( TypeTypeContext context ){
 var obj = "";
 obj = ((string)(Visit(context.GetChild(0))));
 return obj;
 }
-public  override  object VisitTypeReference( TypeReferenceContext context )
-{
+public  override  object VisitTypeReference( TypeReferenceContext context ){
 var obj = "ref ";
 if ( context.typeNullable()!=null ) {
 obj+=Visit(context.typeNullable());
 }
 else if ( context.typeNotNull()!=null ) {
 obj+=Visit(context.typeNotNull());
-} 
+}
 return obj;
 }
-public  override  object VisitTypeNullable( TypeNullableContext context )
-{
+public  override  object VisitTypeNullable( TypeNullableContext context ){
 var obj = "";
 obj = ((string)(Visit(context.typeNotNull())));
 if ( context.typeNotNull().GetChild(0).@is<TypeBasicContext>()&&context.typeNotNull().GetChild(0).GetText()!="any"&&context.typeNotNull().GetChild(0).GetText()!="str" ) {
@@ -35,8 +32,7 @@ obj+="?";
 }
 return obj;
 }
-public  override  object VisitTypeTuple( TypeTupleContext context )
-{
+public  override  object VisitTypeTuple( TypeTupleContext context ){
 var obj = "";
 obj+="(";
 foreach (var (i,v) in range(context.typeType())){
@@ -50,38 +46,32 @@ obj+=(new System.Text.StringBuilder(",").Append(Visit(v)).Append("")).to_str();
 obj+=")";
 return obj;
 }
-public  override  object VisitTypeArray( TypeArrayContext context )
-{
+public  override  object VisitTypeArray( TypeArrayContext context ){
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Visit(context.typeType())).Append("[]")).to_str();
 return obj;
 }
-public  override  object VisitTypeList( TypeListContext context )
-{
+public  override  object VisitTypeList( TypeListContext context ){
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Lst).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
 return obj;
 }
-public  override  object VisitTypeSet( TypeSetContext context )
-{
+public  override  object VisitTypeSet( TypeSetContext context ){
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Set).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
 return obj;
 }
-public  override  object VisitTypeDictionary( TypeDictionaryContext context )
-{
+public  override  object VisitTypeDictionary( TypeDictionaryContext context ){
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Dic).Append("<").Append(Visit(context.typeType(0))).Append(",").Append(Visit(context.typeType(1))).Append(">")).to_str();
 return obj;
 }
-public  override  object VisitTypeStack( TypeStackContext context )
-{
+public  override  object VisitTypeStack( TypeStackContext context ){
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Stk).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
 return obj;
 }
-public  override  object VisitTypePackage( TypePackageContext context )
-{
+public  override  object VisitTypePackage( TypePackageContext context ){
 var obj = "";
 obj+=Visit(context.nameSpaceItem());
 if ( context.templateCall()!=null ) {
@@ -89,8 +79,7 @@ obj+=Visit(context.templateCall());
 }
 return obj;
 }
-public  override  object VisitTypeFunction( TypeFunctionContext context )
-{
+public  override  object VisitTypeFunction( TypeFunctionContext context ){
 var obj = "";
 var @in = ((string)(Visit(context.typeFunctionParameterClause(0))));
 var @out = ((string)(Visit(context.typeFunctionParameterClause(1))));
@@ -141,12 +130,10 @@ obj = (new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(Ta
 }
 return obj;
 }
-public  override  object VisitTypeAny( TypeAnyContext context )
-{
+public  override  object VisitTypeAny( TypeAnyContext context ){
 return Any;
 }
-public  override  object VisitTypeFunctionParameterClause( TypeFunctionParameterClauseContext context )
-{
+public  override  object VisitTypeFunctionParameterClause( TypeFunctionParameterClauseContext context ){
 var obj = "";
 foreach (var i in range(0,context.typeType().Length,1,true,false)){
 var p = ((string)(Visit(context.typeType(i))));
@@ -159,8 +146,7 @@ obj+=(new System.Text.StringBuilder(", ").Append(p).Append("")).to_str();
 }
 return obj;
 }
-public  override  object VisitTypeBasic( TypeBasicContext context )
-{
+public  override  object VisitTypeBasic( TypeBasicContext context ){
 var obj = "";
 switch (context.t.Type) {
 case TypeI8 :
@@ -214,7 +200,7 @@ case TypeByte :
 default:
 { obj = Any;
 }break;
-} 
+}
 return obj;
 }
 }

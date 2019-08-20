@@ -9,8 +9,7 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class LiteLangVisitor{
-public  override  object VisitImplementStatement( ImplementStatementContext context )
-{
+public  override  object VisitImplementStatement( ImplementStatementContext context ){
 var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
 this.selfID=Self.id;
 var isVirtual = "";
@@ -27,8 +26,7 @@ obj+=BlockRight+Wrap;
 this.selfID="";
 return obj;
 }
-public  override  object VisitImplementFunctionStatement( ImplementFunctionStatementContext context )
-{
+public  override  object VisitImplementFunctionStatement( ImplementFunctionStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var isVirtual = "";
 if ( id.isVirtual ) {
@@ -67,8 +65,7 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitImplementControlStatement( ImplementControlStatementContext context )
-{
+public  override  object VisitImplementControlStatement( ImplementControlStatementContext context ){
 var r1 = ((Result)(Visit(context.id())));
 var isMutable = true;
 var isVirtual = "";
@@ -95,8 +92,7 @@ obj+=temp.text;
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitOverrideStatement( OverrideStatementContext context )
-{
+public  override  object VisitOverrideStatement( OverrideStatementContext context ){
 var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
 this.selfID=Self.id;
 this.superID=((Result)(Visit(context.id()))).text;
@@ -110,8 +106,7 @@ this.selfID="";
 this.superID="";
 return obj;
 }
-public  override  object VisitOverrideFunctionStatement( OverrideFunctionStatementContext context )
-{
+public  override  object VisitOverrideFunctionStatement( OverrideFunctionStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var isVirtual = " override ";
 var obj = "";
@@ -152,8 +147,7 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitOverrideControlStatement( OverrideControlStatementContext context )
-{
+public  override  object VisitOverrideControlStatement( OverrideControlStatementContext context ){
 var r1 = ((Result)(Visit(context.id())));
 var isMutable = true;
 var isVirtual = " override ";
