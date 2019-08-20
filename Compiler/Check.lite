@@ -13,7 +13,7 @@ base me LiteLangVisitor -> {
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
-        obj += ""BlockRight+Wrap""
+        obj += ""BlockRight""
         item @ context.checkErrorStatement() {
             obj += ""Visit(item)"" Wrap""
         }
@@ -61,6 +61,43 @@ base me LiteLangVisitor -> {
         } _ {
             "var "r1.text" = "r2.text""
         }
+        <- obj
+    }
+
+    VisitCheckExpression(context CheckExpressionContext -> v any) {
+        obj = "run(()=> { "Wrap"try "BlockLeft+Wrap""
+        me.add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        obj += "return " Visit(context.tupleExpression()).[Result].text ";"
+        me.delete_current_set()
+        obj += ""BlockRight+Wrap""
+        item @ context.checkErrorExpression() {
+            obj += ""Visit(item)"" Wrap""
+        }
+
+        ? context.checkFinallyStatment() >< nil {
+            obj += Visit(context.checkFinallyStatment())
+        }
+        obj += "})"
+        <- Result{ data="var"; text=obj}
+    }
+
+    VisitCheckErrorExpression(context CheckErrorExpressionContext -> v any) {
+        me.add_current_set()
+        obj = ""
+        ID = Visit(context.id()).[Result].text
+        me.add_id(ID)
+
+        Type = "Exception"
+        ? context.typeType() >< nil {
+            Type = Visit(context.typeType()).[str]
+        }
+
+        obj += "catch( "Type" "ID" )"+Wrap+BlockLeft+Wrap
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        obj += "return " Visit(context.tupleExpression()).[Result].text ";"
+        me.delete_current_set()
+        obj += BlockRight
         <- obj
     }
 }

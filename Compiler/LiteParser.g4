@@ -242,6 +242,7 @@ linq // 联合查询
 | judgeExpression // 判断表达式
 | loopExpression // 循环表达式
 | loopEachExpression // 集合循环表达式
+| checkExpression // 检查表达式
 | expression judgeCaseExpression // 条件判断表达式
 | expression op=Bang // 引用判断
 | expression op=Question // 可空判断
@@ -376,7 +377,12 @@ loopExpression: id At Right_Arrow iteratorStatement left_brace (functionSupportS
 loopEachExpression: (id Colon)? id At Right_Arrow expression left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression?;
 // else 判断
 loopElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
-
+// 检查
+checkExpression: 
+Bang Right_Arrow left_brace (functionSupportStatement)* tupleExpression right_brace (checkErrorExpression)* checkFinallyStatment
+|Bang Right_Arrow left_brace (functionSupportStatement)* tupleExpression right_brace (checkErrorExpression)+ ;
+// 错误处理
+checkErrorExpression: (id|id typeType) left_brace (functionSupportStatement)* tupleExpression right_brace;
 // 基础数据
 dataStatement:
 floatExpr
