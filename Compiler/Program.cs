@@ -47,8 +47,7 @@ var Result = Visitor.Visit(AST);
 var ByteResult = Encoding.UTF8.GetBytes(Result.to_str());
 using (var fsWrite = (new FileStream(_ReadPath+file.sub_str(0, file.Length-5)+".cs", FileMode.Create))) { 
 fsWrite.Write(ByteResult, 0, ByteResult.Length);
-}}
-catch( Exception err )
+}}catch( Exception err )
 {
 print(err);
 return;
