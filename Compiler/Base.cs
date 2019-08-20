@@ -171,12 +171,11 @@ return obj;
 public  override  object VisitAnnotationList( AnnotationListContext context ){
 var obj = "";
 foreach (var (i,v) in range(context.annotationItem())){
-if ( i>0 ) {
-obj+=(new System.Text.StringBuilder(",").Append(Visit(v)).Append("")).to_str();
-}
+obj+=run(()=>{if ( i>0 ) {
+return (new System.Text.StringBuilder(",").Append(Visit(v)).Append("")).to_str();}
 else {
-obj+=Visit(v);
-}
+return Visit(v);}
+});
 }
 return obj;
 }

@@ -120,4 +120,44 @@ base me LiteLangVisitor -> {
     VisitLoopContinueStatement(context LoopContinueStatementContext -> v any) {
         <- "continue "Terminate+Wrap""
     }
+
+    VisitLoopEachExpression(context LoopEachExpressionContext -> v any) {
+        obj = ""
+        arr = Visit(context.expression()).[Result]
+        target = arr.text
+        id = "ea"
+        ? context.id().Length == 2 {
+            target = "range("target")"
+            id = "("Visit(context.id(0)).[Result].text","Visit(context.id(1)).[Result].text")"
+        } context.id().Length == 1 {
+            id = Visit(context.id(0)).[Result].text
+        }
+
+        obj += "runloop("target", ("id")=>"
+        obj += BlockLeft+Wrap
+        me.add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        obj += "return " Visit(context.tupleExpression()).[Result].text ";"
+        me.delete_current_set()
+        obj += BlockRight
+        
+        ? context.loopElseExpression() >< nil {
+            elseContent = Visit(context.loopElseExpression()).[str]
+            obj += ", ()=> " elseContent ")"
+        } _ {
+            obj += ")"
+        }
+        
+        <- Result{ data = "var"; text = obj }
+    }
+
+    VisitLoopElseExpression(context LoopElseExpressionContext -> v any) {
+        obj = BlockLeft+Wrap
+        me.add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        obj += "return " Visit(context.tupleExpression()).[Result].text ";"
+        me.delete_current_set()
+        obj += BlockRight
+        <- obj
+    }
 }

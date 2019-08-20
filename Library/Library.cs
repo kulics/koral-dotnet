@@ -41,6 +41,26 @@ namespace Library {
 
         public static T run<T>(Func<T> rn) => rn();
 
+        public static list<T2> runloop<T1, T2>(IEnumerable<T1> source, Func<T1, T2> fn) {
+            var temp = new list<T2>();
+            foreach (var item in source) {
+                temp.add(fn(item));
+            }
+            return temp;
+        }
+
+        public static list<T2> runloop<T1, T2>(IEnumerable<T1> source, Func<T1, T2> fn, Func<list<T2>> elseFn) {
+            if (can_range(source)) {
+                var temp = new list<T2>();
+                foreach (var item in source) {
+                    temp.add(fn(item));
+                }
+                return temp;
+            } else {
+                return elseFn();
+            }
+        }
+
         public static Task<T> go<T>(Func<Task<T>> fn) => Task.Run(fn);
 
         public static Task go(Func<Task> fn) => fn();
