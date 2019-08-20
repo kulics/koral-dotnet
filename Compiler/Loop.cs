@@ -106,6 +106,27 @@ return (new System.Text.StringBuilder("break ").Append(Terminate+Wrap).Append(""
 public  override  object VisitLoopContinueStatement( LoopContinueStatementContext context ){
 return (new System.Text.StringBuilder("continue ").Append(Terminate+Wrap).Append("")).to_str();
 }
+public  override  object VisitLoopExpression( LoopExpressionContext context ){
+var obj = "";
+var id = ((Result)(Visit(context.id()))).text;
+var it = ((Iterator)(Visit(context.iteratorStatement())));
+var target = (new System.Text.StringBuilder("range(").Append(it.begin.text).Append(",").Append(it.end.text).Append(",").Append(it.step.text).Append(",").Append(it.order).Append(",").Append(it.attach).Append(")")).to_str();
+obj+=(new System.Text.StringBuilder("runloop(").Append(target).Append(", (").Append(id).Append(")=>")).to_str();
+obj+=BlockLeft+Wrap;
+this.add_current_set();
+obj+=ProcessFunctionSupport(context.functionSupportStatement());
+obj+=(new System.Text.StringBuilder("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).to_str();
+this.delete_current_set();
+obj+=BlockRight;
+if ( context.loopElseExpression()!=null ) {
+var elseContent = ((string)(Visit(context.loopElseExpression())));
+obj+=(new System.Text.StringBuilder(", ()=> ").Append(elseContent).Append(")")).to_str();
+}
+else {
+obj+=")";
+}
+return (new Result(){data = "var",text = obj});
+}
 public  override  object VisitLoopEachExpression( LoopEachExpressionContext context ){
 var obj = "";
 var arr = ((Result)(Visit(context.expression())));

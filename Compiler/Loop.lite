@@ -121,6 +121,32 @@ base me LiteLangVisitor -> {
         <- "continue "Terminate+Wrap""
     }
 
+    VisitLoopExpression(context LoopExpressionContext -> v any) {
+        obj = ""
+        id = Visit(context.id()).[Result].text
+        
+        it = Visit(context.iteratorStatement()).[Iterator]
+        target = "range("it.begin.text","it.end.text","it.step.text","it.order","it.attach")"
+
+        obj += "runloop("target", ("id")=>"
+
+        obj += BlockLeft+Wrap
+        me.add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        obj += "return " Visit(context.tupleExpression()).[Result].text ";"
+        me.delete_current_set()
+        obj += BlockRight
+
+        ? context.loopElseExpression() >< nil {
+            elseContent = Visit(context.loopElseExpression()).[str]
+            obj += ", ()=> " elseContent ")"
+        } _ {
+            obj += ")"
+        }
+        
+        <- Result{ data = "var"; text = obj }
+    }
+
     VisitLoopEachExpression(context LoopEachExpressionContext -> v any) {
         obj = ""
         arr = Visit(context.expression()).[Result]
