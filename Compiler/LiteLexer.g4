@@ -37,6 +37,9 @@ Dot: '.';
 
 Comma: ',';
 
+Cube: '<>';
+
+Equal_Equal_Arrow: '==>';
 Equal_Arrow: '=>';
 
 Right_Arrow: '->';

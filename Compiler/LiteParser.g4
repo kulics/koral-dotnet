@@ -30,27 +30,27 @@ namespaceVariableStatement
 ;
 
 // 类型别名
-typeAliasStatement: id Equal_Arrow typeType end;
+typeAliasStatement: id Equal_Equal_Arrow typeType end;
 // 类型重定义
-typeRedefineStatement: id Right_Arrow typeType end;
+typeRedefineStatement: id Equal_Arrow typeType end;
 
 // 枚举
-enumStatement: (annotationSupport)? id Right_Arrow New_Line* typeType Colon left_brace enumSupportStatement* right_brace end;
+enumStatement: (annotationSupport)? id Equal_Arrow New_Line* typeType Colon left_brace enumSupportStatement* right_brace end;
 
 enumSupportStatement: id (Equal (add)? integerExpr)? end;
 // 命名空间变量
 namespaceVariableStatement: (annotationSupport)? id (Equal expression| typeType (Equal expression)?) end;
 // 命名空间控制
-namespaceControlStatement: (annotationSupport)? id left_paren expression? right_paren typeType
+namespaceControlStatement: (annotationSupport)? id Colon left_paren expression? right_paren typeType
 (left_brace (packageControlSubStatement)+ right_brace)? end;
 // 命名空间常量
 namespaceConstantStatement: (annotationSupport)? id (typeType)? Colon expression end;
 // 命名空间函数
-namespaceFunctionStatement: (annotationSupport)? id (templateDefine)? left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
+namespaceFunctionStatement: (annotationSupport)? id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 定义包
-packageStatement: (annotationSupport)? id (templateDefine)? Right_Arrow left_brace (packageSupportStatement)* right_brace end;
+packageStatement: (annotationSupport)? id (templateDefine)? Equal_Arrow Cube left_brace (packageSupportStatement)* right_brace end;
 
 // 包支持的语句
 packageSupportStatement:
@@ -74,34 +74,33 @@ packageControlSubStatement: id (left_paren id right_paren)? left_brace (function
 packageEventStatement: id left_brack Question right_brack nameSpaceItem end;
 
 // 实现
-implementStatement: parameterClauseSelf Right_Arrow (typeType)? New_Line* left_brace (implementSupportStatement)* right_brace end;
+implementStatement: parameterClauseSelf Xor (typeType)? New_Line* left_brace (implementSupportStatement)* right_brace end;
 
 // 实现支持的语句
 implementSupportStatement: implementFunctionStatement | implementControlStatement | New_Line;
 
 // 函数
-implementFunctionStatement: (annotationSupport)? id (templateDefine)? left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
+implementFunctionStatement: (annotationSupport)? id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义控制
-implementControlStatement: (annotationSupport)? id left_paren expression? right_paren 
+implementControlStatement: (annotationSupport)? id Colon left_paren expression? right_paren 
  typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
 
 // 重载
-overrideStatement: id parameterClauseSelf 
- Right_Arrow New_Line* left_brace (overrideSupportStatement)* right_brace end;
+overrideStatement: id parameterClauseSelf Xor New_Line* left_brace (overrideSupportStatement)* right_brace end;
 
 // 实现支持的语句
 overrideSupportStatement: overrideFunctionStatement | overrideControlStatement | New_Line;
 
 // 函数
-overrideFunctionStatement: (annotationSupport)? (n='_')? id (templateDefine)? left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
+overrideFunctionStatement: (annotationSupport)? (n='_')? id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义控制
-overrideControlStatement: (annotationSupport)? (n='_')? id left_paren expression? right_paren
+overrideControlStatement: (annotationSupport)? (n='_')? id Colon left_paren expression? right_paren
  typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
 
 // 协议
-protocolStatement: (annotationSupport)? id (templateDefine)? Left_Arrow left_brace (protocolSupportStatement)* right_brace end;
+protocolStatement: (annotationSupport)? id (templateDefine)? Equal_Arrow Xor left_brace (protocolSupportStatement)* right_brace end;
 // 协议支持的语句
 protocolSupportStatement:
 includeStatement
@@ -119,7 +118,7 @@ protocolFunctionStatement: (annotationSupport)? id (templateDefine)? left_paren 
 t=(Right_Arrow|Right_Flow) y=At? New_Line* parameterClauseOut right_paren end;
 
 // 函数
-functionStatement: id (templateDefine)? left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
+functionStatement: id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
  parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 返回
 returnStatement: Left_Arrow (tupleExpression)? end;
