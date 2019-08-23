@@ -50,7 +50,7 @@ namespaceFunctionStatement: (annotationSupport)? id (templateDefine)? Colon left
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 定义包
-packageStatement: (annotationSupport)? id (templateDefine)? Equal_Arrow Cube left_brace (packageSupportStatement)* right_brace end;
+packageStatement: (annotationSupport)? id (templateDefine)? Equal_Arrow Coin left_brace (packageSupportStatement)* right_brace end;
 
 // 包支持的语句
 packageSupportStatement:

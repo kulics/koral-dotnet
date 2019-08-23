@@ -37,8 +37,6 @@ Dot: '.';
 
 Comma: ',';
 
-Cube: '<>';
-
 Equal_Equal_Arrow: '==>';
 Equal_Arrow: '=>';
 
@@ -70,6 +68,8 @@ Question: '?';
 At: '@';
 
 Bang: '!';
+
+Coin: '$';
 
 Wave: '~';
 
