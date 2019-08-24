@@ -13,7 +13,9 @@ base me LiteLangVisitor -> {
     }
 
     VisitPackageStatement(context PackageStatementContext -> v any) {
-        id = Visit(context.id()).[Result]
+        id = Visit(context.id(0)).[Result]
+        Self = Visit(context.id(1)).[Result]
+        me.selfID = Self.text
         obj = ""
         extend = ""
 
@@ -27,6 +29,15 @@ base me LiteLangVisitor -> {
             } _ {
                 obj += Visit(item)
             }
+        }
+        item @ context.packageImplementStatement() {
+            r = Visit(item).[Result]
+            extend += ? -> extend == "" {
+                r.data
+            } _ {
+                "," + r.data
+            }
+            obj += r.text
         }
         obj += BlockRight + Wrap
         header = ""
@@ -50,6 +61,7 @@ base me LiteLangVisitor -> {
 
         header += templateContract + BlockLeft + Wrap
         obj = header + obj
+        me.selfID = ""
         <- obj
     }
 
@@ -220,5 +232,14 @@ base me LiteLangVisitor -> {
         }
         r.text += Visit(context.parameterClauseIn()) + templateContract + Terminate + Wrap
         <- r
+    }
+
+    VisitPackageImplementStatement(context PackageImplementStatementContext -> v any) {
+        obj = ""
+        extends = Visit(context.typeType()).[str]
+        item @ context.implementSupportStatement() {
+            obj += Visit(item)
+        }
+        <- Result{ text = obj; data = extends }
     }
 }
