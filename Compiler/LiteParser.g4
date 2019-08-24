@@ -30,12 +30,12 @@ namespaceVariableStatement
 ;
 
 // 类型别名
-typeAliasStatement: id Equal_Equal_Arrow typeType end;
+typeAliasStatement: id Equal_Arrow typeType end;
 // 类型重定义
-typeRedefineStatement: id Equal_Arrow typeType end;
+typeRedefineStatement: id Colon_Equal typeType end;
 
 // 枚举
-enumStatement: (annotationSupport)? id Equal_Arrow New_Line* typeType Colon left_brace enumSupportStatement* right_brace end;
+enumStatement: (annotationSupport)? id Colon_Equal New_Line* typeType Colon left_brace enumSupportStatement* right_brace end;
 
 enumSupportStatement: id (Equal (add)? integerExpr)? end;
 // 命名空间变量
@@ -50,7 +50,7 @@ namespaceFunctionStatement: (annotationSupport)? id (templateDefine)? Colon left
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 定义包
-packageStatement: (annotationSupport)? id (templateDefine)? Equal_Arrow Coin left_brace (packageSupportStatement)* right_brace end;
+packageStatement: (annotationSupport)? id (templateDefine)? Colon_Equal Coin left_brace (packageSupportStatement)* right_brace end;
 
 // 包支持的语句
 packageSupportStatement:
@@ -74,7 +74,7 @@ packageControlSubStatement: id (left_paren id right_paren)? left_brace (function
 packageEventStatement: id left_brack Question right_brack nameSpaceItem end;
 
 // 实现
-implementStatement: parameterClauseSelf Xor (typeType)? New_Line* left_brace (implementSupportStatement)* right_brace end;
+implementStatement: parameterClauseSelf Cent (typeType)? New_Line* left_brace (implementSupportStatement)* right_brace end;
 
 // 实现支持的语句
 implementSupportStatement: implementFunctionStatement | implementControlStatement | New_Line;
@@ -87,7 +87,7 @@ implementControlStatement: (annotationSupport)? id Colon left_paren expression? 
  typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
 
 // 重载
-overrideStatement: id parameterClauseSelf Xor New_Line* left_brace (overrideSupportStatement)* right_brace end;
+overrideStatement: id parameterClauseSelf Cent New_Line* left_brace (overrideSupportStatement)* right_brace end;
 
 // 实现支持的语句
 overrideSupportStatement: overrideFunctionStatement | overrideControlStatement | New_Line;
@@ -100,7 +100,7 @@ overrideControlStatement: (annotationSupport)? (n='_')? id Colon left_paren expr
  typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
 
 // 协议
-protocolStatement: (annotationSupport)? id (templateDefine)? Equal_Arrow Xor left_brace (protocolSupportStatement)* right_brace end;
+protocolStatement: (annotationSupport)? id (templateDefine)? Colon_Equal Cent left_brace (protocolSupportStatement)* right_brace end;
 // 协议支持的语句
 protocolSupportStatement:
 includeStatement

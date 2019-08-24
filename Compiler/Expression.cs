@@ -49,6 +49,9 @@ var obj = r1.text+Visit(context.assign())+r2.text+Terminate+Wrap;
 return obj;
 }
 public  override  object VisitAssign( AssignContext context ){
+if ( context.op.Type==Mod_Equal ) {
+return "%=";
+}
 return context.op.Text;
 }
 public  override  object VisitExpressionStatement( ExpressionStatementContext context ){
@@ -92,7 +95,7 @@ case "**" :
 case "//" :
 { op = "root";
 }break;
-case "%%" :
+case "\\\\" :
 { op = "log";
 }break;
 }
@@ -171,13 +174,13 @@ public  override  object VisitBitwiseRightShift( BitwiseRightShiftContext contex
 return ">>";
 }
 public  override  object VisitJudge( JudgeContext context ){
-if ( context.op.Text=="><" ) {
+if ( context.op.Type==Not_Equal ) {
 return "!=";
 }
-else if ( context.op.Text=="&" ) {
+else if ( context.op.Type==And ) {
 return "&&";
 }
-else if ( context.op.Text=="|" ) {
+else if ( context.op.Type==Or ) {
 return "||";
 }
 return context.op.Text;
@@ -186,6 +189,9 @@ public  override  object VisitAdd( AddContext context ){
 return context.op.Text;
 }
 public  override  object VisitMul( MulContext context ){
+if ( context.op.Type==Mod ) {
+return "%";
+}
 return context.op.Text;
 }
 public  override  object VisitPow( PowContext context ){

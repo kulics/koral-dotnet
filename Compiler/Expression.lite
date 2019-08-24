@@ -63,6 +63,9 @@ base me LiteLangVisitor -> {
     }
 
     VisitAssign(context AssignContext -> v any) {
+        ? context.op.Type == Mod_Equal {
+            <- "%="
+        }
         <- context.op.Text
     }
 
@@ -105,7 +108,7 @@ base me LiteLangVisitor -> {
                     op = "pow"
                 } "//" {
                     op = "root"
-                } "%%" {
+                } "\\\\" {
                     op = "log"
                 }
                 r.text = ""op"("e1.text", "e2.[Result].text")"
@@ -184,11 +187,11 @@ base me LiteLangVisitor -> {
     }
 
     VisitJudge(context JudgeContext -> v any) {
-        ? context.op.Text == "><" {
+        ? context.op.Type == Not_Equal {
             <- "!="
-        } context.op.Text == "&" {
+        } context.op.Type == And {
             <- "&&"
-        } context.op.Text == "|" {
+        } context.op.Type == Or {
             <- "||"
         }
         <- context.op.Text
@@ -199,6 +202,9 @@ base me LiteLangVisitor -> {
     }
 
     VisitMul(context MulContext -> v any) {
+        ? context.op.Type == Mod {
+            <- "%"
+        }
         <- context.op.Text
     }
 

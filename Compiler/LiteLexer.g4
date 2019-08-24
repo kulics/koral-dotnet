@@ -17,13 +17,13 @@ LinqDescending: 'descending';
 
 Pow:    '**';
 Root:   '//';
-Log:    '%%';
+Log:    '\\\\';
 
 Add_Equal:         '+=';
 Sub_Equal:         '-=';
 Mul_Equal:         '*=';
 Div_Equal:         '/=';
-Mod_Equal:         '%=';
+Mod_Equal:        '\\=';
 Colon_Equal:       ':=';
 
 Equal_Equal:        '==';
@@ -37,7 +37,6 @@ Dot: '.';
 
 Comma: ',';
 
-Equal_Equal_Arrow: '==>';
 Equal_Arrow: '=>';
 
 Right_Arrow: '->';
@@ -70,6 +69,7 @@ At: '@';
 Bang: '!';
 
 Coin: '$';
+Cent: '%';
 
 Wave: '~';
 
@@ -77,8 +77,7 @@ Add:    '+';
 Sub:    '-';
 Mul:    '*';
 Div:    '/';
-Mod:    '%';
-Slash:  '\\';
+Mod:   '\\';
 
 And:    '&';
 Or:     '|';
