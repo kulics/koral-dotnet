@@ -7,7 +7,7 @@
     Compiler_static. "Compiler" 
 }
 
-Parameter -> {
+Parameter := $ {
     id str
     type str
     value str
@@ -15,8 +15,8 @@ Parameter -> {
     permission str
 }
 
-me LiteLangVisitor -> {
-    ProcessFunctionSupport(items [:]FunctionSupportStatementContext -> v str) {
+me LiteLangVisitor % {
+    ProcessFunctionSupport : (items [:]FunctionSupportStatementContext -> v str) {
         obj = ""
         content = ""
         lazy = []str{}
@@ -38,8 +38,8 @@ me LiteLangVisitor -> {
     }
 }
 
-base me LiteLangVisitor -> {
-    VisitFunctionStatement(context FunctionStatementContext -> v any) {
+base me LiteLangVisitor % {
+    VisitFunctionStatement : (context FunctionStatementContext -> v any) {
         id = Visit(context.id()).[Result]
         obj = ""
         # 异步 #
@@ -74,7 +74,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitReturnStatement(context ReturnStatementContext -> v any) {
+    VisitReturnStatement : (context ReturnStatementContext -> v any) {
         ? context.tupleExpression() >< nil {
             r = Visit(context.tupleExpression()).[Result]
             <- "return " + r.text + Terminate + Wrap
@@ -82,16 +82,16 @@ base me LiteLangVisitor -> {
         <- "return"Terminate""Wrap""
     }
 
-    VisitYieldReturnStatement(context YieldReturnStatementContext -> v any) {
+    VisitYieldReturnStatement : (context YieldReturnStatementContext -> v any) {
         r = Visit(context.tupleExpression()).[Result]
         <- "yield return " + r.text + Terminate + Wrap
     }
 
-    VisitYieldBreakStatement(context YieldBreakStatementContext -> v any) {
+    VisitYieldBreakStatement : (context YieldBreakStatementContext -> v any) {
         <- "yield break"Terminate""Wrap""
     }
 
-    VisitTuple(context TupleContext -> v any) {
+    VisitTuple : (context TupleContext -> v any) {
         obj = "("
         i @ 0 ..< context.expression().Length {
             r = Visit(context.expression(i)).[Result]
@@ -108,7 +108,7 @@ base me LiteLangVisitor -> {
         }
     }
 
-    VisitTupleExpression(context TupleExpressionContext -> v any) {
+    VisitTupleExpression : (context TupleExpressionContext -> v any) {
         obj = ""
         i @ 0 ..< context.expression().Length {
             r = Visit(context.expression(i)).[Result]
@@ -127,7 +127,7 @@ base me LiteLangVisitor -> {
         }
     }
 
-    VisitParameterClauseIn(context ParameterClauseInContext -> v any) {
+    VisitParameterClauseIn : (context ParameterClauseInContext -> v any) {
         obj = "("
         temp = []str{}
         i @ context.parameter().Length-1 ..>= 0 {
@@ -147,7 +147,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitParameterClauseOut(context ParameterClauseOutContext -> v any) {
+    VisitParameterClauseOut : (context ParameterClauseOutContext -> v any) {
         obj = ""
         ? context.parameter().Length == 0 {
             obj += "void"
@@ -174,7 +174,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitParameterClauseSelf(context ParameterClauseSelfContext -> v any) {
+    VisitParameterClauseSelf : (context ParameterClauseSelfContext -> v any) {
         p = Parameter{}
         id = Visit(context.id()).[Result]
         p.id = id.text
@@ -183,7 +183,7 @@ base me LiteLangVisitor -> {
         <- p
     }
 
-    VisitParameter(context ParameterContext -> v any) {
+    VisitParameter : (context ParameterContext -> v any) {
         p = Parameter{}
         id = Visit(context.id()).[Result]
         p.id = id.text

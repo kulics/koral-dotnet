@@ -44,7 +44,7 @@ BlockRight : "}"
 Task : "System.Threading.Tasks.Task"
 IEnum : "System.Collections.Generic.IEnumerable"
 
-Result -> {
+Result := $ {
     data any
     text str
     permission str
@@ -52,7 +52,7 @@ Result -> {
     isDefine bool
 }
 
-LiteLangVisitor -> {
+LiteLangVisitor := me $ {
     LiteParserBaseVisitor[any]
 
     selfID = ""
@@ -61,31 +61,30 @@ LiteLangVisitor -> {
 
     AllIDSet = []:str{}
     CurrentIDSet = [^][]:str{}
-}
-me LiteLangVisitor() {
-    me.CurrentIDSet.push([[]:str]())
-}
-me LiteLangVisitor -> {
-    has_id(id str -> v bool) {
+
+    has_id : (id str -> v bool) {
         <- me.AllIDSet.contains(id) | me.CurrentIDSet.peek().contains(id)
     }
-    add_id(id str ->) {
+    add_id : (id str ->) {
         me.CurrentIDSet.peek().add(id)
     }
-    add_current_set(->) {
+    add_current_set : (->) {
         item @ CurrentIDSet.peek() {
             AllIDSet.add(item)
         }
         me.CurrentIDSet.push([[]:str]())
     }
-    delete_current_set(->) {
+    delete_current_set : (->) {
         me.AllIDSet.except_with(me.CurrentIDSet.peek())
         me.CurrentIDSet.pop()
     }
 }
+me LiteLangVisitor() {
+    me.CurrentIDSet.push([[]:str]())
+}
 
-base me LiteLangVisitor -> {
-    VisitProgram(context ProgramContext -> v any) {
+base me LiteLangVisitor % {
+    VisitProgram : (context ProgramContext -> v any) {
         StatementList = context.statement()
         Result = ""
         item @ StatementList {
@@ -94,7 +93,7 @@ base me LiteLangVisitor -> {
         <- Result
     }
 
-    VisitId(context IdContext -> v any) {
+    VisitId : (context IdContext -> v any) {
         r = Result{data = "var"}
         first = Visit(context.GetChild(0)).[Result]
         r.permission = first.permission
@@ -120,7 +119,7 @@ base me LiteLangVisitor -> {
         <- r
     }
 
-    VisitIdItem(context IdItemContext -> v any) {
+    VisitIdItem : (context IdItemContext -> v any) {
         r = Result{data = "var"}
         ? context.typeBasic() >< nil {
             r.permission = "public"
@@ -146,7 +145,7 @@ base me LiteLangVisitor -> {
         <- r
     }
 
-    VisitIdExpression(context IdExpressionContext -> v any) {
+    VisitIdExpression : (context IdExpressionContext -> v any) {
         r = Result{data = "var"}
         ? context.idExprItem().Length > 1 {
             r.text = "("
@@ -175,11 +174,11 @@ base me LiteLangVisitor -> {
         <- r
     }
 
-    VisitIdExprItem(context IdExprItemContext -> v any) {
+    VisitIdExprItem : (context IdExprItemContext -> v any) {
         <- Visit(context.GetChild(0))
     }
 
-    VisitBoolExpr(context BoolExprContext -> v any) {
+    VisitBoolExpr : (context BoolExprContext -> v any) {
         r = Result{}
         ? context.t.Type == TrueLiteral {
             r.data = Bool
@@ -191,11 +190,11 @@ base me LiteLangVisitor -> {
         <- r
     }
 
-    VisitAnnotationSupport(context AnnotationSupportContext -> v any) {
+    VisitAnnotationSupport : (context AnnotationSupportContext -> v any) {
         <- Visit(context.annotation()).[str]
     }
 
-    VisitAnnotation(context AnnotationContext -> v any) {
+    VisitAnnotation : (context AnnotationContext -> v any) {
         obj = ""
         id = ""
         ? context.id() >< nil {
@@ -207,7 +206,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitAnnotationList(context AnnotationListContext -> v any) {
+    VisitAnnotationList : (context AnnotationListContext -> v any) {
         obj = ""
         i:v @ context.annotationItem() {
             obj += ? -> i > 0 {
@@ -219,7 +218,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitAnnotationItem(context AnnotationItemContext -> v any) {
+    VisitAnnotationItem : (context AnnotationItemContext -> v any) {
         obj = ""
         obj += Visit(context.id()).[Result].text
         i:v @ context.annotationAssign() {
@@ -235,7 +234,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitAnnotationAssign(context AnnotationAssignContext -> v any) {
+    VisitAnnotationAssign : (context AnnotationAssignContext -> v any) {
         obj = ""
         id = ""
         ? context.id() >< nil {

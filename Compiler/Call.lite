@@ -7,8 +7,8 @@
     Compiler_static. "Compiler" 
 }
 
-base me LiteLangVisitor -> {
-    VisitCallExpression(context CallExpressionContext -> v any) {
+base me LiteLangVisitor % {
+    VisitCallExpression : (context CallExpressionContext -> v any) {
         r = Visit(context.id()).[Result]
         r.text = "." + r.text
         ? context.templateCall() >< nil {
@@ -27,7 +27,7 @@ base me LiteLangVisitor -> {
         <- r
     }
 
-    VisitCallElement(context CallElementContext -> v any) {
+    VisitCallElement : (context CallElementContext -> v any) {
         ? context.expression() == nil {
             <- (Result{ text = Visit(context.slice()).[str] })
         }
@@ -36,11 +36,11 @@ base me LiteLangVisitor -> {
         <- r
     }
 
-    VisitSlice(context SliceContext -> v any) {
+    VisitSlice : (context SliceContext -> v any) {
         <- Visit(context.GetChild(0)).[str]
     }
 
-    VisitSliceFull(context SliceFullContext -> v any) {
+    VisitSliceFull : (context SliceFullContext -> v any) {
         order = ""
         attach = ""
         context.op.Text ? "<=" {
@@ -59,7 +59,7 @@ base me LiteLangVisitor -> {
         <- ".slice("expr1.text", "expr2.text", "order", "attach")"
     }
 
-    VisitSliceStart(context SliceStartContext -> v any) {
+    VisitSliceStart : (context SliceStartContext -> v any) {
         order = ""
         attach = ""
         context.op.Text ? "<=" {
@@ -77,7 +77,7 @@ base me LiteLangVisitor -> {
         <- ".slice("expr.text", null, "order", "attach")"
     }
 
-    VisitSliceEnd(context SliceEndContext -> v any) {
+    VisitSliceEnd : (context SliceEndContext -> v any) {
         order = ""
         attach = "false"
         context.op.Text ? "<=" {
@@ -95,7 +95,7 @@ base me LiteLangVisitor -> {
         <- ".slice(null, "expr.text", "order", "attach")"
     }
 
-    VisitCallFunc(context CallFuncContext -> v any) {
+    VisitCallFunc : (context CallFuncContext -> v any) {
         r = Result{data = "var"}
         r.text += ? -> context.tuple() >< nil {
             Visit(context.tuple()).[Result].text
@@ -106,7 +106,7 @@ base me LiteLangVisitor -> {
         <- r
     }
 
-    VisitCallPkg(context CallPkgContext -> v any) {
+    VisitCallPkg : (context CallPkgContext -> v any) {
         r = Result{data = Visit(context.typeType())}
         r.text = "(new "Visit(context.typeType())"()"
         ? context.pkgAssign() >< nil {
@@ -122,7 +122,7 @@ base me LiteLangVisitor -> {
         <- r
     }
 
-    VisitCallNew(context CallNewContext -> v any) {
+    VisitCallNew : (context CallNewContext -> v any) {
         r = Result{data = Visit(context.typeType())}
         param = ""
         ? context.expressionList() >< nil {
@@ -133,7 +133,7 @@ base me LiteLangVisitor -> {
         <- r
     }
 
-    VisitPkgAssign(context PkgAssignContext -> v any) {
+    VisitPkgAssign : (context PkgAssignContext -> v any) {
         obj = ""
         obj += "{"
         i @ 0 ..< context.pkgAssignElement().Length {
@@ -147,7 +147,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitListAssign(context ListAssignContext -> v any) {
+    VisitListAssign : (context ListAssignContext -> v any) {
         obj = ""
         obj += "{"
         i @ 0 ..< context.expression().Length {
@@ -162,7 +162,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitSetAssign(context SetAssignContext -> v any) {
+    VisitSetAssign : (context SetAssignContext -> v any) {
         obj = ""
         obj += "{"
         i @ 0 ..< context.expression().Length {
@@ -177,7 +177,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitDictionaryAssign(context DictionaryAssignContext -> v any) {
+    VisitDictionaryAssign : (context DictionaryAssignContext -> v any) {
         obj = ""
         obj += "{"
         i @ 0 ..< context.dictionaryElement().Length {
@@ -192,20 +192,20 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitPkgAssignElement(context PkgAssignElementContext -> v any) {
+    VisitPkgAssignElement : (context PkgAssignElementContext -> v any) {
         obj = ""
         obj += Visit(context.name()) + " = " + Visit(context.expression()).[Result].text
         <- obj
     }
 
-    VisitPkgAnonymous(context PkgAnonymousContext -> v any) {
+    VisitPkgAnonymous : (context PkgAnonymousContext -> v any) {
         <- Result{
             data = "var"
             text = "new" + Visit(context.pkgAnonymousAssign()).[str]
         }
     }
 
-    VisitPkgAnonymousAssign(context PkgAnonymousAssignContext -> v any) {
+    VisitPkgAnonymousAssign : (context PkgAnonymousAssignContext -> v any) {
         obj = ""
         obj += "{"
         i @ 0 ..< context.pkgAnonymousAssignElement().Length {
@@ -219,13 +219,13 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitPkgAnonymousAssignElement(context PkgAnonymousAssignElementContext -> v any) {
+    VisitPkgAnonymousAssignElement : (context PkgAnonymousAssignElementContext -> v any) {
         obj = ""
         obj += Visit(context.name()) + " = " + Visit(context.expression()).[Result].text
         <- obj
     }
 
-    VisitCallAwait(context CallAwaitContext -> v any) {
+    VisitCallAwait : (context CallAwaitContext -> v any) {
         r = Result{}
         expr = Visit(context.expression()).[Result]
         r.data = "var"
@@ -233,7 +233,7 @@ base me LiteLangVisitor -> {
         <- r
     }
 
-    VisitList(context ListContext -> v any) {
+    VisitList : (context ListContext -> v any) {
         type = Any
         result = Result{}
         i @ 0 ..< context.expression().Length {
@@ -253,7 +253,7 @@ base me LiteLangVisitor -> {
         <- result
     }
 
-    VisitSet(context SetContext -> v any) {
+    VisitSet : (context SetContext -> v any) {
         type = Any
         result = Result{}
         i @ 0 ..< context.expression().Length {
@@ -273,7 +273,7 @@ base me LiteLangVisitor -> {
         <- result
     }
 
-    VisitDictionary(context DictionaryContext -> v any) {
+    VisitDictionary : (context DictionaryContext -> v any) {
         key = Any
         value = Any
         result = Result{}
@@ -299,7 +299,7 @@ base me LiteLangVisitor -> {
         <- result
     }
 
-    VisitDictionaryElement(context DictionaryElementContext -> v any) {
+    VisitDictionaryElement : (context DictionaryElementContext -> v any) {
         r1 = Visit(context.expression(0)).[Result]
         r2 = Visit(context.expression(1)).[Result]
         result = DicEle{
@@ -310,7 +310,7 @@ base me LiteLangVisitor -> {
         <- result
     }
 
-    VisitFunctionExpression(context FunctionExpressionContext -> v any) {
+    VisitFunctionExpression : (context FunctionExpressionContext -> v any) {
         r = Result{}
         # 异步 #
         ? context.t.Type == Right_Flow {
@@ -325,7 +325,7 @@ base me LiteLangVisitor -> {
         <- r
     }
 
-    VisitLambda(context LambdaContext -> v any) {
+    VisitLambda : (context LambdaContext -> v any) {
         r = Result{data = "var"}
         # 异步 #
         ? context.t.Type == Right_Flow {
@@ -349,7 +349,7 @@ base me LiteLangVisitor -> {
         <- r
     }
 
-    VisitLambdaIn(context LambdaInContext -> v any) {
+    VisitLambdaIn : (context LambdaInContext -> v any) {
         obj = ""
         i @ 0 ..< context.id().Length {
             r = Visit(context.id(i)).[Result]

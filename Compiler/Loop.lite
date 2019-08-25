@@ -7,7 +7,7 @@
     Compiler_static. "Compiler" 
 }
 
-Iterator -> {
+Iterator := $ {
     begin Result
     end Result
     step Result
@@ -15,8 +15,8 @@ Iterator -> {
     attach str = F
 }
 
-base me LiteLangVisitor -> {
-    VisitIteratorStatement(context IteratorStatementContext -> v any) {
+base me LiteLangVisitor % {
+    VisitIteratorStatement : (context IteratorStatementContext -> v any) {
         it = Iterator{}
         ? context.op.Text == ">=" | context.op.Text == "<=" {
             it.attach = T
@@ -39,7 +39,7 @@ base me LiteLangVisitor -> {
         <- it
     }
 
-    VisitLoopStatement(context LoopStatementContext -> v any) {
+    VisitLoopStatement : (context LoopStatementContext -> v any) {
         obj = ""
         id = Visit(context.id()).[Result].text
         
@@ -61,7 +61,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitLoopEachStatement(context LoopEachStatementContext -> v any) {
+    VisitLoopEachStatement : (context LoopEachStatementContext -> v any) {
         obj = ""
         arr = Visit(context.expression()).[Result]
         target = arr.text
@@ -87,7 +87,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitLoopCaseStatement(context LoopCaseStatementContext -> v any) {
+    VisitLoopCaseStatement : (context LoopCaseStatementContext -> v any) {
         obj = ""
         expr = Visit(context.expression()).[Result]
         obj += "for ( ;"expr.text" ;)"
@@ -104,7 +104,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitLoopElseStatement(context LoopElseStatementContext -> v any) {
+    VisitLoopElseStatement : (context LoopElseStatementContext -> v any) {
         obj = BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -113,15 +113,15 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitLoopJumpStatement(context LoopJumpStatementContext -> v any) {
+    VisitLoopJumpStatement : (context LoopJumpStatementContext -> v any) {
         <- "break "Terminate+Wrap""
     }
 
-    VisitLoopContinueStatement(context LoopContinueStatementContext -> v any) {
+    VisitLoopContinueStatement : (context LoopContinueStatementContext -> v any) {
         <- "continue "Terminate+Wrap""
     }
 
-    VisitLoopExpression(context LoopExpressionContext -> v any) {
+    VisitLoopExpression : (context LoopExpressionContext -> v any) {
         obj = ""
         id = Visit(context.id()).[Result].text
         
@@ -147,7 +147,7 @@ base me LiteLangVisitor -> {
         <- Result{ data = "var"; text = obj }
     }
 
-    VisitLoopEachExpression(context LoopEachExpressionContext -> v any) {
+    VisitLoopEachExpression : (context LoopEachExpressionContext -> v any) {
         obj = ""
         arr = Visit(context.expression()).[Result]
         target = arr.text
@@ -177,7 +177,7 @@ base me LiteLangVisitor -> {
         <- Result{ data = "var"; text = obj }
     }
 
-    VisitLoopElseExpression(context LoopElseExpressionContext -> v any) {
+    VisitLoopElseExpression : (context LoopElseExpressionContext -> v any) {
         obj = BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())

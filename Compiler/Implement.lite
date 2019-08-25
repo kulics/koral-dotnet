@@ -7,8 +7,8 @@
     Compiler_static. "Compiler" 
 }
 
-base me LiteLangVisitor -> { 
-    VisitImplementStatement(context ImplementStatementContext -> v any) {
+base me LiteLangVisitor % { 
+    VisitImplementStatement : (context ImplementStatementContext -> v any) {
         Self = Visit(context.parameterClauseSelf()).[Parameter]
         me.selfID = Self.id
         isVirtual = ""
@@ -26,7 +26,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitImplementFunctionStatement(context ImplementFunctionStatementContext -> v any) {
+    VisitImplementFunctionStatement : (context ImplementFunctionStatementContext -> v any) {
         id = Visit(context.id()).[Result]
         isVirtual = ""
         ? id.isVirtual {
@@ -66,7 +66,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitImplementControlStatement(context ImplementControlStatementContext -> v any) {
+    VisitImplementControlStatement : (context ImplementControlStatementContext -> v any) {
         r1 = Visit(context.id()).[Result]
         isMutable = true # r1.isVirtual #
         isVirtual = ""
@@ -93,7 +93,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitOverrideStatement(context OverrideStatementContext -> v any) {
+    VisitOverrideStatement : (context OverrideStatementContext -> v any) {
         Self = Visit(context.parameterClauseSelf()).[Parameter]
         me.selfID = Self.id
         me.superID = Visit(context.id()).[Result].text
@@ -108,7 +108,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitOverrideFunctionStatement(context OverrideFunctionStatementContext -> v any) {
+    VisitOverrideFunctionStatement : (context OverrideFunctionStatementContext -> v any) {
         id = Visit(context.id()).[Result]
         isVirtual = " override "
         obj = ""
@@ -149,7 +149,7 @@ base me LiteLangVisitor -> {
         <- obj
     }
 
-    VisitOverrideControlStatement(context OverrideControlStatementContext -> v any) {
+    VisitOverrideControlStatement : (context OverrideControlStatementContext -> v any) {
         r1 = Visit(context.id()).[Result]
         isMutable = true # r1.isVirtual #
         isVirtual = " override "
