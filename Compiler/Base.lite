@@ -78,8 +78,7 @@ LiteLangVisitor := me $ {
         me.AllIDSet.except_with(me.CurrentIDSet.peek())
         me.CurrentIDSet.pop()
     }
-}
-me LiteLangVisitor() {
+} % () {
     me.CurrentIDSet.push([[]:str]())
 }
 

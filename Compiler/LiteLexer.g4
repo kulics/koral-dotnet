@@ -117,7 +117,7 @@ Big_Big_Comment: '###' .*? '###' -> skip; // 可嵌套注释
 Big_Comment: '##' .*? '##' -> skip; // 可嵌套注释
 Comment: '#' .*? '#' -> skip; // 注释
 
-New_Line: '\n'; 
+New_Line: '\r'? '\n'; 
 //WS: (' ' |'\t' |'\n' |'\r' )+ -> skip ;
 
 WS: [ \t]+ -> skip; // 空白， 后面的->skip表示antlr4在分析语言的文本时，符合这个规则的词法将被无视

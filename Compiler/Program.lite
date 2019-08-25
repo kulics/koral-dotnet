@@ -36,8 +36,6 @@ Compiled : (path str->) {
             ByteBlock = array[u8](FSLength)
             r = fsRead.Read(ByteBlock, 0, ByteBlock.Length)
             Input = Encoding.UTF8.GetString(ByteBlock)
-            # 移除平台差异 #
-            Input.Replace("\r", "")
 
             Stream = [AntlrInputStream](Input)
             Lexer = [LiteLexer](Stream)
