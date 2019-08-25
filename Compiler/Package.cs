@@ -41,6 +41,10 @@ return ","+r.data;}
 });
 obj+=r.text;
 }
+foreach (var item in context.packageNewStatement()){
+var r = ((string)(Visit(item)));
+obj+=(new System.Text.StringBuilder("public ").Append(id.text).Append("").Append(r).Append("")).to_str();
+}
 obj+=BlockRight+Wrap;
 var header = "";
 if ( context.annotationSupport()!=null ) {
@@ -112,10 +116,6 @@ return (new Result(){text = obj,data = typ});
 }
 public  override  object VisitPackageNewStatement( PackageNewStatementContext context ){
 var text = "";
-var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
-this.selfID=Self.id;
-text+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type).Append("").Append(BlockLeft+Wrap).Append("")).to_str();
-text+=(new System.Text.StringBuilder("public ").Append(Self.type).Append(" ")).to_str();
 this.add_current_set();
 text+=((string)(Visit(context.parameterClauseIn())));
 if ( context.expressionList()!=null ) {
@@ -123,8 +123,6 @@ text+=(new System.Text.StringBuilder(":base(").Append(((Result)(Visit(context.ex
 }
 text+=BlockLeft+ProcessFunctionSupport(context.functionSupportStatement())+BlockRight+Wrap;
 this.delete_current_set();
-text+=BlockRight+Wrap;
-this.selfID="";
 return text;
 }
 public  override  object VisitPackageEventStatement( PackageEventStatementContext context ){

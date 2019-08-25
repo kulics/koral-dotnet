@@ -169,4 +169,23 @@ base me LiteLangVisitor % {
         obj += BlockRight + Wrap
         <- obj
     }
+
+    VisitImplementNewStatement : (context ImplementNewStatementContext -> v any) {
+        text = ""
+        Self = Visit(context.parameterClauseSelf()).[Parameter]
+        me.selfID = Self.id
+        text += ""Self.permission" partial class "Self.type""BlockLeft + Wrap""
+        text += "public " Self.type " "
+        # 获取构造数据 #
+        me.add_current_set()
+        text += Visit(context.parameterClauseIn()).[str]
+        ? context.expressionList() >< nil {
+            text += ":base(" Visit(context.expressionList()).[Result].text ")"
+        }
+        text += BlockLeft + ProcessFunctionSupport(context.functionSupportStatement()) + BlockRight + Wrap
+        me.delete_current_set()
+        text += BlockRight + Wrap
+        me.selfID = ""
+        <- text
+    }
 }

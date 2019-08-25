@@ -164,5 +164,22 @@ obj+=temp.text;
 obj+=BlockRight+Wrap;
 return obj;
 }
+public  override  object VisitImplementNewStatement( ImplementNewStatementContext context ){
+var text = "";
+var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
+this.selfID=Self.id;
+text+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type).Append("").Append(BlockLeft+Wrap).Append("")).to_str();
+text+=(new System.Text.StringBuilder("public ").Append(Self.type).Append(" ")).to_str();
+this.add_current_set();
+text+=((string)(Visit(context.parameterClauseIn())));
+if ( context.expressionList()!=null ) {
+text+=(new System.Text.StringBuilder(":base(").Append(((Result)(Visit(context.expressionList()))).text).Append(")")).to_str();
+}
+text+=BlockLeft+ProcessFunctionSupport(context.functionSupportStatement())+BlockRight+Wrap;
+this.delete_current_set();
+text+=BlockRight+Wrap;
+this.selfID="";
+return text;
+}
 }
 }
