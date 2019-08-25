@@ -13,7 +13,11 @@ public  override  object VisitIncludeStatement( IncludeStatementContext context 
 return Visit(context.typeType());
 }
 public  override  object VisitPackageStatement( PackageStatementContext context ){
-var id = ((Result)(Visit(context.id())));
+var id = ((Result)(Visit(context.id(0))));
+if ( context.id(1)!=null ) {
+var Self = ((Result)(Visit(context.id(1))));
+this.selfID=Self.text;
+}
 var obj = "";
 var extend = "";
 foreach (var item in context.packageSupportStatement()){
@@ -27,6 +31,15 @@ return ","+Visit(item);}
 else {
 obj+=Visit(item);
 }
+}
+foreach (var item in context.packageImplementStatement()){
+var r = ((Result)(Visit(item)));
+extend+=run(()=>{if ( extend=="" ) {
+return r.data;}
+else {
+return ","+r.data;}
+});
+obj+=r.text;
 }
 obj+=BlockRight+Wrap;
 var header = "";
@@ -47,6 +60,7 @@ header+=":"+extend;
 }
 header+=templateContract+BlockLeft+Wrap;
 obj = header+obj;
+this.selfID="";
 return obj;
 }
 public  override  object VisitPackageVariableStatement( PackageVariableStatementContext context ){
@@ -203,6 +217,14 @@ templateContract = template.Contract;
 }
 r.text+=Visit(context.parameterClauseIn())+templateContract+Terminate+Wrap;
 return r;
+}
+public  override  object VisitPackageImplementStatement( PackageImplementStatementContext context ){
+var obj = "";
+var extends = ((string)(Visit(context.typeType())));
+foreach (var item in context.implementSupportStatement()){
+obj+=Visit(item);
+}
+return (new Result(){text = obj,data = extends});
 }
 }
 }

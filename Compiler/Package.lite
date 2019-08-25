@@ -14,8 +14,11 @@ base me LiteLangVisitor -> {
 
     VisitPackageStatement(context PackageStatementContext -> v any) {
         id = Visit(context.id(0)).[Result]
-        Self = Visit(context.id(1)).[Result]
-        me.selfID = Self.text
+        ? context.id(1) >< nil {
+            Self = Visit(context.id(1)).[Result]
+            me.selfID = Self.text
+        }
+
         obj = ""
         extend = ""
 
