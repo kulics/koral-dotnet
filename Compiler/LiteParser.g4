@@ -59,6 +59,7 @@ includeStatement
 |packageVariableStatement
 |packageEventStatement
 |implementFunctionStatement
+|implementControlStatement
 |New_Line
 ;
 
