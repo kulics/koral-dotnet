@@ -59,8 +59,7 @@ packageVariableStatement |
 packageEventStatement |
 implementFunctionStatement |
 implementControlStatement |
-overrideFunctionStatement |
-overrideControlStatement |
+overrideStatement |
 New_Line
 ;
 
@@ -89,8 +88,7 @@ implementStatement: parameterClauseSelf Cent (typeType)? New_Line* left_brace (i
 implementSupportStatement: 
 implementFunctionStatement |
 implementControlStatement |
-overrideFunctionStatement |
-overrideControlStatement |
+overrideStatement |
 New_Line;
 
 // 函数
@@ -100,11 +98,14 @@ parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brac
 implementControlStatement: (annotationSupport)? id Colon left_paren expression? right_paren 
  typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
 
+overrideStatement: id typeType left_brace (overrideSupportStatement)* right_brace end;
+
+overrideSupportStatement: overrideFunctionStatement | overrideControlStatement | New_Line;
 // 函数
-overrideFunctionStatement: (annotationSupport)? id call (n='_')? id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
+overrideFunctionStatement: (annotationSupport)? (n='_')? id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义控制
-overrideControlStatement: (annotationSupport)? id call (n='_')? id Colon left_paren expression? right_paren
+overrideControlStatement: (annotationSupport)? (n='_')? id Colon left_paren expression? right_paren
  typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
 
 // 协议

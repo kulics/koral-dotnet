@@ -93,9 +93,19 @@ me LiteLangVisitor % {
         <- obj
     }
 
+    base.VisitOverrideStatement : (context OverrideStatementContext -> v any) {
+        id = Visit(context.id()).[Result]
+        me.superID = id.text
+        obj = ""
+        item @ context.overrideSupportStatement() {
+            obj += Visit(item)
+        }
+        me.superID = ""
+        <- obj
+    }
+
     base.VisitOverrideFunctionStatement : (context OverrideFunctionStatementContext -> v any) {
-        id = Visit(context.id(1)).[Result]
-        me.superID = Visit(context.id(0)).[Result].text
+        id = Visit(context.id()).[Result]
         isVirtual = " override "
         obj = ""
         # 异步 #
@@ -132,13 +142,11 @@ me LiteLangVisitor % {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight + Wrap
-        me.superID = ""
         <- obj
     }
 
     base.VisitOverrideControlStatement : (context OverrideControlStatementContext -> v any) {
-        r1 = Visit(context.id(1)).[Result]
-        me.superID = Visit(context.id(0)).[Result].text
+        r1 = Visit(context.id()).[Result]
         isMutable = true # r1.isVirtual #
         isVirtual = " override "
         typ = ""
@@ -155,7 +163,6 @@ me LiteLangVisitor % {
             obj += temp.text
         }
         obj += BlockRight + Wrap
-        me.superID = ""
         <- obj
     }
 
