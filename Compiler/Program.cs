@@ -33,7 +33,6 @@ var FSLength = ((int)(fsRead.Length));
 var ByteBlock = array<byte>(FSLength);
 var r = fsRead.Read(ByteBlock, 0, ByteBlock.Length);
 var Input = Encoding.UTF8.GetString(ByteBlock);
-Input.Replace("\r", "");
 var Stream = (new AntlrInputStream(Input));
 var Lexer = (new LiteLexer(Stream));
 var Tokens = (new CommonTokenStream(Lexer));

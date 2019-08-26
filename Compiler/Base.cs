@@ -38,9 +38,7 @@ public  virtual  void delete_current_set(){
 this.AllIDSet.except_with(this.CurrentIDSet.peek());
 this.CurrentIDSet.pop();
 }
-}
-public partial class LiteLangVisitor{
-public LiteLangVisitor (){this.CurrentIDSet.push((new hashset<string>()));
+public LiteLangVisitor(){this.CurrentIDSet.push((new hashset<string>()));
 }
 }
 public partial class LiteLangVisitor{
