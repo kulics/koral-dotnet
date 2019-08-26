@@ -91,22 +91,9 @@ obj+=temp.text;
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitOverrideStatement( OverrideStatementContext context ){
-var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
-this.selfID=Self.id;
-this.superID=((Result)(Visit(context.id()))).text;
-var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(Self.permission).Append(" partial class ").Append(Self.type).Append("").Append(BlockLeft+Wrap).Append("")).to_str();
-foreach (var item in context.overrideSupportStatement()){
-obj+=Visit(item);
-}
-obj+=BlockRight+Wrap;
-this.selfID="";
-this.superID="";
-return obj;
-}
 public  override  object VisitOverrideFunctionStatement( OverrideFunctionStatementContext context ){
-var id = ((Result)(Visit(context.id())));
+var id = ((Result)(Visit(context.id(1))));
+this.superID=((Result)(Visit(context.id(0)))).text;
 var isVirtual = " override ";
 var obj = "";
 obj+=run(()=>{if ( context.n!=null ) {
@@ -142,10 +129,12 @@ obj+=Visit(context.parameterClauseIn())+templateContract+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
+this.superID="";
 return obj;
 }
 public  override  object VisitOverrideControlStatement( OverrideControlStatementContext context ){
-var r1 = ((Result)(Visit(context.id())));
+var r1 = ((Result)(Visit(context.id(1))));
+this.superID=((Result)(Visit(context.id(0)))).text;
 var isMutable = true;
 var isVirtual = " override ";
 var typ = "";
@@ -162,6 +151,7 @@ var temp = ((Result)(Visit(item)));
 obj+=temp.text;
 }
 obj+=BlockRight+Wrap;
+this.superID="";
 return obj;
 }
 public  override  object VisitImplementNewStatement( ImplementNewStatementContext context ){

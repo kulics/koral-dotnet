@@ -7,8 +7,8 @@
     Compiler_static. "Compiler" 
 }
 
-base me LiteLangVisitor % {
-    VisitCheckStatement : (context CheckStatementContext -> v any) {
+me LiteLangVisitor % {
+    base.VisitCheckStatement : (context CheckStatementContext -> v any) {
         obj = "try "BlockLeft+Wrap""
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -24,7 +24,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitCheckErrorStatement : (context CheckErrorStatementContext -> v any) {
+    base.VisitCheckErrorStatement : (context CheckErrorStatementContext -> v any) {
         me.add_current_set()
         obj = ""
         ID = Visit(context.id()).[Result].text
@@ -42,7 +42,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitCheckFinallyStatment : (context CheckFinallyStatmentContext -> v any) {
+    base.VisitCheckFinallyStatment : (context CheckFinallyStatmentContext -> v any) {
         obj = "finally "Wrap+BlockLeft+Wrap""
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -51,7 +51,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitUsingStatement : (context UsingStatementContext -> v any) {
+    base.VisitUsingStatement : (context UsingStatementContext -> v any) {
         obj = ""
         r1 = Visit(context.expression(0)).[Result]
         r2 = Visit(context.expression(1)).[Result]
@@ -64,7 +64,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitCheckExpression : (context CheckExpressionContext -> v any) {
+    base.VisitCheckExpression : (context CheckExpressionContext -> v any) {
         obj = "run(()=> { "Wrap"try "BlockLeft+Wrap""
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -82,7 +82,7 @@ base me LiteLangVisitor % {
         <- Result{ data="var"; text=obj}
     }
 
-    VisitCheckErrorExpression : (context CheckErrorExpressionContext -> v any) {
+    base.VisitCheckErrorExpression : (context CheckErrorExpressionContext -> v any) {
         me.add_current_set()
         obj = ""
         ID = Visit(context.id()).[Result].text

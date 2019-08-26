@@ -7,15 +7,14 @@
     Compiler_static. "Compiler" 
 }
 
-ErrorListener := $ {
+ErrorListener := me $ {
     BaseErrorListener
     FileDir str
-} 
-super me ErrorListener % {
-    SyntaxError : (recognizer IRecognizer, offendingSymbol ?IToken, 
+
+    base.SyntaxError : (recognizer IRecognizer, offendingSymbol ?IToken, 
     line int, charPositionInLine int, msg str, 
     e ?RecognitionException->) {
-            super.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
+            base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
             print("------Syntax Error------")
             print("File: "me.FileDir"")
             print("Line: "line"  Column: "charPositionInLine"")

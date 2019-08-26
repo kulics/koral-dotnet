@@ -7,8 +7,8 @@
     Compiler_static. "Compiler" 
 }
 
-base me LiteLangVisitor % { 
-    VisitImplementStatement : (context ImplementStatementContext -> v any) {
+me LiteLangVisitor % { 
+    base.VisitImplementStatement : (context ImplementStatementContext -> v any) {
         Self = Visit(context.parameterClauseSelf()).[Parameter]
         me.selfID = Self.id
         isVirtual = ""
@@ -26,7 +26,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitImplementFunctionStatement : (context ImplementFunctionStatementContext -> v any) {
+    base.VisitImplementFunctionStatement : (context ImplementFunctionStatementContext -> v any) {
         id = Visit(context.id()).[Result]
         isVirtual = ""
         ? id.isVirtual {
@@ -66,7 +66,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitImplementControlStatement : (context ImplementControlStatementContext -> v any) {
+    base.VisitImplementControlStatement : (context ImplementControlStatementContext -> v any) {
         r1 = Visit(context.id()).[Result]
         isMutable = true # r1.isVirtual #
         isVirtual = ""
@@ -93,23 +93,9 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitOverrideStatement : (context OverrideStatementContext -> v any) {
-        Self = Visit(context.parameterClauseSelf()).[Parameter]
-        me.selfID = Self.id
-        me.superID = Visit(context.id()).[Result].text
-        obj = ""
-        obj += ""Self.permission" partial class "Self.type""BlockLeft + Wrap""
-        item @ context.overrideSupportStatement() {
-            obj += Visit(item)
-        }
-        obj += BlockRight + Wrap
-        me.selfID = ""
-        me.superID = ""
-        <- obj
-    }
-
-    VisitOverrideFunctionStatement : (context OverrideFunctionStatementContext -> v any) {
-        id = Visit(context.id()).[Result]
+    base.VisitOverrideFunctionStatement : (context OverrideFunctionStatementContext -> v any) {
+        id = Visit(context.id(1)).[Result]
+        me.superID = Visit(context.id(0)).[Result].text
         isVirtual = " override "
         obj = ""
         # 异步 #
@@ -146,11 +132,13 @@ base me LiteLangVisitor % {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight + Wrap
+        me.superID = ""
         <- obj
     }
 
-    VisitOverrideControlStatement : (context OverrideControlStatementContext -> v any) {
-        r1 = Visit(context.id()).[Result]
+    base.VisitOverrideControlStatement : (context OverrideControlStatementContext -> v any) {
+        r1 = Visit(context.id(1)).[Result]
+        me.superID = Visit(context.id(0)).[Result].text
         isMutable = true # r1.isVirtual #
         isVirtual = " override "
         typ = ""
@@ -167,10 +155,11 @@ base me LiteLangVisitor % {
             obj += temp.text
         }
         obj += BlockRight + Wrap
+        me.superID = ""
         <- obj
     }
 
-    VisitImplementNewStatement : (context ImplementNewStatementContext -> v any) {
+    base.VisitImplementNewStatement : (context ImplementNewStatementContext -> v any) {
         text = ""
         Self = Visit(context.parameterClauseSelf()).[Parameter]
         me.selfID = Self.id

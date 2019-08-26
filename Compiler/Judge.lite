@@ -7,8 +7,8 @@
     Compiler_static. "Compiler" 
 }
 
-base me LiteLangVisitor % {
-    VisitJudgeCaseStatement : (context JudgeCaseStatementContext -> v any)  {
+me LiteLangVisitor % {
+    base.VisitJudgeCaseStatement : (context JudgeCaseStatementContext -> v any)  {
         obj = ""
         expr = Visit(context.expression()).[Result]
         obj += "switch ("expr.text") "BlockLeft+Wrap""
@@ -20,7 +20,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitCaseExprStatement : (context CaseExprStatementContext -> v any) {
+    base.VisitCaseExprStatement : (context CaseExprStatementContext -> v any) {
         <- ? -> context.expression() >< nil  {
             expr = Visit(context.expression()).[Result]
             "case "expr.text" :"Wrap""
@@ -37,7 +37,7 @@ base me LiteLangVisitor % {
         }
     }
 
-    VisitCaseStatement : (context CaseStatementContext -> v any) {
+    base.VisitCaseStatement : (context CaseStatementContext -> v any) {
         obj = ""
         item @ context.caseExprStatement() {
             r = Visit(item).[str]
@@ -49,7 +49,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitJudgeStatement : (context JudgeStatementContext -> v any) {
+    base.VisitJudgeStatement : (context JudgeStatementContext -> v any) {
         obj = ""
         obj += Visit(context.judgeIfStatement())
         it @ context.judgeElseIfStatement() {
@@ -61,7 +61,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitJudgeIfStatement : (context JudgeIfStatementContext -> v any) {
+    base.VisitJudgeIfStatement : (context JudgeIfStatementContext -> v any) {
         b = Visit(context.expression()).[Result]
         obj = "if ( "b.text" ) "BlockLeft+Wrap""
         me.add_current_set()
@@ -71,7 +71,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitJudgeElseIfStatement : (context JudgeElseIfStatementContext -> v any) {
+    base.VisitJudgeElseIfStatement : (context JudgeElseIfStatementContext -> v any) {
         b = Visit(context.expression()).[Result]
         obj = "else if ( "b.text" ) "BlockLeft+Wrap""
         me.add_current_set()
@@ -81,7 +81,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitJudgeElseStatement : (context JudgeElseStatementContext -> v any) {
+    base.VisitJudgeElseStatement : (context JudgeElseStatementContext -> v any) {
         obj = "else "BlockLeft+Wrap""
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -90,7 +90,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitJudgeExpression : (context JudgeExpressionContext -> v any) {
+    base.VisitJudgeExpression : (context JudgeExpressionContext -> v any) {
         r = Result{}
         r.data = "var"
         r.text = "run(()=>" + BlockLeft
@@ -105,7 +105,7 @@ base me LiteLangVisitor % {
         <- r
     }
 
-    VisitJudgeExpressionIfStatement : (context JudgeExpressionIfStatementContext -> v any) {
+    base.VisitJudgeExpressionIfStatement : (context JudgeExpressionIfStatementContext -> v any) {
         b = Visit(context.expression()).[Result]
         obj = "if ( "b.text" ) "BlockLeft+Wrap""
         me.add_current_set()
@@ -116,7 +116,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitJudgeExpressionElseIfStatement : (context JudgeExpressionElseIfStatementContext -> v any) {
+    base.VisitJudgeExpressionElseIfStatement : (context JudgeExpressionElseIfStatementContext -> v any) {
         b = Visit(context.expression()).[Result]
         obj = "else if ( "b.text" ) "BlockLeft+Wrap""
         me.add_current_set()
@@ -127,7 +127,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitJudgeExpressionElseStatement : (context JudgeExpressionElseStatementContext -> v any) {
+    base.VisitJudgeExpressionElseStatement : (context JudgeExpressionElseStatementContext -> v any) {
         obj = "else "BlockLeft+Wrap""
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -137,7 +137,7 @@ base me LiteLangVisitor % {
         <- obj
     }
 
-    VisitJudgeCaseExpression : (context JudgeCaseExpressionContext -> v any)  {
+    base.VisitJudgeCaseExpression : (context JudgeCaseExpressionContext -> v any)  {
         r = Result{}
         r.text += BlockLeft+Wrap
         item @ context.caseExpressionStatement() {
@@ -148,7 +148,7 @@ base me LiteLangVisitor % {
         <- r
     }
 
-    VisitCaseExpressionStatement : (context CaseExpressionStatementContext -> v any) {
+    base.VisitCaseExpressionStatement : (context CaseExpressionStatementContext -> v any) {
         obj = ""
         item @ context.caseExprStatement() {
             r = Visit(item).[str]
