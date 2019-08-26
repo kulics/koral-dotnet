@@ -7,181 +7,183 @@
     Compiler_static. "Compiler" 
 }
 
-me LiteLangVisitor % { 
-    base.VisitImplementStatement : (context ImplementStatementContext -> v any) {
-        Self = Visit(context.parameterClauseSelf()).[Parameter]
-        me.selfID = Self.id
-        isVirtual = ""
-        obj = ""
-        extends = ""
-        ? context.typeType() >< nil {
-            extends += ":" + Visit(context.typeType())
-        }
-        obj += ""Self.permission" partial class "Self.type + extends + BlockLeft + Wrap""
-        item @ context.implementSupportStatement() {
-            obj += Visit(item)
-        }
-        obj += BlockRight + Wrap
-        me.selfID = ""
-        <- obj
-    }
-
-    base.VisitImplementFunctionStatement : (context ImplementFunctionStatementContext -> v any) {
-        id = Visit(context.id()).[Result]
-        isVirtual = ""
-        ? id.isVirtual {
-            isVirtual = " virtual "
-        }
-        obj = ""
-        # 异步 #
-        obj += ""id.permission" "
-        pout = Visit(context.parameterClauseOut()).[str]
-        ? context.t.Type == Right_Flow {
-            pout = ? -> pout >< "void" {
-                ""Task"<"pout">"
-            } _ {
-                Task
+me LiteLangVisitor % {
+    base LiteParserBaseVisitor[any] {
+        VisitImplementStatement : (context ImplementStatementContext -> v any) {
+            Self = Visit(context.parameterClauseSelf()).[Parameter]
+            me.selfID = Self.id
+            isVirtual = ""
+            obj = ""
+            extends = ""
+            ? context.typeType() >< nil {
+                extends += ":" + Visit(context.typeType())
             }
-            obj += ""isVirtual" async "pout" "id.text""
-        } _ {
-            ? context.y >< nil {
-                ? pout >< "void" {
-                    pout = ""IEnum"<"pout">"
+            obj += ""Self.permission" partial class "Self.type + extends + BlockLeft + Wrap""
+            item @ context.implementSupportStatement() {
+                obj += Visit(item)
+            }
+            obj += BlockRight + Wrap
+            me.selfID = ""
+            <- obj
+        }
+
+        VisitImplementFunctionStatement : (context ImplementFunctionStatementContext -> v any) {
+            id = Visit(context.id()).[Result]
+            isVirtual = ""
+            ? id.isVirtual {
+                isVirtual = " virtual "
+            }
+            obj = ""
+            # 异步 #
+            obj += ""id.permission" "
+            pout = Visit(context.parameterClauseOut()).[str]
+            ? context.t.Type == Right_Flow {
+                pout = ? -> pout >< "void" {
+                    ""Task"<"pout">"
+                } _ {
+                    Task
+                }
+                obj += ""isVirtual" async "pout" "id.text""
+            } _ {
+                ? context.y >< nil {
+                    ? pout >< "void" {
+                        pout = ""IEnum"<"pout">"
+                    }
+                }
+                obj += ""isVirtual" "pout" "id.text""
+            }
+            # 泛型 #
+            templateContract = ""
+            ? context.templateDefine() >< nil {
+                template = Visit(context.templateDefine()).[TemplateItem]
+                obj += template.Template
+                templateContract = template.Contract
+            }
+            me.add_current_set()
+            obj += Visit(context.parameterClauseIn()) + templateContract + BlockLeft + Wrap
+            obj += ProcessFunctionSupport(context.functionSupportStatement())
+            me.delete_current_set()
+            obj += BlockRight + Wrap
+            <- obj
+        }
+
+        VisitImplementControlStatement : (context ImplementControlStatementContext -> v any) {
+            r1 = Visit(context.id()).[Result]
+            isMutable = true # r1.isVirtual #
+            isVirtual = ""
+            ? r1.isVirtual {
+                isVirtual = " virtual "
+            }
+            typ = ""
+            typ = Visit(context.typeType()).[str]
+            obj = ""
+            ? context.annotationSupport() >< nil {
+                obj += Visit(context.annotationSupport())
+            }
+            obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""
+            ? context.expression() >< nil {
+                expr = me.Visit(context.expression()).[Result]
+                obj += "get{return "expr.text"; }set{"expr.text"=value;}"
+            } _ {
+                item @ context.packageControlSubStatement() {
+                    temp = Visit(item).[Result]
+                    obj += temp.text
                 }
             }
-            obj += ""isVirtual" "pout" "id.text""
+            obj += BlockRight + Wrap
+            <- obj
         }
-        # 泛型 #
-        templateContract = ""
-        ? context.templateDefine() >< nil {
-            template = Visit(context.templateDefine()).[TemplateItem]
-            obj += template.Template
-            templateContract = template.Contract
-        }
-        me.add_current_set()
-        obj += Visit(context.parameterClauseIn()) + templateContract + BlockLeft + Wrap
-        obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.delete_current_set()
-        obj += BlockRight + Wrap
-        <- obj
-    }
 
-    base.VisitImplementControlStatement : (context ImplementControlStatementContext -> v any) {
-        r1 = Visit(context.id()).[Result]
-        isMutable = true # r1.isVirtual #
-        isVirtual = ""
-        ? r1.isVirtual {
-            isVirtual = " virtual "
+        VisitOverrideStatement : (context OverrideStatementContext -> v any) {
+            id = Visit(context.id()).[Result]
+            me.superID = id.text
+            obj = ""
+            item @ context.overrideSupportStatement() {
+                obj += Visit(item)
+            }
+            me.superID = ""
+            <- obj
         }
-        typ = ""
-        typ = Visit(context.typeType()).[str]
-        obj = ""
-        ? context.annotationSupport() >< nil {
-            obj += Visit(context.annotationSupport())
+
+        VisitOverrideFunctionStatement : (context OverrideFunctionStatementContext -> v any) {
+            id = Visit(context.id()).[Result]
+            isVirtual = " override "
+            obj = ""
+            # 异步 #
+            obj += ? -> context.n >< nil {
+                "protected "
+            } _ {
+                ""id.permission" "
+            }
+            pout = Visit(context.parameterClauseOut()).[str]
+            ? context.t.Type == Right_Flow {
+                pout = ? -> pout >< "void" {
+                    ""Task"<"pout">"
+                } _ {
+                    Task
+                }
+                obj += ""isVirtual" async "pout" "id.text""
+            } _ {
+                ? context.y >< nil {
+                    ? pout >< "void" {
+                        pout = ""IEnum"<"pout">"
+                    }
+                }
+                obj += ""isVirtual" "pout" "id.text""
+            }
+            # 泛型 #
+            templateContract = ""
+            ? context.templateDefine() >< nil {
+                template = Visit(context.templateDefine()).[TemplateItem]
+                obj += template.Template
+                templateContract = template.Contract
+            }
+            me.add_current_set()
+            obj += Visit(context.parameterClauseIn()) + templateContract + BlockLeft + Wrap
+            obj += ProcessFunctionSupport(context.functionSupportStatement())
+            me.delete_current_set()
+            obj += BlockRight + Wrap
+            <- obj
         }
-        obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""
-        ? context.expression() >< nil {
-            expr = me.Visit(context.expression()).[Result]
-            obj += "get{return "expr.text"; }set{"expr.text"=value;}"
-        } _ {
+
+        VisitOverrideControlStatement : (context OverrideControlStatementContext -> v any) {
+            r1 = Visit(context.id()).[Result]
+            isMutable = true # r1.isVirtual #
+            isVirtual = " override "
+            typ = ""
+            ? context.typeType() >< nil {
+                typ = Visit(context.typeType()).[str]
+            }
+            obj = ""
+            ? context.annotationSupport() >< nil {
+                obj += Visit(context.annotationSupport())
+            }
+            obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""
             item @ context.packageControlSubStatement() {
                 temp = Visit(item).[Result]
                 obj += temp.text
             }
+            obj += BlockRight + Wrap
+            <- obj
         }
-        obj += BlockRight + Wrap
-        <- obj
-    }
 
-    base.VisitOverrideStatement : (context OverrideStatementContext -> v any) {
-        id = Visit(context.id()).[Result]
-        me.superID = id.text
-        obj = ""
-        item @ context.overrideSupportStatement() {
-            obj += Visit(item)
-        }
-        me.superID = ""
-        <- obj
-    }
-
-    base.VisitOverrideFunctionStatement : (context OverrideFunctionStatementContext -> v any) {
-        id = Visit(context.id()).[Result]
-        isVirtual = " override "
-        obj = ""
-        # 异步 #
-        obj += ? -> context.n >< nil {
-            "protected "
-        } _ {
-            ""id.permission" "
-        }
-        pout = Visit(context.parameterClauseOut()).[str]
-        ? context.t.Type == Right_Flow {
-            pout = ? -> pout >< "void" {
-                ""Task"<"pout">"
-            } _ {
-                Task
+        VisitImplementNewStatement : (context ImplementNewStatementContext -> v any) {
+            text = ""
+            Self = Visit(context.parameterClauseSelf()).[Parameter]
+            me.selfID = Self.id
+            text += ""Self.permission" partial class "Self.type""BlockLeft + Wrap""
+            text += "public " Self.type " "
+            # 获取构造数据 #
+            me.add_current_set()
+            text += Visit(context.parameterClauseIn()).[str]
+            ? context.expressionList() >< nil {
+                text += ":base(" Visit(context.expressionList()).[Result].text ")"
             }
-            obj += ""isVirtual" async "pout" "id.text""
-        } _ {
-            ? context.y >< nil {
-                ? pout >< "void" {
-                    pout = ""IEnum"<"pout">"
-                }
-            }
-            obj += ""isVirtual" "pout" "id.text""
+            text += BlockLeft + ProcessFunctionSupport(context.functionSupportStatement()) + BlockRight + Wrap
+            me.delete_current_set()
+            text += BlockRight + Wrap
+            me.selfID = ""
+            <- text
         }
-        # 泛型 #
-        templateContract = ""
-        ? context.templateDefine() >< nil {
-            template = Visit(context.templateDefine()).[TemplateItem]
-            obj += template.Template
-            templateContract = template.Contract
-        }
-        me.add_current_set()
-        obj += Visit(context.parameterClauseIn()) + templateContract + BlockLeft + Wrap
-        obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.delete_current_set()
-        obj += BlockRight + Wrap
-        <- obj
-    }
-
-    base.VisitOverrideControlStatement : (context OverrideControlStatementContext -> v any) {
-        r1 = Visit(context.id()).[Result]
-        isMutable = true # r1.isVirtual #
-        isVirtual = " override "
-        typ = ""
-        ? context.typeType() >< nil {
-            typ = Visit(context.typeType()).[str]
-        }
-        obj = ""
-        ? context.annotationSupport() >< nil {
-            obj += Visit(context.annotationSupport())
-        }
-        obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""
-        item @ context.packageControlSubStatement() {
-            temp = Visit(item).[Result]
-            obj += temp.text
-        }
-        obj += BlockRight + Wrap
-        <- obj
-    }
-
-    base.VisitImplementNewStatement : (context ImplementNewStatementContext -> v any) {
-        text = ""
-        Self = Visit(context.parameterClauseSelf()).[Parameter]
-        me.selfID = Self.id
-        text += ""Self.permission" partial class "Self.type""BlockLeft + Wrap""
-        text += "public " Self.type " "
-        # 获取构造数据 #
-        me.add_current_set()
-        text += Visit(context.parameterClauseIn()).[str]
-        ? context.expressionList() >< nil {
-            text += ":base(" Visit(context.expressionList()).[Result].text ")"
-        }
-        text += BlockLeft + ProcessFunctionSupport(context.functionSupportStatement()) + BlockRight + Wrap
-        me.delete_current_set()
-        text += BlockRight + Wrap
-        me.selfID = ""
-        <- text
     }
 }

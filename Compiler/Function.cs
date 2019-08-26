@@ -36,8 +36,6 @@ content+=BlockRight;
 obj+=content;
 return obj;
 }
-}
-public partial class LiteLangVisitor{
 public  override  object VisitFunctionStatement( FunctionStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var obj = "";

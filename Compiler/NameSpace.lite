@@ -32,235 +32,237 @@ GetControlSub : (id str -> id str, type str) {
 }
 
 me LiteLangVisitor % {
-    base.VisitStatement : (context StatementContext -> v any) {
-        obj = ""
-        ns = Visit(context.exportStatement()).[Namespace]
-        # import library #
-        obj += "using Library;"Wrap"using static Library.Lib;"Wrap""
-        obj += ns.imports + Wrap
-        ? context.annotationSupport() >< nil {
-            obj += Visit(context.annotationSupport())
-        }
-        obj += "namespace "ns.name + Wrap + BlockLeft + Wrap""
-
-        content = ""
-        contentStatic = ""
-        me.add_current_set()
-        item @ context.namespaceSupportStatement() {
-            type = item.GetChild(0).GetType()
-            ? type == typeof[NamespaceVariableStatementContext]() |
-                type == typeof[NamespaceControlStatementContext]() |
-                type == typeof[NamespaceFunctionStatementContext]() |
-                type == typeof[NamespaceConstantStatementContext]() {
-                contentStatic += Visit(item)
-            } _ {
-                content += Visit(item)
+    base LiteParserBaseVisitor[any] {
+        VisitStatement : (context StatementContext -> v any) {
+            obj = ""
+            ns = Visit(context.exportStatement()).[Namespace]
+            # import library #
+            obj += "using Library;"Wrap"using static Library.Lib;"Wrap""
+            obj += ns.imports + Wrap
+            ? context.annotationSupport() >< nil {
+                obj += Visit(context.annotationSupport())
             }
-        }
-        obj += content
-        ? contentStatic >< "" {
-            obj += "public partial class "ns.name.sub_str(ns.name.last_index_of(".") + 1) "_static" +
-                BlockLeft + Wrap + contentStatic + BlockRight + Wrap
-        }
-        me.delete_current_set()
-        obj += BlockRight + Wrap
-        <- obj
-    }
+            obj += "namespace "ns.name + Wrap + BlockLeft + Wrap""
 
-    base.VisitExportStatement : (context ExportStatementContext -> v any) {
-        name = context.TextLiteral().GetText()
-        name = name.sub_str(1, name.len()-2)
-        name = name.replace("/", ".")
-        obj = Namespace{
-            name = name
-        }
-        item @ context.importStatement() {
-            obj.imports += Visit(item).[str]
-        }
-        <- obj
-    }
-
-    base.VisitImportStatement : (context ImportStatementContext -> v any) {
-        obj = ""
-        ? context.annotationSupport() >< nil {
-            obj += Visit(context.annotationSupport())
-        }
-        ns = context.TextLiteral().GetText()
-        ns = ns.sub_str(1, ns.len()-2)
-        ns = ns.replace("/", ".")
-        obj += ? -> context.call() >< nil {
-            "using static " + ns + "." + Visit(context.id()).[Result].text
-        } context.id() >< nil {
-            "using " + ns + "." + Visit(context.id()).[Result].text
-        } _ {
-            "using " + ns
-        }
-        obj += Terminate + Wrap
-        <- obj
-    }
-
-    base.VisitNameSpaceItem : (context NameSpaceItemContext -> v any) {
-        obj = ""
-        i @ 0 ..< context.id().Length {
-            id = Visit(context.id(i)).[Result]
-            obj += ? -> i == 0 {
-                "" + id.text
-            } _ {
-                "." + id.text
-            }
-        }
-        <- obj
-    }
-
-    base.VisitName : (context NameContext -> v any) {
-        obj = ""
-        i @ 0 ..< context.id().Length {
-            id = Visit(context.id(i)).[Result]
-            obj += ? -> i == 0 {
-                "" + id.text
-            } _ {
-                "." + id.text
-            }
-        }
-        <- obj
-    }
-
-    base.VisitEnumStatement : (context EnumStatementContext -> v any) {
-        obj = ""
-        id = Visit(context.id()).[Result]
-        header = ""
-        typ = Visit(context.typeType()).[str]
-        ? context.annotationSupport() >< nil {
-            header += Visit(context.annotationSupport())
-        }
-        header += id.permission + " enum " + id.text + ":" + typ
-        header += Wrap + BlockLeft + Wrap
-        i @ 0 ..< context.enumSupportStatement().Length {
-            obj += Visit(context.enumSupportStatement(i))
-        }
-        obj += BlockRight + Terminate + Wrap
-        obj = header + obj
-        <- obj
-    }
-
-    base.VisitEnumSupportStatement : (context EnumSupportStatementContext -> v any) {
-        id = Visit(context.id()).[Result]
-        ? context.integerExpr() >< nil {
-            op = ""
-            ? context.add() >< nil {
-                op = Visit(context.add()).[str]
-            }
-            id.text += " = " + op + Visit(context.integerExpr())
-        }
-        <- id.text + ","
-    }
-
-    base.VisitNamespaceFunctionStatement : (context NamespaceFunctionStatementContext -> v any) {
-        id = Visit(context.id()).[Result]
-        obj = ""
-        ? context.annotationSupport() >< nil {
-            obj += Visit(context.annotationSupport())
-        }
-        # 异步 #
-        pout = Visit(context.parameterClauseOut()).[str]
-        ? context.t.Type == Right_Flow {
-            pout = ? -> pout >< "void" {
-                ""Task"<"pout">"
-            } _ {
-                Task
-            }
-            obj += ""id.permission" async static "pout" "id.text""
-        } _ {
-            ? context.y >< nil {
-                ? pout >< "void" {
-                    pout = ""IEnum"<"pout">"
+            content = ""
+            contentStatic = ""
+            me.add_current_set()
+            item @ context.namespaceSupportStatement() {
+                type = item.GetChild(0).GetType()
+                ? type == typeof[NamespaceVariableStatementContext]() |
+                    type == typeof[NamespaceControlStatementContext]() |
+                    type == typeof[NamespaceFunctionStatementContext]() |
+                    type == typeof[NamespaceConstantStatementContext]() {
+                    contentStatic += Visit(item)
+                } _ {
+                    content += Visit(item)
                 }
             }
-            obj += ""id.permission" static "pout" "id.text""
-        }
-
-        # 泛型 #
-        templateContract = ""
-        ? context.templateDefine() >< nil {
-            template = Visit(context.templateDefine()).[TemplateItem]
-            obj += template.Template
-            templateContract = template.Contract
-        }
-        me.add_current_set()
-        obj += Visit(context.parameterClauseIn()) + templateContract + BlockLeft + Wrap
-        obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.delete_current_set()
-        obj += BlockRight + Wrap
-        <- obj
-    }
-
-    base.VisitNamespaceConstantStatement : (context NamespaceConstantStatementContext -> v any) {
-        id = Visit(context.id()).[Result]
-        expr = Visit(context.expression()).[Result]
-        typ = ? -> context.typeType() >< nil {
-            Visit(context.typeType()).[str]
-        } _ {
-            expr.data.[str]
-        }
-
-        obj = ""
-        ? context.annotationSupport() >< nil {
-            obj += Visit(context.annotationSupport())
-        }
-        
-        obj += ""id.permission" const "typ" "id.text" = "expr.text" "Terminate + Wrap""
-        <- obj
-    }
-
-    base.VisitNamespaceVariableStatement : (context NamespaceVariableStatementContext -> v any) {
-        r1 = Visit(context.id()).[Result]
-        me.add_id(r1.text)
-        isMutable = r1.isVirtual
-        typ = ""
-        r2 Result = nil
-        ? context.expression() >< nil {
-            r2 = Visit(context.expression()).[Result]
-            typ = r2.data.[str]
-        }
-        ? context.typeType() >< nil {
-            typ = Visit(context.typeType()).[str]
-        }
-        obj = ""
-        ? context.annotationSupport() >< nil {
-            obj += Visit(context.annotationSupport())
-        }
-
-        obj += ""r1.permission" static "typ" "r1.text""
-        obj += ? -> r2 >< nil {
-            " = "r2.text" "Terminate+Wrap""
-        } _ {
-            Terminate + Wrap
-        }
-        <- obj
-    }
-
-    base.VisitNamespaceControlStatement : (context NamespaceControlStatementContext -> v any) {
-        r1 = Visit(context.id()).[Result]
-        me.add_id(r1.text)
-        isMutable = r1.isVirtual
-        typ = ""
-        typ = Visit(context.typeType()).[str]
-        obj = ""
-        ? context.annotationSupport() >< nil {
-            obj += Visit(context.annotationSupport())
-        }
-
-        obj += ""r1.permission" static "typ" "r1.text + BlockLeft""
-        ? context.expression() >< nil {
-            expr = me.Visit(context.expression()).[Result]
-            obj += "get{return "expr.text"; }set{"expr.text"=value;}"
-        } _ {
-            item @ context.packageControlSubStatement() {
-                temp = Visit(item).[Result]
-                obj += temp.text
+            obj += content
+            ? contentStatic >< "" {
+                obj += "public partial class "ns.name.sub_str(ns.name.last_index_of(".") + 1) "_static" +
+                    BlockLeft + Wrap + contentStatic + BlockRight + Wrap
             }
+            me.delete_current_set()
+            obj += BlockRight + Wrap
+            <- obj
         }
-        obj += BlockRight + Wrap
-        <- obj
+
+        VisitExportStatement : (context ExportStatementContext -> v any) {
+            name = context.TextLiteral().GetText()
+            name = name.sub_str(1, name.len()-2)
+            name = name.replace("/", ".")
+            obj = Namespace{
+                name = name
+            }
+            item @ context.importStatement() {
+                obj.imports += Visit(item).[str]
+            }
+            <- obj
+        }
+
+        VisitImportStatement : (context ImportStatementContext -> v any) {
+            obj = ""
+            ? context.annotationSupport() >< nil {
+                obj += Visit(context.annotationSupport())
+            }
+            ns = context.TextLiteral().GetText()
+            ns = ns.sub_str(1, ns.len()-2)
+            ns = ns.replace("/", ".")
+            obj += ? -> context.call() >< nil {
+                "using static " + ns + "." + Visit(context.id()).[Result].text
+            } context.id() >< nil {
+                "using " + ns + "." + Visit(context.id()).[Result].text
+            } _ {
+                "using " + ns
+            }
+            obj += Terminate + Wrap
+            <- obj
+        }
+
+        VisitNameSpaceItem : (context NameSpaceItemContext -> v any) {
+            obj = ""
+            i @ 0 ..< context.id().Length {
+                id = Visit(context.id(i)).[Result]
+                obj += ? -> i == 0 {
+                    "" + id.text
+                } _ {
+                    "." + id.text
+                }
+            }
+            <- obj
+        }
+
+        VisitName : (context NameContext -> v any) {
+            obj = ""
+            i @ 0 ..< context.id().Length {
+                id = Visit(context.id(i)).[Result]
+                obj += ? -> i == 0 {
+                    "" + id.text
+                } _ {
+                    "." + id.text
+                }
+            }
+            <- obj
+        }
+
+        VisitEnumStatement : (context EnumStatementContext -> v any) {
+            obj = ""
+            id = Visit(context.id()).[Result]
+            header = ""
+            typ = Visit(context.typeType()).[str]
+            ? context.annotationSupport() >< nil {
+                header += Visit(context.annotationSupport())
+            }
+            header += id.permission + " enum " + id.text + ":" + typ
+            header += Wrap + BlockLeft + Wrap
+            i @ 0 ..< context.enumSupportStatement().Length {
+                obj += Visit(context.enumSupportStatement(i))
+            }
+            obj += BlockRight + Terminate + Wrap
+            obj = header + obj
+            <- obj
+        }
+
+        VisitEnumSupportStatement : (context EnumSupportStatementContext -> v any) {
+            id = Visit(context.id()).[Result]
+            ? context.integerExpr() >< nil {
+                op = ""
+                ? context.add() >< nil {
+                    op = Visit(context.add()).[str]
+                }
+                id.text += " = " + op + Visit(context.integerExpr())
+            }
+            <- id.text + ","
+        }
+
+        VisitNamespaceFunctionStatement : (context NamespaceFunctionStatementContext -> v any) {
+            id = Visit(context.id()).[Result]
+            obj = ""
+            ? context.annotationSupport() >< nil {
+                obj += Visit(context.annotationSupport())
+            }
+            # 异步 #
+            pout = Visit(context.parameterClauseOut()).[str]
+            ? context.t.Type == Right_Flow {
+                pout = ? -> pout >< "void" {
+                    ""Task"<"pout">"
+                } _ {
+                    Task
+                }
+                obj += ""id.permission" async static "pout" "id.text""
+            } _ {
+                ? context.y >< nil {
+                    ? pout >< "void" {
+                        pout = ""IEnum"<"pout">"
+                    }
+                }
+                obj += ""id.permission" static "pout" "id.text""
+            }
+
+            # 泛型 #
+            templateContract = ""
+            ? context.templateDefine() >< nil {
+                template = Visit(context.templateDefine()).[TemplateItem]
+                obj += template.Template
+                templateContract = template.Contract
+            }
+            me.add_current_set()
+            obj += Visit(context.parameterClauseIn()) + templateContract + BlockLeft + Wrap
+            obj += ProcessFunctionSupport(context.functionSupportStatement())
+            me.delete_current_set()
+            obj += BlockRight + Wrap
+            <- obj
+        }
+
+        VisitNamespaceConstantStatement : (context NamespaceConstantStatementContext -> v any) {
+            id = Visit(context.id()).[Result]
+            expr = Visit(context.expression()).[Result]
+            typ = ? -> context.typeType() >< nil {
+                Visit(context.typeType()).[str]
+            } _ {
+                expr.data.[str]
+            }
+
+            obj = ""
+            ? context.annotationSupport() >< nil {
+                obj += Visit(context.annotationSupport())
+            }
+            
+            obj += ""id.permission" const "typ" "id.text" = "expr.text" "Terminate + Wrap""
+            <- obj
+        }
+
+        VisitNamespaceVariableStatement : (context NamespaceVariableStatementContext -> v any) {
+            r1 = Visit(context.id()).[Result]
+            me.add_id(r1.text)
+            isMutable = r1.isVirtual
+            typ = ""
+            r2 Result = nil
+            ? context.expression() >< nil {
+                r2 = Visit(context.expression()).[Result]
+                typ = r2.data.[str]
+            }
+            ? context.typeType() >< nil {
+                typ = Visit(context.typeType()).[str]
+            }
+            obj = ""
+            ? context.annotationSupport() >< nil {
+                obj += Visit(context.annotationSupport())
+            }
+
+            obj += ""r1.permission" static "typ" "r1.text""
+            obj += ? -> r2 >< nil {
+                " = "r2.text" "Terminate+Wrap""
+            } _ {
+                Terminate + Wrap
+            }
+            <- obj
+        }
+
+        VisitNamespaceControlStatement : (context NamespaceControlStatementContext -> v any) {
+            r1 = Visit(context.id()).[Result]
+            me.add_id(r1.text)
+            isMutable = r1.isVirtual
+            typ = ""
+            typ = Visit(context.typeType()).[str]
+            obj = ""
+            ? context.annotationSupport() >< nil {
+                obj += Visit(context.annotationSupport())
+            }
+
+            obj += ""r1.permission" static "typ" "r1.text + BlockLeft""
+            ? context.expression() >< nil {
+                expr = me.Visit(context.expression()).[Result]
+                obj += "get{return "expr.text"; }set{"expr.text"=value;}"
+            } _ {
+                item @ context.packageControlSubStatement() {
+                    temp = Visit(item).[Result]
+                    obj += temp.text
+                }
+            }
+            obj += BlockRight + Wrap
+            <- obj
+        }
     }
 }

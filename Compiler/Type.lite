@@ -8,183 +8,185 @@
 }
 
 me LiteLangVisitor % {
-    base.VisitTypeType : (context TypeTypeContext -> v any) {
-        obj = ""
-        obj = Visit(context.GetChild(0)).[str]
-        <- obj
-    }
-
-    base.VisitTypeReference : (context TypeReferenceContext -> v any) {
-        obj = "ref "
-        ? context.typeNullable() >< nil {
-            obj += Visit(context.typeNullable())
-        } context.typeNotNull() >< nil {
-            obj += Visit(context.typeNotNull())
+    base LiteParserBaseVisitor[any] {
+        VisitTypeType : (context TypeTypeContext -> v any) {
+            obj = ""
+            obj = Visit(context.GetChild(0)).[str]
+            <- obj
         }
-        <- obj
-    }
 
-    base.VisitTypeNullable : (context TypeNullableContext -> v any) {
-        obj = ""
-        obj = Visit(context.typeNotNull()).[str]
-        ? context.typeNotNull().GetChild(0).is[TypeBasicContext]() &
-            context.typeNotNull().GetChild(0).GetText() >< "any" &
-            context.typeNotNull().GetChild(0).GetText() >< "str" {
-            obj += "?"
-        }
-        <- obj
-    }
-
-    base.VisitTypeTuple : (context TypeTupleContext -> v any) {
-        obj = ""
-        obj += "("
-        i:v @ context.typeType() {
-            obj += ? -> i == 0 {
-                Visit(v)
-            } _ {
-                ","Visit(v)""
+        VisitTypeReference : (context TypeReferenceContext -> v any) {
+            obj = "ref "
+            ? context.typeNullable() >< nil {
+                obj += Visit(context.typeNullable())
+            } context.typeNotNull() >< nil {
+                obj += Visit(context.typeNotNull())
             }
+            <- obj
         }
-        obj += ")"
-        <- obj
-    }
 
-    base.VisitTypeArray : (context TypeArrayContext -> v any) {
-        obj = ""
-        obj += ""Visit(context.typeType())"[]"
-        <- obj
-    }
-
-    base.VisitTypeList : (context TypeListContext -> v any) {
-        obj = ""
-        obj += ""Lst"<"Visit(context.typeType())">"
-        <- obj
-    }
-
-    base.VisitTypeSet : (context TypeSetContext -> v any) {
-        obj = ""
-        obj += ""Set"<"Visit(context.typeType())">"
-        <- obj
-    }
-
-    base.VisitTypeDictionary : (context TypeDictionaryContext -> v any) {
-        obj = ""
-        obj += ""Dic"<"Visit(context.typeType(0))","Visit(context.typeType(1))">"
-        <- obj
-    }
-
-    base.VisitTypeStack : (context TypeStackContext -> v any) {
-        obj = ""
-        obj += ""Stk"<"Visit(context.typeType())">"
-        <- obj
-    }
-
-    base.VisitTypePackage : (context TypePackageContext -> v any) {
-        obj = ""
-        obj += Visit(context.nameSpaceItem())
-        ? context.templateCall() >< nil {
-            obj += Visit(context.templateCall())
+        VisitTypeNullable : (context TypeNullableContext -> v any) {
+            obj = ""
+            obj = Visit(context.typeNotNull()).[str]
+            ? context.typeNotNull().GetChild(0).is[TypeBasicContext]() &
+                context.typeNotNull().GetChild(0).GetText() >< "any" &
+                context.typeNotNull().GetChild(0).GetText() >< "str" {
+                obj += "?"
+            }
+            <- obj
         }
-        <- obj
-    }
 
-    base.VisitTypeFunction : (context TypeFunctionContext -> v any) {
-        obj = ""
-        in = Visit(context.typeFunctionParameterClause(0)).[str]
-        out = Visit(context.typeFunctionParameterClause(1)).[str]
-        ? context.t.Type == Right_Arrow {
-            ? out.Length == 0 {
-                obj = ? -> in.Length == 0 {
-                    "Action"
+        VisitTypeTuple : (context TypeTupleContext -> v any) {
+            obj = ""
+            obj += "("
+            i:v @ context.typeType() {
+                obj += ? -> i == 0 {
+                    Visit(v)
                 } _ {
-                    "Action<"in">"
-                }
-            } _ {
-                ? out.first_index_of(",") >= 0 {
-                    out = "(" out ")"
-                }
-                ? context.y >< nil {
-                    out = ""IEnum"<"out">"
-                }
-                obj = ? -> in.Length == 0 {
-                    "Func<"out">"
-                } _ {
-                    "Func<"in", "out">"
+                    ","Visit(v)""
                 }
             }
-        } _ {
-            ? out.Length == 0 {
-                obj = ? -> in.Length == 0 {
-                    "Func<"Task">"
+            obj += ")"
+            <- obj
+        }
+
+        VisitTypeArray : (context TypeArrayContext -> v any) {
+            obj = ""
+            obj += ""Visit(context.typeType())"[]"
+            <- obj
+        }
+
+        VisitTypeList : (context TypeListContext -> v any) {
+            obj = ""
+            obj += ""Lst"<"Visit(context.typeType())">"
+            <- obj
+        }
+
+        VisitTypeSet : (context TypeSetContext -> v any) {
+            obj = ""
+            obj += ""Set"<"Visit(context.typeType())">"
+            <- obj
+        }
+
+        VisitTypeDictionary : (context TypeDictionaryContext -> v any) {
+            obj = ""
+            obj += ""Dic"<"Visit(context.typeType(0))","Visit(context.typeType(1))">"
+            <- obj
+        }
+
+        VisitTypeStack : (context TypeStackContext -> v any) {
+            obj = ""
+            obj += ""Stk"<"Visit(context.typeType())">"
+            <- obj
+        }
+
+        VisitTypePackage : (context TypePackageContext -> v any) {
+            obj = ""
+            obj += Visit(context.nameSpaceItem())
+            ? context.templateCall() >< nil {
+                obj += Visit(context.templateCall())
+            }
+            <- obj
+        }
+
+        VisitTypeFunction : (context TypeFunctionContext -> v any) {
+            obj = ""
+            in = Visit(context.typeFunctionParameterClause(0)).[str]
+            out = Visit(context.typeFunctionParameterClause(1)).[str]
+            ? context.t.Type == Right_Arrow {
+                ? out.Length == 0 {
+                    obj = ? -> in.Length == 0 {
+                        "Action"
+                    } _ {
+                        "Action<"in">"
+                    }
                 } _ {
-                    "Func<"in", "Task">"
+                    ? out.first_index_of(",") >= 0 {
+                        out = "(" out ")"
+                    }
+                    ? context.y >< nil {
+                        out = ""IEnum"<"out">"
+                    }
+                    obj = ? -> in.Length == 0 {
+                        "Func<"out">"
+                    } _ {
+                        "Func<"in", "out">"
+                    }
                 }
             } _ {
-                ? context.y >< nil {
-                    out = ""IEnum"<("out")>"
-                }
-                obj = ? -> in.Length == 0 {
-                    "Func<"Task"<"out">>"
+                ? out.Length == 0 {
+                    obj = ? -> in.Length == 0 {
+                        "Func<"Task">"
+                    } _ {
+                        "Func<"in", "Task">"
+                    }
                 } _ {
-                    "Func<"in", "Task"<"out">>"
+                    ? context.y >< nil {
+                        out = ""IEnum"<("out")>"
+                    }
+                    obj = ? -> in.Length == 0 {
+                        "Func<"Task"<"out">>"
+                    } _ {
+                        "Func<"in", "Task"<"out">>"
+                    }
                 }
             }
+            <- obj
         }
-        <- obj
-    }
 
-    base.VisitTypeAny : (context TypeAnyContext -> v any) {
-        <- Any
-    }
+        VisitTypeAny : (context TypeAnyContext -> v any) {
+            <- Any
+        }
 
-    base.VisitTypeFunctionParameterClause : (context TypeFunctionParameterClauseContext -> v any) {
-        obj = ""
-        i @ 0 ..< context.typeType().Length {
-            p = Visit(context.typeType(i)).[str]
-            obj += ? -> i == 0 {
-                p
-            } _ {
-                ", "p""
+        VisitTypeFunctionParameterClause : (context TypeFunctionParameterClauseContext -> v any) {
+            obj = ""
+            i @ 0 ..< context.typeType().Length {
+                p = Visit(context.typeType(i)).[str]
+                obj += ? -> i == 0 {
+                    p
+                } _ {
+                    ", "p""
+                }
             }
+            <- obj
         }
-        <- obj
-    }
 
-    base.VisitTypeBasic : (context TypeBasicContext -> v any) {
-        <- context.t.Type ? -> TypeI8 {
-            I8
-        } TypeU8 {
-            U8
-        } TypeI16 {
-            I16
-        } TypeU16 {
-            U16
-        } TypeI32 {
-            I32
-        } TypeU32 {
-            U32
-        } TypeI64 {
-            I64
-        } TypeU64 {
-            U64
-        } TypeF32 {
-            F32
-        } TypeF64 {
-            F64
-        } TypeChr {
-            Chr
-        } TypeStr {
-            Str
-        } TypeBool {
-            Bool
-        } TypeInt {
-            Int
-        } TypeNum {
-            Num
-        } TypeByte {
-            U8
-        } _ {
-            Any
+        VisitTypeBasic : (context TypeBasicContext -> v any) {
+            <- context.t.Type ? -> TypeI8 {
+                I8
+            } TypeU8 {
+                U8
+            } TypeI16 {
+                I16
+            } TypeU16 {
+                U16
+            } TypeI32 {
+                I32
+            } TypeU32 {
+                U32
+            } TypeI64 {
+                I64
+            } TypeU64 {
+                U64
+            } TypeF32 {
+                F32
+            } TypeF64 {
+                F64
+            } TypeChr {
+                Chr
+            } TypeStr {
+                Str
+            } TypeBool {
+                Bool
+            } TypeInt {
+                Int
+            } TypeNum {
+                Num
+            } TypeByte {
+                U8
+            } _ {
+                Any
+            }
         }
     }
 }
