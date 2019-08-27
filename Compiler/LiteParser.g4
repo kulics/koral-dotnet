@@ -34,7 +34,7 @@ typeAliasStatement: id Equal_Arrow typeType end;
 typeRedefineStatement: id Colon_Equal typeType end;
 
 // 枚举
-enumStatement: (annotationSupport)? id Colon_Equal New_Line* typeType Colon left_brace enumSupportStatement* right_brace end;
+enumStatement: (annotationSupport)? id Colon_Equal New_Line* typeType Question left_brace enumSupportStatement* right_brace end;
 
 enumSupportStatement: id (Equal (add)? integerExpr)? end;
 // 命名空间变量

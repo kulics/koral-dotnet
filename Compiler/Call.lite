@@ -177,7 +177,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    VisitDictionaryAssign : (context DictionaryAssignContext -> v any) {
+    base%VisitDictionaryAssign : (context DictionaryAssignContext -> v any) {
         obj = ""
         obj += "{"
         i @ 0 ..< context.dictionaryElement().Length {
@@ -253,7 +253,7 @@ me LiteLangVisitor % {
         <- result
     }
 
-    VisitSet : (context SetContext -> v any) {
+    base%VisitSet : (context SetContext -> v any) {
         type = Any
         result = Result{}
         i @ 0 ..< context.expression().Length {
@@ -299,7 +299,7 @@ me LiteLangVisitor % {
         <- result
     }
 
-    VisitDictionaryElement : (context DictionaryElementContext -> v any) {
+    base%VisitDictionaryElement : (context DictionaryElementContext -> v any) {
         r1 = Visit(context.expression(0)).[Result]
         r2 = Visit(context.expression(1)).[Result]
         result = DicEle{

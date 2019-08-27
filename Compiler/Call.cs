@@ -185,7 +185,7 @@ return ","+r.text;}
 obj+="}";
 return obj;
 }
-public  virtual  object VisitDictionaryAssign( DictionaryAssignContext context ){
+public  override  object VisitDictionaryAssign( DictionaryAssignContext context ){
 var obj = "";
 obj+="{";
 foreach (var i in range(0,context.dictionaryElement().Length,1,true,false)){
@@ -251,7 +251,7 @@ result.data=(new System.Text.StringBuilder("").Append(Lst).Append("<").Append(ty
 result.text=(new System.Text.StringBuilder("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
 return result;
 }
-public  virtual  object VisitSet( SetContext context ){
+public  override  object VisitSet( SetContext context ){
 var type = Any;
 var result = (new Result());
 foreach (var i in range(0,context.expression().Length,1,true,false)){
@@ -295,7 +295,7 @@ result.data=(new System.Text.StringBuilder("").Append(Dic).Append("<").Append(ty
 result.text=(new System.Text.StringBuilder("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
 return result;
 }
-public  virtual  object VisitDictionaryElement( DictionaryElementContext context ){
+public  override  object VisitDictionaryElement( DictionaryElementContext context ){
 var r1 = ((Result)(Visit(context.expression(0))));
 var r2 = ((Result)(Visit(context.expression(1))));
 var result = (new DicEle(){key = ((string)(r1.data)),value = ((string)(r2.data)),text = "{"+r1.text+","+r2.text+"}"});
