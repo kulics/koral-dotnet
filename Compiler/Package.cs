@@ -20,17 +20,10 @@ this.selfID=Self.text;
 }
 var obj = "";
 var extend = "";
-foreach (var item in context.packageSupportStatement()){
-if ( item.GetChild(0).GetType()==@typeof<IncludeStatementContext>() ) {
-extend+=run(()=>{if ( extend=="" ) {
-return Visit(item);}
-else {
-return ","+Visit(item);}
-});
-}
-else {
-obj+=Visit(item);
-}
+foreach (var item in context.packageFieldStatement()){
+var r = ((Result)(Visit(item)));
+obj+=r.text;
+extend+=r.data;
 }
 foreach (var item in context.packageImplementStatement()){
 var r = ((Result)(Visit(item)));
@@ -66,6 +59,23 @@ header+=templateContract+BlockLeft+Wrap;
 obj = header+obj;
 this.selfID="";
 return obj;
+}
+public  override  object VisitPackageFieldStatement( PackageFieldStatementContext context ){
+var obj = "";
+var extend = "";
+foreach (var item in context.packageSupportStatement()){
+if ( item.GetChild(0).GetType()==@typeof<IncludeStatementContext>() ) {
+extend+=run(()=>{if ( extend=="" ) {
+return Visit(item);}
+else {
+return ","+Visit(item);}
+});
+}
+else {
+obj+=Visit(item);
+}
+}
+return (new Result(){text = obj,data = extend});
 }
 public  override  object VisitPackageVariableStatement( PackageVariableStatementContext context ){
 var r1 = ((Result)(Visit(context.id())));

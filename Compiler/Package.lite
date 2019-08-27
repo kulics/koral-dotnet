@@ -22,16 +22,10 @@ me LiteLangVisitor % {
         obj = ""
         extend = ""
 
-        item @ context.packageSupportStatement() {
-            ? item.GetChild(0).GetType() == typeof[IncludeStatementContext]() {
-                extend += ? -> extend == "" {
-                    Visit(item)
-                } _ {
-                    "," + Visit(item)
-                }
-            } _ {
-                obj += Visit(item)
-            }
+        item @ context.packageFieldStatement() {
+            r = Visit(item).[Result]
+            obj += r.text
+            extend += r.data
         }
         item @ context.packageImplementStatement() {
             r = Visit(item).[Result]
@@ -70,6 +64,23 @@ me LiteLangVisitor % {
         obj = header + obj
         me.selfID = ""
         <- obj
+    }
+
+    base%VisitPackageFieldStatement : (context PackageFieldStatementContext -> v any) {
+        obj = ""
+        extend = ""
+        item @ context.packageSupportStatement() {
+            ? item.GetChild(0).GetType() == typeof[IncludeStatementContext]() {
+                extend += ? -> extend == "" {
+                    Visit(item)
+                } _ {
+                    "," + Visit(item)
+                }
+            } _ {
+                obj += Visit(item)
+            }
+        }
+        <- Result{text = obj; data = extend}
     }
 
     base%VisitPackageVariableStatement : (context PackageVariableStatementContext -> v any) {

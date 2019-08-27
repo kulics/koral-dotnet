@@ -50,7 +50,10 @@ parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brac
 
 // 定义包
 packageStatement: (annotationSupport)? id (templateDefine)? Colon_Equal (id)? Coin 
-left_brace (packageSupportStatement)* right_brace (packageNewStatement|packageImplementStatement)* end;
+ (packageNewStatement|packageFieldStatement|packageImplementStatement) 
+ (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))* end;
+
+packageFieldStatement: left_brace (packageSupportStatement)* right_brace;
 
 // 包支持的语句
 packageSupportStatement:
@@ -67,7 +70,7 @@ New_Line
 // 包含
 includeStatement: typeType end;
 // 包构造方法
-packageNewStatement: (annotationSupport)? Cent left_paren parameterClauseIn right_paren
+packageNewStatement: (annotationSupport)? left_paren parameterClauseIn right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
 // 定义变量
 packageVariableStatement: (annotationSupport)? id (Equal expression| typeType (Equal expression)?) end;
@@ -76,7 +79,7 @@ packageControlSubStatement: id (left_paren id right_paren)? left_brace (function
 // 定义包事件
 packageEventStatement: id left_brack Question right_brack nameSpaceItem end;
 // 包实现接口
-packageImplementStatement: Cent typeType left_brace (implementSupportStatement)* right_brace;
+packageImplementStatement: typeType left_brace (implementSupportStatement)* right_brace;
 
 // 包构造方法
 implementNewStatement: (annotationSupport)? parameterClauseSelf Cent left_paren parameterClauseIn right_paren
