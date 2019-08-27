@@ -9,10 +9,10 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class LiteLangVisitor{
-public  override  object VisitIncludeStatement( IncludeStatementContext context ){
+public  override  object @base( IncludeStatementContext context ){
 return Visit(context.typeType());
 }
-public  override  object VisitPackageStatement( PackageStatementContext context ){
+public  override  object @base( PackageStatementContext context ){
 var id = ((Result)(Visit(context.id(0))));
 if ( context.id(1)!=null ) {
 var Self = ((Result)(Visit(context.id(1))));
@@ -67,7 +67,7 @@ obj = header+obj;
 this.selfID="";
 return obj;
 }
-public  override  object VisitPackageVariableStatement( PackageVariableStatementContext context ){
+public  override  object @base( PackageVariableStatementContext context ){
 var r1 = ((Result)(Visit(context.id())));
 var isMutable = r1.isVirtual;
 var typ = "";
@@ -91,7 +91,7 @@ return Terminate+Wrap;}
 });
 return obj;
 }
-public  override  object VisitPackageControlSubStatement( PackageControlSubStatementContext context ){
+public  override  object @base( PackageControlSubStatementContext context ){
 var obj = "";
 var id = "";
 var typ = "";
@@ -114,7 +114,7 @@ this.delete_current_set();
 this.setID="";
 return (new Result(){text = obj,data = typ});
 }
-public  override  object VisitPackageNewStatement( PackageNewStatementContext context ){
+public  override  object @base( PackageNewStatementContext context ){
 var text = "";
 this.add_current_set();
 text+=((string)(Visit(context.parameterClauseIn())));
@@ -125,14 +125,14 @@ text+=BlockLeft+ProcessFunctionSupport(context.functionSupportStatement())+Block
 this.delete_current_set();
 return text;
 }
-public  override  object VisitPackageEventStatement( PackageEventStatementContext context ){
+public  override  object @base( PackageEventStatementContext context ){
 var obj = "";
 var id = ((Result)(Visit(context.id())));
 var nameSpace = Visit(context.nameSpaceItem());
 obj+=(new System.Text.StringBuilder("public event ").Append(nameSpace).Append(" ").Append(id.text+Terminate+Wrap).Append("")).to_str();
 return obj;
 }
-public  override  object VisitProtocolStatement( ProtocolStatementContext context ){
+public  override  object @base( ProtocolStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var obj = "";
 var interfaceProtocol = "";
@@ -156,7 +156,7 @@ obj+=interfaceProtocol;
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitProtocolControlStatement( ProtocolControlStatementContext context ){
+public  override  object @base( ProtocolControlStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var isMutable = id.isVirtual;
 var r = (new Result());
@@ -178,12 +178,12 @@ r.text+="get;set;";
 r.text+=BlockRight+Wrap;
 return r;
 }
-public  override  object VisitProtocolControlSubStatement( ProtocolControlSubStatementContext context ){
+public  override  object @base( ProtocolControlSubStatementContext context ){
 var obj = "";
 obj = GetControlSub(context.id().GetText()).id+Terminate;
 return obj;
 }
-public  override  object VisitProtocolFunctionStatement( ProtocolFunctionStatementContext context ){
+public  override  object @base( ProtocolFunctionStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var r = (new Result());
 if ( context.annotationSupport()!=null ) {
@@ -216,7 +216,7 @@ templateContract = template.Contract;
 r.text+=Visit(context.parameterClauseIn())+templateContract+Terminate+Wrap;
 return r;
 }
-public  override  object VisitPackageImplementStatement( PackageImplementStatementContext context ){
+public  override  object @base( PackageImplementStatementContext context ){
 var obj = "";
 var extends = ((string)(Visit(context.typeType())));
 foreach (var item in context.implementSupportStatement()){

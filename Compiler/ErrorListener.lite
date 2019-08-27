@@ -11,17 +11,15 @@ ErrorListener := me $ {
     BaseErrorListener
     FileDir str
 
-    base BaseErrorListener {
-        SyntaxError : (recognizer IRecognizer, offendingSymbol ?IToken, 
-                line int, charPositionInLine int, msg str, 
-                e ?RecognitionException->) {
-            base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
-            print("------Syntax Error------")
-            print("File: "me.FileDir"")
-            print("Line: "line"  Column: "charPositionInLine"")
-            print("OffendingSymbol: "offendingSymbol.Text"")
-            print("Message: "msg"")
-        }
+    base%SyntaxError : (recognizer IRecognizer, offendingSymbol ?IToken, 
+            line int, charPositionInLine int, msg str, 
+            e ?RecognitionException->) {
+        base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
+        print("------Syntax Error------")
+        print("File: "me.FileDir"")
+        print("Line: "line"  Column: "charPositionInLine"")
+        print("OffendingSymbol: "offendingSymbol.Text"")
+        print("Message: "msg"")
     }
 }
 

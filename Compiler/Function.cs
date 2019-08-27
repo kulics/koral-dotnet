@@ -36,7 +36,7 @@ content+=BlockRight;
 obj+=content;
 return obj;
 }
-public  override  object VisitFunctionStatement( FunctionStatementContext context ){
+public  override  object @base( FunctionStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var obj = "";
 var pout = ((string)(Visit(context.parameterClauseOut())));
@@ -69,21 +69,21 @@ obj+=BlockRight+Wrap;
 this.delete_current_set();
 return obj;
 }
-public  override  object VisitReturnStatement( ReturnStatementContext context ){
+public  override  object @base( ReturnStatementContext context ){
 if ( context.tupleExpression()!=null ) {
 var r = ((Result)(Visit(context.tupleExpression())));
 return "return "+r.text+Terminate+Wrap;
 }
 return (new System.Text.StringBuilder("return").Append(Terminate).Append("").Append(Wrap).Append("")).to_str();
 }
-public  override  object VisitYieldReturnStatement( YieldReturnStatementContext context ){
+public  override  object @base( YieldReturnStatementContext context ){
 var r = ((Result)(Visit(context.tupleExpression())));
 return "yield return "+r.text+Terminate+Wrap;
 }
-public  override  object VisitYieldBreakStatement( YieldBreakStatementContext context ){
+public  override  object @base( YieldBreakStatementContext context ){
 return (new System.Text.StringBuilder("yield break").Append(Terminate).Append("").Append(Wrap).Append("")).to_str();
 }
-public  override  object VisitTuple( TupleContext context ){
+public  override  object @base( TupleContext context ){
 var obj = "(";
 foreach (var i in range(0,context.expression().Length,1,true,false)){
 var r = ((Result)(Visit(context.expression(i))));
@@ -96,7 +96,7 @@ return (new System.Text.StringBuilder(", ").Append(r.text).Append("")).to_str();
 obj+=")";
 return (new Result(){data = "var",text = obj});
 }
-public  override  object VisitTupleExpression( TupleExpressionContext context ){
+public  override  object @base( TupleExpressionContext context ){
 var obj = "";
 foreach (var i in range(0,context.expression().Length,1,true,false)){
 var r = ((Result)(Visit(context.expression(i))));
@@ -111,7 +111,7 @@ obj = (new System.Text.StringBuilder("(").Append(obj).Append(")")).to_str();
 }
 return (new Result(){data = "var",text = obj});
 }
-public  override  object VisitParameterClauseIn( ParameterClauseInContext context ){
+public  override  object @base( ParameterClauseInContext context ){
 var obj = "(";
 var temp = (new list<string>());
 foreach (var i in range(context.parameter().Length-1,0,1,false,true)){
@@ -129,7 +129,7 @@ return (new System.Text.StringBuilder(", ").Append(temp[i]).Append("")).to_str()
 obj+=")";
 return obj;
 }
-public  override  object VisitParameterClauseOut( ParameterClauseOutContext context ){
+public  override  object @base( ParameterClauseOutContext context ){
 var obj = "";
 if ( context.parameter().Length==0 ) {
 obj+="void";
@@ -156,7 +156,7 @@ obj+=" )";
 }
 return obj;
 }
-public  override  object VisitParameterClauseSelf( ParameterClauseSelfContext context ){
+public  override  object @base( ParameterClauseSelfContext context ){
 var p = (new Parameter());
 var id = ((Result)(Visit(context.id())));
 p.id=id.text;
@@ -164,7 +164,7 @@ p.permission=id.permission;
 p.type=((string)(Visit(context.typeType())));
 return p;
 }
-public  override  object VisitParameter( ParameterContext context ){
+public  override  object @base( ParameterContext context ){
 var p = (new Parameter());
 var id = ((Result)(Visit(context.id())));
 p.id=id.text;

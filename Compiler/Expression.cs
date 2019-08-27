@@ -18,7 +18,7 @@ public string value;
 public string text;
 }
 public partial class LiteLangVisitor{
-public  override  object VisitVariableStatement( VariableStatementContext context ){
+public  override  object @base( VariableStatementContext context ){
 var obj = "";
 var r1 = ((Result)(Visit(context.idExpression())));
 var r2 = ((Result)(Visit(context.expression())));
@@ -35,30 +35,30 @@ return (new System.Text.StringBuilder("var ").Append(r1.text).Append(" = ").Appe
 }
 return obj;
 }
-public  override  object VisitVariableDeclaredStatement( VariableDeclaredStatementContext context ){
+public  override  object @base( VariableDeclaredStatementContext context ){
 var obj = "";
 var Type = ((string)(Visit(context.typeType())));
 var r = ((Result)(Visit(context.idExpression())));
 obj = (new System.Text.StringBuilder("").Append(Type).Append(" ").Append(r.text).Append("")).to_str()+Terminate+Wrap;
 return obj;
 }
-public  override  object VisitAssignStatement( AssignStatementContext context ){
+public  override  object @base( AssignStatementContext context ){
 var r1 = ((Result)(Visit(context.tupleExpression(0))));
 var r2 = ((Result)(Visit(context.tupleExpression(1))));
 var obj = r1.text+Visit(context.assign())+r2.text+Terminate+Wrap;
 return obj;
 }
-public  override  object VisitAssign( AssignContext context ){
+public  override  object @base( AssignContext context ){
 if ( context.op.Type==Mod_Equal ) {
 return "%=";
 }
 return context.op.Text;
 }
-public  override  object VisitExpressionStatement( ExpressionStatementContext context ){
+public  override  object @base( ExpressionStatementContext context ){
 var r = ((Result)(Visit(context.expression())));
 return r.text+Terminate+Wrap;
 }
-public  override  object VisitExpression( ExpressionContext context ){
+public  override  object @base( ExpressionContext context ){
 var count = context.ChildCount;
 var r = (new Result());
 switch (count) {
@@ -143,37 +143,37 @@ case 1 :
 }
 return r;
 }
-public  override  object VisitTypeConversion( TypeConversionContext context ){
+public  override  object @base( TypeConversionContext context ){
 return ((string)(Visit(context.typeType())));
 }
-public  override  object VisitCall( CallContext context ){
+public  override  object @base( CallContext context ){
 return context.op.Text;
 }
-public  override  object VisitWave( WaveContext context ){
+public  override  object @base( WaveContext context ){
 return context.op.Text;
 }
-public  override  object VisitJudgeType( JudgeTypeContext context ){
+public  override  object @base( JudgeTypeContext context ){
 return context.op.Text;
 }
-public  override  object VisitBitwise( BitwiseContext context ){
+public  override  object @base( BitwiseContext context ){
 return ((string)(this.Visit(context.GetChild(0))));
 }
-public  override  object VisitBitwiseAnd( BitwiseAndContext context ){
+public  override  object @base( BitwiseAndContext context ){
 return "&";
 }
-public  override  object VisitBitwiseOr( BitwiseOrContext context ){
+public  override  object @base( BitwiseOrContext context ){
 return "|";
 }
-public  override  object VisitBitwiseXor( BitwiseXorContext context ){
+public  override  object @base( BitwiseXorContext context ){
 return "^";
 }
-public  override  object VisitBitwiseLeftShift( BitwiseLeftShiftContext context ){
+public  override  object @base( BitwiseLeftShiftContext context ){
 return "<<";
 }
-public  override  object VisitBitwiseRightShift( BitwiseRightShiftContext context ){
+public  override  object @base( BitwiseRightShiftContext context ){
 return ">>";
 }
-public  override  object VisitJudge( JudgeContext context ){
+public  override  object @base( JudgeContext context ){
 if ( context.op.Type==Not_Equal ) {
 return "!=";
 }
@@ -185,19 +185,19 @@ return "||";
 }
 return context.op.Text;
 }
-public  override  object VisitAdd( AddContext context ){
+public  override  object @base( AddContext context ){
 return context.op.Text;
 }
-public  override  object VisitMul( MulContext context ){
+public  override  object @base( MulContext context ){
 if ( context.op.Type==Mod ) {
 return "%";
 }
 return context.op.Text;
 }
-public  override  object VisitPow( PowContext context ){
+public  override  object @base( PowContext context ){
 return context.op.Text;
 }
-public  override  object VisitPrimaryExpression( PrimaryExpressionContext context ){
+public  override  object @base( PrimaryExpressionContext context ){
 if ( context.ChildCount==1 ) {
 var c = context.GetChild(0);
 if ( c.@is<DataStatementContext>() ) {
@@ -218,7 +218,7 @@ return (new Result(){text = id.text+template,data = id.text+template});
 var r = ((Result)(Visit(context.expression())));
 return (new Result(){text = "("+r.text+")",data = r.data});
 }
-public  override  object VisitExpressionList( ExpressionListContext context ){
+public  override  object @base( ExpressionListContext context ){
 var r = (new Result());
 var obj = "";
 foreach (var i in range(0,context.expression().Length,1,true,false)){
@@ -233,7 +233,7 @@ r.text=obj;
 r.data="var";
 return r;
 }
-public  override  object VisitTemplateDefine( TemplateDefineContext context ){
+public  override  object @base( TemplateDefineContext context ){
 var item = (new TemplateItem());
 item.Template+="<";
 foreach (var i in range(0,context.templateDefineItem().Length,1,true,false)){
@@ -250,7 +250,7 @@ item.Contract+=r.Contract;
 item.Template+=">";
 return item;
 }
-public  override  object VisitTemplateDefineItem( TemplateDefineItemContext context ){
+public  override  object @base( TemplateDefineItemContext context ){
 var item = (new TemplateItem());
 if ( context.id().len()==1 ) {
 var id1 = context.id(0).GetText();
@@ -264,7 +264,7 @@ item.Contract=(new System.Text.StringBuilder(" where ").Append(id1).Append(":").
 }
 return item;
 }
-public  override  object VisitTemplateCall( TemplateCallContext context ){
+public  override  object @base( TemplateCallContext context ){
 var obj = "";
 obj+="<";
 foreach (var i in range(0,context.typeType().Length,1,true,false)){
@@ -277,7 +277,7 @@ obj+=r;
 obj+=">";
 return obj;
 }
-public  override  object VisitStringExpression( StringExpressionContext context ){
+public  override  object @base( StringExpressionContext context ){
 var text = (new System.Text.StringBuilder("(new System.Text.StringBuilder(").Append(context.TextLiteral().GetText()).Append(")")).to_str();
 foreach (var item in context.stringExpressionElement()){
 text+=Visit(item);
@@ -285,12 +285,12 @@ text+=Visit(item);
 text+=").to_str()";
 return (new Result(){data = Str,text = text});
 }
-public  override  object VisitStringExpressionElement( StringExpressionElementContext context ){
+public  override  object @base( StringExpressionElementContext context ){
 var r = ((Result)(Visit(context.expression())));
 var text = context.TextLiteral().GetText();
 return (new System.Text.StringBuilder(".Append(").Append(r.text).Append(").Append(").Append(text).Append(")")).to_str();
 }
-public  override  object VisitDataStatement( DataStatementContext context ){
+public  override  object @base( DataStatementContext context ){
 var r = (new Result());
 if ( context.nilExpr()!=null ) {
 r.data=Any;
@@ -322,17 +322,17 @@ r.text=F;
 }
 return r;
 }
-public  override  object VisitFloatExpr( FloatExprContext context ){
+public  override  object @base( FloatExprContext context ){
 var number = "";
 number+=Visit(context.integerExpr(0))+"."+Visit(context.integerExpr(1));
 return number;
 }
-public  override  object VisitIntegerExpr( IntegerExprContext context ){
+public  override  object @base( IntegerExprContext context ){
 var number = "";
 number+=context.NumberLiteral().GetText();
 return number;
 }
-public  override  object VisitPlusMinus( PlusMinusContext context ){
+public  override  object @base( PlusMinusContext context ){
 var r = (new Result());
 var expr = ((Result)(Visit(context.expression())));
 var op = Visit(context.add());
@@ -340,21 +340,21 @@ r.data=expr.data;
 r.text=op+expr.text;
 return r;
 }
-public  override  object VisitNegate( NegateContext context ){
+public  override  object @base( NegateContext context ){
 var r = (new Result());
 var expr = ((Result)(Visit(context.expression())));
 r.data=expr.data;
 r.text="!"+expr.text;
 return r;
 }
-public  override  object VisitBitwiseNotExpression( BitwiseNotExpressionContext context ){
+public  override  object @base( BitwiseNotExpressionContext context ){
 var r = (new Result());
 var expr = ((Result)(Visit(context.expression())));
 r.data=expr.data;
 r.text="~"+expr.text;
 return r;
 }
-public  override  object VisitLinq( LinqContext context ){
+public  override  object @base( LinqContext context ){
 var r = (new Result(){data = "var"});
 r.text+=(new System.Text.StringBuilder("from ").Append(((Result)(Visit(context.expression(0)))).text).Append(" ")).to_str();
 foreach (var item in context.linqItem()){
@@ -363,20 +363,20 @@ r.text+=(new System.Text.StringBuilder("").Append(Visit(item)).Append(" ")).to_s
 r.text+=(new System.Text.StringBuilder("").Append(context.k.Text).Append(" ").Append(((Result)(Visit(context.expression(1)))).text).Append("")).to_str();
 return r;
 }
-public  override  object VisitLinqItem( LinqItemContext context ){
+public  override  object @base( LinqItemContext context ){
 var obj = ((string)(Visit(context.linqKeyword())));
 if ( context.expression()!=null ) {
 obj+=(new System.Text.StringBuilder(" ").Append(((Result)(Visit(context.expression()))).text).Append("")).to_str();
 }
 return obj;
 }
-public  override  object VisitLinqKeyword( LinqKeywordContext context ){
+public  override  object @base( LinqKeywordContext context ){
 return Visit(context.GetChild(0));
 }
-public  override  object VisitLinqHeadKeyword( LinqHeadKeywordContext context ){
+public  override  object @base( LinqHeadKeywordContext context ){
 return context.k.Text;
 }
-public  override  object VisitLinqBodyKeyword( LinqBodyKeywordContext context ){
+public  override  object @base( LinqBodyKeywordContext context ){
 return context.k.Text;
 }
 }

@@ -9,7 +9,7 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class LiteLangVisitor{
-public  override  object VisitImplementStatement( ImplementStatementContext context ){
+public  override  object @base( ImplementStatementContext context ){
 var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
 this.selfID=Self.id;
 var isVirtual = "";
@@ -26,7 +26,7 @@ obj+=BlockRight+Wrap;
 this.selfID="";
 return obj;
 }
-public  override  object VisitImplementFunctionStatement( ImplementFunctionStatementContext context ){
+public  override  object @base( ImplementFunctionStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var isVirtual = "";
 if ( id.isVirtual ) {
@@ -64,7 +64,7 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitImplementControlStatement( ImplementControlStatementContext context ){
+public  override  object @base( ImplementControlStatementContext context ){
 var r1 = ((Result)(Visit(context.id())));
 var isMutable = true;
 var isVirtual = "";
@@ -91,7 +91,7 @@ obj+=temp.text;
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitOverrideFunctionStatement( OverrideFunctionStatementContext context ){
+public  override  object @base( OverrideFunctionStatementContext context ){
 var id = ((Result)(Visit(context.id(0))));
 this.superID=((Result)(Visit(context.id(1)))).text;
 var isVirtual = " override ";
@@ -132,7 +132,7 @@ obj+=BlockRight+Wrap;
 this.superID="";
 return obj;
 }
-public  override  object VisitOverrideControlStatement( OverrideControlStatementContext context ){
+public  override  object @base( OverrideControlStatementContext context ){
 var r1 = ((Result)(Visit(context.id(0))));
 this.superID=((Result)(Visit(context.id(1)))).text;
 var isMutable = true;
@@ -154,7 +154,7 @@ obj+=BlockRight+Wrap;
 this.superID="";
 return obj;
 }
-public  override  object VisitImplementNewStatement( ImplementNewStatementContext context ){
+public  override  object @base( ImplementNewStatementContext context ){
 var text = "";
 var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
 this.selfID=Self.id;

@@ -8,98 +8,96 @@
 }
 
 me LiteLangVisitor % {
-    base LiteParserBaseVisitor[any] {
-        VisitCheckStatement : (context CheckStatementContext -> v any) {
-            obj = "try "BlockLeft+Wrap""
-            me.add_current_set()
-            obj += ProcessFunctionSupport(context.functionSupportStatement())
-            me.delete_current_set()
-            obj += ""BlockRight""
-            item @ context.checkErrorStatement() {
-                obj += ""Visit(item)"" Wrap""
-            }
-
-            ? context.checkFinallyStatment() >< nil {
-                obj += Visit(context.checkFinallyStatment())
-            }
-            <- obj
+    base%VisitCheckStatement : (context CheckStatementContext -> v any) {
+        obj = "try "BlockLeft+Wrap""
+        me.add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
+        obj += ""BlockRight""
+        item @ context.checkErrorStatement() {
+            obj += ""Visit(item)"" Wrap""
         }
 
-        VisitCheckErrorStatement : (context CheckErrorStatementContext -> v any) {
-            me.add_current_set()
-            obj = ""
-            ID = Visit(context.id()).[Result].text
-            me.add_id(ID)
+        ? context.checkFinallyStatment() >< nil {
+            obj += Visit(context.checkFinallyStatment())
+        }
+        <- obj
+    }
 
-            Type = "Exception"
-            ? context.typeType() >< nil {
-                Type = Visit(context.typeType()).[str]
-            }
+    base%VisitCheckErrorStatement : (context CheckErrorStatementContext -> v any) {
+        me.add_current_set()
+        obj = ""
+        ID = Visit(context.id()).[Result].text
+        me.add_id(ID)
 
-            obj += "catch( "Type" "ID" )"+Wrap+BlockLeft+Wrap
-            obj += ProcessFunctionSupport(context.functionSupportStatement())
-            me.delete_current_set()
-            obj += BlockRight
-            <- obj
+        Type = "Exception"
+        ? context.typeType() >< nil {
+            Type = Visit(context.typeType()).[str]
         }
 
-        VisitCheckFinallyStatment : (context CheckFinallyStatmentContext -> v any) {
-            obj = "finally "Wrap+BlockLeft+Wrap""
-            me.add_current_set()
-            obj += ProcessFunctionSupport(context.functionSupportStatement())
-            me.delete_current_set()
-            obj += ""BlockRight""Wrap""
-            <- obj
+        obj += "catch( "Type" "ID" )"+Wrap+BlockLeft+Wrap
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
+        obj += BlockRight
+        <- obj
+    }
+
+    base%VisitCheckFinallyStatment : (context CheckFinallyStatmentContext -> v any) {
+        obj = "finally "Wrap+BlockLeft+Wrap""
+        me.add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
+        obj += ""BlockRight""Wrap""
+        <- obj
+    }
+
+    base%VisitUsingStatement : (context UsingStatementContext -> v any) {
+        obj = ""
+        r1 = Visit(context.expression(0)).[Result]
+        r2 = Visit(context.expression(1)).[Result]
+        obj = ? -> context.typeType() >< nil {
+            Type = Visit(context.typeType()).[str]
+            ""Type" "r1.text" = "r2.text""
+        } _ {
+            "var "r1.text" = "r2.text""
+        }
+        <- obj
+    }
+
+    base%VisitCheckExpression : (context CheckExpressionContext -> v any) {
+        obj = "run(()=> { "Wrap"try "BlockLeft+Wrap""
+        me.add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        obj += "return " Visit(context.tupleExpression()).[Result].text ";"
+        me.delete_current_set()
+        obj += ""BlockRight+Wrap""
+        item @ context.checkErrorExpression() {
+            obj += ""Visit(item)"" Wrap""
         }
 
-        VisitUsingStatement : (context UsingStatementContext -> v any) {
-            obj = ""
-            r1 = Visit(context.expression(0)).[Result]
-            r2 = Visit(context.expression(1)).[Result]
-            obj = ? -> context.typeType() >< nil {
-                Type = Visit(context.typeType()).[str]
-                ""Type" "r1.text" = "r2.text""
-            } _ {
-                "var "r1.text" = "r2.text""
-            }
-            <- obj
+        ? context.checkFinallyStatment() >< nil {
+            obj += Visit(context.checkFinallyStatment())
+        }
+        obj += "})"
+        <- Result{ data="var"; text=obj}
+    }
+
+    base%VisitCheckErrorExpression : (context CheckErrorExpressionContext -> v any) {
+        me.add_current_set()
+        obj = ""
+        ID = Visit(context.id()).[Result].text
+        me.add_id(ID)
+
+        Type = "Exception"
+        ? context.typeType() >< nil {
+            Type = Visit(context.typeType()).[str]
         }
 
-        VisitCheckExpression : (context CheckExpressionContext -> v any) {
-            obj = "run(()=> { "Wrap"try "BlockLeft+Wrap""
-            me.add_current_set()
-            obj += ProcessFunctionSupport(context.functionSupportStatement())
-            obj += "return " Visit(context.tupleExpression()).[Result].text ";"
-            me.delete_current_set()
-            obj += ""BlockRight+Wrap""
-            item @ context.checkErrorExpression() {
-                obj += ""Visit(item)"" Wrap""
-            }
-
-            ? context.checkFinallyStatment() >< nil {
-                obj += Visit(context.checkFinallyStatment())
-            }
-            obj += "})"
-            <- Result{ data="var"; text=obj}
-        }
-
-        VisitCheckErrorExpression : (context CheckErrorExpressionContext -> v any) {
-            me.add_current_set()
-            obj = ""
-            ID = Visit(context.id()).[Result].text
-            me.add_id(ID)
-
-            Type = "Exception"
-            ? context.typeType() >< nil {
-                Type = Visit(context.typeType()).[str]
-            }
-
-            obj += "catch( "Type" "ID" )"+Wrap+BlockLeft+Wrap
-            obj += ProcessFunctionSupport(context.functionSupportStatement())
-            obj += "return " Visit(context.tupleExpression()).[Result].text ";"
-            me.delete_current_set()
-            obj += BlockRight
-            <- obj
-        }
+        obj += "catch( "Type" "ID" )"+Wrap+BlockLeft+Wrap
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        obj += "return " Visit(context.tupleExpression()).[Result].text ";"
+        me.delete_current_set()
+        obj += BlockRight
+        <- obj
     }
 }

@@ -9,7 +9,7 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class LiteLangVisitor{
-public  override  object VisitCheckStatement( CheckStatementContext context ){
+public  override  object @base( CheckStatementContext context ){
 var obj = (new System.Text.StringBuilder("try ").Append(BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -23,7 +23,7 @@ obj+=Visit(context.checkFinallyStatment());
 }
 return obj;
 }
-public  override  object VisitCheckErrorStatement( CheckErrorStatementContext context ){
+public  override  object @base( CheckErrorStatementContext context ){
 this.add_current_set();
 var obj = "";
 var ID = ((Result)(Visit(context.id()))).text;
@@ -38,7 +38,7 @@ this.delete_current_set();
 obj+=BlockRight;
 return obj;
 }
-public  override  object VisitCheckFinallyStatment( CheckFinallyStatmentContext context ){
+public  override  object @base( CheckFinallyStatmentContext context ){
 var obj = (new System.Text.StringBuilder("finally ").Append(Wrap+BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -46,7 +46,7 @@ this.delete_current_set();
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append("").Append(Wrap).Append("")).to_str();
 return obj;
 }
-public  override  object VisitUsingStatement( UsingStatementContext context ){
+public  override  object @base( UsingStatementContext context ){
 var obj = "";
 var r1 = ((Result)(Visit(context.expression(0))));
 var r2 = ((Result)(Visit(context.expression(1))));
@@ -58,7 +58,7 @@ return (new System.Text.StringBuilder("var ").Append(r1.text).Append(" = ").Appe
 });
 return obj;
 }
-public  override  object VisitCheckExpression( CheckExpressionContext context ){
+public  override  object @base( CheckExpressionContext context ){
 var obj = (new System.Text.StringBuilder("run(()=> { ").Append(Wrap).Append("try ").Append(BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -74,7 +74,7 @@ obj+=Visit(context.checkFinallyStatment());
 obj+="})";
 return (new Result(){data = "var",text = obj});
 }
-public  override  object VisitCheckErrorExpression( CheckErrorExpressionContext context ){
+public  override  object @base( CheckErrorExpressionContext context ){
 this.add_current_set();
 var obj = "";
 var ID = ((Result)(Visit(context.id()))).text;

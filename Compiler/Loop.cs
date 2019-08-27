@@ -16,7 +16,7 @@ public string order = T ;
 public string attach = F ; 
 }
 public partial class LiteLangVisitor{
-public  override  object VisitIteratorStatement( IteratorStatementContext context ){
+public  override  object @base( IteratorStatementContext context ){
 var it = (new Iterator());
 if ( context.op.Text==">="||context.op.Text=="<=" ) {
 it.attach=T;
@@ -36,7 +36,7 @@ it.step=((Result)(Visit(context.expression(2))));
 }
 return it;
 }
-public  override  object VisitLoopStatement( LoopStatementContext context ){
+public  override  object @base( LoopStatementContext context ){
 var obj = "";
 var id = ((Result)(Visit(context.id()))).text;
 var it = ((Iterator)(Visit(context.iteratorStatement())));
@@ -53,7 +53,7 @@ obj = (new System.Text.StringBuilder("if (!can_range(").Append(target).Append(")
 }
 return obj;
 }
-public  override  object VisitLoopEachStatement( LoopEachStatementContext context ){
+public  override  object @base( LoopEachStatementContext context ){
 var obj = "";
 var arr = ((Result)(Visit(context.expression())));
 var target = arr.text;
@@ -77,7 +77,7 @@ obj = (new System.Text.StringBuilder("if (!can_range(").Append(target).Append(")
 }
 return obj;
 }
-public  override  object VisitLoopCaseStatement( LoopCaseStatementContext context ){
+public  override  object @base( LoopCaseStatementContext context ){
 var obj = "";
 var expr = ((Result)(Visit(context.expression())));
 obj+=(new System.Text.StringBuilder("for ( ;").Append(expr.text).Append(" ;)")).to_str();
@@ -92,7 +92,7 @@ obj = (new System.Text.StringBuilder("if (!(").Append(expr.text).Append(")) ")).
 }
 return obj;
 }
-public  override  object VisitLoopElseStatement( LoopElseStatementContext context ){
+public  override  object @base( LoopElseStatementContext context ){
 var obj = BlockLeft+Wrap;
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -100,13 +100,13 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitLoopJumpStatement( LoopJumpStatementContext context ){
+public  override  object @base( LoopJumpStatementContext context ){
 return (new System.Text.StringBuilder("break ").Append(Terminate+Wrap).Append("")).to_str();
 }
-public  override  object VisitLoopContinueStatement( LoopContinueStatementContext context ){
+public  override  object @base( LoopContinueStatementContext context ){
 return (new System.Text.StringBuilder("continue ").Append(Terminate+Wrap).Append("")).to_str();
 }
-public  override  object VisitLoopExpression( LoopExpressionContext context ){
+public  override  object @base( LoopExpressionContext context ){
 var obj = "";
 var id = ((Result)(Visit(context.id()))).text;
 var it = ((Iterator)(Visit(context.iteratorStatement())));
@@ -127,7 +127,7 @@ obj+=")";
 }
 return (new Result(){data = "var",text = obj});
 }
-public  override  object VisitLoopEachExpression( LoopEachExpressionContext context ){
+public  override  object @base( LoopEachExpressionContext context ){
 var obj = "";
 var arr = ((Result)(Visit(context.expression())));
 var target = arr.text;
@@ -155,7 +155,7 @@ obj+=")";
 }
 return (new Result(){data = "var",text = obj});
 }
-public  override  object VisitLoopElseExpression( LoopElseExpressionContext context ){
+public  override  object @base( LoopElseExpressionContext context ){
 var obj = BlockLeft+Wrap;
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());

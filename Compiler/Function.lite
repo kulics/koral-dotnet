@@ -37,102 +37,128 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base LiteParserBaseVisitor[any] {
-        VisitFunctionStatement : (context FunctionStatementContext -> v any) {
-            id = Visit(context.id()).[Result]
-            obj = ""
-            # 异步 #
-            pout = Visit(context.parameterClauseOut()).[str]
-            ? context.t.Type == Right_Flow {
-                pout = ? -> pout >< "void" {
-                    ""Task"<"pout">"
-                } _ {
-                    Task
-                }
-                obj += " async "pout" "id.text""
+    base%VisitFunctionStatement : (context FunctionStatementContext -> v any) {
+        id = Visit(context.id()).[Result]
+        obj = ""
+        # 异步 #
+        pout = Visit(context.parameterClauseOut()).[str]
+        ? context.t.Type == Right_Flow {
+            pout = ? -> pout >< "void" {
+                ""Task"<"pout">"
             } _ {
-                ? context.y >< nil {
-                    ? pout >< "void" {
-                        pout = ""IEnum"<"pout">"
-                    }
+                Task
+            }
+            obj += " async "pout" "id.text""
+        } _ {
+            ? context.y >< nil {
+                ? pout >< "void" {
+                    pout = ""IEnum"<"pout">"
                 }
-                obj += ""pout" "id.text""
             }
-            # 泛型 #
-            templateContract = ""
-            ? context.templateDefine() >< nil {
-                template = Visit(context.templateDefine()).[TemplateItem]
-                obj += template.Template
-                templateContract = template.Contract
-            }
-            me.add_current_set()
-            obj += ""Visit(context.parameterClauseIn())" "templateContract" "Wrap" "BlockLeft" "Wrap""
-            obj += ProcessFunctionSupport(context.functionSupportStatement())
-            obj += BlockRight + Wrap
-            me.delete_current_set()
-            <- obj
+            obj += ""pout" "id.text""
         }
-
-        VisitReturnStatement : (context ReturnStatementContext -> v any) {
-            ? context.tupleExpression() >< nil {
-                r = Visit(context.tupleExpression()).[Result]
-                <- "return " + r.text + Terminate + Wrap
-            }
-            <- "return"Terminate""Wrap""
+        # 泛型 #
+        templateContract = ""
+        ? context.templateDefine() >< nil {
+            template = Visit(context.templateDefine()).[TemplateItem]
+            obj += template.Template
+            templateContract = template.Contract
         }
+        me.add_current_set()
+        obj += ""Visit(context.parameterClauseIn())" "templateContract" "Wrap" "BlockLeft" "Wrap""
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        obj += BlockRight + Wrap
+        me.delete_current_set()
+        <- obj
+    }
 
-        VisitYieldReturnStatement : (context YieldReturnStatementContext -> v any) {
+    base%VisitReturnStatement : (context ReturnStatementContext -> v any) {
+        ? context.tupleExpression() >< nil {
             r = Visit(context.tupleExpression()).[Result]
-            <- "yield return " + r.text + Terminate + Wrap
+            <- "return " + r.text + Terminate + Wrap
         }
+        <- "return"Terminate""Wrap""
+    }
 
-        VisitYieldBreakStatement : (context YieldBreakStatementContext -> v any) {
-            <- "yield break"Terminate""Wrap""
-        }
+    base%VisitYieldReturnStatement : (context YieldReturnStatementContext -> v any) {
+        r = Visit(context.tupleExpression()).[Result]
+        <- "yield return " + r.text + Terminate + Wrap
+    }
 
-        VisitTuple : (context TupleContext -> v any) {
-            obj = "("
-            i @ 0 ..< context.expression().Length {
-                r = Visit(context.expression(i)).[Result]
-                obj += ? -> i == 0 {
-                    r.text
-                } _ {
-                    ", " r.text ""
-                }
-            }
-            obj += ")"
-            <- Result{
-                data = "var"
-                text = obj
-            }
-        }
+    base%VisitYieldBreakStatement : (context YieldBreakStatementContext -> v any) {
+        <- "yield break"Terminate""Wrap""
+    }
 
-        VisitTupleExpression : (context TupleExpressionContext -> v any) {
-            obj = ""
-            i @ 0 ..< context.expression().Length {
-                r = Visit(context.expression(i)).[Result]
-                obj += ? -> i == 0 {
-                    r.text
-                } _ {
-                    ", " r.text ""
-                }
-            }
-            ? context.expression().Length > 1 {
-                obj = "(" obj ")"
-            }
-            <- Result{
-                data = "var"
-                text = obj
+    base%VisitTuple : (context TupleContext -> v any) {
+        obj = "("
+        i @ 0 ..< context.expression().Length {
+            r = Visit(context.expression(i)).[Result]
+            obj += ? -> i == 0 {
+                r.text
+            } _ {
+                ", " r.text ""
             }
         }
+        obj += ")"
+        <- Result{
+            data = "var"
+            text = obj
+        }
+    }
 
-        VisitParameterClauseIn : (context ParameterClauseInContext -> v any) {
-            obj = "("
+    base%VisitTupleExpression : (context TupleExpressionContext -> v any) {
+        obj = ""
+        i @ 0 ..< context.expression().Length {
+            r = Visit(context.expression(i)).[Result]
+            obj += ? -> i == 0 {
+                r.text
+            } _ {
+                ", " r.text ""
+            }
+        }
+        ? context.expression().Length > 1 {
+            obj = "(" obj ")"
+        }
+        <- Result{
+            data = "var"
+            text = obj
+        }
+    }
+
+    base%VisitParameterClauseIn : (context ParameterClauseInContext -> v any) {
+        obj = "("
+        temp = []str{}
+        i @ context.parameter().Length-1 ..>= 0 {
+            p = Visit(context.parameter(i)).[Parameter]
+            temp.add(""p.annotation" "p.type" "p.id" "p.value"")
+            me.add_id(p.id)
+        }
+        i @ temp.Count-1 ..>= 0 {
+            obj += ? -> i == temp.Count - 1 {
+                temp.(i)
+            } _ {
+                ", "temp.(i)""
+            }
+        }
+
+        obj += ")"
+        <- obj
+    }
+
+    base%VisitParameterClauseOut : (context ParameterClauseOutContext -> v any) {
+        obj = ""
+        ? context.parameter().Length == 0 {
+            obj += "void"
+        } context.parameter().Length == 1 {
+            p = Visit(context.parameter(0)).[Parameter]
+            obj += p.type
+        }
+        ? context.parameter().Length > 1 {
+            obj += "( "
             temp = []str{}
             i @ context.parameter().Length-1 ..>= 0 {
                 p = Visit(context.parameter(i)).[Parameter]
                 temp.add(""p.annotation" "p.type" "p.id" "p.value"")
-                me.add_id(p.id)
             }
             i @ temp.Count-1 ..>= 0 {
                 obj += ? -> i == temp.Count - 1 {
@@ -141,60 +167,32 @@ me LiteLangVisitor % {
                     ", "temp.(i)""
                 }
             }
-
-            obj += ")"
-            <- obj
+            obj += " )"
         }
+        <- obj
+    }
 
-        VisitParameterClauseOut : (context ParameterClauseOutContext -> v any) {
-            obj = ""
-            ? context.parameter().Length == 0 {
-                obj += "void"
-            } context.parameter().Length == 1 {
-                p = Visit(context.parameter(0)).[Parameter]
-                obj += p.type
-            }
-            ? context.parameter().Length > 1 {
-                obj += "( "
-                temp = []str{}
-                i @ context.parameter().Length-1 ..>= 0 {
-                    p = Visit(context.parameter(i)).[Parameter]
-                    temp.add(""p.annotation" "p.type" "p.id" "p.value"")
-                }
-                i @ temp.Count-1 ..>= 0 {
-                    obj += ? -> i == temp.Count - 1 {
-                        temp.(i)
-                    } _ {
-                        ", "temp.(i)""
-                    }
-                }
-                obj += " )"
-            }
-            <- obj
-        }
+    base%VisitParameterClauseSelf : (context ParameterClauseSelfContext -> v any) {
+        p = Parameter{}
+        id = Visit(context.id()).[Result]
+        p.id = id.text
+        p.permission = id.permission
+        p.type = Visit(context.typeType()).[str]
+        <- p
+    }
 
-        VisitParameterClauseSelf : (context ParameterClauseSelfContext -> v any) {
-            p = Parameter{}
-            id = Visit(context.id()).[Result]
-            p.id = id.text
-            p.permission = id.permission
-            p.type = Visit(context.typeType()).[str]
-            <- p
+    base%VisitParameter : (context ParameterContext -> v any) {
+        p = Parameter{}
+        id = Visit(context.id()).[Result]
+        p.id = id.text
+        p.permission = id.permission
+        ? context.annotationSupport() >< nil {
+            p.annotation = Visit(context.annotationSupport()).[str]
         }
-
-        VisitParameter : (context ParameterContext -> v any) {
-            p = Parameter{}
-            id = Visit(context.id()).[Result]
-            p.id = id.text
-            p.permission = id.permission
-            ? context.annotationSupport() >< nil {
-                p.annotation = Visit(context.annotationSupport()).[str]
-            }
-            ? context.expression() >< nil {
-                p.value = "=" Visit(context.expression()).[Result].text ""
-            }
-            p.type = Visit(context.typeType()).[str]
-            <- p
+        ? context.expression() >< nil {
+            p.value = "=" Visit(context.expression()).[Result].text ""
         }
+        p.type = Visit(context.typeType()).[str]
+        <- p
     }
 }
