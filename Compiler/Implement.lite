@@ -94,8 +94,8 @@ me LiteLangVisitor % {
     }
 
     base%VisitOverrideFunctionStatement : (context OverrideFunctionStatementContext -> v any) {
-        id = Visit(context.id(0)).[Result]
-        me.superID = Visit(context.id(1)).[Result].text
+        id = Visit(context.id(1)).[Result]
+        me.superID = Visit(context.id(0)).[Result].text
         isVirtual = " override "
         obj = ""
         # 异步 #
@@ -137,8 +137,8 @@ me LiteLangVisitor % {
     }
 
     base%VisitOverrideControlStatement : (context OverrideControlStatementContext -> v any) {
-        r1 = Visit(context.id(0)).[Result]
-        me.superID = Visit(context.id(1)).[Result].text
+        r1 = Visit(context.id(1)).[Result]
+        me.superID = Visit(context.id(0)).[Result].text
         isMutable = true # r1.isVirtual #
         isVirtual = " override "
         typ = ""

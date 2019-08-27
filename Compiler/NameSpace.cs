@@ -13,7 +13,7 @@ public string name;
 public string imports;
 }
 public partial class LiteLangVisitor{
-public  override  object @base( StatementContext context ){
+public  override  object VisitStatement( StatementContext context ){
 var obj = "";
 var ns = ((Namespace)(Visit(context.exportStatement())));
 obj+=(new System.Text.StringBuilder("using Library;").Append(Wrap).Append("using static Library.Lib;").Append(Wrap).Append("")).to_str();
@@ -42,7 +42,7 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object @base( ExportStatementContext context ){
+public  override  object VisitExportStatement( ExportStatementContext context ){
 var name = context.TextLiteral().GetText();
 name = name.sub_str(1, name.len()-2);
 name = name.replace("/", ".");
@@ -52,7 +52,7 @@ obj.imports+=((string)(Visit(item)));
 }
 return obj;
 }
-public  override  object @base( ImportStatementContext context ){
+public  override  object VisitImportStatement( ImportStatementContext context ){
 var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
@@ -70,7 +70,7 @@ return "using "+ns;}
 obj+=Terminate+Wrap;
 return obj;
 }
-public  override  object @base( NameSpaceItemContext context ){
+public  override  object VisitNameSpaceItem( NameSpaceItemContext context ){
 var obj = "";
 foreach (var i in range(0,context.id().Length,1,true,false)){
 var id = ((Result)(Visit(context.id(i))));
@@ -82,7 +82,7 @@ return "."+id.text;}
 }
 return obj;
 }
-public  override  object @base( NameContext context ){
+public  override  object VisitName( NameContext context ){
 var obj = "";
 foreach (var i in range(0,context.id().Length,1,true,false)){
 var id = ((Result)(Visit(context.id(i))));
@@ -94,7 +94,7 @@ return "."+id.text;}
 }
 return obj;
 }
-public  override  object @base( EnumStatementContext context ){
+public  override  object VisitEnumStatement( EnumStatementContext context ){
 var obj = "";
 var id = ((Result)(Visit(context.id())));
 var header = "";
@@ -111,7 +111,7 @@ obj+=BlockRight+Terminate+Wrap;
 obj = header+obj;
 return obj;
 }
-public  override  object @base( EnumSupportStatementContext context ){
+public  override  object VisitEnumSupportStatement( EnumSupportStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 if ( context.integerExpr()!=null ) {
 var op = "";
@@ -122,7 +122,7 @@ id.text+=" = "+op+Visit(context.integerExpr());
 }
 return id.text+",";
 }
-public  override  object @base( NamespaceFunctionStatementContext context ){
+public  override  object VisitNamespaceFunctionStatement( NamespaceFunctionStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var obj = "";
 if ( context.annotationSupport()!=null ) {
@@ -158,7 +158,7 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object @base( NamespaceConstantStatementContext context ){
+public  override  object VisitNamespaceConstantStatement( NamespaceConstantStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var expr = ((Result)(Visit(context.expression())));
 var typ = run(()=>{if ( context.typeType()!=null ) {
@@ -173,7 +173,7 @@ obj+=Visit(context.annotationSupport());
 obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" const ").Append(typ).Append(" ").Append(id.text).Append(" = ").Append(expr.text).Append(" ").Append(Terminate+Wrap).Append("")).to_str();
 return obj;
 }
-public  override  object @base( NamespaceVariableStatementContext context ){
+public  override  object VisitNamespaceVariableStatement( NamespaceVariableStatementContext context ){
 var r1 = ((Result)(Visit(context.id())));
 this.add_id(r1.text);
 var isMutable = r1.isVirtual;
@@ -198,7 +198,7 @@ return Terminate+Wrap;}
 });
 return obj;
 }
-public  override  object @base( NamespaceControlStatementContext context ){
+public  override  object VisitNamespaceControlStatement( NamespaceControlStatementContext context ){
 var r1 = ((Result)(Visit(context.id())));
 this.add_id(r1.text);
 var isMutable = r1.isVirtual;

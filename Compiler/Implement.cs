@@ -9,7 +9,7 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class LiteLangVisitor{
-public  override  object @base( ImplementStatementContext context ){
+public  override  object VisitImplementStatement( ImplementStatementContext context ){
 var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
 this.selfID=Self.id;
 var isVirtual = "";
@@ -26,7 +26,7 @@ obj+=BlockRight+Wrap;
 this.selfID="";
 return obj;
 }
-public  override  object @base( ImplementFunctionStatementContext context ){
+public  override  object VisitImplementFunctionStatement( ImplementFunctionStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var isVirtual = "";
 if ( id.isVirtual ) {
@@ -64,7 +64,7 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object @base( ImplementControlStatementContext context ){
+public  override  object VisitImplementControlStatement( ImplementControlStatementContext context ){
 var r1 = ((Result)(Visit(context.id())));
 var isMutable = true;
 var isVirtual = "";
@@ -91,9 +91,9 @@ obj+=temp.text;
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object @base( OverrideFunctionStatementContext context ){
-var id = ((Result)(Visit(context.id(0))));
-this.superID=((Result)(Visit(context.id(1)))).text;
+public  override  object VisitOverrideFunctionStatement( OverrideFunctionStatementContext context ){
+var id = ((Result)(Visit(context.id(1))));
+this.superID=((Result)(Visit(context.id(0)))).text;
 var isVirtual = " override ";
 var obj = "";
 obj+=run(()=>{if ( context.n!=null ) {
@@ -132,9 +132,9 @@ obj+=BlockRight+Wrap;
 this.superID="";
 return obj;
 }
-public  override  object @base( OverrideControlStatementContext context ){
-var r1 = ((Result)(Visit(context.id(0))));
-this.superID=((Result)(Visit(context.id(1)))).text;
+public  override  object VisitOverrideControlStatement( OverrideControlStatementContext context ){
+var r1 = ((Result)(Visit(context.id(1))));
+this.superID=((Result)(Visit(context.id(0)))).text;
 var isMutable = true;
 var isVirtual = " override ";
 var typ = "";
@@ -154,7 +154,7 @@ obj+=BlockRight+Wrap;
 this.superID="";
 return obj;
 }
-public  override  object @base( ImplementNewStatementContext context ){
+public  override  object VisitImplementNewStatement( ImplementNewStatementContext context ){
 var text = "";
 var Self = ((Parameter)(Visit(context.parameterClauseSelf())));
 this.selfID=Self.id;

@@ -10,8 +10,8 @@ namespace Compiler
 {
 public partial class ErrorListener:BaseErrorListener{
 public string FileDir;
-public  override  void @base( IRecognizer recognizer ,  IToken offendingSymbol ,  int line ,  int charPositionInLine ,  string msg ,  RecognitionException e ){
-@base.base(recognizer, offendingSymbol, line, charPositionInLine, msg, e);
+public  override  void SyntaxError( IRecognizer recognizer ,  IToken offendingSymbol ,  int line ,  int charPositionInLine ,  string msg ,  RecognitionException e ){
+base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e);
 print("------Syntax Error------");
 print((new System.Text.StringBuilder("File: ").Append(this.FileDir).Append("")).to_str());
 print((new System.Text.StringBuilder("Line: ").Append(line).Append("  Column: ").Append(charPositionInLine).Append("")).to_str());

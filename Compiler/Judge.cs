@@ -9,7 +9,7 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class LiteLangVisitor{
-public  override  object @base( JudgeCaseStatementContext context ){
+public  override  object VisitJudgeCaseStatement( JudgeCaseStatementContext context ){
 var obj = "";
 var expr = ((Result)(Visit(context.expression())));
 obj+=(new System.Text.StringBuilder("switch (").Append(expr.text).Append(") ").Append(BlockLeft+Wrap).Append("")).to_str();
@@ -20,7 +20,7 @@ obj+=r+Wrap;
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object @base( CaseExprStatementContext context ){
+public  override  object VisitCaseExprStatement( CaseExprStatementContext context ){
 return run(()=>{if ( context.expression()!=null ) {
 var expr = ((Result)(Visit(context.expression())));
 return (new System.Text.StringBuilder("case ").Append(expr.text).Append(" :").Append(Wrap).Append("")).to_str();}
@@ -36,7 +36,7 @@ else {
 return (new System.Text.StringBuilder("default:").Append(Wrap).Append("")).to_str();}
 });
 }
-public  override  object @base( CaseStatementContext context ){
+public  override  object VisitCaseStatement( CaseStatementContext context ){
 var obj = "";
 foreach (var item in context.caseExprStatement()){
 var r = ((string)(Visit(item)));
@@ -47,7 +47,7 @@ obj+=r+process;
 }
 return obj;
 }
-public  override  object @base( JudgeStatementContext context ){
+public  override  object VisitJudgeStatement( JudgeStatementContext context ){
 var obj = "";
 obj+=Visit(context.judgeIfStatement());
 foreach (var it in context.judgeElseIfStatement()){
@@ -58,7 +58,7 @@ obj+=Visit(context.judgeElseStatement());
 }
 return obj;
 }
-public  override  object @base( JudgeIfStatementContext context ){
+public  override  object VisitJudgeIfStatement( JudgeIfStatementContext context ){
 var b = ((Result)(Visit(context.expression())));
 var obj = (new System.Text.StringBuilder("if ( ").Append(b.text).Append(" ) ").Append(BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
@@ -67,7 +67,7 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object @base( JudgeElseIfStatementContext context ){
+public  override  object VisitJudgeElseIfStatement( JudgeElseIfStatementContext context ){
 var b = ((Result)(Visit(context.expression())));
 var obj = (new System.Text.StringBuilder("else if ( ").Append(b.text).Append(" ) ").Append(BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
@@ -76,7 +76,7 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object @base( JudgeElseStatementContext context ){
+public  override  object VisitJudgeElseStatement( JudgeElseStatementContext context ){
 var obj = (new System.Text.StringBuilder("else ").Append(BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -84,7 +84,7 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object @base( JudgeExpressionContext context ){
+public  override  object VisitJudgeExpression( JudgeExpressionContext context ){
 var r = (new Result());
 r.data="var";
 r.text="run(()=>"+BlockLeft;
@@ -98,7 +98,7 @@ r.text+=Visit(context.judgeExpressionElseStatement());
 r.text+=BlockRight+")";
 return r;
 }
-public  override  object @base( JudgeExpressionIfStatementContext context ){
+public  override  object VisitJudgeExpressionIfStatement( JudgeExpressionIfStatementContext context ){
 var b = ((Result)(Visit(context.expression())));
 var obj = (new System.Text.StringBuilder("if ( ").Append(b.text).Append(" ) ").Append(BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
@@ -108,7 +108,7 @@ this.delete_current_set();
 obj+=(new System.Text.StringBuilder("").Append(BlockRight).Append("").Append(Wrap).Append("")).to_str();
 return obj;
 }
-public  override  object @base( JudgeExpressionElseIfStatementContext context ){
+public  override  object VisitJudgeExpressionElseIfStatement( JudgeExpressionElseIfStatementContext context ){
 var b = ((Result)(Visit(context.expression())));
 var obj = (new System.Text.StringBuilder("else if ( ").Append(b.text).Append(" ) ").Append(BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
@@ -118,7 +118,7 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object @base( JudgeExpressionElseStatementContext context ){
+public  override  object VisitJudgeExpressionElseStatement( JudgeExpressionElseStatementContext context ){
 var obj = (new System.Text.StringBuilder("else ").Append(BlockLeft+Wrap).Append("")).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -127,7 +127,7 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object @base( JudgeCaseExpressionContext context ){
+public  override  object VisitJudgeCaseExpression( JudgeCaseExpressionContext context ){
 var r = (new Result());
 r.text+=BlockLeft+Wrap;
 foreach (var item in context.caseExpressionStatement()){
@@ -137,7 +137,7 @@ r.text+=temp+Wrap;
 r.text+=BlockRight+Wrap;
 return r;
 }
-public  override  object @base( CaseExpressionStatementContext context ){
+public  override  object VisitCaseExpressionStatement( CaseExpressionStatementContext context ){
 var obj = "";
 foreach (var item in context.caseExprStatement()){
 var r = ((string)(Visit(item)));

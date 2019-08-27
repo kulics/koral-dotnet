@@ -42,7 +42,7 @@ public LiteLangVisitor(){this.CurrentIDSet.push((new hashset<string>()));
 }
 }
 public partial class LiteLangVisitor{
-public  override  object @base( ProgramContext context ){
+public  override  object VisitProgram( ProgramContext context ){
 var StatementList = context.statement();
 var Result = "";
 foreach (var item in StatementList){
@@ -50,7 +50,7 @@ Result+=VisitStatement(item);
 }
 return Result;
 }
-public  override  object @base( IdContext context ){
+public  override  object VisitId( IdContext context ){
 var r = (new Result(){data = "var"});
 var first = ((Result)(Visit(context.GetChild(0))));
 r.permission=first.permission;
@@ -76,7 +76,7 @@ r.text="value";
 }
 return r;
 }
-public  override  object @base( IdItemContext context ){
+public  override  object VisitIdItem( IdItemContext context ){
 var r = (new Result(){data = "var"});
 if ( context.typeBasic()!=null ) {
 r.permission="public";
@@ -105,7 +105,7 @@ r.isVirtual=true;
 }
 return r;
 }
-public  override  object @base( IdExpressionContext context ){
+public  override  object VisitIdExpression( IdExpressionContext context ){
 var r = (new Result(){data = "var"});
 if ( context.idExprItem().Length>1 ) {
 r.text="(";
@@ -136,10 +136,10 @@ this.add_id(r.text);
 }
 return r;
 }
-public  override  object @base( IdExprItemContext context ){
+public  override  object VisitIdExprItem( IdExprItemContext context ){
 return Visit(context.GetChild(0));
 }
-public  override  object @base( BoolExprContext context ){
+public  override  object VisitBoolExpr( BoolExprContext context ){
 var r = (new Result());
 if ( context.t.Type==TrueLiteral ) {
 r.data=Bool;
@@ -151,10 +151,10 @@ r.text=F;
 }
 return r;
 }
-public  override  object @base( AnnotationSupportContext context ){
+public  override  object VisitAnnotationSupport( AnnotationSupportContext context ){
 return ((string)(Visit(context.annotation())));
 }
-public  override  object @base( AnnotationContext context ){
+public  override  object VisitAnnotation( AnnotationContext context ){
 var obj = "";
 var id = "";
 if ( context.id()!=null ) {
@@ -164,7 +164,7 @@ var r = ((string)(Visit(context.annotationList())));
 obj+=(new System.Text.StringBuilder("[").Append(id).Append("").Append(r).Append("]")).to_str();
 return obj;
 }
-public  override  object @base( AnnotationListContext context ){
+public  override  object VisitAnnotationList( AnnotationListContext context ){
 var obj = "";
 foreach (var (i,v) in range(context.annotationItem())){
 obj+=run(()=>{if ( i>0 ) {
@@ -175,7 +175,7 @@ return Visit(v);}
 }
 return obj;
 }
-public  override  object @base( AnnotationItemContext context ){
+public  override  object VisitAnnotationItem( AnnotationItemContext context ){
 var obj = "";
 obj+=((Result)(Visit(context.id()))).text;
 foreach (var (i,v) in range(context.annotationAssign())){
@@ -190,7 +190,7 @@ obj+=")";
 }
 return obj;
 }
-public  override  object @base( AnnotationAssignContext context ){
+public  override  object VisitAnnotationAssign( AnnotationAssignContext context ){
 var obj = "";
 var id = "";
 if ( context.id()!=null ) {
