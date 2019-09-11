@@ -186,7 +186,7 @@ judgeElseIfStatement: expression left_brace (functionSupportStatement)* right_br
 // 循环
 loopStatement: id At iteratorStatement left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 集合循环
-loopEachStatement: (id Colon)? id At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
+loopEachStatement: (left_paren id right_paren)? id At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 条件循环
 loopCaseStatement: At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // else 判断
@@ -302,21 +302,21 @@ pkgAssign: (pkgAssignElement end)* pkgAssignElement ; // 简化赋值
 
 pkgAssignElement: name Equal expression; // 简化赋值元素
 
-listAssign: expression (more expression)* ;
+listAssign: (expression end)* expression;
 
 setAssign: Colon expression (more Colon expression)* ;
 
-dictionaryAssign: dictionaryElement (more dictionaryElement)* ;
+dictionaryAssign: (dictionaryElement end)* dictionaryElement;
 
 callAwait: Left_Flow expression; // 异步调用
 
-list: left_brace expression (more expression)* right_brace; // 列表
+list: left_brace (expression end)* expression right_brace; // 列表
 
 set: left_brace Colon expression (more Colon expression)* right_brace; // 无序集合
 
-dictionary:  left_brace dictionaryElement (more dictionaryElement)* right_brace; // 字典
+dictionary:  left_brace (dictionaryElement end)* dictionaryElement right_brace; // 字典
 
-dictionaryElement: expression Colon expression; // 字典元素
+dictionaryElement: expression Equal_Arrow expression; // 字典元素
 
 slice: sliceFull | sliceStart | sliceEnd;
 
@@ -344,7 +344,7 @@ pkgAnonymous: pkgAnonymousAssign; // 匿名包
 
 pkgAnonymousAssign: left_brace (pkgAnonymousAssignElement end)* pkgAnonymousAssignElement right_brace; // 简化赋值
 
-pkgAnonymousAssignElement: name Equal expression; // 简化赋值元素
+pkgAnonymousAssignElement: name t=(Equal|Colon) expression; // 简化赋值元素
 
 functionExpression: left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace;
@@ -430,11 +430,11 @@ typeNullable: Question typeNotNull;
 
 typeTuple: Less typeType (more typeType)+ Greater;
 typeArray: left_brack Colon right_brack typeType;
-typeList: left_brack right_brack typeType;
+typeList: left_brack typeType Semi right_brack;
 typeSet: left_brack right_brack Colon typeType;
-typeDictionary: left_brack right_brack typeType Colon typeType;
-typeChannel: left_brack Right_Arrow right_brack typeType;
-typeStack: left_brack Xor right_brack typeType;
+typeDictionary: left_brack typeType Equal_Arrow typeType right_brack;
+typeChannel: left_brack typeType Right_Arrow right_brack;
+typeStack: left_brack typeType Xor right_brack;
 typePackage: nameSpaceItem (templateCall)? ;
 typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) y=At? New_Line* typeFunctionParameterClause right_paren;
 typeAny: TypeAny;
