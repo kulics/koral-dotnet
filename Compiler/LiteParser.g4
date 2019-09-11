@@ -312,7 +312,7 @@ callAwait: Left_Flow expression; // 异步调用
 
 list: left_brace (expression end)* expression right_brace; // 列表
 
-set: left_brace Colon expression (more Colon expression)* right_brace; // 无序集合
+set: left_brace (expression Equal_Arrow end)* expression Equal_Arrow right_brace; // 无序集合
 
 dictionary:  left_brace (dictionaryElement end)* dictionaryElement right_brace; // 字典
 
@@ -431,7 +431,7 @@ typeNullable: Question typeNotNull;
 typeTuple: Less typeType (more typeType)+ Greater;
 typeArray: left_brack Colon right_brack typeType;
 typeList: left_brack typeType Semi right_brack;
-typeSet: left_brack right_brack Colon typeType;
+typeSet: left_brack typeType Equal_Arrow right_brack;
 typeDictionary: left_brack typeType Equal_Arrow typeType right_brack;
 typeChannel: left_brack typeType Right_Arrow right_brack;
 typeStack: left_brack typeType Xor right_brack;
