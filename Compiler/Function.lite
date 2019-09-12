@@ -16,7 +16,7 @@ Parameter := $ {
 }
 
 me LiteLangVisitor % {
-    ProcessFunctionSupport : (items [:]FunctionSupportStatementContext -> v str) {
+    ProcessFunctionSupport : (items [FunctionSupportStatementContext:] -> v str) {
         obj = ""
         content = ""
         lazy = [str;]{}
