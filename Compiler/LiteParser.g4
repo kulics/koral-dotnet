@@ -430,7 +430,7 @@ typeReference: Bang (typeNotNull | typeNullable);
 typeNullable: Question typeNotNull;
 
 typeTuple: Less typeType (more typeType)+ Greater;
-typeArray: left_brack Colon right_brack typeType;
+typeArray: left_brack typeType Colon right_brack;
 typeList: left_brack typeType Semi right_brack;
 typeSet: left_brack typeType Equal_Arrow right_brack;
 typeDictionary: left_brack typeType Equal_Arrow typeType right_brack;
