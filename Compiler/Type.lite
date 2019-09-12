@@ -38,7 +38,7 @@ me LiteLangVisitor % {
     base%VisitTypeTuple : (context TypeTupleContext -> v any) {
         obj = ""
         obj += "("
-        i:v @ context.typeType() {
+        (i)v @ context.typeType() {
             obj += ? -> i == 0 {
                 Visit(v)
             } _ {

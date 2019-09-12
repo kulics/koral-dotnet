@@ -60,8 +60,8 @@ LiteLangVisitor := me $ {
     superID = ""
     setID = ""
 
-    AllIDSet = []:str{}
-    CurrentIDSet = [^][]:str{}
+    AllIDSet = [str=>]{}
+    CurrentIDSet = [..[str=>]]{}
 
     has_id : (id str -> v bool) {
         <- me.AllIDSet.contains(id) | me.CurrentIDSet.peek().contains(id)
@@ -73,14 +73,14 @@ LiteLangVisitor := me $ {
         item @ CurrentIDSet.peek() {
             AllIDSet.add(item)
         }
-        me.CurrentIDSet.push([[]:str]())
+        me.CurrentIDSet.push([[str=>]]())
     }
     delete_current_set : (->) {
         me.AllIDSet.except_with(me.CurrentIDSet.peek())
         me.CurrentIDSet.pop()
     }
 } % () {
-    me.CurrentIDSet.push([[]:str]())
+    me.CurrentIDSet.push([[str=>]]())
 }
 
 me LiteLangVisitor % {
@@ -149,7 +149,7 @@ me LiteLangVisitor % {
         r = Result{data = "var"}
         ? context.idExprItem().Length > 1 {
             r.text = "("
-            i:v @ context.idExprItem() {
+            (i)v @ context.idExprItem() {
                 subID = Visit(v).[Result].text
                 r.text += ? -> i >< 0 {
                     ", " + subID
@@ -208,7 +208,7 @@ me LiteLangVisitor % {
 
     base%VisitAnnotationList : (context AnnotationListContext -> v any) {
         obj = ""
-        i:v @ context.annotationItem() {
+        (i)v @ context.annotationItem() {
             obj += ? -> i > 0 {
                 "," Visit(v) ""
             } _ {
@@ -221,7 +221,7 @@ me LiteLangVisitor % {
     base%VisitAnnotationItem : (context AnnotationItemContext -> v any) {
         obj = ""
         obj += Visit(context.id()).[Result].text
-        i:v @ context.annotationAssign() {
+        (i)v @ context.annotationAssign() {
             obj += ? -> i > 0 {
                 "," Visit(v) ""
             } _ {
