@@ -226,6 +226,7 @@ public const string Lst = "list" ;
 public const string Set = "hashset" ;
 public const string Dic = "dictionary" ;
 public const string Stk = "stack" ;
+public const string Que = "queue" ;
 public const string BlockLeft = "{" ;
 public const string BlockRight = "}" ;
 public const string Task = "System.Threading.Tasks.Task" ;

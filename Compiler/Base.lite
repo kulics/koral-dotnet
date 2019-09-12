@@ -37,6 +37,7 @@ Lst : "list"
 Set : "hashset"
 Dic : "dictionary"
 Stk : "stack"
+Que : "queue"
 
 BlockLeft : "{"
 BlockRight : "}"

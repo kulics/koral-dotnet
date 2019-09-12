@@ -288,7 +288,7 @@ annotationAssign: (id Equal)? expression ;
 
 callFunc: (tuple|lambda); // 函数调用
 
-callChannel: Dot left_paren Left_Arrow right_paren; // 通道调用
+callChannel: Dot left_paren Dot right_paren; // 通道调用
 
 callElement: Dot left_paren (slice | expression) right_paren; // 元素调用
 
@@ -416,8 +416,9 @@ typeAny
 | typeList
 | typeSet
 | typeDictionary
-| typeChannel
 | typeStack
+| typeQueue
+| typeChannel
 | typeBasic
 | typePackage
 | typeFunction
@@ -433,8 +434,9 @@ typeArray: left_brack Colon right_brack typeType;
 typeList: left_brack typeType Semi right_brack;
 typeSet: left_brack typeType Equal_Arrow right_brack;
 typeDictionary: left_brack typeType Equal_Arrow typeType right_brack;
-typeChannel: left_brack typeType Right_Arrow right_brack;
-typeStack: left_brack typeType Xor right_brack;
+typeStack: left_brack Dot_Dot typeType right_brack;
+typeQueue: left_brack typeType Dot_Dot right_brack;
+typeChannel: left_brack typeType Dot_Dot_Dot right_brack;
 typePackage: nameSpaceItem (templateCall)? ;
 typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) y=At? New_Line* typeFunctionParameterClause right_paren;
 typeAny: TypeAny;

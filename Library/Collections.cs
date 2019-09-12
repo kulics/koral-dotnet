@@ -179,6 +179,32 @@ namespace Library {
         public void trim_excess() => TrimExcess();
     }
 
+    public class queue<T> : Queue<T> {
+        public int count => Count;
+
+        public queue() : base() { }
+
+        public queue(IEnumerable<T> collection) : base(collection) { }
+
+        public queue(int capacity) : base(capacity) { }
+
+        public void clear() => Clear();
+
+        public bool contains(T item) => Contains(item);
+
+        public void copy_to(T[] array, int arrayIndex) => CopyTo(array, arrayIndex);
+
+        public T dequeue() => Dequeue();
+
+        public void enqueue(T item) => Enqueue(item);
+
+        public T peek() => Peek();
+
+        public T[] to_array() => ToArray();
+
+        public void trim_excess() => TrimExcess();
+    }
+
     public static partial class CollectionsExtension {
         public static bool is_empty<T>(this ICollection<T> it) => !it.not_empty();
         public static bool not_empty<T>(this ICollection<T> it) => it.Count > 0;

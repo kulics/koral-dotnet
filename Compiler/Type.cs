@@ -70,6 +70,11 @@ var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Stk).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
 return obj;
 }
+public  override  object VisitTypeQueue( TypeQueueContext context ){
+var obj = "";
+obj+=(new System.Text.StringBuilder("").Append(Que).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
+return obj;
+}
 public  override  object VisitTypePackage( TypePackageContext context ){
 var obj = "";
 obj+=Visit(context.nameSpaceItem());

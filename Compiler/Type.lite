@@ -79,6 +79,12 @@ me LiteLangVisitor % {
         <- obj
     }
 
+    base%VisitTypeQueue : (context TypeQueueContext -> v any) {
+        obj = ""
+        obj += ""Que"<"Visit(context.typeType())">"
+        <- obj
+    }
+
     base%VisitTypePackage : (context TypePackageContext -> v any) {
         obj = ""
         obj += Visit(context.nameSpaceItem())
