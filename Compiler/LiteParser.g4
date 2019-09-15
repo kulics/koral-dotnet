@@ -68,7 +68,7 @@ New_Line
 ;
 
 // 包含
-includeStatement: typeType end;
+includeStatement: Coin typeType end;
 // 包构造方法
 packageNewStatement: (annotationSupport)? left_paren parameterClauseIn right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
