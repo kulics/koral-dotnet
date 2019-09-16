@@ -45,7 +45,7 @@ BlockRight : "}"
 Task : "System.Threading.Tasks.Task"
 IEnum : "System.Collections.Generic.IEnumerable"
 
-Result := $ {
+Result := % {
     data any
     text str
     permission str
@@ -53,8 +53,8 @@ Result := $ {
     isDefine bool
 }
 
-LiteLangVisitor := me $ {
-    $ LiteParserBaseVisitor[any]
+LiteLangVisitor := me % {
+    % LiteParserBaseVisitor[any]
 
     selfID = ""
     superID = ""

@@ -7,7 +7,7 @@
     Compiler_static. "Compiler" 
 }
 
-Iterator := $ {
+Iterator := % {
     begin Result
     end Result
     step Result

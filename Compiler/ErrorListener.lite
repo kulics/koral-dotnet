@@ -7,8 +7,8 @@
     Compiler_static. "Compiler" 
 }
 
-ErrorListener := me $ {
-    $ BaseErrorListener
+ErrorListener := me % {
+    % BaseErrorListener
     FileDir str
 
     base%SyntaxError : (recognizer IRecognizer, offendingSymbol ?IToken, 

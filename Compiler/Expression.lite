@@ -85,12 +85,12 @@ keywords = [str;]{
     "while"
 }
 
-TemplateItem := $ {
+TemplateItem := % {
     Template str
     Contract str
 }
 
-DicEle := $ {
+DicEle := % {
     key str
     value str
     text str
