@@ -214,7 +214,7 @@ variableStatement: idExpression typeType? Equal expression end;
 // 声明变量
 variableDeclaredStatement: idExpression typeType end;
 // 通道赋值
-channelAssignStatement: expression Dot left_paren Left_Arrow right_paren assign expression end;
+channelAssignStatement: expression Dot left_paren Dot right_paren assign expression end;
 // 赋值
 assignStatement: tupleExpression assign tupleExpression end;
 
