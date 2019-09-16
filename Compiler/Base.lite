@@ -54,7 +54,7 @@ Result := $ {
 }
 
 LiteLangVisitor := me $ {
-    LiteParserBaseVisitor[any]
+    $ LiteParserBaseVisitor[any]
 
     selfID = ""
     superID = ""
