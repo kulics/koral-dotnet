@@ -49,9 +49,8 @@ namespaceFunctionStatement: (annotationSupport)? id (templateDefine)? Colon left
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 定义包
-packageStatement: (annotationSupport)? id (templateDefine)? Colon_Equal (id)? Coin 
- (packageNewStatement|packageFieldStatement|packageImplementStatement) 
- (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))* end;
+packageStatement: (annotationSupport)? id (templateDefine)? Colon_Equal (id)?
+ (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))+ end;
 
 packageFieldStatement: left_brace (packageSupportStatement)* right_brace;
 
@@ -68,7 +67,7 @@ New_Line
 ;
 
 // 包含
-includeStatement: Coin typeType end;
+includeStatement: Cent typeType end;
 // 包构造方法
 packageNewStatement: (annotationSupport)? left_paren parameterClauseIn right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
@@ -111,7 +110,7 @@ overrideControlStatement: (annotationSupport)? id Cent (n='_')? id Colon left_pa
  typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
 
 // 协议
-protocolStatement: (annotationSupport)? id (templateDefine)? Colon_Equal Cent left_brace (protocolSupportStatement)* right_brace end;
+protocolStatement: (annotationSupport)? id (templateDefine)? Colon_Equal Discard Cent left_brace (protocolSupportStatement)* right_brace end;
 // 协议支持的语句
 protocolSupportStatement:
 includeStatement
