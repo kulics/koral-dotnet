@@ -206,8 +206,8 @@ checkErrorStatement: (id|id typeType) left_brace (functionSupportStatement)* rig
 checkFinallyStatment: Discard left_brace (functionSupportStatement)* right_brace;
 
 // 迭代器
-iteratorStatement: expression Dot_Dot op=(Less|Less_Equal|Greater|Greater_Equal) expression
- Colon expression | expression Dot_Dot op=(Less|Less_Equal|Greater|Greater_Equal) expression;
+iteratorStatement: expression op=(Add_Add|Sub_Sub) expression
+ Colon expression | expression op=(Add_Add|Sub_Sub) expression;
 
 // 定义变量
 variableStatement: idExpression typeType? Equal expression end;
@@ -319,9 +319,9 @@ dictionaryElement: expression Equal_Arrow expression; // 字典元素
 
 slice: sliceFull | sliceStart | sliceEnd;
 
-sliceFull: expression Dot_Dot op=(Less|Less_Equal|Greater|Greater_Equal) expression; 
-sliceStart: expression Dot_Dot op=(Less|Less_Equal|Greater|Greater_Equal);
-sliceEnd: Dot_Dot op=(Less|Less_Equal|Greater|Greater_Equal) expression; 
+sliceFull: expression op=(Add_Add|Sub_Sub) expression; 
+sliceStart: expression op=(Add_Add|Sub_Sub);
+sliceEnd: op=(Add_Add|Sub_Sub) expression; 
 
 nameSpaceItem: (id call New_Line?)* id;
 

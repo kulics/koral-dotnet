@@ -12,16 +12,16 @@ Iterator := % {
     end Result
     step Result
     order str = T
-    attach str = F
+    attach str = T
 }
 
 me LiteLangVisitor % {
     base%VisitIteratorStatement : (context IteratorStatementContext -> v any) {
         it = Iterator{}
-        ? context.op.Text == ">=" | context.op.Text == "<=" {
+        # ? context.op.Type == ">=" | context.op.Text == "<=" {
             it.attach = T
-        }
-        ? context.op.Text == ">" | context.op.Text == ">=" {
+        } #
+        ? context.op.Type == LiteParser.Sub_Sub {
             it.order = F
         }
         ? context.expression().Length == 2 {

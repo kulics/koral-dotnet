@@ -13,15 +13,12 @@ public Result begin;
 public Result end;
 public Result step;
 public string order = T ; 
-public string attach = F ; 
+public string attach = T ; 
 }
 public partial class LiteLangVisitor{
 public  override  object VisitIteratorStatement( IteratorStatementContext context ){
 var it = (new Iterator());
-if ( context.op.Text==">="||context.op.Text=="<=" ) {
-it.attach=T;
-}
-if ( context.op.Text==">"||context.op.Text==">=" ) {
+if ( context.op.Type==LiteParser.Sub_Sub ) {
 it.order=F;
 }
 if ( context.expression().Length==2 ) {

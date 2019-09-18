@@ -43,16 +43,12 @@ me LiteLangVisitor % {
     base%VisitSliceFull : (context SliceFullContext -> v any) {
         order = ""
         attach = ""
-        context.op.Text ? "<=" {
+        context.op.Type ? LiteParser.Add_Add {
             order = "true"
             attach = "true"
-        } "<" {
-            order = "true"
-        } ">=" {
+        } LiteParser.Sub_Sub {
             order = "false"
             attach = "true"
-        } ">" {
-            order = "false"
         }
         expr1 = Visit(context.expression(0)).[Result]
         expr2 = Visit(context.expression(1)).[Result]
@@ -62,16 +58,12 @@ me LiteLangVisitor % {
     base%VisitSliceStart : (context SliceStartContext -> v any) {
         order = ""
         attach = ""
-        context.op.Text ? "<=" {
+        context.op.Type ? LiteParser.Add_Add {
             order = "true"
             attach = "true"
-        } "<" {
-            order = "true"
-        } ">=" {
+        } LiteParser.Sub_Sub {
             order = "false"
             attach = "true"
-        } ">" {
-            order = "false"
         }
         expr = Visit(context.expression()).[Result]
         <- ".slice("expr.text", null, "order", "attach")"
@@ -79,17 +71,13 @@ me LiteLangVisitor % {
 
     base%VisitSliceEnd : (context SliceEndContext -> v any) {
         order = ""
-        attach = "false"
-        context.op.Text ? "<=" {
+        attach = ""
+        context.op.Type ? LiteParser.Add_Add {
             order = "true"
             attach = "true"
-        } "<" {
-            order = "true"
-        } ">=" {
+        } LiteParser.Sub_Sub {
             order = "false"
             attach = "true"
-        } ">" {
-            order = "false"
         }
         expr = Visit(context.expression()).[Result]
         <- ".slice(null, "expr.text", "order", "attach")"
