@@ -15,9 +15,12 @@ LinqEquals: 'equals';
 LinqAscending: 'ascending';
 LinqDescending: 'descending';
 
-Pow:    '**';
-Root:   '//';
-Log:    '\\\\';
+Pow:    '*^';
+Root:   '/^';
+Log:    '\\^';
+
+Add_Add: '++';
+Sub_Sub: '--';
 
 Add_Equal:         '+=';
 Sub_Equal:         '-=';

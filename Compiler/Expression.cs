@@ -88,17 +88,6 @@ return F64;}
 }break;
 case PowContext it :
 { r.data=F64;
-switch (op) {
-case "**" :
-{ op = "pow";
-}break;
-case "//" :
-{ op = "root";
-}break;
-case "\\\\" :
-{ op = "log";
-}break;
-}
 r.text=(new System.Text.StringBuilder("").Append(op).Append("(").Append(e1.text).Append(", ").Append(((Result)(e2)).text).Append(")")).to_str();
 return r;
 }break;
@@ -195,7 +184,15 @@ return "%";
 return context.op.Text;
 }
 public  override  object VisitPow( PowContext context ){
-return context.op.Text;
+return run(()=> { switch (context.op.Type) {
+case LiteParser.Root :
+{return "root";}break;
+case LiteParser.Log :
+{return "log";}break;
+default:
+{return "pow";}break;
+}
+});
 }
 public  override  object VisitPrimaryExpression( PrimaryExpressionContext context ){
 if ( context.ChildCount==1 ) {

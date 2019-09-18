@@ -171,13 +171,6 @@ me LiteLangVisitor % {
             } _ PowContext {
                 # todo 如果左右部署number类型，报错 #
                 r.data = F64
-                op ? "**" {
-                    op = "pow"
-                } "//" {
-                    op = "root"
-                } "\\\\" {
-                    op = "log"
-                }
                 r.text = ""op"("e1.text", "e2.[Result].text")"
                 <- r
             }
@@ -276,7 +269,13 @@ me LiteLangVisitor % {
     }
 
     base%VisitPow : (context PowContext -> v any) {
-        <- context.op.Text
+        <- context.op.Type ? -> LiteParser.Root {
+                "root"
+            } LiteParser.Log {
+                "log"
+            } _ {
+                "pow"
+            }
     }
 
     base%VisitPrimaryExpression : (context PrimaryExpressionContext -> v any) {
