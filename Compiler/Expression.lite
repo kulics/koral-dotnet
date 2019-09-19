@@ -309,7 +309,7 @@ me LiteLangVisitor % {
     base%VisitExpressionList : (context ExpressionListContext -> v any) {
         r = Result{}
         obj = ""
-        i @ 0 ..< context.expression().Length {
+        i @ 0 ++ context.expression().Length-1 {
             temp = Visit(context.expression(i)).[Result]
             obj += ? -> i == 0 {
                 temp.text
@@ -325,7 +325,7 @@ me LiteLangVisitor % {
     base%VisitTemplateDefine : (context TemplateDefineContext -> v any) {
         item = TemplateItem{}
         item.Template += "<"
-        i @ 0 ..< context.templateDefineItem().Length {
+        i @ 0 ++ context.templateDefineItem().Length-1 {
             ? i > 0 {
                 item.Template += ","
                 ? item.Contract.len() > 0 {
@@ -357,7 +357,7 @@ me LiteLangVisitor % {
     base%VisitTemplateCall : (context TemplateCallContext -> v any) {
         obj = ""
         obj += "<"
-        i @ 0 ..< context.typeType().Length {
+        i @ 0 ++ context.typeType().Length-1 {
             ? i > 0 {
                 obj += ","
             }

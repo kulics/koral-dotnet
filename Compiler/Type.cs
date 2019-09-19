@@ -135,7 +135,7 @@ return Any;
 }
 public  override  object VisitTypeFunctionParameterClause( TypeFunctionParameterClauseContext context ){
 var obj = "";
-foreach (var i in range(0,context.typeType().Length,1,true,false)){
+foreach (var i in range(0,context.typeType().Length-1,1,true,true)){
 var p = ((string)(Visit(context.typeType(i))));
 obj+=run(()=>{if ( i==0 ) {
 return p;}

@@ -129,7 +129,7 @@ return r;
 public  override  object VisitPkgAssign( PkgAssignContext context ){
 var obj = "";
 obj+="{";
-foreach (var i in range(0,context.pkgAssignElement().Length,1,true,false)){
+foreach (var i in range(0,context.pkgAssignElement().Length-1,1,true,true)){
 obj+=run(()=>{if ( i==0 ) {
 return Visit(context.pkgAssignElement(i));}
 else {
@@ -142,7 +142,7 @@ return obj;
 public  override  object VisitListAssign( ListAssignContext context ){
 var obj = "";
 obj+="{";
-foreach (var i in range(0,context.expression().Length,1,true,false)){
+foreach (var i in range(0,context.expression().Length-1,1,true,true)){
 var r = ((Result)(Visit(context.expression(i))));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
@@ -156,7 +156,7 @@ return obj;
 public  override  object VisitSetAssign( SetAssignContext context ){
 var obj = "";
 obj+="{";
-foreach (var i in range(0,context.expression().Length,1,true,false)){
+foreach (var i in range(0,context.expression().Length-1,1,true,true)){
 var r = ((Result)(Visit(context.expression(i))));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
@@ -170,7 +170,7 @@ return obj;
 public  override  object VisitDictionaryAssign( DictionaryAssignContext context ){
 var obj = "";
 obj+="{";
-foreach (var i in range(0,context.dictionaryElement().Length,1,true,false)){
+foreach (var i in range(0,context.dictionaryElement().Length-1,1,true,true)){
 var r = ((DicEle)(Visit(context.dictionaryElement(i))));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
@@ -192,7 +192,7 @@ return (new Result(){data = "var",text = "new"+((string)(Visit(context.pkgAnonym
 public  override  object VisitPkgAnonymousAssign( PkgAnonymousAssignContext context ){
 var obj = "";
 obj+="{";
-foreach (var i in range(0,context.pkgAnonymousAssignElement().Length,1,true,false)){
+foreach (var i in range(0,context.pkgAnonymousAssignElement().Length-1,1,true,true)){
 obj+=run(()=>{if ( i==0 ) {
 return Visit(context.pkgAnonymousAssignElement(i));}
 else {
@@ -217,7 +217,7 @@ return r;
 public  override  object VisitList( ListContext context ){
 var type = Any;
 var result = (new Result());
-foreach (var i in range(0,context.expression().Length,1,true,false)){
+foreach (var i in range(0,context.expression().Length-1,1,true,true)){
 var r = ((Result)(Visit(context.expression(i))));
 result.text+=run(()=>{if ( i==0 ) {
 type = ((string)(r.data));
@@ -236,7 +236,7 @@ return result;
 public  override  object VisitSet( SetContext context ){
 var type = Any;
 var result = (new Result());
-foreach (var i in range(0,context.expression().Length,1,true,false)){
+foreach (var i in range(0,context.expression().Length-1,1,true,true)){
 var r = ((Result)(Visit(context.expression(i))));
 result.text+=run(()=>{if ( i==0 ) {
 type = ((string)(r.data));
@@ -256,7 +256,7 @@ public  override  object VisitDictionary( DictionaryContext context ){
 var key = Any;
 var value = Any;
 var result = (new Result());
-foreach (var i in range(0,context.dictionaryElement().Length,1,true,false)){
+foreach (var i in range(0,context.dictionaryElement().Length-1,1,true,true)){
 var r = ((DicEle)(Visit(context.dictionaryElement(i))));
 result.text+=run(()=>{if ( i==0 ) {
 key = r.key;
@@ -319,7 +319,7 @@ return r;
 }
 public  override  object VisitLambdaIn( LambdaInContext context ){
 var obj = "";
-foreach (var i in range(0,context.id().Length,1,true,false)){
+foreach (var i in range(0,context.id().Length-1,1,true,true)){
 var r = ((Result)(Visit(context.id(i))));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}

@@ -218,7 +218,7 @@ return (new Result(){text = "("+r.text+")",data = r.data});
 public  override  object VisitExpressionList( ExpressionListContext context ){
 var r = (new Result());
 var obj = "";
-foreach (var i in range(0,context.expression().Length,1,true,false)){
+foreach (var i in range(0,context.expression().Length-1,1,true,true)){
 var temp = ((Result)(Visit(context.expression(i))));
 obj+=run(()=>{if ( i==0 ) {
 return temp.text;}
@@ -233,7 +233,7 @@ return r;
 public  override  object VisitTemplateDefine( TemplateDefineContext context ){
 var item = (new TemplateItem());
 item.Template+="<";
-foreach (var i in range(0,context.templateDefineItem().Length,1,true,false)){
+foreach (var i in range(0,context.templateDefineItem().Length-1,1,true,true)){
 if ( i>0 ) {
 item.Template+=",";
 if ( item.Contract.len()>0 ) {
@@ -264,7 +264,7 @@ return item;
 public  override  object VisitTemplateCall( TemplateCallContext context ){
 var obj = "";
 obj+="<";
-foreach (var i in range(0,context.typeType().Length,1,true,false)){
+foreach (var i in range(0,context.typeType().Length-1,1,true,true)){
 if ( i>0 ) {
 obj+=",";
 }

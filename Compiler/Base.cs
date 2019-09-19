@@ -57,7 +57,7 @@ r.permission=first.permission;
 r.text=first.text;
 r.isVirtual=first.isVirtual;
 if ( context.ChildCount>=2 ) {
-foreach (var i in range(1,context.ChildCount,1,true,false)){
+foreach (var i in range(1,context.ChildCount-1,1,true,true)){
 var other = ((Result)(Visit(context.GetChild(i))));
 r.text+=(new System.Text.StringBuilder("_").Append(other.text).Append("")).to_str();
 }
