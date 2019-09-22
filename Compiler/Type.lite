@@ -35,20 +35,6 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitTypeTuple : (context TypeTupleContext -> v any) {
-        obj = ""
-        obj += "("
-        (i)v @ context.typeType() {
-            obj += ? -> i == 0 {
-                Visit(v)
-            } _ {
-                ","Visit(v)""
-            }
-        }
-        obj += ")"
-        <- obj
-    }
-
     base%VisitTypeArray : (context TypeArrayContext -> v any) {
         obj = ""
         obj += ""Visit(context.typeType())"[]"

@@ -410,7 +410,6 @@ integerExpr: NumberLiteral;
 // 类型
 typeNotNull:
 typeAny
-| typeTuple
 | typeArray
 | typeList
 | typeSet
@@ -428,14 +427,13 @@ typeType: typeNotNull | typeNullable | typeReference;
 typeReference: Bang (typeNotNull | typeNullable);
 typeNullable: Question typeNotNull;
 
-typeTuple: Less typeType (more typeType)+ Greater;
-typeArray: left_brack typeType Colon right_brack;
-typeList: left_brack typeType Semi right_brack;
+typeArray: left_brack right_brack Colon typeType;
+typeList: left_brack right_brack typeType;
 typeSet: left_brack typeType Equal_Arrow right_brack;
-typeDictionary: left_brack typeType Equal_Arrow typeType right_brack;
-typeStack: left_brack Dot_Dot typeType right_brack;
-typeQueue: left_brack typeType Dot_Dot right_brack;
-typeChannel: left_brack typeType Dot_Dot_Dot right_brack;
+typeDictionary: left_brack right_brack typeType Equal_Arrow typeType;
+typeStack: left_brack right_brack Greater typeType;
+typeQueue: left_brack right_brack Less typeType;
+typeChannel: left_brack right_brack Less Less typeType;
 typePackage: nameSpaceItem (templateCall)? ;
 typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) y=At? New_Line* typeFunctionParameterClause right_paren;
 typeAny: TypeAny;

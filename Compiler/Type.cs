@@ -32,19 +32,6 @@ obj+="?";
 }
 return obj;
 }
-public  override  object VisitTypeTuple( TypeTupleContext context ){
-var obj = "";
-obj+="(";
-foreach (var (i,v) in range(context.typeType())){
-obj+=run(()=>{if ( i==0 ) {
-return Visit(v);}
-else {
-return (new System.Text.StringBuilder(",").Append(Visit(v)).Append("")).to_str();}
-});
-}
-obj+=")";
-return obj;
-}
 public  override  object VisitTypeArray( TypeArrayContext context ){
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(Visit(context.typeType())).Append("[]")).to_str();
