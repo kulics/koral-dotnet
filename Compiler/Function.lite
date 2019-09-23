@@ -16,10 +16,10 @@ Parameter := % {
 }
 
 me LiteLangVisitor % {
-    ProcessFunctionSupport : (items [FunctionSupportStatementContext:] -> v str) {
+    ProcessFunctionSupport : (items []:FunctionSupportStatementContext -> v str) {
         obj = ""
         content = ""
-        lazy = [str;]{}
+        lazy = []str{}
         item @ items {
             content += ? -> item.GetChild(0).is[UsingStatementContext]() {
                 lazy.add("}")
@@ -127,7 +127,7 @@ me LiteLangVisitor % {
 
     base%VisitParameterClauseIn : (context ParameterClauseInContext -> v any) {
         obj = "("
-        temp = [str;]{}
+        temp = []str{}
         i @ context.parameter().Length-1 -- 0 {
             p = Visit(context.parameter(i)).[Parameter]
             temp.add(""p.annotation" "p.type" "p.id" "p.value"")
@@ -155,7 +155,7 @@ me LiteLangVisitor % {
         }
         ? context.parameter().Length > 1 {
             obj += "( "
-            temp = [str;]{}
+            temp = []str{}
             i @ context.parameter().Length-1 -- 0 {
                 p = Visit(context.parameter(i)).[Parameter]
                 temp.add(""p.annotation" "p.type" "p.id" "p.value"")
