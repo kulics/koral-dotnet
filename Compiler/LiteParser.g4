@@ -303,7 +303,7 @@ pkgAssignElement: name Equal expression; // 简化赋值元素
 
 listAssign: (expression end)* expression;
 
-setAssign: Colon expression (more Colon expression)* ;
+setAssign: Equal_Arrow expression (more Equal_Arrow expression)* ;
 
 dictionaryAssign: (dictionaryElement end)* dictionaryElement;
 
@@ -311,7 +311,7 @@ callAwait: Left_Flow expression; // 异步调用
 
 list: left_brace (expression end)* expression right_brace; // 列表
 
-set: left_brace (expression Equal_Arrow end)* expression Equal_Arrow right_brace; // 无序集合
+set: left_brace (Equal_Arrow expression end)* Equal_Arrow expression right_brace; // 无序集合
 
 dictionary:  left_brace (dictionaryElement end)* dictionaryElement right_brace; // 字典
 
@@ -429,7 +429,7 @@ typeNullable: Question typeNotNull;
 
 typeArray: left_brack right_brack Colon typeType;
 typeList: left_brack right_brack typeType;
-typeSet: left_brack typeType Equal_Arrow right_brack;
+typeSet: left_brack right_brack Equal_Arrow typeType;
 typeDictionary: left_brack right_brack typeType Equal_Arrow typeType;
 typeStack: left_brack right_brack Greater typeType;
 typeQueue: left_brack right_brack Less typeType;
