@@ -27,9 +27,7 @@ return obj;
 public  override  object VisitTypeNullable( TypeNullableContext context ){
 var obj = "";
 obj = ((string)(Visit(context.typeNotNull())));
-if ( context.typeNotNull().GetChild(0).@is<TypeBasicContext>()&&context.typeNotNull().GetChild(0).GetText()!="any"&&context.typeNotNull().GetChild(0).GetText()!="str" ) {
 obj+="?";
-}
 return obj;
 }
 public  override  object VisitTypeArray( TypeArrayContext context ){
