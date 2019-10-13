@@ -354,13 +354,13 @@ negate: wave expression;
 
 bitwiseNotExpression: bitwiseNot expression;
 
-linq: linqHeadKeyword New_Line? expression Right_Arrow New_Line?  (linqItem)+ k=(LinqSelect|LinqBy) New_Line? expression;
+linq: linqHeadItem Right_Arrow New_Line?  (linqItem)+ k=(LinqSelect|LinqBy) New_Line? expression;
 
-linqItem: linqKeyword (expression)? Right_Arrow New_Line?;
+linqHeadItem: id At expression;
 
-linqKeyword: linqHeadKeyword | linqBodyKeyword ;
-linqHeadKeyword: k=LinqFrom;
-linqBodyKeyword: k=(LinqSelect|LinqBy|LinqWhere|LinqGroup|LinqInto|LinqOrderby|LinqJoin|LinqLet|LinqIn|LinqOn|LinqEquals|LinqAscending|LinqDescending);
+linqItem: (linqHeadItem | linqKeyword (expression)?) Right_Arrow New_Line?;
+
+linqKeyword: k=(LinqSelect|LinqBy|LinqWhere|LinqGroup|LinqInto|LinqOrderby|LinqJoin|LinqLet|LinqIn|LinqOn|LinqEquals|LinqAscending|LinqDescending|LinqFrom);
 
 stringExpression: TextLiteral (stringExpressionElement)+;
 

@@ -452,15 +452,18 @@ me LiteLangVisitor % {
 
     base%VisitLinq : (context LinqContext -> v any) {
         r = Result{data = "var"}
-        r.text += "from " Visit(context.expression(0)).[Result].text " "
+        r.text += Visit(context.linqHeadItem()).[str]
         item @ context.linqItem() {
             r.text += "" Visit(item) " "
         }
-        r.text += ""context.k.Text " " Visit(context.expression(1)).[Result].text ""
+        r.text += ""context.k.Text " " Visit(context.expression()).[Result].text ""
         <- r
     }
 
     base%VisitLinqItem : (context LinqItemContext -> v any) {
+        ? context.linqHeadItem() >< nil {
+            <- Visit(context.linqHeadItem()).[str]
+        }
         obj = Visit(context.linqKeyword()).[str]
         ? context.expression() >< nil {
             obj += " "Visit(context.expression()).[Result].text""
@@ -468,15 +471,14 @@ me LiteLangVisitor % {
         <- obj
     }
 
+    base%VisitLinqHeadItem : (context LinqHeadItemContext -> v any) {
+        obj = ""
+        id = Visit(context.id()).[Result]
+        obj += "from " id.text " in "Visit(context.expression()).[Result].text " "
+        <- obj
+    }
+
     base%VisitLinqKeyword : (context LinqKeywordContext -> v any) {
-        <- Visit(context.GetChild(0))
-    }
-
-    base%VisitLinqHeadKeyword : (context LinqHeadKeywordContext -> v any) {
-        <- context.k.Text
-    }
-
-    base%VisitLinqBodyKeyword : (context LinqBodyKeywordContext -> v any) {
         <- context.k.Text
     }
 }
