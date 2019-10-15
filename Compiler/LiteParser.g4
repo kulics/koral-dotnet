@@ -343,7 +343,7 @@ negate: wave expression;
 
 bitwiseNotExpression: bitwiseNot expression;
 
-linq: linqHeadItem Right_Arrow New_Line?  (linqItem)+ id New_Line? expression;
+linq: linqHeadItem Right_Arrow New_Line?  (linqItem)* id New_Line? expression;
 
 linqHeadItem: id At expression;
 
