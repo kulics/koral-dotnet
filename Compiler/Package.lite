@@ -173,32 +173,6 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitPackageControlSubStatement : (context PackageControlSubStatementContext -> v any) {
-        obj = ""
-        id = ""
-        typ = ""
-        me.add_current_set()
-        id, typ = GetControlSub(context.id(0).GetText())
-        ? context.id(1) >< nil {
-            me.setID = context.id(1).GetText()
-        }
-        ? context.functionSupportStatement().Length > 0 {
-            obj += id + BlockLeft
-            item @ context.functionSupportStatement() {
-                obj += Visit(item)
-            }
-            obj += BlockRight + Wrap
-        } _ {
-            obj += id + Terminate
-        }
-        me.delete_current_set()
-        me.setID = ""
-        <- Result{
-            text = obj
-            data = typ
-        }
-    }
-
     base%VisitPackageNewStatement : (context PackageNewStatementContext -> v any) {
         text = ""
         # 获取构造数据 #

@@ -114,6 +114,55 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
+public  override  object VisitOverrideVariableStatement( OverrideVariableStatementContext context ){
+var r1 = ((Result)(Visit(context.id(1))));
+this.superID=((Result)(Visit(context.id(0)))).text;
+var isMutable = r1.isVirtual;
+var isVirtual = " override ";
+var typ = "";
+Result r2 = null;
+if ( context.expression()!=null ) {
+r2 = ((Result)(Visit(context.expression())));
+typ = ((string)(r2.data));
+}
+if ( context.typeType()!=null ) {
+typ = ((string)(Visit(context.typeType())));
+}
+var obj = "";
+if ( context.annotationSupport()!=null ) {
+this.selfPropertyID=r1.text;
+obj+=Visit(context.annotationSupport());
+}
+if ( this.selfPropertyContent.len>0 ) {
+var pri = "";
+if ( this.selfPropertyVariable ) {
+pri = (new System.Text.StringBuilder("private ").Append(typ).Append(" _").Append(r1.text).Append("")).to_str();
+if ( r2!=null ) {
+pri+=" = "+r2.text;
+}
+pri+=Terminate+Wrap;
+}
+obj = pri+obj;
+obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(isVirtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("").Append(BlockLeft).Append("")).to_str();
+foreach (var v in this.selfPropertyContent){
+obj+=v;
+}
+obj+=BlockRight+Wrap;
+this.selfPropertyContent.clear();
+this.selfPropertyID="";
+this.selfPropertyVariable=false;
+}
+else {
+obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("")).to_str();
+obj+=run(()=>{if ( r2!=null ) {
+return (new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate).Append(" ").Append(Wrap).Append("")).to_str();}
+else {
+return Terminate+Wrap;}
+});
+}
+this.superID="";
+return obj;
+}
 public  override  object VisitOverrideFunctionStatement( OverrideFunctionStatementContext context ){
 var id = ((Result)(Visit(context.id(1))));
 this.superID=((Result)(Visit(context.id(0)))).text;
@@ -151,28 +200,6 @@ this.add_current_set();
 obj+=Visit(context.parameterClauseIn())+templateContract+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
-obj+=BlockRight+Wrap;
-this.superID="";
-return obj;
-}
-public  override  object VisitOverrideControlStatement( OverrideControlStatementContext context ){
-var r1 = ((Result)(Visit(context.id(1))));
-this.superID=((Result)(Visit(context.id(0)))).text;
-var isMutable = true;
-var isVirtual = " override ";
-var typ = "";
-if ( context.typeType()!=null ) {
-typ = ((string)(Visit(context.typeType())));
-}
-var obj = "";
-if ( context.annotationSupport()!=null ) {
-obj+=Visit(context.annotationSupport());
-}
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(isVirtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("").Append(BlockLeft).Append("")).to_str();
-foreach (var item in context.packageControlSubStatement()){
-var temp = ((Result)(Visit(item)));
-obj+=temp.text;
-}
 obj+=BlockRight+Wrap;
 this.superID="";
 return obj;

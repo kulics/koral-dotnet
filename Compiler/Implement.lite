@@ -116,6 +116,55 @@ me LiteLangVisitor % {
         <- obj
     }
 
+    base%VisitOverrideVariableStatement : (context OverrideVariableStatementContext -> v any) {
+        r1 = Visit(context.id(1)).[Result]
+        me.superID = Visit(context.id(0)).[Result].text
+        isMutable = r1.isVirtual
+        isVirtual = " override "
+        typ = ""
+        r2 Result = nil
+        ? context.expression() >< nil {
+            r2 = Visit(context.expression()).[Result]
+            typ = r2.data.[str]
+        }
+        ? context.typeType() >< nil {
+            typ = Visit(context.typeType()).[str]
+        }
+        obj = ""
+        ? context.annotationSupport() >< nil {
+            me.selfPropertyID = r1.text
+            obj += Visit(context.annotationSupport())
+        }
+        ? me.selfPropertyContent.len > 0 {
+            pri = ""
+            ? me.selfPropertyVariable {
+                pri = "private "typ" _"r1.text"" 
+                ? r2 >< nil {
+                    pri += " = " + r2.text
+                }
+                pri += Terminate + Wrap
+            }
+            obj = pri + obj
+            obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""
+            v @ me.selfPropertyContent {
+                obj += v
+            }
+            obj += BlockRight+Wrap
+            me.selfPropertyContent.clear()
+            me.selfPropertyID = ""
+            me.selfPropertyVariable = false
+        } _ {
+            obj += ""r1.permission" "typ" "r1.text""
+            obj += ? -> r2 >< nil {
+                " = "r2.text" "Terminate" "Wrap""
+            } _ {
+                Terminate + Wrap
+            }
+        }
+        me.superID = ""
+        <- obj
+    }
+
     base%VisitOverrideFunctionStatement : (context OverrideFunctionStatementContext -> v any) {
         id = Visit(context.id(1)).[Result]
         me.superID = Visit(context.id(0)).[Result].text
@@ -154,29 +203,6 @@ me LiteLangVisitor % {
         obj += Visit(context.parameterClauseIn()) + templateContract + BlockLeft + Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
-        obj += BlockRight + Wrap
-        me.superID = ""
-        <- obj
-    }
-
-    base%VisitOverrideControlStatement : (context OverrideControlStatementContext -> v any) {
-        r1 = Visit(context.id(1)).[Result]
-        me.superID = Visit(context.id(0)).[Result].text
-        isMutable = true # r1.isVirtual #
-        isVirtual = " override "
-        typ = ""
-        ? context.typeType() >< nil {
-            typ = Visit(context.typeType()).[str]
-        }
-        obj = ""
-        ? context.annotationSupport() >< nil {
-            obj += Visit(context.annotationSupport())
-        }
-        obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""
-        item @ context.packageControlSubStatement() {
-            temp = Visit(item).[Result]
-            obj += temp.text
-        }
         obj += BlockRight + Wrap
         me.superID = ""
         <- obj

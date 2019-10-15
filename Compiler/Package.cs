@@ -165,29 +165,6 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitPackageControlSubStatement( PackageControlSubStatementContext context ){
-var obj = "";
-var id = "";
-var typ = "";
-this.add_current_set();
-(id, typ) = GetControlSub(context.id(0).GetText());
-if ( context.id(1)!=null ) {
-this.setID=context.id(1).GetText();
-}
-if ( context.functionSupportStatement().Length>0 ) {
-obj+=id+BlockLeft;
-foreach (var item in context.functionSupportStatement()){
-obj+=Visit(item);
-}
-obj+=BlockRight+Wrap;
-}
-else {
-obj+=id+Terminate;
-}
-this.delete_current_set();
-this.setID="";
-return (new Result(){text = obj,data = typ});
-}
 public  override  object VisitPackageNewStatement( PackageNewStatementContext context ){
 var text = "";
 this.add_current_set();

@@ -56,8 +56,8 @@ includeStatement |
 packageVariableStatement |
 packageFunctionStatement |
 packageEventStatement |
+overrideVariableStatement |
 overrideFunctionStatement |
-overrideControlStatement |
 New_Line
 ;
 
@@ -89,8 +89,8 @@ implementStatement: parameterClauseSelf Cent (typeType)? New_Line* left_brace (i
 implementSupportStatement: 
 implementVariableStatement |
 implementFunctionStatement |
+overrideVariableStatement |
 overrideFunctionStatement |
-overrideControlStatement |
 New_Line;
 
 // 定义变量
@@ -99,12 +99,11 @@ implementVariableStatement: (annotationSupport)? id (Equal expression| typeType 
 implementFunctionStatement: (annotationSupport)? id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
+// 定义变量
+overrideVariableStatement: (annotationSupport)? id Cent (n='_')? id (Equal expression| typeType (Equal expression)?) end;
 // 函数
 overrideFunctionStatement: (annotationSupport)? id Cent (n='_')? id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
-// 定义控制
-overrideControlStatement: (annotationSupport)? id Cent (n='_')? id Colon left_paren expression? right_paren
- typeType (left_brace (packageControlSubStatement)+ right_brace)? end;
 
 // 协议
 protocolStatement: (annotationSupport)? id (templateDefine)? Colon_Equal Discard Cent left_brace (protocolSupportStatement)* right_brace end;
