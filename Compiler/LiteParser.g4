@@ -281,9 +281,7 @@ annotation: left_paren (id Right_Arrow)? annotationList right_paren; // 注解
 
 annotationList: annotationItem (more annotationItem)*;
 
-annotationItem: id ( left_paren annotationAssign (more annotationAssign)* right_paren)? ;
-
-annotationAssign: (id Equal)? expression ;
+annotationItem: id (tuple|lambda)?;
 
 callFunc: (tuple|lambda); // 函数调用
 

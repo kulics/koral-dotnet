@@ -188,14 +188,36 @@ typ = ((string)(Visit(context.typeType())));
 }
 var obj = "";
 if ( context.annotationSupport()!=null ) {
+this.selfPropertyID=r1.text;
 obj+=Visit(context.annotationSupport());
 }
+if ( this.selfPropertyContent.len>0 ) {
+var pri = "";
+if ( this.selfPropertyVariable ) {
+pri = (new System.Text.StringBuilder("private static ").Append(typ).Append(" _").Append(r1.text).Append("")).to_str();
+if ( r2!=null ) {
+pri+=" = "+r2.text;
+}
+pri+=Terminate+Wrap;
+}
+obj = pri+obj;
+obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append("").Append(BlockLeft).Append("")).to_str();
+foreach (var v in this.selfPropertyContent){
+obj+=v;
+}
+obj+=BlockRight+Wrap;
+this.selfPropertyContent.clear();
+this.selfPropertyID="";
+this.selfPropertyVariable=false;
+}
+else {
 obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append("")).to_str();
 obj+=run(()=>{if ( r2!=null ) {
 return (new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate+Wrap).Append("")).to_str();}
 else {
 return Terminate+Wrap;}
 });
+}
 return obj;
 }
 public  override  object VisitNamespaceControlStatement( NamespaceControlStatementContext context ){

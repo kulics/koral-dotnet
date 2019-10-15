@@ -314,6 +314,7 @@ me LiteLangVisitor % {
     }
 
     base%VisitLambda : (context LambdaContext -> v any) {
+        me.add_current_set()
         r = Result{data = "var"}
         # 异步 #
         ? context.t.Type == Right_Flow {
@@ -329,11 +330,9 @@ me LiteLangVisitor % {
         ? context.tupleExpression() >< nil {
             r.text += Visit(context.tupleExpression()).[Result].text
         } _ {
-            me.add_current_set()
             r.text += "{" + ProcessFunctionSupport(context.functionSupportStatement()) + "}"
-            me.delete_current_set()
         }
-
+        me.delete_current_set()
         <- r
     }
 

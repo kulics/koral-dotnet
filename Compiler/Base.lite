@@ -59,6 +59,10 @@ LiteLangVisitor := me % {
     selfID = ""
     superID = ""
     setID = ""
+    getID = ""
+    selfPropertyID = ""
+    selfPropertyContent = [;str]{}
+    selfPropertyVariable = false
 
     AllIDSet = [=>str]{}
     CurrentIDSet = [>[=>str]]{}
@@ -115,6 +119,8 @@ me LiteLangVisitor % {
             r.text = "base"
         } r.text == setID {
             r.text = "value"
+        } r.text == getID {
+            r.text = "_" + selfPropertyID
         }
         <- r
     }
@@ -202,17 +208,22 @@ me LiteLangVisitor % {
         }
 
         r = Visit(context.annotationList()).[str]
-        obj += "[" id "" r "]"
+        ? r >< "" {
+            obj += "[" id "" r "]"
+        }
         <- obj
     }
 
     base%VisitAnnotationList : (context AnnotationListContext -> v any) {
         obj = ""
         (i)v @ context.annotationItem() {
-            obj += ? -> i > 0 {
-                "," Visit(v) ""
-            } _ {
-                Visit(v)
+            txt str = me.Visit(v).[str]
+            ? txt >< "" {
+                obj += ? -> i > 0 {
+                    "," txt ""
+                } _ {
+                    txt
+                }
             }
         }
         <- obj
@@ -220,28 +231,98 @@ me LiteLangVisitor % {
 
     base%VisitAnnotationItem : (context AnnotationItemContext -> v any) {
         obj = ""
-        obj += Visit(context.id()).[Result].text
-        (i)v @ context.annotationAssign() {
-            obj += ? -> i > 0 {
-                "," Visit(v) ""
+        obj += me.Visit(context.id()).[Result].text
+        obj ? "get" {
+            ? context.lambda() == nil {
+                me.selfPropertyVariable = true
+                me.selfPropertyContent += "get{return _" me.selfPropertyID "; }"
             } _ {
-                "(" Visit(v) ""
+                me.selfPropertyContent += "get{" me.VisitPropertyLambda(context.lambda(), true) "}"
             }
+            <- ""
+        } "set" {
+            ? context.lambda() == nil {
+                me.selfPropertyVariable = true
+                me.selfPropertyContent += "set{_" me.selfPropertyID "=value;}"
+            } _ {
+                me.selfPropertyContent += "set{" me.VisitPropertyLambda(context.lambda(), false) "}"
+            }
+            <- ""
+        } "_get" {
+            ? context.lambda() == nil {
+                me.selfPropertyVariable = true
+                me.selfPropertyContent += "private get{return _" me.selfPropertyID "; }"
+            } _ {
+                me.selfPropertyContent += "private get{" me.VisitPropertyLambda(context.lambda(), true) "}"
+            }
+            <- ""
+        } "_set" {
+            ? context.lambda() == nil {
+                me.selfPropertyVariable = true
+                me.selfPropertyContent += "private set{_" me.selfPropertyID "=value;}"
+            } _ {
+                me.selfPropertyContent += "private set{" me.VisitPropertyLambda(context.lambda(), false) "}"
+            }
+            <- ""
+        } "add" {
+            todo("not yet")
+            <- ""
+        } "remove" {
+            todo("not yet")
+            <- ""
         }
-        ? context.annotationAssign().Length > 0 {
-            obj += ")"
+        obj += ? -> context.tuple() >< nil {
+            me.Visit(context.tuple()).[Result].text
+        } context.lambda() >< nil {
+            "(" me.Visit(context.lambda()).[Result].text ")"
+        } _ {
+            ""
         }
         <- obj
     }
 
-    base%VisitAnnotationAssign : (context AnnotationAssignContext -> v any) {
+    VisitPropertyLambda : (context LambdaContext, is_get bool -> v str) {
+        me.add_current_set()
         obj = ""
-        id = ""
-        ? context.id() >< nil {
-            id = "" Visit(context.id()).[Result].text "="
+        ? context.lambdaIn() >< nil {
+            me.VisitPropertyLambdaIn(context.lambdaIn(), is_get)
         }
-        r = Visit(context.expression()).[Result]
-        obj = id + r.text
+
+        ? context.tupleExpression() >< nil {
+            obj += Visit(context.tupleExpression()).[Result].text
+            ? is_get {
+                obj = "return " + obj
+            }
+            obj += Terminate
+        } _ {
+            obj += ProcessFunctionSupport(context.functionSupportStatement())
+        }
+        me.getID = ""
+        me.setID = ""
+        me.delete_current_set()
         <- obj
+    }
+
+    VisitPropertyLambdaIn : (context LambdaInContext, is_get bool ->) {
+        context.id().Length ? 1 {
+            id0 = me.Visit(context.id(0)).[Result]
+            me.add_id(id0.text)
+            ? is_get {
+                me.selfPropertyVariable = true
+                me.add_id("_"+me.selfPropertyID)
+                me.getID = id0.text
+            } _ {
+                me.setID = id0.text
+            }
+        } 2 {
+            me.selfPropertyVariable = true
+            me.add_id("_"+me.selfPropertyID)
+            id0 = me.Visit(context.id(0)).[Result]
+            id1 = me.Visit(context.id(1)).[Result]
+            me.add_id(id0.text)
+            me.add_id(id1.text)
+            me.getID = id0.text
+            me.setID = id1.text
+        }
     }
 }

@@ -297,6 +297,7 @@ r.data="var";
 return r;
 }
 public  override  object VisitLambda( LambdaContext context ){
+this.add_current_set();
 var r = (new Result(){data = "var"});
 if ( context.t.Type==Right_Flow ) {
 r.text+="async ";
@@ -311,10 +312,9 @@ if ( context.tupleExpression()!=null ) {
 r.text+=((Result)(Visit(context.tupleExpression()))).text;
 }
 else {
-this.add_current_set();
 r.text+="{"+ProcessFunctionSupport(context.functionSupportStatement())+"}";
-this.delete_current_set();
 }
+this.delete_current_set();
 return r;
 }
 public  override  object VisitLambdaIn( LambdaInContext context ){

@@ -227,14 +227,34 @@ me LiteLangVisitor % {
         }
         obj = ""
         ? context.annotationSupport() >< nil {
+            me.selfPropertyID = r1.text
             obj += Visit(context.annotationSupport())
         }
-
-        obj += ""r1.permission" static "typ" "r1.text""
-        obj += ? -> r2 >< nil {
-            " = "r2.text" "Terminate+Wrap""
+        ? me.selfPropertyContent.len > 0 {
+            pri = ""
+            ? me.selfPropertyVariable {
+                pri = "private static "typ" _"r1.text"" 
+                ? r2 >< nil {
+                    pri += " = " + r2.text
+                }
+                pri += Terminate + Wrap
+            }
+            obj = pri + obj
+            obj += ""r1.permission" static "typ" "r1.text""BlockLeft""
+            v @ me.selfPropertyContent {
+                obj += v
+            }
+            obj += BlockRight+Wrap
+            me.selfPropertyContent.clear()
+            me.selfPropertyID = ""
+            me.selfPropertyVariable = false
         } _ {
-            Terminate + Wrap
+            obj += ""r1.permission" static "typ" "r1.text""
+            obj += ? -> r2 >< nil {
+                " = "r2.text" "Terminate+Wrap""
+            } _ {
+                Terminate + Wrap
+            }
         }
         <- obj
     }

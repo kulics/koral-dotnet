@@ -20,6 +20,10 @@ public partial class LiteLangVisitor:LiteParserBaseVisitor<object>{
 public string selfID = "" ; 
 public string superID = "" ; 
 public string setID = "" ; 
+public string getID = "" ; 
+public string selfPropertyID = "" ; 
+public list<string> selfPropertyContent = (new list<string>()) ; 
+public bool selfPropertyVariable = false ; 
 public hashset<string> AllIDSet = (new hashset<string>()) ; 
 public stack<hashset<string>> CurrentIDSet = (new stack<hashset<string>>()) ; 
 public  virtual  bool has_id( string id ){
@@ -73,6 +77,9 @@ r.text="base";
 }
 else if ( r.text==setID ) {
 r.text="value";
+}
+else if ( r.text==getID ) {
+r.text="_"+selfPropertyID;
 }
 return r;
 }
@@ -161,44 +168,133 @@ if ( context.id()!=null ) {
 id = (new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).text).Append(":")).to_str();
 }
 var r = ((string)(Visit(context.annotationList())));
+if ( r!="" ) {
 obj+=(new System.Text.StringBuilder("[").Append(id).Append("").Append(r).Append("]")).to_str();
+}
 return obj;
 }
 public  override  object VisitAnnotationList( AnnotationListContext context ){
 var obj = "";
 foreach (var (i,v) in range(context.annotationItem())){
+string txt = ((string)(this.Visit(v)));
+if ( txt!="" ) {
 obj+=run(()=>{if ( i>0 ) {
-return (new System.Text.StringBuilder(",").Append(Visit(v)).Append("")).to_str();}
+return (new System.Text.StringBuilder(",").Append(txt).Append("")).to_str();}
 else {
-return Visit(v);}
+return txt;}
 });
+}
 }
 return obj;
 }
 public  override  object VisitAnnotationItem( AnnotationItemContext context ){
 var obj = "";
-obj+=((Result)(Visit(context.id()))).text;
-foreach (var (i,v) in range(context.annotationAssign())){
-obj+=run(()=>{if ( i>0 ) {
-return (new System.Text.StringBuilder(",").Append(Visit(v)).Append("")).to_str();}
+obj+=((Result)(this.Visit(context.id()))).text;
+switch (obj) {
+case "get" :
+{ if ( context.lambda()==null ) {
+this.selfPropertyVariable=true;
+this.selfPropertyContent+=(new System.Text.StringBuilder("get{return _").Append(this.selfPropertyID).Append("; }")).to_str();
+}
 else {
-return (new System.Text.StringBuilder("(").Append(Visit(v)).Append("")).to_str();}
+this.selfPropertyContent+=(new System.Text.StringBuilder("get{").Append(this.VisitPropertyLambda(context.lambda(), true)).Append("}")).to_str();
+}
+return "";
+}break;
+case "set" :
+{ if ( context.lambda()==null ) {
+this.selfPropertyVariable=true;
+this.selfPropertyContent+=(new System.Text.StringBuilder("set{_").Append(this.selfPropertyID).Append("=value;}")).to_str();
+}
+else {
+this.selfPropertyContent+=(new System.Text.StringBuilder("set{").Append(this.VisitPropertyLambda(context.lambda(), false)).Append("}")).to_str();
+}
+return "";
+}break;
+case "_get" :
+{ if ( context.lambda()==null ) {
+this.selfPropertyVariable=true;
+this.selfPropertyContent+=(new System.Text.StringBuilder("private get{return _").Append(this.selfPropertyID).Append("; }")).to_str();
+}
+else {
+this.selfPropertyContent+=(new System.Text.StringBuilder("private get{").Append(this.VisitPropertyLambda(context.lambda(), true)).Append("}")).to_str();
+}
+return "";
+}break;
+case "_set" :
+{ if ( context.lambda()==null ) {
+this.selfPropertyVariable=true;
+this.selfPropertyContent+=(new System.Text.StringBuilder("private set{_").Append(this.selfPropertyID).Append("=value;}")).to_str();
+}
+else {
+this.selfPropertyContent+=(new System.Text.StringBuilder("private set{").Append(this.VisitPropertyLambda(context.lambda(), false)).Append("}")).to_str();
+}
+return "";
+}break;
+case "add" :
+{ todo("not yet");
+return "";
+}break;
+case "remove" :
+{ todo("not yet");
+return "";
+}break;
+}
+obj+=run(()=>{if ( context.tuple()!=null ) {
+return ((Result)(this.Visit(context.tuple()))).text;}
+else if ( context.lambda()!=null ) {
+return (new System.Text.StringBuilder("(").Append(((Result)(this.Visit(context.lambda()))).text).Append(")")).to_str();}
+else {
+return "";}
 });
-}
-if ( context.annotationAssign().Length>0 ) {
-obj+=")";
-}
 return obj;
 }
-public  override  object VisitAnnotationAssign( AnnotationAssignContext context ){
+public  virtual  string VisitPropertyLambda( LambdaContext context ,  bool is_get ){
+this.add_current_set();
 var obj = "";
-var id = "";
-if ( context.id()!=null ) {
-id = (new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).text).Append("=")).to_str();
+if ( context.lambdaIn()!=null ) {
+this.VisitPropertyLambdaIn(context.lambdaIn(), is_get);
 }
-var r = ((Result)(Visit(context.expression())));
-obj = id+r.text;
+if ( context.tupleExpression()!=null ) {
+obj+=((Result)(Visit(context.tupleExpression()))).text;
+if ( is_get ) {
+obj = "return "+obj;
+}
+obj+=Terminate;
+}
+else {
+obj+=ProcessFunctionSupport(context.functionSupportStatement());
+}
+this.getID="";
+this.setID="";
+this.delete_current_set();
 return obj;
+}
+public  virtual  void VisitPropertyLambdaIn( LambdaInContext context ,  bool is_get ){
+switch (context.id().Length) {
+case 1 :
+{ var id0 = ((Result)(this.Visit(context.id(0))));
+this.add_id(id0.text);
+if ( is_get ) {
+this.selfPropertyVariable=true;
+this.add_id("_"+this.selfPropertyID);
+this.getID=id0.text;
+}
+else {
+this.setID=id0.text;
+}
+}break;
+case 2 :
+{ this.selfPropertyVariable=true;
+this.add_id("_"+this.selfPropertyID);
+var id0 = ((Result)(this.Visit(context.id(0))));
+var id1 = ((Result)(this.Visit(context.id(1))));
+this.add_id(id0.text);
+this.add_id(id1.text);
+this.getID=id0.text;
+this.setID=id1.text;
+}break;
+}
 }
 }
 public partial class Compiler_static{
