@@ -135,10 +135,6 @@ me LiteLangVisitor % {
             r.permission = "public"
             r.text += context.typeAny().GetText()
             r.isVirtual = true
-        } context.linqKeyword() >< nil {
-            r.permission = "public"
-            r.text += Visit(context.linqKeyword())
-            r.isVirtual = true
         } context.op.Type == IDPublic {
             r.permission = "public"
             r.text += context.op.Text

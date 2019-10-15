@@ -357,14 +357,14 @@ r.text+=((string)(Visit(context.linqHeadItem())));
 foreach (var item in context.linqItem()){
 r.text+=(new System.Text.StringBuilder("").Append(Visit(item)).Append(" ")).to_str();
 }
-r.text+=(new System.Text.StringBuilder("").Append(context.k.Text).Append(" ").Append(((Result)(Visit(context.expression()))).text).Append("")).to_str();
+r.text+=(new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).text).Append(" ").Append(((Result)(Visit(context.expression()))).text).Append("")).to_str();
 return r;
 }
 public  override  object VisitLinqItem( LinqItemContext context ){
 if ( context.linqHeadItem()!=null ) {
 return ((string)(Visit(context.linqHeadItem())));
 }
-var obj = ((string)(Visit(context.linqKeyword())));
+var obj = ((Result)(Visit(context.id()))).text;
 if ( context.expression()!=null ) {
 obj+=(new System.Text.StringBuilder(" ").Append(((Result)(Visit(context.expression()))).text).Append("")).to_str();
 }
@@ -375,9 +375,6 @@ var obj = "";
 var id = ((Result)(Visit(context.id())));
 obj+=(new System.Text.StringBuilder("from ").Append(id.text).Append(" in ").Append(((Result)(Visit(context.expression()))).text).Append(" ")).to_str();
 return obj;
-}
-public  override  object VisitLinqKeyword( LinqKeywordContext context ){
-return context.k.Text;
 }
 }
 public partial class Compiler_static{

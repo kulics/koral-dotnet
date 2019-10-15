@@ -1,20 +1,5 @@
 lexer grammar LiteLexer;
 
-LinqFrom: 'from';
-LinqBy: 'by';
-LinqSelect: 'select';
-LinqWhere: 'where';
-LinqGroup: 'group';
-LinqInto: 'into';
-LinqOrderby: 'orderby';
-LinqJoin: 'join';
-LinqLet: 'let';
-LinqIn: 'in';
-LinqOn: 'on';
-LinqEquals: 'equals';
-LinqAscending: 'ascending';
-LinqDescending: 'descending';
-
 Pow:    '*^';
 Root:   '/^';
 Log:    '\\^';
@@ -62,7 +47,6 @@ Right_Brace:             '}';
 Left_Brack:             '[';
 Right_Brack:             ']';
 
-Colon_Colon: '::';
 Colon: ':';
 
 Question: '?';

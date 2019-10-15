@@ -95,11 +95,6 @@ r.permission="public";
 r.text+=context.typeAny().GetText();
 r.isVirtual=true;
 }
-else if ( context.linqKeyword()!=null ) {
-r.permission="public";
-r.text+=Visit(context.linqKeyword());
-r.isVirtual=true;
-}
 else if ( context.op.Type==IDPublic ) {
 r.permission="public";
 r.text+=context.op.Text;

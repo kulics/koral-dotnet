@@ -456,7 +456,7 @@ me LiteLangVisitor % {
         item @ context.linqItem() {
             r.text += "" Visit(item) " "
         }
-        r.text += ""context.k.Text " " Visit(context.expression()).[Result].text ""
+        r.text += ""Visit(context.id()).[Result].text " " Visit(context.expression()).[Result].text ""
         <- r
     }
 
@@ -464,7 +464,7 @@ me LiteLangVisitor % {
         ? context.linqHeadItem() >< nil {
             <- Visit(context.linqHeadItem()).[str]
         }
-        obj = Visit(context.linqKeyword()).[str]
+        obj = Visit(context.id()).[Result].text
         ? context.expression() >< nil {
             obj += " "Visit(context.expression()).[Result].text""
         }
@@ -476,9 +476,5 @@ me LiteLangVisitor % {
         id = Visit(context.id()).[Result]
         obj += "from " id.text " in "Visit(context.expression()).[Result].text " "
         <- obj
-    }
-
-    base%VisitLinqKeyword : (context LinqKeywordContext -> v any) {
-        <- context.k.Text
     }
 }
