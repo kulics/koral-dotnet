@@ -49,7 +49,6 @@ me LiteLangVisitor % {
         item @ context.namespaceSupportStatement() {
             type = item.GetChild(0).GetType()
             ? type == typeof[NamespaceVariableStatementContext]() |
-                type == typeof[NamespaceControlStatementContext]() |
                 type == typeof[NamespaceFunctionStatementContext]() |
                 type == typeof[NamespaceConstantStatementContext]() {
                 contentStatic += Visit(item)
@@ -256,31 +255,6 @@ me LiteLangVisitor % {
                 Terminate + Wrap
             }
         }
-        <- obj
-    }
-
-    base%VisitNamespaceControlStatement : (context NamespaceControlStatementContext -> v any) {
-        r1 = Visit(context.id()).[Result]
-        me.add_id(r1.text)
-        isMutable = r1.isVirtual
-        typ = ""
-        typ = Visit(context.typeType()).[str]
-        obj = ""
-        ? context.annotationSupport() >< nil {
-            obj += Visit(context.annotationSupport())
-        }
-
-        obj += ""r1.permission" static "typ" "r1.text + BlockLeft""
-        ? context.expression() >< nil {
-            expr = me.Visit(context.expression()).[Result]
-            obj += "get{return "expr.text"; }set{"expr.text"=value;}"
-        } _ {
-            item @ context.packageControlSubStatement() {
-                temp = Visit(item).[Result]
-                obj += temp.text
-            }
-        }
-        obj += BlockRight + Wrap
         <- obj
     }
 }

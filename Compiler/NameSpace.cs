@@ -27,7 +27,7 @@ var contentStatic = "";
 this.add_current_set();
 foreach (var item in context.namespaceSupportStatement()){
 var type = item.GetChild(0).GetType();
-if ( type==@typeof<NamespaceVariableStatementContext>()||type==@typeof<NamespaceControlStatementContext>()||type==@typeof<NamespaceFunctionStatementContext>()||type==@typeof<NamespaceConstantStatementContext>() ) {
+if ( type==@typeof<NamespaceVariableStatementContext>()||type==@typeof<NamespaceFunctionStatementContext>()||type==@typeof<NamespaceConstantStatementContext>() ) {
 contentStatic+=Visit(item);
 }
 else {
@@ -218,30 +218,6 @@ else {
 return Terminate+Wrap;}
 });
 }
-return obj;
-}
-public  override  object VisitNamespaceControlStatement( NamespaceControlStatementContext context ){
-var r1 = ((Result)(Visit(context.id())));
-this.add_id(r1.text);
-var isMutable = r1.isVirtual;
-var typ = "";
-typ = ((string)(Visit(context.typeType())));
-var obj = "";
-if ( context.annotationSupport()!=null ) {
-obj+=Visit(context.annotationSupport());
-}
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text+BlockLeft).Append("")).to_str();
-if ( context.expression()!=null ) {
-var expr = ((Result)(this.Visit(context.expression())));
-obj+=(new System.Text.StringBuilder("get{return ").Append(expr.text).Append("; }set{").Append(expr.text).Append("=value;}")).to_str();
-}
-else {
-foreach (var item in context.packageControlSubStatement()){
-var temp = ((Result)(Visit(item)));
-obj+=temp.text;
-}
-}
-obj+=BlockRight+Wrap;
 return obj;
 }
 }

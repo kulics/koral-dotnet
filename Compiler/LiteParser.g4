@@ -15,7 +15,6 @@ importStatement: (annotationSupport)? (id call?)? TextLiteral end;
 
 namespaceSupportStatement:
 namespaceVariableStatement
-|namespaceControlStatement
 |namespaceFunctionStatement
 |namespaceConstantStatement
 |packageStatement
@@ -39,9 +38,6 @@ enumStatement: (annotationSupport)? id Colon_Equal New_Line* typeType Question l
 enumSupportStatement: id (Equal (add)? integerExpr)? end;
 // 命名空间变量
 namespaceVariableStatement: (annotationSupport)? id (Equal expression| typeType (Equal expression)?) end;
-// 命名空间控制
-namespaceControlStatement: (annotationSupport)? id Colon left_paren expression? right_paren typeType
-(left_brace (packageControlSubStatement)+ right_brace)? end;
 // 命名空间常量
 namespaceConstantStatement: (annotationSupport)? id (typeType)? Colon expression end;
 // 命名空间函数
