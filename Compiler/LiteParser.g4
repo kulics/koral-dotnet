@@ -54,9 +54,8 @@ packageFieldStatement: left_brace (packageSupportStatement)* right_brace;
 packageSupportStatement:
 includeStatement |
 packageVariableStatement |
+packageFunctionStatement |
 packageEventStatement |
-implementFunctionStatement |
-implementControlStatement |
 overrideFunctionStatement |
 overrideControlStatement |
 New_Line
@@ -69,6 +68,9 @@ packageNewStatement: (annotationSupport)? left_paren parameterClauseIn right_par
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
 // 定义变量
 packageVariableStatement: (annotationSupport)? id (Equal expression| typeType (Equal expression)?) end;
+// 函数
+packageFunctionStatement: (annotationSupport)? id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
+parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义子方法
 packageControlSubStatement: id (left_paren id right_paren)? left_brace (functionSupportStatement)+ right_brace end;
 // 定义包事件

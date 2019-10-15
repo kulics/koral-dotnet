@@ -91,14 +91,74 @@ typ = ((string)(Visit(context.typeType())));
 }
 var obj = "";
 if ( context.annotationSupport()!=null ) {
+this.selfPropertyID=r1.text;
 obj+=Visit(context.annotationSupport());
 }
+if ( this.selfPropertyContent.len>0 ) {
+var pri = "";
+if ( this.selfPropertyVariable ) {
+pri = (new System.Text.StringBuilder("private ").Append(typ).Append(" _").Append(r1.text).Append("")).to_str();
+if ( r2!=null ) {
+pri+=" = "+r2.text;
+}
+pri+=Terminate+Wrap;
+}
+obj = pri+obj;
+obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("").Append(BlockLeft).Append("")).to_str();
+foreach (var v in this.selfPropertyContent){
+obj+=v;
+}
+obj+=BlockRight+Wrap;
+this.selfPropertyContent.clear();
+this.selfPropertyID="";
+this.selfPropertyVariable=false;
+}
+else {
 obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("")).to_str();
 obj+=run(()=>{if ( r2!=null ) {
 return (new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate).Append(" ").Append(Wrap).Append("")).to_str();}
 else {
 return Terminate+Wrap;}
 });
+}
+return obj;
+}
+public  override  object VisitPackageFunctionStatement( PackageFunctionStatementContext context ){
+var id = ((Result)(Visit(context.id())));
+var isVirtual = "";
+if ( id.isVirtual ) {
+isVirtual = " virtual ";
+}
+var obj = "";
+obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" ")).to_str();
+var pout = ((string)(Visit(context.parameterClauseOut())));
+if ( context.t.Type==Right_Flow ) {
+pout = run(()=>{if ( pout!="void" ) {
+return (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();}
+else {
+return Task;}
+});
+obj+=(new System.Text.StringBuilder("").Append(isVirtual).Append(" async ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
+}
+else {
+if ( context.y!=null ) {
+if ( pout!="void" ) {
+pout = (new System.Text.StringBuilder("").Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
+}
+}
+obj+=(new System.Text.StringBuilder("").Append(isVirtual).Append(" ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
+}
+var templateContract = "";
+if ( context.templateDefine()!=null ) {
+var template = ((TemplateItem)(Visit(context.templateDefine())));
+obj+=template.Template;
+templateContract = template.Contract;
+}
+this.add_current_set();
+obj+=Visit(context.parameterClauseIn())+templateContract+BlockLeft+Wrap;
+obj+=ProcessFunctionSupport(context.functionSupportStatement());
+this.delete_current_set();
+obj+=BlockRight+Wrap;
 return obj;
 }
 public  override  object VisitPackageControlSubStatement( PackageControlSubStatementContext context ){

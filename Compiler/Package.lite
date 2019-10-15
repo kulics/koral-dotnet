@@ -97,15 +97,75 @@ me LiteLangVisitor % {
         }
         obj = ""
         ? context.annotationSupport() >< nil {
+            me.selfPropertyID = r1.text
             obj += Visit(context.annotationSupport())
         }
-
-        obj += ""r1.permission" "typ" "r1.text""
-        obj += ? -> r2 >< nil {
-            " = "r2.text" "Terminate" "Wrap""
+        ? me.selfPropertyContent.len > 0 {
+            pri = ""
+            ? me.selfPropertyVariable {
+                pri = "private "typ" _"r1.text"" 
+                ? r2 >< nil {
+                    pri += " = " + r2.text
+                }
+                pri += Terminate + Wrap
+            }
+            obj = pri + obj
+            obj += ""r1.permission" "typ" "r1.text""BlockLeft""
+            v @ me.selfPropertyContent {
+                obj += v
+            }
+            obj += BlockRight+Wrap
+            me.selfPropertyContent.clear()
+            me.selfPropertyID = ""
+            me.selfPropertyVariable = false
         } _ {
-            Terminate + Wrap
+            obj += ""r1.permission" "typ" "r1.text""
+            obj += ? -> r2 >< nil {
+                " = "r2.text" "Terminate" "Wrap""
+            } _ {
+                Terminate + Wrap
+            }
         }
+        <- obj
+    }
+
+    base%VisitPackageFunctionStatement : (context PackageFunctionStatementContext -> v any) {
+        id = Visit(context.id()).[Result]
+        isVirtual = ""
+        ? id.isVirtual {
+            isVirtual = " virtual "
+        }
+        obj = ""
+        # 异步 #
+        obj += ""id.permission" "
+        pout = Visit(context.parameterClauseOut()).[str]
+        ? context.t.Type == Right_Flow {
+            pout = ? -> pout >< "void" {
+                ""Task"<"pout">"
+            } _ {
+                Task
+            }
+            obj += ""isVirtual" async "pout" "id.text""
+        } _ {
+            ? context.y >< nil {
+                ? pout >< "void" {
+                    pout = ""IEnum"<"pout">"
+                }
+            }
+            obj += ""isVirtual" "pout" "id.text""
+        }
+        # 泛型 #
+        templateContract = ""
+        ? context.templateDefine() >< nil {
+            template = Visit(context.templateDefine()).[TemplateItem]
+            obj += template.Template
+            templateContract = template.Contract
+        }
+        me.add_current_set()
+        obj += Visit(context.parameterClauseIn()) + templateContract + BlockLeft + Wrap
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
+        obj += BlockRight + Wrap
         <- obj
     }
 
