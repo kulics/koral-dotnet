@@ -80,6 +80,10 @@ return (new Result(){text = obj,data = extend});
 public  override  object VisitPackageVariableStatement( PackageVariableStatementContext context ){
 var r1 = ((Result)(Visit(context.id())));
 var isMutable = r1.isVirtual;
+var isVirtual = "";
+if ( r1.isVirtual ) {
+isVirtual = " virtual ";
+}
 var typ = "";
 Result r2 = null;
 if ( context.expression()!=null ) {
@@ -104,7 +108,7 @@ pri+=" = "+r2.text;
 pri+=Terminate+Wrap;
 }
 obj = pri+obj;
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("").Append(BlockLeft).Append("")).to_str();
+obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" ").Append(isVirtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append("").Append(BlockLeft).Append("")).to_str();
 foreach (var v in this.selfPropertyContent){
 obj+=v;
 }
