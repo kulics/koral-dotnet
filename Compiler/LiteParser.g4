@@ -14,18 +14,17 @@ exportStatement: TextLiteral left_brace (importStatement|New_Line)* right_brace 
 importStatement: (annotationSupport)? (id call?)? TextLiteral end;
 
 namespaceSupportStatement:
-namespaceVariableStatement
-|namespaceFunctionStatement
-|namespaceConstantStatement
-|packageStatement
-|protocolStatement
-|implementStatement
-|implementNewStatement
-|enumStatement
-|typeAliasStatement
-|typeRedefineStatement
-|New_Line
-;
+namespaceFunctionStatement |
+namespaceVariableStatement |
+namespaceConstantStatement |
+packageStatement |
+protocolStatement |
+implementStatement |
+implementNewStatement |
+enumStatement |
+typeAliasStatement |
+typeRedefineStatement |
+New_Line ;
 
 // 类型别名
 typeAliasStatement: id Equal_Arrow typeType end;
@@ -53,11 +52,11 @@ packageFieldStatement: left_brace (packageSupportStatement)* right_brace;
 // 包支持的语句
 packageSupportStatement:
 includeStatement |
-packageVariableStatement |
 packageFunctionStatement |
+packageVariableStatement |
 packageEventStatement |
-overrideVariableStatement |
 overrideFunctionStatement |
+overrideVariableStatement |
 New_Line
 ;
 
@@ -87,10 +86,10 @@ implementStatement: parameterClauseSelf Cent (typeType)? New_Line* left_brace (i
 
 // 实现支持的语句
 implementSupportStatement: 
-implementVariableStatement |
 implementFunctionStatement |
-overrideVariableStatement |
+implementVariableStatement |
 overrideFunctionStatement |
+overrideVariableStatement |
 New_Line;
 
 // 定义变量
@@ -109,16 +108,12 @@ parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brac
 protocolStatement: (annotationSupport)? id (templateDefine)? Colon_Equal Discard Cent left_brace (protocolSupportStatement)* right_brace end;
 // 协议支持的语句
 protocolSupportStatement:
-includeStatement
-|protocolFunctionStatement
-|protocolControlStatement
-|New_Line
-;
+includeStatement |
+protocolFunctionStatement |
+protocolVariableStatement |
+New_Line ;
 // 定义控制
-protocolControlStatement: (annotationSupport)? id left_paren right_paren typeType
- (left_brace (protocolControlSubStatement)* right_brace)? end;
-// 定义子方法
-protocolControlSubStatement: id;
+protocolVariableStatement: (annotationSupport)? id (Equal expression| typeType (Equal expression)?) end;
 // 函数
 protocolFunctionStatement: (annotationSupport)? id (templateDefine)? left_paren parameterClauseIn 
 t=(Right_Arrow|Right_Flow) y=At? New_Line* parameterClauseOut right_paren end;

@@ -220,7 +220,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitProtocolControlStatement : (context ProtocolControlStatementContext -> v any) {
+    base%VisitProtocolVariableStatement : (context ProtocolVariableStatementContext -> v any) {
         id = Visit(context.id()).[Result]
         isMutable = id.isVirtual
         r = Result{}
@@ -231,22 +231,9 @@ me LiteLangVisitor % {
         type = Visit(context.typeType()).[str]
         r.text += type + " " + id.text
         r.text += BlockLeft
-        ? context.protocolControlSubStatement().Length > 0 {
-            item @ context.protocolControlSubStatement() {
-                r.text += Visit(item)
-            }
-        } _ {
-            r.text += "get;set;"
-        }
-
+        r.text += "get;set;"
         r.text += BlockRight + Wrap
         <- r
-    }
-
-    base%VisitProtocolControlSubStatement : (context ProtocolControlSubStatementContext -> v any) {
-        obj = ""
-        obj = GetControlSub(context.id().GetText()).id + Terminate
-        <- obj
     }
 
     base%VisitProtocolFunctionStatement : (context ProtocolFunctionStatementContext -> v any) {

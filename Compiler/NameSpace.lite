@@ -12,25 +12,6 @@ Namespace := % {
     imports str
 }
 
-GetControlSub : (id str -> id str, type str) {
-    <- id ? -> "get" {
-        " get ", "get"
-    } "set" {
-        " set ", "set"
-    } "_get" {
-        " protected get ", "get"
-    } "_set" {
-        " protected set ", "set"
-    } "add" {
-        " add ", "add"
-    } "remove" {
-        " remove ", "remove"
-    } _ {
-        throw(Exception{})
-        "", ""
-    }
-}
-
 me LiteLangVisitor % {
     base%VisitStatement : (context StatementContext -> v any) {
         obj = ""

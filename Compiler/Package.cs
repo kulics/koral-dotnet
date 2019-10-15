@@ -207,7 +207,7 @@ obj+=interfaceProtocol;
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitProtocolControlStatement( ProtocolControlStatementContext context ){
+public  override  object VisitProtocolVariableStatement( ProtocolVariableStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var isMutable = id.isVirtual;
 var r = (new Result());
@@ -218,21 +218,9 @@ r.permission="public";
 var type = ((string)(Visit(context.typeType())));
 r.text+=type+" "+id.text;
 r.text+=BlockLeft;
-if ( context.protocolControlSubStatement().Length>0 ) {
-foreach (var item in context.protocolControlSubStatement()){
-r.text+=Visit(item);
-}
-}
-else {
 r.text+="get;set;";
-}
 r.text+=BlockRight+Wrap;
 return r;
-}
-public  override  object VisitProtocolControlSubStatement( ProtocolControlSubStatementContext context ){
-var obj = "";
-obj = GetControlSub(context.id().GetText()).id+Terminate;
-return obj;
 }
 public  override  object VisitProtocolFunctionStatement( ProtocolFunctionStatementContext context ){
 var id = ((Result)(Visit(context.id())));

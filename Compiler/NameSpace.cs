@@ -221,26 +221,4 @@ return Terminate+Wrap;}
 return obj;
 }
 }
-public partial class Compiler_static{
-public static (  string id ,  string type  ) GetControlSub( string id ){
-return run(()=> { switch (id) {
-case "get" :
-{return (" get ", "get");}break;
-case "set" :
-{return (" set ", "set");}break;
-case "_get" :
-{return (" protected get ", "get");}break;
-case "_set" :
-{return (" protected set ", "set");}break;
-case "add" :
-{return (" add ", "add");}break;
-case "remove" :
-{return (" remove ", "remove");}break;
-default:
-{@throw((new Exception()));
-return ("", "");}break;
-}
-});
-}
-}
 }
