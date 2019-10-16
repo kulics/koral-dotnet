@@ -246,6 +246,7 @@ linq // 联合查询
 | expression judgeCaseExpression // 条件判断表达式
 | expression op=Bang // 引用判断
 | expression op=Question // 可空判断
+| expression orElse // 空值替换
 | expression op=Left_Flow // 异步执行
 | expression typeConversion // 类型转换
 | expression callFunc // 函数调用
@@ -283,6 +284,8 @@ callElement: Dot left_paren (slice | expression) right_paren; // 元素调用
 callPkg: typeType left_brace (pkgAssign|listAssign|setAssign|dictionaryAssign)? right_brace; // 新建包
 
 callNew: left_brack typeType right_brack left_paren New_Line? expressionList? New_Line? right_paren; // 构造类对象
+
+orElse: Question Discard left_paren expression right_paren; // 类型转化
 
 typeConversion: Dot left_brack typeType right_brack; // 类型转化
 

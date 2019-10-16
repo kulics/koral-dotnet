@@ -101,6 +101,10 @@ var e2 = ((string)(Visit(context.GetChild(1))));
 r.data=e2;
 r.text=(new System.Text.StringBuilder("((").Append(e2).Append(")(").Append(r.text).Append("))")).to_str();
 }
+else if ( context.GetChild(1).GetType()==@typeof<OrElseContext>() ) {
+var e2 = ((Result)(Visit(context.GetChild(1))));
+r.text=(new System.Text.StringBuilder("(").Append(r.text).Append("??").Append(e2.text).Append(")")).to_str();
+}
 else if ( context.GetChild(1).GetType()==@typeof<CallExpressionContext>() ) {
 var e2 = ((Result)(Visit(context.GetChild(1))));
 r.text=r.text+e2.text;
@@ -131,6 +135,9 @@ case 1 :
 }break;
 }
 return r;
+}
+public  override  object VisitOrElse( OrElseContext context ){
+return ((Result)(Visit(context.expression())));
 }
 public  override  object VisitTypeConversion( TypeConversionContext context ){
 return ((string)(Visit(context.typeType())));
