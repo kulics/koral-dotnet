@@ -20,7 +20,6 @@ namespaceConstantStatement |
 packageStatement |
 protocolStatement |
 implementStatement |
-implementNewStatement |
 enumStatement |
 typeAliasStatement |
 typeRedefineStatement |
@@ -44,7 +43,7 @@ namespaceFunctionStatement: (annotationSupport)? id (templateDefine)? Colon left
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 定义包
-packageStatement: (annotationSupport)? id (templateDefine)? Colon_Equal (id)?
+packageStatement: (annotationSupport)? id (templateDefine)? Colon_Equal (id (id)?)?
  (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))+ end;
 
 packageFieldStatement: left_brace (packageSupportStatement)* right_brace;
@@ -77,12 +76,8 @@ packageEventStatement: id left_brack Question right_brack nameSpaceItem end;
 // 包实现接口
 packageImplementStatement: typeType left_brace (implementSupportStatement)* right_brace;
 
-// 包构造方法
-implementNewStatement: (annotationSupport)? parameterClauseSelf Cent left_paren parameterClauseIn right_paren
-(left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace end;
-
 // 实现
-implementStatement: parameterClauseSelf Cent (typeType)? New_Line* left_brace (implementSupportStatement)* right_brace end;
+implementStatement: id (id)? id (templateDefine)? (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))+ end;
 
 // 实现支持的语句
 implementSupportStatement: 
@@ -99,9 +94,9 @@ implementFunctionStatement: (annotationSupport)? id (templateDefine)? Colon left
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 定义变量
-overrideVariableStatement: (annotationSupport)? id Cent (n='_')? id (Equal expression| typeType (Equal expression)?) end;
+overrideVariableStatement: (annotationSupport)? Cent (n='_')? id (Equal expression| typeType (Equal expression)?) end;
 // 函数
-overrideFunctionStatement: (annotationSupport)? id Cent (n='_')? id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
+overrideFunctionStatement: (annotationSupport)? Cent (n='_')? id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) y=At? New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 协议
@@ -130,8 +125,6 @@ yieldBreakStatement: At Left_Arrow end;
 parameterClauseIn: parameter? (more parameter)*;
 // 出参
 parameterClauseOut: parameter? (more parameter)*;
-// 接收器
-parameterClauseSelf: id typeType;
 // 参数结构
 parameter: (annotationSupport)? id typeType (Equal expression)?;
 

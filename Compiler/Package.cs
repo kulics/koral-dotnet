@@ -18,6 +18,10 @@ if ( context.id(1)!=null ) {
 var Self = ((Result)(Visit(context.id(1))));
 this.selfID=Self.text;
 }
+if ( context.id(2)!=null ) {
+var Super = ((Result)(Visit(context.id(2))));
+this.superID=Super.text;
+}
 var obj = "";
 var extend = "";
 foreach (var item in context.packageFieldStatement()){
@@ -58,6 +62,7 @@ header+=":"+extend;
 header+=templateContract+BlockLeft+Wrap;
 obj = header+obj;
 this.selfID="";
+this.superID="";
 return obj;
 }
 public  override  object VisitPackageFieldStatement( PackageFieldStatementContext context ){

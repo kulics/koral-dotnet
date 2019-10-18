@@ -18,6 +18,10 @@ me LiteLangVisitor % {
             Self = Visit(context.id(1)).[Result]
             me.selfID = Self.text
         }
+        ? context.id(2) >< nil {
+            Super = Visit(context.id(2)).[Result]
+            me.superID = Super.text
+        }
 
         obj = ""
         extend = ""
@@ -63,6 +67,7 @@ me LiteLangVisitor % {
         header += templateContract + BlockLeft + Wrap
         obj = header + obj
         me.selfID = ""
+        me.superID = ""
         <- obj
     }
 

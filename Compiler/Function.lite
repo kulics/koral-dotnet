@@ -172,15 +172,6 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitParameterClauseSelf : (context ParameterClauseSelfContext -> v any) {
-        p = Parameter{}
-        id = Visit(context.id()).[Result]
-        p.id = id.text
-        p.permission = id.permission
-        p.type = Visit(context.typeType()).[str]
-        <- p
-    }
-
     base%VisitParameter : (context ParameterContext -> v any) {
         p = Parameter{}
         id = Visit(context.id()).[Result]

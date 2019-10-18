@@ -156,14 +156,6 @@ obj+=" )";
 }
 return obj;
 }
-public  override  object VisitParameterClauseSelf( ParameterClauseSelfContext context ){
-var p = (new Parameter());
-var id = ((Result)(Visit(context.id())));
-p.id=id.text;
-p.permission=id.permission;
-p.type=((string)(Visit(context.typeType())));
-return p;
-}
 public  override  object VisitParameter( ParameterContext context ){
 var p = (new Parameter());
 var id = ((Result)(Visit(context.id())));

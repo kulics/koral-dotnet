@@ -9,20 +9,57 @@
 
 me LiteLangVisitor % {
     base%VisitImplementStatement : (context ImplementStatementContext -> v any) {
-        Self = Visit(context.parameterClauseSelf()).[Parameter]
-        me.selfID = Self.id
-        isVirtual = ""
-        obj = ""
-        extends = ""
-        ? context.typeType() >< nil {
-            extends += ":" + Visit(context.typeType())
+        Self = Visit(context.id(0)).[Result]
+        me.selfID = Self.text
+        ? context.id().Length == 3 {
+            Super = Visit(context.id(2)).[Result]
+            me.superID = Super.text
         }
-        obj += ""Self.permission" partial class "Self.type + extends + BlockLeft + Wrap""
-        item @ context.implementSupportStatement() {
-            obj += Visit(item)
+        typ = Visit(context.id(3)).[Result]
+
+        obj = ""
+        extend = ""
+
+        item @ context.packageFieldStatement() {
+            r = Visit(item).[Result]
+            obj += r.text
+            extend += r.data
+        }
+        item @ context.packageImplementStatement() {
+            r = Visit(item).[Result]
+            extend += ? -> extend == "" {
+                r.data
+            } _ {
+                "," + r.data
+            }
+            obj += r.text
+        }
+        item @ context.packageNewStatement() {
+            r = Visit(item).[str]
+            obj += "public " id.text "" r ""
         }
         obj += BlockRight + Wrap
+        header = ""
+        header += "" typ.permission " partial class " typ.text ""
+        # 泛型 #
+        template = ""
+        templateContract = ""
+        ? context.templateDefine() >< nil {
+            item = Visit(context.templateDefine()).[TemplateItem]
+            template += item.Template
+            templateContract = item.Contract
+            header += template
+        }
+
+        ? extend.Length > 0 {
+            header += ":" + extend
+        }
+
+        header += templateContract + BlockLeft + Wrap
+        obj = header + obj
+
         me.selfID = ""
+        me.superID = ""
         <- obj
     }
 
@@ -117,8 +154,7 @@ me LiteLangVisitor % {
     }
 
     base%VisitOverrideVariableStatement : (context OverrideVariableStatementContext -> v any) {
-        r1 = Visit(context.id(1)).[Result]
-        me.superID = Visit(context.id(0)).[Result].text
+        r1 = Visit(context.id()).[Result]
         isMutable = r1.isVirtual
         isVirtual = " override "
         typ = ""
@@ -161,13 +197,11 @@ me LiteLangVisitor % {
                 Terminate + Wrap
             }
         }
-        me.superID = ""
         <- obj
     }
 
     base%VisitOverrideFunctionStatement : (context OverrideFunctionStatementContext -> v any) {
-        id = Visit(context.id(1)).[Result]
-        me.superID = Visit(context.id(0)).[Result].text
+        id = Visit(context.id()).[Result]
         isVirtual = " override "
         obj = ""
         # 异步 #
@@ -204,26 +238,6 @@ me LiteLangVisitor % {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight + Wrap
-        me.superID = ""
         <- obj
-    }
-
-    base%VisitImplementNewStatement : (context ImplementNewStatementContext -> v any) {
-        text = ""
-        Self = Visit(context.parameterClauseSelf()).[Parameter]
-        me.selfID = Self.id
-        text += ""Self.permission" partial class "Self.type""BlockLeft + Wrap""
-        text += "public " Self.type " "
-        # 获取构造数据 #
-        me.add_current_set()
-        text += Visit(context.parameterClauseIn()).[str]
-        ? context.expressionList() >< nil {
-            text += ":base(" Visit(context.expressionList()).[Result].text ")"
-        }
-        text += BlockLeft + ProcessFunctionSupport(context.functionSupportStatement()) + BlockRight + Wrap
-        me.delete_current_set()
-        text += BlockRight + Wrap
-        me.selfID = ""
-        <- text
     }
 }
