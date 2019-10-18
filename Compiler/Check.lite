@@ -8,7 +8,7 @@
 }
 
 me LiteLangVisitor % {
-    base%VisitCheckStatement : (context CheckStatementContext -> v any) {
+    %VisitCheckStatement : (context CheckStatementContext -> v any) {
         obj = "try "BlockLeft+Wrap""
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -24,7 +24,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitCheckErrorStatement : (context CheckErrorStatementContext -> v any) {
+    %VisitCheckErrorStatement : (context CheckErrorStatementContext -> v any) {
         me.add_current_set()
         obj = ""
         ID = Visit(context.id()).[Result].text
@@ -42,7 +42,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitCheckFinallyStatment : (context CheckFinallyStatmentContext -> v any) {
+    %VisitCheckFinallyStatment : (context CheckFinallyStatmentContext -> v any) {
         obj = "finally "Wrap+BlockLeft+Wrap""
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -51,7 +51,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitUsingStatement : (context UsingStatementContext -> v any) {
+    %VisitUsingStatement : (context UsingStatementContext -> v any) {
         obj = ""
         r1 = Visit(context.expression(0)).[Result]
         r2 = Visit(context.expression(1)).[Result]
@@ -64,7 +64,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitCheckExpression : (context CheckExpressionContext -> v any) {
+    %VisitCheckExpression : (context CheckExpressionContext -> v any) {
         obj = "run(()=> { "Wrap"try "BlockLeft+Wrap""
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -82,7 +82,7 @@ me LiteLangVisitor % {
         <- Result{ data="var"; text=obj}
     }
 
-    base%VisitCheckErrorExpression : (context CheckErrorExpressionContext -> v any) {
+    %VisitCheckErrorExpression : (context CheckErrorExpressionContext -> v any) {
         me.add_current_set()
         obj = ""
         ID = Visit(context.id()).[Result].text
@@ -101,7 +101,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitCheckReportStatement : (context CheckReportStatementContext -> v any) {
+    %VisitCheckReportStatement : (context CheckReportStatementContext -> v any) {
         obj = "throw "Visit(context.expression()).[Result].text+Terminate+Wrap""
         <- obj
     }

@@ -8,11 +8,11 @@
 }
 
 me LiteLangVisitor % {
-    base%VisitIncludeStatement : (context IncludeStatementContext -> v any) {
+    %VisitIncludeStatement : (context IncludeStatementContext -> v any) {
         <- Visit(context.typeType())
     }
 
-    base%VisitPackageStatement : (context PackageStatementContext -> v any) {
+    %VisitPackageStatement : (context PackageStatementContext -> v any) {
         id = Visit(context.id(0)).[Result]
         ? context.id(1) >< nil {
             Self = Visit(context.id(1)).[Result]
@@ -71,7 +71,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitPackageFieldStatement : (context PackageFieldStatementContext -> v any) {
+    %VisitPackageFieldStatement : (context PackageFieldStatementContext -> v any) {
         obj = ""
         extend = ""
         item @ context.packageSupportStatement() {
@@ -88,7 +88,7 @@ me LiteLangVisitor % {
         <- Result{text = obj; data = extend}
     }
 
-    base%VisitPackageVariableStatement : (context PackageVariableStatementContext -> v any) {
+    %VisitPackageVariableStatement : (context PackageVariableStatementContext -> v any) {
         r1 = Visit(context.id()).[Result]
         isMutable = r1.isVirtual
         isVirtual = ""
@@ -138,7 +138,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitPackageFunctionStatement : (context PackageFunctionStatementContext -> v any) {
+    %VisitPackageFunctionStatement : (context PackageFunctionStatementContext -> v any) {
         id = Visit(context.id()).[Result]
         isVirtual = ""
         ? id.isVirtual {
@@ -178,7 +178,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitPackageNewStatement : (context PackageNewStatementContext -> v any) {
+    %VisitPackageNewStatement : (context PackageNewStatementContext -> v any) {
         text = ""
         # 获取构造数据 #
         me.add_current_set()
@@ -191,7 +191,7 @@ me LiteLangVisitor % {
         <- text
     }
 
-    base%VisitPackageEventStatement : (context PackageEventStatementContext -> v any) {
+    %VisitPackageEventStatement : (context PackageEventStatementContext -> v any) {
         obj = ""
         id = Visit(context.id()).[Result]
         nameSpace = Visit(context.nameSpaceItem())
@@ -199,7 +199,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitProtocolStatement : (context ProtocolStatementContext -> v any) {
+    %VisitProtocolStatement : (context ProtocolStatementContext -> v any) {
         id = Visit(context.id()).[Result]
         obj = ""
         interfaceProtocol = ""
@@ -225,7 +225,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitProtocolVariableStatement : (context ProtocolVariableStatementContext -> v any) {
+    %VisitProtocolVariableStatement : (context ProtocolVariableStatementContext -> v any) {
         id = Visit(context.id()).[Result]
         isMutable = id.isVirtual
         r = Result{}
@@ -241,7 +241,7 @@ me LiteLangVisitor % {
         <- r
     }
 
-    base%VisitProtocolFunctionStatement : (context ProtocolFunctionStatementContext -> v any) {
+    %VisitProtocolFunctionStatement : (context ProtocolFunctionStatementContext -> v any) {
         id = Visit(context.id()).[Result]
         r = Result{}
         ? context.annotationSupport() >< nil {
@@ -276,7 +276,7 @@ me LiteLangVisitor % {
         <- r
     }
 
-    base%VisitPackageImplementStatement : (context PackageImplementStatementContext -> v any) {
+    %VisitPackageImplementStatement : (context PackageImplementStatementContext -> v any) {
         obj = ""
         extends = Visit(context.typeType()).[str]
         item @ context.implementSupportStatement() {

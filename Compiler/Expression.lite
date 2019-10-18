@@ -97,7 +97,7 @@ DicEle := % {
 }
 
 me LiteLangVisitor % {
-    base%VisitVariableStatement : (context VariableStatementContext -> v any) {
+    %VisitVariableStatement : (context VariableStatementContext -> v any) {
         obj = ""
         r1 = Visit(context.idExpression()).[Result]
         r2 = Visit(context.expression()).[Result]
@@ -114,7 +114,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitVariableDeclaredStatement : (context VariableDeclaredStatementContext -> v any) {
+    %VisitVariableDeclaredStatement : (context VariableDeclaredStatementContext -> v any) {
         obj = ""
         Type = Visit(context.typeType()).[str]
         r = Visit(context.idExpression()).[Result]
@@ -122,26 +122,26 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitAssignStatement : (context AssignStatementContext -> v any) {
+    %VisitAssignStatement : (context AssignStatementContext -> v any) {
         r1 = Visit(context.tupleExpression(0)).[Result]
         r2 = Visit(context.tupleExpression(1)).[Result]
         obj = r1.text + Visit(context.assign()) + r2.text + Terminate + Wrap
         <- obj
     }
 
-    base%VisitAssign : (context AssignContext -> v any) {
+    %VisitAssign : (context AssignContext -> v any) {
         ? context.op.Type == Mod_Equal {
             <- "%="
         }
         <- context.op.Text
     }
 
-    base%VisitExpressionStatement : (context ExpressionStatementContext -> v any) {
+    %VisitExpressionStatement : (context ExpressionStatementContext -> v any) {
         r = Visit(context.expression()).[Result]
         <- r.text + Terminate + Wrap
     }
 
-    base%VisitExpression : (context ExpressionContext -> v any) {
+    %VisitExpression : (context ExpressionContext -> v any) {
         count = context.ChildCount
         r = Result{}
         count ? 3 {
@@ -209,51 +209,51 @@ me LiteLangVisitor % {
         <- r
     }
 
-    base%VisitOrElse : (context OrElseContext -> v any) {
+    %VisitOrElse : (context OrElseContext -> v any) {
         <- Visit(context.expression()).[Result]
     }
 
-    base%VisitTypeConversion : (context TypeConversionContext -> v any) {
+    %VisitTypeConversion : (context TypeConversionContext -> v any) {
         <- Visit(context.typeType()).[str]
     }
 
-    base%VisitCall : (context CallContext -> v any) {
+    %VisitCall : (context CallContext -> v any) {
         <- context.op.Text
     }
 
-    base%VisitWave : (context WaveContext -> v any) {
+    %VisitWave : (context WaveContext -> v any) {
         <- context.op.Text
     }
 
-    base%VisitJudgeType : (context JudgeTypeContext -> v any) {
+    %VisitJudgeType : (context JudgeTypeContext -> v any) {
         <- context.op.Text
     }
 
-    base%VisitBitwise : (context BitwiseContext -> v any) {
+    %VisitBitwise : (context BitwiseContext -> v any) {
         <- me.Visit(context.GetChild(0)).[str]
     }
 
-    base%VisitBitwiseAnd : (context BitwiseAndContext -> v any) {
+    %VisitBitwiseAnd : (context BitwiseAndContext -> v any) {
         <- "&"
     }
 
-    base%VisitBitwiseOr : (context BitwiseOrContext -> v any) {
+    %VisitBitwiseOr : (context BitwiseOrContext -> v any) {
         <- "|"
     }
 
-    base%VisitBitwiseXor : (context BitwiseXorContext -> v any) {
+    %VisitBitwiseXor : (context BitwiseXorContext -> v any) {
         <- "^"
     }
 
-    base%VisitBitwiseLeftShift : (context BitwiseLeftShiftContext -> v any) {
+    %VisitBitwiseLeftShift : (context BitwiseLeftShiftContext -> v any) {
         <- "<<"
     }
 
-    base%VisitBitwiseRightShift : (context BitwiseRightShiftContext -> v any) {
+    %VisitBitwiseRightShift : (context BitwiseRightShiftContext -> v any) {
         <- ">>"
     }
 
-    base%VisitJudge : (context JudgeContext -> v any) {
+    %VisitJudge : (context JudgeContext -> v any) {
         ? context.op.Type == Not_Equal {
             <- "!="
         } context.op.Type == And {
@@ -264,18 +264,18 @@ me LiteLangVisitor % {
         <- context.op.Text
     }
 
-    base%VisitAdd : (context AddContext -> v any) {
+    %VisitAdd : (context AddContext -> v any) {
         <- context.op.Text
     }
 
-    base%VisitMul : (context MulContext -> v any) {
+    %VisitMul : (context MulContext -> v any) {
         ? context.op.Type == Mod {
             <- "%"
         }
         <- context.op.Text
     }
 
-    base%VisitPow : (context PowContext -> v any) {
+    %VisitPow : (context PowContext -> v any) {
         <- context.op.Type ? -> LiteParser.Root {
                 "root"
             } LiteParser.Log {
@@ -285,7 +285,7 @@ me LiteLangVisitor % {
             }
     }
 
-    base%VisitPrimaryExpression : (context PrimaryExpressionContext -> v any) {
+    %VisitPrimaryExpression : (context PrimaryExpressionContext -> v any) {
         ? context.ChildCount == 1 {
             c = context.GetChild(0)
             ? c.is[DataStatementContext]() {
@@ -313,7 +313,7 @@ me LiteLangVisitor % {
         }
     }
 
-    base%VisitExpressionList : (context ExpressionListContext -> v any) {
+    %VisitExpressionList : (context ExpressionListContext -> v any) {
         r = Result{}
         obj = ""
         i @ 0 ++ context.expression().Length-1 {
@@ -329,7 +329,7 @@ me LiteLangVisitor % {
         <- r
     }
 
-    base%VisitTemplateDefine : (context TemplateDefineContext -> v any) {
+    %VisitTemplateDefine : (context TemplateDefineContext -> v any) {
         item = TemplateItem{}
         item.Template += "<"
         i @ 0 ++ context.templateDefineItem().Length-1 {
@@ -347,7 +347,7 @@ me LiteLangVisitor % {
         <- item
     }
 
-    base%VisitTemplateDefineItem : (context TemplateDefineItemContext -> v any) {
+    %VisitTemplateDefineItem : (context TemplateDefineItemContext -> v any) {
         item = TemplateItem{}
         ? context.id().len() == 1 {
             id1 = context.id(0).GetText()
@@ -361,7 +361,7 @@ me LiteLangVisitor % {
         <- item
     }
 
-    base%VisitTemplateCall : (context TemplateCallContext -> v any) {
+    %VisitTemplateCall : (context TemplateCallContext -> v any) {
         obj = ""
         obj += "<"
         i @ 0 ++ context.typeType().Length-1 {
@@ -375,7 +375,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitStringExpression : (context StringExpressionContext -> v any) {
+    %VisitStringExpression : (context StringExpressionContext -> v any) {
         text = "(new System.Text.StringBuilder("context.TextLiteral().GetText()")"
         item @ context.stringExpressionElement() {
             text += Visit(item)
@@ -387,13 +387,13 @@ me LiteLangVisitor % {
         }
     }
 
-    base%VisitStringExpressionElement : (context StringExpressionElementContext -> v any) {
+    %VisitStringExpressionElement : (context StringExpressionElementContext -> v any) {
         r = Visit(context.expression()).[Result]
         text = context.TextLiteral().GetText()
         <- ".Append("r.text").Append("text")"
     }
 
-    base%VisitDataStatement : (context DataStatementContext -> v any) {
+    %VisitDataStatement : (context DataStatementContext -> v any) {
         r = Result{}
         ? context.nilExpr() >< nil {
             r.data = Any
@@ -420,19 +420,19 @@ me LiteLangVisitor % {
         <- r
     }
 
-    base%VisitFloatExpr : (context FloatExprContext -> v any) {
+    %VisitFloatExpr : (context FloatExprContext -> v any) {
         number = ""
         number += Visit(context.integerExpr(0)) + "." + Visit(context.integerExpr(1))
         <- number
     }
 
-    base%VisitIntegerExpr : (context IntegerExprContext -> v any) {
+    %VisitIntegerExpr : (context IntegerExprContext -> v any) {
         number = ""
         number += context.NumberLiteral().GetText()
         <- number
     }
 
-    base%VisitPlusMinus : (context PlusMinusContext -> v any) {
+    %VisitPlusMinus : (context PlusMinusContext -> v any) {
         r = Result{}
         expr = Visit(context.expression()).[Result]
         op = Visit(context.add())
@@ -441,7 +441,7 @@ me LiteLangVisitor % {
         <- r
     }
 
-    base%VisitNegate : (context NegateContext -> v any) {
+    %VisitNegate : (context NegateContext -> v any) {
         r = Result{}
         expr = Visit(context.expression()).[Result]
         r.data = expr.data
@@ -449,7 +449,7 @@ me LiteLangVisitor % {
         <- r
     }
 
-    base%VisitBitwiseNotExpression : (context BitwiseNotExpressionContext -> v any) {
+    %VisitBitwiseNotExpression : (context BitwiseNotExpressionContext -> v any) {
         r = Result{}
         expr = Visit(context.expression()).[Result]
         r.data = expr.data
@@ -457,7 +457,7 @@ me LiteLangVisitor % {
         <- r
     }
 
-    base%VisitLinq : (context LinqContext -> v any) {
+    %VisitLinq : (context LinqContext -> v any) {
         r = Result{data = "var"}
         r.text += Visit(context.linqHeadItem()).[str]
         item @ context.linqItem() {
@@ -467,7 +467,7 @@ me LiteLangVisitor % {
         <- r
     }
 
-    base%VisitLinqItem : (context LinqItemContext -> v any) {
+    %VisitLinqItem : (context LinqItemContext -> v any) {
         ? context.linqHeadItem() >< nil {
             <- Visit(context.linqHeadItem()).[str]
         }
@@ -478,7 +478,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitLinqHeadItem : (context LinqHeadItemContext -> v any) {
+    %VisitLinqHeadItem : (context LinqHeadItemContext -> v any) {
         obj = ""
         id = Visit(context.id()).[Result]
         obj += "from " id.text " in "Visit(context.expression()).[Result].text " "

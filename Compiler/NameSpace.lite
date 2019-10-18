@@ -13,7 +13,7 @@ Namespace := % {
 }
 
 me LiteLangVisitor % {
-    base%VisitStatement : (context StatementContext -> v any) {
+    %VisitStatement : (context StatementContext -> v any) {
         obj = ""
         ns = Visit(context.exportStatement()).[Namespace]
         # import library #
@@ -47,7 +47,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitExportStatement : (context ExportStatementContext -> v any) {
+    %VisitExportStatement : (context ExportStatementContext -> v any) {
         name = context.TextLiteral().GetText()
         name = name.sub_str(1, name.len()-2)
         name = name.replace("/", ".")
@@ -60,7 +60,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitImportStatement : (context ImportStatementContext -> v any) {
+    %VisitImportStatement : (context ImportStatementContext -> v any) {
         obj = ""
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
@@ -79,7 +79,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitNameSpaceItem : (context NameSpaceItemContext -> v any) {
+    %VisitNameSpaceItem : (context NameSpaceItemContext -> v any) {
         obj = ""
         i @ 0 ++ context.id().Length-1 {
             id = Visit(context.id(i)).[Result]
@@ -92,7 +92,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitName : (context NameContext -> v any) {
+    %VisitName : (context NameContext -> v any) {
         obj = ""
         i @ 0 ++ context.id().Length-1 {
             id = Visit(context.id(i)).[Result]
@@ -105,7 +105,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitEnumStatement : (context EnumStatementContext -> v any) {
+    %VisitEnumStatement : (context EnumStatementContext -> v any) {
         obj = ""
         id = Visit(context.id()).[Result]
         header = ""
@@ -123,7 +123,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitEnumSupportStatement : (context EnumSupportStatementContext -> v any) {
+    %VisitEnumSupportStatement : (context EnumSupportStatementContext -> v any) {
         id = Visit(context.id()).[Result]
         ? context.integerExpr() >< nil {
             op = ""
@@ -135,7 +135,7 @@ me LiteLangVisitor % {
         <- id.text + ","
     }
 
-    base%VisitNamespaceFunctionStatement : (context NamespaceFunctionStatementContext -> v any) {
+    %VisitNamespaceFunctionStatement : (context NamespaceFunctionStatementContext -> v any) {
         id = Visit(context.id()).[Result]
         obj = ""
         ? context.annotationSupport() >< nil {
@@ -174,7 +174,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitNamespaceConstantStatement : (context NamespaceConstantStatementContext -> v any) {
+    %VisitNamespaceConstantStatement : (context NamespaceConstantStatementContext -> v any) {
         id = Visit(context.id()).[Result]
         expr = Visit(context.expression()).[Result]
         typ = ? -> context.typeType() >< nil {
@@ -192,7 +192,7 @@ me LiteLangVisitor % {
         <- obj
     }
 
-    base%VisitNamespaceVariableStatement : (context NamespaceVariableStatementContext -> v any) {
+    %VisitNamespaceVariableStatement : (context NamespaceVariableStatementContext -> v any) {
         r1 = Visit(context.id()).[Result]
         me.add_id(r1.text)
         isMutable = r1.isVirtual
