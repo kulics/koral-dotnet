@@ -288,7 +288,7 @@ callPkg: typeType left_brace (pkgAssign|listAssign|setAssign|dictionaryAssign)? 
 
 callNew: left_brack typeType right_brack left_paren New_Line? expressionList? New_Line? right_paren; // 构造类对象
 
-orElse: Question Discard left_paren expression right_paren; // 类型转化
+orElse: Question Bang expression; // 类型转化
 
 typeConversion: Dot left_brack typeType right_brack; // 类型转化
 
