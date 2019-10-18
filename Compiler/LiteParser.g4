@@ -149,6 +149,7 @@ functionSupportStatement:
 | loopContinueStatement
 | usingStatement
 | checkStatement
+| checkReportStatement
 | functionStatement
 | variableStatement
 | variableDeclaredStatement
@@ -195,6 +196,8 @@ usingStatement: Bang expression (typeType)? Equal expression end;
 checkErrorStatement: (id|id typeType) left_brace (functionSupportStatement)* right_brace;
 // 最终执行
 checkFinallyStatment: Discard left_brace (functionSupportStatement)* right_brace;
+// 抛出异常
+checkReportStatement: Bang Left_Arrow expression end;
 
 // 迭代器
 iteratorStatement: expression op=(Add_Add|Sub_Sub) expression

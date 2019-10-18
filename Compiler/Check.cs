@@ -90,5 +90,9 @@ this.delete_current_set();
 obj+=BlockRight;
 return obj;
 }
+public  override  object VisitCheckReportStatement( CheckReportStatementContext context ){
+var obj = (new System.Text.StringBuilder("throw ").Append(((Result)(Visit(context.expression()))).text+Terminate+Wrap).Append("")).to_str();
+return obj;
+}
 }
 }
