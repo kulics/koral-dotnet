@@ -11,12 +11,15 @@ me LiteLangVisitor % {
     base%VisitImplementStatement : (context ImplementStatementContext -> v any) {
         Self = Visit(context.id(0)).[Result]
         me.selfID = Self.text
+        typ Result
         ? context.id().Length == 3 {
-            Super = Visit(context.id(2)).[Result]
+            Super = Visit(context.id(1)).[Result]
             me.superID = Super.text
+            typ = Visit(context.id(2)).[Result]
+        } _ {
+            typ = Visit(context.id(1)).[Result]
         }
-        typ = Visit(context.id(3)).[Result]
-
+        
         obj = ""
         extend = ""
 
@@ -36,7 +39,7 @@ me LiteLangVisitor % {
         }
         item @ context.packageNewStatement() {
             r = Visit(item).[str]
-            obj += "public " id.text "" r ""
+            obj += "public " typ.text "" r ""
         }
         obj += BlockRight + Wrap
         header = ""

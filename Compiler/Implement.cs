@@ -12,11 +12,15 @@ public partial class LiteLangVisitor{
 public  override  object VisitImplementStatement( ImplementStatementContext context ){
 var Self = ((Result)(Visit(context.id(0))));
 this.selfID=Self.text;
+Result typ;
 if ( context.id().Length==3 ) {
-var Super = ((Result)(Visit(context.id(2))));
+var Super = ((Result)(Visit(context.id(1))));
 this.superID=Super.text;
+typ = ((Result)(Visit(context.id(2))));
 }
-var typ = ((Result)(Visit(context.id(3))));
+else {
+typ = ((Result)(Visit(context.id(1))));
+}
 var obj = "";
 var extend = "";
 foreach (var item in context.packageFieldStatement()){
@@ -35,7 +39,7 @@ obj+=r.text;
 }
 foreach (var item in context.packageNewStatement()){
 var r = ((string)(Visit(item)));
-obj+=(new System.Text.StringBuilder("public ").Append(id.text).Append("").Append(r).Append("")).to_str();
+obj+=(new System.Text.StringBuilder("public ").Append(typ.text).Append("").Append(r).Append("")).to_str();
 }
 obj+=BlockRight+Wrap;
 var header = "";
