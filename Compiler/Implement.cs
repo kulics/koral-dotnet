@@ -10,16 +10,14 @@ namespace Compiler
 {
 public partial class LiteLangVisitor{
 public  override  object VisitImplementStatement( ImplementStatementContext context ){
-var Self = ((Result)(Visit(context.id(0))));
+var id = ((Result)(Visit(context.id(0))));
+if ( context.id(1)!=null ) {
+var Self = ((Result)(Visit(context.id(1))));
 this.selfID=Self.text;
-Result typ;
-if ( context.id().Length==3 ) {
-var Super = ((Result)(Visit(context.id(1))));
-this.superID=Super.text;
-typ = ((Result)(Visit(context.id(2))));
 }
-else {
-typ = ((Result)(Visit(context.id(1))));
+if ( context.id(2)!=null ) {
+var Super = ((Result)(Visit(context.id(2))));
+this.superID=Super.text;
 }
 var obj = "";
 var extend = "";
@@ -39,11 +37,11 @@ obj+=r.text;
 }
 foreach (var item in context.packageNewStatement()){
 var r = ((string)(Visit(item)));
-obj+=(new System.Text.StringBuilder("public ").Append(typ.text).Append("").Append(r).Append("")).to_str();
+obj+=(new System.Text.StringBuilder("public ").Append(id.text).Append("").Append(r).Append("")).to_str();
 }
 obj+=BlockRight+Wrap;
 var header = "";
-header+=(new System.Text.StringBuilder("").Append(typ.permission).Append(" partial class ").Append(typ.text).Append("")).to_str();
+header+=(new System.Text.StringBuilder("").Append(id.permission).Append(" partial class ").Append(id.text).Append("")).to_str();
 var template = "";
 var templateContract = "";
 if ( context.templateDefine()!=null ) {

@@ -9,15 +9,14 @@
 
 me LiteLangVisitor % {
     %VisitImplementStatement : (context ImplementStatementContext -> v any) {
-        Self = Visit(context.id(0)).[Result]
-        me.selfID = Self.text
-        typ Result
-        ? context.id().Length == 3 {
-            Super = Visit(context.id(1)).[Result]
+        id = Visit(context.id(0)).[Result]
+        ? context.id(1) >< nil {
+            Self = Visit(context.id(1)).[Result]
+            me.selfID = Self.text
+        }
+        ? context.id(2) >< nil {
+            Super = Visit(context.id(2)).[Result]
             me.superID = Super.text
-            typ = Visit(context.id(2)).[Result]
-        } _ {
-            typ = Visit(context.id(1)).[Result]
         }
         
         obj = ""
@@ -39,11 +38,11 @@ me LiteLangVisitor % {
         }
         item @ context.packageNewStatement() {
             r = Visit(item).[str]
-            obj += "public " typ.text "" r ""
+            obj += "public " id.text "" r ""
         }
         obj += BlockRight + Wrap
         header = ""
-        header += "" typ.permission " partial class " typ.text ""
+        header += ""id.permission" partial class "id.text""
         # 泛型 #
         template = ""
         templateContract = ""
@@ -60,7 +59,6 @@ me LiteLangVisitor % {
 
         header += templateContract + BlockLeft + Wrap
         obj = header + obj
-
         me.selfID = ""
         me.superID = ""
         <- obj

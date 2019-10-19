@@ -77,7 +77,7 @@ packageEventStatement: id left_brack Question right_brack nameSpaceItem end;
 packageImplementStatement: typeType left_brace (implementSupportStatement)* right_brace;
 
 // 实现
-implementStatement: id (id)? id (templateDefine)? (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))+ end;
+implementStatement: id (templateDefine)? Add_Equal (id (id)?)? (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))+ end;
 
 // 实现支持的语句
 implementSupportStatement: 
