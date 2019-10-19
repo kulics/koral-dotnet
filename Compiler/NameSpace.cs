@@ -98,7 +98,7 @@ public  override  object VisitEnumStatement( EnumStatementContext context ){
 var obj = "";
 var id = ((Result)(Visit(context.id())));
 var header = "";
-var typ = ((string)(Visit(context.typeType())));
+var typ = "int";
 if ( context.annotationSupport()!=null ) {
 header+=Visit(context.annotationSupport());
 }

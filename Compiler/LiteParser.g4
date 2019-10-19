@@ -31,7 +31,7 @@ typeAliasStatement: id Equal_Arrow typeType end;
 typeRedefineStatement: id Colon_Equal typeType end;
 
 // 枚举
-enumStatement: (annotationSupport)? id Colon_Equal New_Line* typeType Question left_brace enumSupportStatement* right_brace end;
+enumStatement: (annotationSupport)? id Colon_Equal New_Line* Cent Question left_brace enumSupportStatement* right_brace end;
 
 enumSupportStatement: id (Equal (add)? integerExpr)? end;
 // 命名空间变量
@@ -100,7 +100,7 @@ overrideFunctionStatement: (annotationSupport)? Cent (n='_')? id (templateDefine
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 协议
-protocolStatement: (annotationSupport)? id (templateDefine)? Colon_Equal Discard Cent left_brace (protocolSupportStatement)* right_brace end;
+protocolStatement: (annotationSupport)? id (templateDefine)? Colon_Equal Cent Discard left_brace (protocolSupportStatement)* right_brace end;
 // 协议支持的语句
 protocolSupportStatement:
 includeStatement |
