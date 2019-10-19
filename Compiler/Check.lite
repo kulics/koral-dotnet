@@ -7,7 +7,7 @@
     Compiler_static. "Compiler" 
 }
 
-me LiteLangVisitor % {
+LiteLangVisitor := me % {
     %VisitCheckStatement : (context CheckStatementContext -> v any) {
         obj = "try "BlockLeft+Wrap""
         me.add_current_set()

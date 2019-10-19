@@ -7,7 +7,7 @@
     Compiler_static. "Compiler" 
 }
 
-me LiteLangVisitor % {
+LiteLangVisitor := me % {
     %VisitImplementStatement : (context ImplementStatementContext -> v any) {
         id = Visit(context.id(0)).[Result]
         ? context.id(1) >< nil {

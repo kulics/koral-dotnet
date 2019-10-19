@@ -87,7 +87,7 @@ LiteLangVisitor := me % {
     me.CurrentIDSet.push([[=>str]]())
 }
 
-me LiteLangVisitor % {
+LiteLangVisitor := me % {
     %VisitProgram : (context ProgramContext -> v any) {
         StatementList = context.statement()
         Result = ""

@@ -12,7 +12,7 @@ Namespace := % {
     imports str
 }
 
-me LiteLangVisitor % {
+LiteLangVisitor := me % {
     %VisitStatement : (context StatementContext -> v any) {
         obj = ""
         ns = Visit(context.exportStatement()).[Namespace]

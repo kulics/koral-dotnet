@@ -15,7 +15,7 @@ Iterator := % {
     attach str = T
 }
 
-me LiteLangVisitor % {
+LiteLangVisitor := me % {
     %VisitIteratorStatement : (context IteratorStatementContext -> v any) {
         it = Iterator{}
         # ? context.op.Type == ">=" | context.op.Text == "<=" {

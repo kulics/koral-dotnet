@@ -15,7 +15,7 @@ Parameter := % {
     permission str
 }
 
-me LiteLangVisitor % {
+LiteLangVisitor := me % {
     ProcessFunctionSupport : (items [:FunctionSupportStatementContext] -> v str) {
         obj = ""
         content = ""
