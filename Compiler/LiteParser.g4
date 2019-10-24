@@ -178,9 +178,9 @@ loopCaseStatement: At expression left_brace (functionSupportStatement)* right_br
 // else 判断
 loopElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
 // 跳出循环
-loopJumpStatement: At Dot_Dot end;
+loopJumpStatement: Wave At end;
 // 跳出当前循环
-loopContinueStatement: Dot_Dot At end;
+loopContinueStatement: Discard At end;
 // 检查
 checkStatement: 
 Bang left_brace (functionSupportStatement)* right_brace (checkErrorStatement)* checkFinallyStatment end
