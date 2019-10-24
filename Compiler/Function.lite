@@ -41,9 +41,14 @@ LiteLangVisitor := me % {
         id = Visit(context.id()).[Result]
         obj = ""
         # 异步 #
-        pout = Visit(context.parameterClauseOut()).[str]
+        pout = ""
+        ? context.parameterClauseOut() >< nil {
+            pout = Visit(context.parameterClauseOut()).[str]
+        }
         ? context.t.Type == Right_Flow {
-            pout = ? -> pout >< "void" {
+            pout = ? -> context.Discard() >< nil {
+                "void"
+            } pout >< "void" {
                 ""Task"<"pout">"
             } _ {
                 Task
@@ -76,6 +81,14 @@ LiteLangVisitor := me % {
         ? context.tupleExpression() >< nil {
             r = Visit(context.tupleExpression()).[Result]
             <- "return " + r.text + Terminate + Wrap
+        }
+        <- "return"Terminate""Wrap""
+    }
+
+    %VisitReturnAwaitStatement : (context ReturnAwaitStatementContext -> v any) {
+        ? context.tupleExpression() >< nil {
+            r = Visit(context.tupleExpression()).[Result]
+            <- "return await " + r.text + Terminate + Wrap
         }
         <- "return"Terminate""Wrap""
     }

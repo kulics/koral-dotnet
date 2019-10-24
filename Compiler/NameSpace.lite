@@ -143,9 +143,14 @@ LiteLangVisitor := me % {
             obj += Visit(context.annotationSupport())
         }
         # 异步 #
-        pout = Visit(context.parameterClauseOut()).[str]
+        pout = ""
+        ? context.parameterClauseOut() >< nil {
+            pout = Visit(context.parameterClauseOut()).[str]
+        }
         ? context.t.Type == Right_Flow {
-            pout = ? -> pout >< "void" {
+            pout = ? -> context.Discard() >< nil {
+                "void"
+            } pout >< "void" {
                 ""Task"<"pout">"
             } _ {
                 Task

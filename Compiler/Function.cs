@@ -39,9 +39,14 @@ return obj;
 public  override  object VisitFunctionStatement( FunctionStatementContext context ){
 var id = ((Result)(Visit(context.id())));
 var obj = "";
-var pout = ((string)(Visit(context.parameterClauseOut())));
+var pout = "";
+if ( context.parameterClauseOut()!=null ) {
+pout = ((string)(Visit(context.parameterClauseOut())));
+}
 if ( context.t.Type==Right_Flow ) {
-pout = run(()=>{if ( pout!="void" ) {
+pout = run(()=>{if ( context.Discard()!=null ) {
+return "void";}
+else if ( pout!="void" ) {
 return (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();}
 else {
 return Task;}
@@ -73,6 +78,13 @@ public  override  object VisitReturnStatement( ReturnStatementContext context ){
 if ( context.tupleExpression()!=null ) {
 var r = ((Result)(Visit(context.tupleExpression())));
 return "return "+r.text+Terminate+Wrap;
+}
+return (new System.Text.StringBuilder("return").Append(Terminate).Append("").Append(Wrap).Append("")).to_str();
+}
+public  override  object VisitReturnAwaitStatement( ReturnAwaitStatementContext context ){
+if ( context.tupleExpression()!=null ) {
+var r = ((Result)(Visit(context.tupleExpression())));
+return "return await "+r.text+Terminate+Wrap;
 }
 return (new System.Text.StringBuilder("return").Append(Terminate).Append("").Append(Wrap).Append("")).to_str();
 }

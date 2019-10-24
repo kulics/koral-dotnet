@@ -140,9 +140,14 @@ isVirtual = " virtual ";
 }
 var obj = "";
 obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" ")).to_str();
-var pout = ((string)(Visit(context.parameterClauseOut())));
+var pout = "";
+if ( context.parameterClauseOut()!=null ) {
+pout = ((string)(Visit(context.parameterClauseOut())));
+}
 if ( context.t.Type==Right_Flow ) {
-pout = run(()=>{if ( pout!="void" ) {
+pout = run(()=>{if ( context.Discard()!=null ) {
+return "void";}
+else if ( pout!="void" ) {
 return (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();}
 else {
 return Task;}

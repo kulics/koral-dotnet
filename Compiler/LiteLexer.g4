@@ -30,10 +30,13 @@ Equal_Arrow: '=>';
 Right_Arrow: '->';
 Left_Arrow: '<-';
 
-Right_Flow: '~>';
-Left_Flow: '<~';
+Right_Flow: '->>';
+Left_Flow: '<<-';
 
 Equal: '=';
+
+Less_Less: '<<';
+Greater_Greater: '>>';
 
 Less: '<';
 Greater: '>';
