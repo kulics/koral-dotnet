@@ -180,7 +180,7 @@ loopElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
 // 跳出循环
 loopJumpStatement: Wave At end;
 // 跳出当前循环
-loopContinueStatement: Discard At end;
+loopContinueStatement: Xor At end;
 // 检查
 checkStatement: 
 Bang left_brace (functionSupportStatement)* right_brace (checkErrorStatement)* checkFinallyStatment end
@@ -195,8 +195,8 @@ checkFinallyStatment: Discard left_brace (functionSupportStatement)* right_brace
 checkReportStatement: Bang Left_Arrow expression end;
 
 // 迭代器
-iteratorStatement: expression op=(Add_Add|Sub_Sub) expression
- Colon expression | expression op=(Add_Add|Sub_Sub) expression;
+iteratorStatement: expression op=(Add_Add|Sub_Sub) expression Xor expression | 
+expression op=(Add_Add|Sub_Sub) expression;
 
 // 定义变量
 variableStatement: idExpression typeType? Equal expression end;
