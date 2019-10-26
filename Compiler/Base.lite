@@ -65,7 +65,7 @@ LiteLangVisitor := me % {
     selfPropertyVariable = false
 
     AllIDSet = [=>str]{}
-    CurrentIDSet = [>[=>str]]{}
+    CurrentIDSet = [.>[=>str]]{}
 
     has_id : (id str -> v bool) {
         <- me.AllIDSet.contains(id) | me.CurrentIDSet.peek().contains(id)
