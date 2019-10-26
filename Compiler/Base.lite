@@ -61,7 +61,7 @@ LiteLangVisitor := me % {
     setID = ""
     getID = ""
     selfPropertyID = ""
-    selfPropertyContent = [;str]{}
+    selfPropertyContent = [..str]{}
     selfPropertyVariable = false
 
     AllIDSet = [=>str]{}

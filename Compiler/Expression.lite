@@ -7,7 +7,7 @@
     Compiler_static. "Compiler" 
 }
 
-keywords = [;str]{
+keywords = {
     "abstract"
     "as"
     "base"
