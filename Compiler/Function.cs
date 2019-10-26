@@ -180,6 +180,9 @@ if ( context.expression()!=null ) {
 p.value=(new System.Text.StringBuilder("=").Append(((Result)(Visit(context.expression()))).text).Append("")).to_str();
 }
 p.type=((string)(Visit(context.typeType())));
+if ( context.Dot_Dot_Dot()!=null ) {
+p.type="params "+p.type+"[]";
+}
 return p;
 }
 }

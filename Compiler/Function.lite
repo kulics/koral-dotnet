@@ -197,6 +197,9 @@ LiteLangVisitor := me % {
             p.value = "=" Visit(context.expression()).[Result].text ""
         }
         p.type = Visit(context.typeType()).[str]
+        ? context.Dot_Dot_Dot() >< nil {
+            p.type = "params " + p.type + "[]"
+        }
         <- p
     }
 }

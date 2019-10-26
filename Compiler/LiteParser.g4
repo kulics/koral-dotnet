@@ -128,7 +128,7 @@ parameterClauseIn: parameter? (more parameter)*;
 // 出参
 parameterClauseOut: parameter? (more parameter)*;
 // 参数结构
-parameter: (annotationSupport)? id typeType (Equal expression)?;
+parameter: (annotationSupport)? id (Dot_Dot|Dot_Dot_Dot)? typeType (Equal expression)?;
 
 // 函数支持的语句
 functionSupportStatement:
@@ -416,8 +416,8 @@ typeType: typeNotNull | typeNullable | typeReference;
 typeReference: Bang (typeNotNull | typeNullable);
 typeNullable: Question typeNotNull;
 
-typeArray: left_brack Colon typeType right_brack;
-typeList: left_brack Semi typeType right_brack;
+typeArray: left_brack Dot_Dot_Dot typeType right_brack;
+typeList: left_brack Dot_Dot typeType right_brack;
 typeSet: left_brack Equal_Arrow typeType right_brack;
 typeDictionary: left_brack typeType Equal_Arrow typeType right_brack;
 typeStack: left_brack Greater typeType right_brack;
