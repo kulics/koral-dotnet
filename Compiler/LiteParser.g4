@@ -457,12 +457,12 @@ boolExpr: t=TrueLiteral|t=FalseLiteral;
 judgeType: op=(Equal_Equal|Not_Equal);
 bitwise: (bitwiseAnd | bitwiseOr | bitwiseXor 
 | bitwiseLeftShift | bitwiseRightShift) (New_Line)?;
-bitwiseAnd: And And;
-bitwiseOr: Or Or;
-bitwiseNot: Wave Wave;
-bitwiseXor: Xor Xor;
-bitwiseLeftShift: Less_Less;
-bitwiseRightShift: Greater_Greater;
+bitwiseAnd: left_brack And right_brack;
+bitwiseOr: left_brack Or right_brack;
+bitwiseNot: left_brack Wave right_brack;
+bitwiseXor: left_brack Xor right_brack;
+bitwiseLeftShift: left_brack Less right_brack;
+bitwiseRightShift: left_brack Greater right_brack;
 judge: op=(Or | And | Equal_Equal | Not_Equal | Less_Equal | Greater_Equal | Less | Greater) (New_Line)?;
 assign: op=(Equal | Add_Equal | Sub_Equal | Mul_Equal | Div_Equal | Mod_Equal) (New_Line)?;
 add: op=(Add | Sub) (New_Line)?;
