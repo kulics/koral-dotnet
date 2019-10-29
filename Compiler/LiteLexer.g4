@@ -73,6 +73,8 @@ And:    '&';
 Or:     '|';
 Xor:    '^';
 
+Grave:  '`';
+
 TypeI8: 'i8';
 TypeU8: 'u8';
 TypeI16: 'i16';
