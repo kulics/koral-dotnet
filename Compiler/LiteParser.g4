@@ -252,6 +252,7 @@ linq // 联合查询
 | expression callElement // 访问元素
 | expression callExpression // 链式调用
 | expression bitwise expression // 位运算表达式
+| expression judgeCombine expression // 组合判断表达式
 | expression judge expression // 判断型表达式
 | expression add expression // 和型表达式
 | expression mul expression // 积型表达式
@@ -454,7 +455,6 @@ nilExpr: NilLiteral;
 // bool值
 boolExpr: t=TrueLiteral|t=FalseLiteral;
 
-judgeType: op=(Equal_Equal|Not_Equal);
 bitwise: (bitwiseAnd | bitwiseOr | bitwiseXor 
 | bitwiseLeftShift | bitwiseRightShift) (New_Line)?;
 bitwiseAnd: Grave And Grave;
@@ -463,6 +463,7 @@ bitwiseNot: Grave Wave Grave;
 bitwiseXor: Grave Xor Grave;
 bitwiseLeftShift: Grave Less Grave;
 bitwiseRightShift: Grave Greater Grave;
+judgeCombine: Combine_Equal;
 judge: op=(Or | And | Equal_Equal | Not_Equal | Less_Equal | Greater_Equal | Less | Greater) (New_Line)?;
 assign: op=(Equal | Add_Equal | Sub_Equal | Mul_Equal | Div_Equal | Mod_Equal) (New_Line)?;
 add: op=(Add | Sub) (New_Line)?;

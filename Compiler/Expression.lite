@@ -149,7 +149,13 @@ LiteLangVisitor := me % {
             e2 = Visit(context.GetChild(2))
             op = Visit(context.GetChild(1))
 
-            context.GetChild(1) ? _ JudgeContext {
+            context.GetChild(1) ? _ JudgeCombineContext {
+                r.data = I32
+                s1 = e1.text
+                s2 = e2.[Result].text
+                r.text = ""s1" > "s2" ? 1 : ( "s1"=="s2" ? 0 : -1 )"
+                <- r
+            } _ JudgeContext {
                 # todo 如果左右不是bool类型值，报错 #
                 r.data = Bool
             } _ AddContext {
@@ -222,10 +228,6 @@ LiteLangVisitor := me % {
     }
 
     %VisitWave : (context WaveContext -> v any) {
-        <- context.op.Text
-    }
-
-    %VisitJudgeType : (context JudgeTypeContext -> v any) {
         <- context.op.Text
     }
 

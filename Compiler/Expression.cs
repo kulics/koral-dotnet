@@ -67,6 +67,13 @@ case 3 :
 var e2 = Visit(context.GetChild(2));
 var op = Visit(context.GetChild(1));
 switch (context.GetChild(1)) {
+case JudgeCombineContext it :
+{ r.data=I32;
+var s1 = e1.text;
+var s2 = ((Result)(e2)).text;
+r.text=(new System.Text.StringBuilder("").Append(s1).Append(" > ").Append(s2).Append(" ? 1 : ( ").Append(s1).Append("==").Append(s2).Append(" ? 0 : -1 )")).to_str();
+return r;
+}break;
 case JudgeContext it :
 { r.data=Bool;
 }break;
@@ -146,9 +153,6 @@ public  override  object VisitCall( CallContext context ){
 return context.op.Text;
 }
 public  override  object VisitWave( WaveContext context ){
-return context.op.Text;
-}
-public  override  object VisitJudgeType( JudgeTypeContext context ){
 return context.op.Text;
 }
 public  override  object VisitBitwise( BitwiseContext context ){
