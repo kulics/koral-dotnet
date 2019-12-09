@@ -12,7 +12,6 @@ Sub_Equal:         '-=';
 Mul_Equal:         '*=';
 Div_Equal:         '/=';
 Mod_Equal:        '\\=';
-Colon_Equal:       ':=';
 
 Equal_Equal:        '==';
 Less_Equal:         '<=';

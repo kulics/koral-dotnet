@@ -13,15 +13,7 @@ LiteLangVisitor := me % {
     }
 
     %VisitPackageStatement : (context PackageStatementContext -> v any) {
-        id = Visit(context.id(0)).[Result]
-        ? context.id(1) >< nil {
-            Self = Visit(context.id(1)).[Result]
-            me.selfID = Self.text
-        }
-        ? context.id(2) >< nil {
-            Super = Visit(context.id(2)).[Result]
-            me.superID = Super.text
-        }
+        id = Visit(context.id()).[Result]
 
         obj = ""
         extend = ""
@@ -66,14 +58,20 @@ LiteLangVisitor := me % {
 
         header += templateContract + BlockLeft + Wrap
         obj = header + obj
-        me.selfID = ""
-        me.superID = ""
         <- obj
     }
 
     %VisitPackageFieldStatement : (context PackageFieldStatementContext -> v any) {
         obj = ""
         extend = ""
+        ? context.id(0) >< nil {
+            Self = Visit(context.id(0)).[Result]
+            me.selfID = Self.text
+        }
+        ? context.id(1) >< nil {
+            Super = Visit(context.id(1)).[Result]
+            me.superID = Super.text
+        }
         item @ context.packageSupportStatement() {
             ? item.GetChild(0).GetType() == typeof[IncludeStatementContext]() {
                 extend += ? -> extend == "" {
@@ -85,6 +83,8 @@ LiteLangVisitor := me % {
                 obj += Visit(item)
             }
         }
+        me.selfID = ""
+        me.superID = ""
         <- Result{text = obj; data = extend}
     }
 
@@ -185,6 +185,14 @@ LiteLangVisitor := me % {
 
     %VisitPackageNewStatement : (context PackageNewStatementContext -> v any) {
         text = ""
+        ? context.id(0) >< nil {
+            Self = Visit(context.id(0)).[Result]
+            me.selfID = Self.text
+        }
+        ? context.id(1) >< nil {
+            Super = Visit(context.id(1)).[Result]
+            me.superID = Super.text
+        }
         # 获取构造数据 #
         me.add_current_set()
         text += Visit(context.parameterClauseIn()).[str]
@@ -193,6 +201,8 @@ LiteLangVisitor := me % {
         }
         text += BlockLeft + ProcessFunctionSupport(context.functionSupportStatement()) + BlockRight + Wrap
         me.delete_current_set()
+        me.selfID = ""
+        me.superID = ""
         <- text
     }
 
@@ -205,7 +215,7 @@ LiteLangVisitor := me % {
     }
 
     %VisitProtocolStatement : (context ProtocolStatementContext -> v any) {
-        id = Visit(context.id()).[Result]
+        id = Visit(context.id(0)).[Result]
         obj = ""
         interfaceProtocol = ""
         ptclName = id.text
@@ -283,10 +293,20 @@ LiteLangVisitor := me % {
 
     %VisitPackageImplementStatement : (context PackageImplementStatementContext -> v any) {
         obj = ""
+        ? context.id(0) >< nil {
+            Self = Visit(context.id(0)).[Result]
+            me.selfID = Self.text
+        }
+        ? context.id(1) >< nil {
+            Super = Visit(context.id(1)).[Result]
+            me.superID = Super.text
+        }
         extends = Visit(context.typeType()).[str]
         item @ context.implementSupportStatement() {
             obj += Visit(item)
         }
+        me.selfID = ""
+        me.superID = ""
         <- Result{ text = obj; data = extends }
     }
 }

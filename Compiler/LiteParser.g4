@@ -26,12 +26,12 @@ typeRedefineStatement |
 New_Line ;
 
 // 类型别名
-typeAliasStatement: id Equal_Arrow typeType end;
+typeAliasStatement: id (Equal_Arrow|Colon_Arrow) typeType end;
 // 类型重定义
-typeRedefineStatement: id Colon_Equal typeType end;
+typeRedefineStatement: id (Colon|Equal) New_Line* Cent typeType end;
 
 // 枚举
-enumStatement: (annotationSupport)? id Colon_Equal New_Line* Cent Question left_brace enumSupportStatement* right_brace end;
+enumStatement: (annotationSupport)? id (Colon|Equal) New_Line* Cent Question (Right_Arrow id (more id)?)? left_brace enumSupportStatement* right_brace end;
 
 enumSupportStatement: id (Equal (add)? integerExpr)? end;
 // 命名空间变量
@@ -43,10 +43,10 @@ namespaceFunctionStatement: (annotationSupport)? id (templateDefine)? Colon left
 (parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 定义包
-packageStatement: (annotationSupport)? id (templateDefine)? Colon_Equal (id (id)?)?
+packageStatement: (annotationSupport)? id (templateDefine)? (Colon|Equal)
  (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))+ end;
 
-packageFieldStatement: left_brace (packageSupportStatement)* right_brace;
+packageFieldStatement: (Right_Arrow id (more id)?)? left_brace (packageSupportStatement)* right_brace;
 
 // 包支持的语句
 packageSupportStatement:
@@ -63,7 +63,7 @@ New_Line
 includeStatement: Cent typeType end;
 // 包构造方法
 packageNewStatement: (annotationSupport)? left_paren parameterClauseIn right_paren
-(left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
+(left_paren expressionList? right_paren)? (Right_Arrow id (more id)?)? left_brace (functionSupportStatement)* right_brace;
 // 定义变量
 packageVariableStatement: (annotationSupport)? id (Equal expression| typeType (Equal expression)?) end;
 // 函数
@@ -74,7 +74,7 @@ packageControlSubStatement: id (left_paren id right_paren)? left_brace (function
 // 定义包事件
 packageEventStatement: id left_brack Question right_brack nameSpaceItem end;
 // 包实现接口
-packageImplementStatement: typeType left_brace (implementSupportStatement)* right_brace;
+packageImplementStatement: typeType (Right_Arrow id (more id)?)? left_brace (implementSupportStatement)* right_brace;
 
 // 实现
 implementStatement: id (templateDefine)? Add_Equal (id (id)?)? (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))+ end;
@@ -100,7 +100,7 @@ overrideFunctionStatement: (annotationSupport)? Cent (n='_')? id (templateDefine
 (parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 协议
-protocolStatement: (annotationSupport)? id (templateDefine)? Colon_Equal Cent Discard left_brace (protocolSupportStatement)* right_brace end;
+protocolStatement: (annotationSupport)? id (templateDefine)? (Colon|Equal) Cent Discard (Right_Arrow id (more id)?)? left_brace (protocolSupportStatement)* right_brace end;
 // 协议支持的语句
 protocolSupportStatement:
 includeStatement |

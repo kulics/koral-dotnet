@@ -107,7 +107,7 @@ LiteLangVisitor := me % {
 
     %VisitEnumStatement : (context EnumStatementContext -> v any) {
         obj = ""
-        id = Visit(context.id()).[Result]
+        id = Visit(context.id(0)).[Result]
         header = ""
         # typ = Visit(context.typeType()).[str] #
         typ = "int"

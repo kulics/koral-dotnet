@@ -13,15 +13,7 @@ public  override  object VisitIncludeStatement( IncludeStatementContext context 
 return Visit(context.typeType());
 }
 public  override  object VisitPackageStatement( PackageStatementContext context ){
-var id = ((Result)(Visit(context.id(0))));
-if ( context.id(1)!=null ) {
-var Self = ((Result)(Visit(context.id(1))));
-this.selfID=Self.text;
-}
-if ( context.id(2)!=null ) {
-var Super = ((Result)(Visit(context.id(2))));
-this.superID=Super.text;
-}
+var id = ((Result)(Visit(context.id())));
 var obj = "";
 var extend = "";
 foreach (var item in context.packageFieldStatement()){
@@ -61,13 +53,19 @@ header+=":"+extend;
 }
 header+=templateContract+BlockLeft+Wrap;
 obj = header+obj;
-this.selfID="";
-this.superID="";
 return obj;
 }
 public  override  object VisitPackageFieldStatement( PackageFieldStatementContext context ){
 var obj = "";
 var extend = "";
+if ( context.id(0)!=null ) {
+var Self = ((Result)(Visit(context.id(0))));
+this.selfID=Self.text;
+}
+if ( context.id(1)!=null ) {
+var Super = ((Result)(Visit(context.id(1))));
+this.superID=Super.text;
+}
 foreach (var item in context.packageSupportStatement()){
 if ( item.GetChild(0).GetType()==@typeof<IncludeStatementContext>() ) {
 extend+=run(()=>{if ( extend=="" ) {
@@ -80,6 +78,8 @@ else {
 obj+=Visit(item);
 }
 }
+this.selfID="";
+this.superID="";
 return (new Result(){text = obj,data = extend});
 }
 public  override  object VisitPackageVariableStatement( PackageVariableStatementContext context ){
@@ -177,6 +177,14 @@ return obj;
 }
 public  override  object VisitPackageNewStatement( PackageNewStatementContext context ){
 var text = "";
+if ( context.id(0)!=null ) {
+var Self = ((Result)(Visit(context.id(0))));
+this.selfID=Self.text;
+}
+if ( context.id(1)!=null ) {
+var Super = ((Result)(Visit(context.id(1))));
+this.superID=Super.text;
+}
 this.add_current_set();
 text+=((string)(Visit(context.parameterClauseIn())));
 if ( context.expressionList()!=null ) {
@@ -184,6 +192,8 @@ text+=(new System.Text.StringBuilder(":base(").Append(((Result)(Visit(context.ex
 }
 text+=BlockLeft+ProcessFunctionSupport(context.functionSupportStatement())+BlockRight+Wrap;
 this.delete_current_set();
+this.selfID="";
+this.superID="";
 return text;
 }
 public  override  object VisitPackageEventStatement( PackageEventStatementContext context ){
@@ -194,7 +204,7 @@ obj+=(new System.Text.StringBuilder("public event ").Append(nameSpace).Append(" 
 return obj;
 }
 public  override  object VisitProtocolStatement( ProtocolStatementContext context ){
-var id = ((Result)(Visit(context.id())));
+var id = ((Result)(Visit(context.id(0))));
 var obj = "";
 var interfaceProtocol = "";
 var ptclName = id.text;
@@ -267,10 +277,20 @@ return r;
 }
 public  override  object VisitPackageImplementStatement( PackageImplementStatementContext context ){
 var obj = "";
+if ( context.id(0)!=null ) {
+var Self = ((Result)(Visit(context.id(0))));
+this.selfID=Self.text;
+}
+if ( context.id(1)!=null ) {
+var Super = ((Result)(Visit(context.id(1))));
+this.superID=Super.text;
+}
 var extends = ((string)(Visit(context.typeType())));
 foreach (var item in context.implementSupportStatement()){
 obj+=Visit(item);
 }
+this.selfID="";
+this.superID="";
 return (new Result(){text = obj,data = extends});
 }
 }
