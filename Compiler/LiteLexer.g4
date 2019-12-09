@@ -106,9 +106,8 @@ IDPrivate: '_' [a-zA-Z0-9_]+; // 私有标识符
 IDPublic: [a-zA-Z] [a-zA-Z0-9_]*; // 公有标识符
 Discard: '_'; // 匿名变量
 
-Big_Big_Comment: '###' .*? '###' -> skip; // 可嵌套注释
-Big_Comment: '##' .*? '##' -> skip; // 可嵌套注释
-Comment: '#' .*? '#' -> skip; // 注释
+Comment_Block: '{#' .*? '#}' -> skip; // 块注释
+Comment_Line: '#' ~[\r\n]* -> skip; // 行注释
 
 New_Line: '\r'? '\n'; 
 //WS: (' ' |'\t' |'\n' |'\r' )+ -> skip ;
