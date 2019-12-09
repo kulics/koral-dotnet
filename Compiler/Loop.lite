@@ -7,7 +7,7 @@
     Compiler_static. "Compiler" 
 }
 
-Iterator := % {
+Iterator : % {
     begin Result
     end Result
     step Result
@@ -15,7 +15,7 @@ Iterator := % {
     attach str = T
 }
 
-LiteLangVisitor := me % {
+LiteLangVisitor : % -> me {
     %VisitIteratorStatement : (context IteratorStatementContext -> v any) {
         it = Iterator{}
         # ? context.op.Type == ">=" | context.op.Text == "<=" {

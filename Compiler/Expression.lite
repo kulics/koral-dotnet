@@ -85,18 +85,18 @@ keywords = {
     "while"
 }
 
-TemplateItem := % {
+TemplateItem : % {
     Template str
     Contract str
 }
 
-DicEle := % {
+DicEle : % {
     key str
     value str
     text str
 }
 
-LiteLangVisitor := me % {
+LiteLangVisitor : % -> me {
     %VisitVariableStatement : (context VariableStatementContext -> v any) {
         obj = ""
         r1 = Visit(context.idExpression()).[Result]

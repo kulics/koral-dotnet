@@ -7,7 +7,7 @@
     Compiler_static. "Compiler" 
 }
 
-Parameter := % {
+Parameter : % {
     id str
     type str
     value str
@@ -15,7 +15,7 @@ Parameter := % {
     permission str
 }
 
-LiteLangVisitor := me % {
+LiteLangVisitor : % -> me {
     ProcessFunctionSupport : (items [...FunctionSupportStatementContext] -> v str) {
         obj = ""
         content = ""

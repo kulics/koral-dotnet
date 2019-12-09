@@ -7,12 +7,12 @@
     Compiler_static. "Compiler" 
 }
 
-Namespace := % {
+Namespace : % {
     name str
     imports str
 }
 
-LiteLangVisitor := me % {
+LiteLangVisitor : % -> me {
     %VisitStatement : (context StatementContext -> v any) {
         obj = ""
         ns = Visit(context.exportStatement()).[Namespace]

@@ -7,7 +7,7 @@
     Compiler_static. "Compiler" 
 }
 
-LiteLangVisitor := me % {
+LiteLangVisitor : % -> me {
     %VisitCallExpression : (context CallExpressionContext -> v any) {
         r = Visit(context.id()).[Result]
         r.text = "." + r.text

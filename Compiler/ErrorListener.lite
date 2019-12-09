@@ -7,7 +7,7 @@
     Compiler_static. "Compiler" 
 }
 
-ErrorListener := me base % {
+ErrorListener : % -> me, base {
     % BaseErrorListener
     FileDir str
 
