@@ -18,9 +18,9 @@ Iterator : % {
 LiteLangVisitor : % -> me {
     %VisitIteratorStatement : (context IteratorStatementContext -> v any) {
         it = Iterator{}
-        # ? context.op.Type == ">=" | context.op.Text == "<=" {
+        {# ? context.op.Type == ">=" | context.op.Text == "<=" {
             it.attach = T
-        } #
+        } #}
         ? context.op.Type == LiteParser.Sub_Sub {
             it.order = F
         }

@@ -43,7 +43,7 @@ LiteLangVisitor : % -> me {
         obj += BlockRight + Wrap
         header = ""
         header += ""id.permission" partial class "id.text""
-        # 泛型 #
+        # 泛型
         template = ""
         templateContract = ""
         ? context.templateDefine() >< nil {
@@ -121,7 +121,7 @@ LiteLangVisitor : % -> me {
             isVirtual = " virtual "
         }
         obj = ""
-        # 异步 #
+        # 异步
         obj += ""id.permission" "
         pout = ""
         ? context.parameterClauseOut() >< nil {
@@ -144,7 +144,7 @@ LiteLangVisitor : % -> me {
             }
             obj += ""isVirtual" "pout" "id.text""
         }
-        # 泛型 #
+        # 泛型
         templateContract = ""
         ? context.templateDefine() >< nil {
             template = Visit(context.templateDefine()).[TemplateItem]
@@ -210,7 +210,7 @@ LiteLangVisitor : % -> me {
         id = Visit(context.id()).[Result]
         isVirtual = " override "
         obj = ""
-        # 异步 #
+        # 异步
         obj += ? -> context.n >< nil {
             "protected "
         } _ {
@@ -237,7 +237,7 @@ LiteLangVisitor : % -> me {
             }
             obj += ""isVirtual" "pout" "id.text""
         }
-        # 泛型 #
+        # 泛型
         templateContract = ""
         ? context.templateDefine() >< nil {
             template = Visit(context.templateDefine()).[TemplateItem]

@@ -300,7 +300,7 @@ LiteLangVisitor : % -> me {
 
     %VisitFunctionExpression : (context FunctionExpressionContext -> v any) {
         r = Result{}
-        # 异步 #
+        # 异步
         ? context.t.Type == Right_Flow {
             r.text += " async "
         }
@@ -316,7 +316,7 @@ LiteLangVisitor : % -> me {
     %VisitLambda : (context LambdaContext -> v any) {
         me.add_current_set()
         r = Result{data = "var"}
-        # 异步 #
+        # 异步
         ? context.t.Type == Right_Flow {
             r.text += "async "
         }

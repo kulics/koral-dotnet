@@ -156,10 +156,10 @@ LiteLangVisitor : % -> me {
                 r.text = ""s1" > "s2" ? 1 : ( "s1"=="s2" ? 0 : -1 )"
                 <- r
             } _ JudgeContext {
-                # todo 如果左右不是bool类型值，报错 #
+                # todo 如果左右不是bool类型值，报错
                 r.data = Bool
             } _ AddContext {
-                # todo 如果左右不是number或text类型值，报错 #
+                # todo 如果左右不是number或text类型值，报错
                 r.data = ? -> e1.data.[str] == Str | e2.[Result].data.[str] == Str {
                     Str
                 } e1.data.[str] == I32 & e2.[Result].data.[str] == I32 {
@@ -168,14 +168,14 @@ LiteLangVisitor : % -> me {
                     F64
                 }
             } _ MulContext {
-                # todo 如果左右不是number类型值，报错 #
+                # todo 如果左右不是number类型值，报错
                 r.data = ? -> e1.data.[str] == I32 & e2.[Result].data.[str] == I32 {
                     I32
                 } _ {
                     F64
                 }
             } _ PowContext {
-                # todo 如果左右部署number类型，报错 #
+                # todo 如果左右部署number类型，报错
                 r.data = F64
                 r.text = ""op"("e1.text", "e2.[Result].text")"
                 <- r

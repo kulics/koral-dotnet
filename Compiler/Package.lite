@@ -42,7 +42,7 @@ LiteLangVisitor : % -> me {
             header += Visit(context.annotationSupport())
         }
         header += ""id.permission" partial class "id.text""
-        # 泛型 #
+        # 泛型
         template = ""
         templateContract = ""
         ? context.templateDefine() >< nil {
@@ -145,7 +145,7 @@ LiteLangVisitor : % -> me {
             isVirtual = " virtual "
         }
         obj = ""
-        # 异步 #
+        # 异步
         obj += ""id.permission" "
         pout = ""
         ? context.parameterClauseOut() >< nil {
@@ -168,7 +168,7 @@ LiteLangVisitor : % -> me {
             }
             obj += ""isVirtual" "pout" "id.text""
         }
-        # 泛型 #
+        # 泛型
         templateContract = ""
         ? context.templateDefine() >< nil {
             template = Visit(context.templateDefine()).[TemplateItem]
@@ -193,7 +193,7 @@ LiteLangVisitor : % -> me {
             Super = Visit(context.id(1)).[Result]
             me.superID = Super.text
         }
-        # 获取构造数据 #
+        # 获取构造数据
         me.add_current_set()
         text += Visit(context.parameterClauseIn()).[str]
         ? context.expressionList() >< nil {
@@ -227,7 +227,7 @@ LiteLangVisitor : % -> me {
             interfaceProtocol += r.text
         }
         obj += "public partial interface " + ptclName
-        # 泛型 #
+        # 泛型
         templateContract = ""
         ? context.templateDefine() >< nil {
             template = Visit(context.templateDefine()).[TemplateItem]
@@ -263,7 +263,7 @@ LiteLangVisitor : % -> me {
             r.text += Visit(context.annotationSupport())
         }
         r.permission = "public"
-        # 异步 #
+        # 异步
         pout = Visit(context.parameterClauseOut()).[str]
         ? context.t.Type == Right_Flow {
             pout = ? -> pout >< "void" {
@@ -280,7 +280,7 @@ LiteLangVisitor : % -> me {
             }
             r.text += pout + " " + id.text
         }
-        # 泛型 #
+        # 泛型
         templateContract = ""
         ? context.templateDefine() >< nil {
             template = Visit(context.templateDefine()).[TemplateItem]

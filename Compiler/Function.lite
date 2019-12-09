@@ -40,7 +40,7 @@ LiteLangVisitor : % -> me {
     %VisitFunctionStatement : (context FunctionStatementContext -> v any) {
         id = Visit(context.id()).[Result]
         obj = ""
-        # 异步 #
+        # 异步
         pout = ""
         ? context.parameterClauseOut() >< nil {
             pout = Visit(context.parameterClauseOut()).[str]
@@ -62,7 +62,7 @@ LiteLangVisitor : % -> me {
             }
             obj += ""pout" "id.text""
         }
-        # 泛型 #
+        # 泛型
         templateContract = ""
         ? context.templateDefine() >< nil {
             template = Visit(context.templateDefine()).[TemplateItem]

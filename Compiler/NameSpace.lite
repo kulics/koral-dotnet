@@ -16,7 +16,7 @@ LiteLangVisitor : % -> me {
     %VisitStatement : (context StatementContext -> v any) {
         obj = ""
         ns = Visit(context.exportStatement()).[Namespace]
-        # import library #
+        # import library
         obj += "using Library;"Wrap"using static Library.Lib;"Wrap""
         obj += ns.imports + Wrap
         ? context.annotationSupport() >< nil {
@@ -109,7 +109,7 @@ LiteLangVisitor : % -> me {
         obj = ""
         id = Visit(context.id(0)).[Result]
         header = ""
-        # typ = Visit(context.typeType()).[str] #
+        # typ = Visit(context.typeType()).[str]
         typ = "int"
         ? context.annotationSupport() >< nil {
             header += Visit(context.annotationSupport())
@@ -142,7 +142,7 @@ LiteLangVisitor : % -> me {
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
-        # 异步 #
+        # 异步
         pout = ""
         ? context.parameterClauseOut() >< nil {
             pout = Visit(context.parameterClauseOut()).[str]
@@ -165,7 +165,7 @@ LiteLangVisitor : % -> me {
             obj += ""id.permission" static "pout" "id.text""
         }
 
-        # 泛型 #
+        # 泛型
         templateContract = ""
         ? context.templateDefine() >< nil {
             template = Visit(context.templateDefine()).[TemplateItem]
