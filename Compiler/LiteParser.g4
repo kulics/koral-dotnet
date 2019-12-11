@@ -8,10 +8,10 @@ statement: (New_Line)* (annotationSupport)?
 exportStatement (New_Line)* namespaceSupportStatement*;
 
 // 导出命名空间
-exportStatement: TextLiteral left_brace (importStatement|New_Line)* right_brace end;
+exportStatement: TextLiteral left_brace (importStatement|typeAliasStatement|New_Line)* right_brace end;
 
 // 导入命名空间
-importStatement: (annotationSupport)? (id call?)? TextLiteral end;
+importStatement: (annotationSupport)? (id call? Right_Arrow)? TextLiteral end;
 
 namespaceSupportStatement:
 namespaceFunctionStatement |
@@ -21,12 +21,11 @@ packageStatement |
 protocolStatement |
 implementStatement |
 enumStatement |
-typeAliasStatement |
 typeRedefineStatement |
 New_Line ;
 
 // 类型别名
-typeAliasStatement: id (Equal_Arrow|Colon_Arrow) typeType end;
+typeAliasStatement: id Right_Arrow typeType end;
 // 类型重定义
 typeRedefineStatement: id (Colon|Equal) New_Line* Cent typeType end;
 

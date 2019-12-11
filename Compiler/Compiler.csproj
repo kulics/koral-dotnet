@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <Reference Include="Library">
-      <HintPath>..\Library\bin\Release\netstandard2.0\Library.dll</HintPath>
+      <HintPath>..\Library\bin\Release\netstandard2.1\Library.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
