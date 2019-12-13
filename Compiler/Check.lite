@@ -3,11 +3,11 @@
     "Antlr4/Runtime/Misc"
     "System"
 
-    LiteParser. "Compiler" 
-    Compiler_static. "Compiler" 
+    LiteParser. <- "Compiler" 
+    Compiler_static. <- "Compiler" 
 }
 
-LiteLangVisitor : % -> me {
+LiteLangVisitor : % me <- {
     %VisitCheckStatement : (context CheckStatementContext -> v any) {
         obj = "try "BlockLeft+Wrap""
         me.add_current_set()

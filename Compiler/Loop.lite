@@ -3,8 +3,8 @@
     "Antlr4/Runtime/Misc"
     "System"
 
-    LiteParser. "Compiler" 
-    Compiler_static. "Compiler" 
+    LiteParser. <- "Compiler" 
+    Compiler_static. <- "Compiler" 
 }
 
 Iterator : % {
@@ -15,7 +15,7 @@ Iterator : % {
     attach str = T
 }
 
-LiteLangVisitor : % -> me {
+LiteLangVisitor : % me <- {
     %VisitIteratorStatement : (context IteratorStatementContext -> v any) {
         it = Iterator{}
         {# ? context.op.Type == ">=" | context.op.Text == "<=" {

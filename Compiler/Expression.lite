@@ -3,8 +3,8 @@
     "Antlr4/Runtime/Misc"
     "System"
 
-    LiteParser. "Compiler" 
-    Compiler_static. "Compiler" 
+    LiteParser. <- "Compiler" 
+    Compiler_static. <- "Compiler" 
 }
 
 keywords = {
@@ -96,7 +96,7 @@ DicEle : % {
     text str
 }
 
-LiteLangVisitor : % -> me {
+LiteLangVisitor : % me <- {
     %VisitVariableStatement : (context VariableStatementContext -> v any) {
         obj = ""
         r1 = Visit(context.idExpression()).[Result]

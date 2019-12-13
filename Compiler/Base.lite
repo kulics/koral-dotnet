@@ -4,8 +4,8 @@
     "System"
     "System/Collections/Generic"
 
-    LiteParser. "Compiler" 
-    Compiler_static. "Compiler" 
+    LiteParser. <- "Compiler" 
+    Compiler_static. <- "Compiler" 
 }
 
 Terminate : ";"
@@ -53,7 +53,7 @@ Result : % {
     isDefine bool
 }
 
-LiteLangVisitor : % -> me {
+LiteLangVisitor : % me <- {
     % LiteParserBaseVisitor[any]
 
     selfID = ""
@@ -83,11 +83,11 @@ LiteLangVisitor : % -> me {
         me.AllIDSet.except_with(me.CurrentIDSet.peek())
         me.CurrentIDSet.pop()
     }
-} % () -> me {
+} % me <- () {
     me.CurrentIDSet.push([[:>str]]())
 }
 
-LiteLangVisitor : % -> me {
+LiteLangVisitor : % me <- {
     %VisitProgram : (context ProgramContext -> v any) {
         StatementList = context.statement()
         Result = ""

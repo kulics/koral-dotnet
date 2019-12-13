@@ -3,11 +3,11 @@
     "Antlr4/Runtime/Misc"
     "System"
 
-    LiteParser. "Compiler" 
-    Compiler_static. "Compiler" 
+    LiteParser. <- "Compiler" 
+    Compiler_static. <- "Compiler" 
 }
 
-LiteLangVisitor : % -> me {
+LiteLangVisitor : % me <- {
     %VisitCallExpression : (context CallExpressionContext -> v any) {
         r = Visit(context.id()).[Result]
         r.text = "." + r.text

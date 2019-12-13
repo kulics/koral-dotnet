@@ -3,8 +3,8 @@
     "Antlr4/Runtime/Misc"
     "System"
 
-    LiteParser. "Compiler" 
-    Compiler_static. "Compiler" 
+    LiteParser. <- "Compiler" 
+    Compiler_static. <- "Compiler" 
 }
 
 Namespace : % {
@@ -12,7 +12,7 @@ Namespace : % {
     imports str
 }
 
-LiteLangVisitor : % -> me {
+LiteLangVisitor : % me <- {
     %VisitStatement : (context StatementContext -> v any) {
         obj = ""
         ns = Visit(context.exportStatement()).[Namespace]

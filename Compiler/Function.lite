@@ -3,8 +3,8 @@
     "Antlr4/Runtime/Misc"
     "System"
 
-    LiteParser. "Compiler" 
-    Compiler_static. "Compiler" 
+    LiteParser. <- "Compiler" 
+    Compiler_static. <- "Compiler" 
 }
 
 Parameter : % {
@@ -15,7 +15,7 @@ Parameter : % {
     permission str
 }
 
-LiteLangVisitor : % -> me {
+LiteLangVisitor : % me <- {
     ProcessFunctionSupport : (items [...FunctionSupportStatementContext] -> v str) {
         obj = ""
         content = ""
