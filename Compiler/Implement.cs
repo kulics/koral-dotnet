@@ -10,15 +10,7 @@ namespace Compiler
 {
 public partial class LiteLangVisitor{
 public  override  object VisitImplementStatement( ImplementStatementContext context ){
-var id = ((Result)(Visit(context.id(0))));
-if ( context.id(1)!=null ) {
-var Self = ((Result)(Visit(context.id(1))));
-this.selfID=Self.text;
-}
-if ( context.id(2)!=null ) {
-var Super = ((Result)(Visit(context.id(2))));
-this.superID=Super.text;
-}
+var id = ((Result)(Visit(context.id())));
 var obj = "";
 var extend = "";
 foreach (var item in context.packageFieldStatement()){

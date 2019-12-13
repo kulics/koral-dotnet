@@ -9,15 +9,7 @@
 
 LiteLangVisitor : % -> me {
     %VisitImplementStatement : (context ImplementStatementContext -> v any) {
-        id = Visit(context.id(0)).[Result]
-        ? context.id(1) >< nil {
-            Self = Visit(context.id(1)).[Result]
-            me.selfID = Self.text
-        }
-        ? context.id(2) >< nil {
-            Super = Visit(context.id(2)).[Result]
-            me.superID = Super.text
-        }
+        id = Visit(context.id()).[Result]
         
         obj = ""
         extend = ""
