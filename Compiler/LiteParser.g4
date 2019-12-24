@@ -157,7 +157,7 @@ New_Line;
 judgeCaseStatement: expression Question (caseStatement)+ end;
 // 判断条件声明
 caseStatement: caseExprStatement (more caseExprStatement)* left_brace (functionSupportStatement)* right_brace;
-caseExprStatement: Discard | expression | (id|Discard) typeType;
+caseExprStatement: Discard | expression | (id Left_Arrow)? left_brack typeType right_brack;
 // 判断
 judgeStatement:
 judgeIfStatement (judgeElseIfStatement)* judgeElseStatement end
@@ -171,7 +171,7 @@ judgeElseIfStatement: expression left_brace (functionSupportStatement)* right_br
 // 循环
 loopStatement: id At iteratorStatement left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 集合循环
-loopEachStatement: (left_paren id right_paren)? id At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
+loopEachStatement: (id Equal_Arrow)? id At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 条件循环
 loopCaseStatement: At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // else 判断
@@ -267,7 +267,7 @@ expressionList: expression (more expression)* ; // 表达式列
 
 annotationSupport: annotation (New_Line)?;
 
-annotation: left_paren (id Right_Arrow)? annotationList right_paren; // 注解
+annotation: Less (id Right_Arrow)? annotationList Greater; // 注解
 
 annotationList: annotationItem (more annotationItem)*;
 
@@ -277,23 +277,23 @@ callFunc: (tuple|lambda); // 函数调用
 
 callChannel: Dot left_paren Dot right_paren; // 通道调用
 
-callElement: Dot left_paren (slice | expression) right_paren; // 元素调用
+callElement: Dot left_brack (slice | expression) right_brack; // 元素调用
 
 callPkg: typeType left_brace (pkgAssign|listAssign|setAssign|dictionaryAssign)? right_brace; // 新建包
 
-callNew: left_brack typeType right_brack left_paren New_Line? expressionList? New_Line? right_paren; // 构造类对象
+callNew: typeType Dot left_paren New_Line? expressionList? New_Line? right_paren; // 构造类对象
 
 orElse: Question Bang expression; // 类型转化
 
-typeConversion: Dot left_brack typeType right_brack; // 类型转化
+typeConversion: Bang left_brack typeType right_brack; // 类型转化
 
-pkgAssign: (pkgAssignElement end)* pkgAssignElement ; // 简化赋值
+pkgAssign: (pkgAssignElement end)* pkgAssignElement; // 简化赋值
 
 pkgAssignElement: name Equal expression; // 简化赋值元素
 
 listAssign: (expression end)* expression;
 
-setAssign: Colon_Arrow expression (more expression)* ;
+setAssign: (setElement end)* setElement;
 
 dictionaryAssign: (dictionaryElement end)* dictionaryElement;
 
@@ -302,7 +302,9 @@ callAsync: Greater_Greater expression; // 创建异步调用
 
 list: left_brace (expression end)* expression right_brace; // 列表
 
-set: left_brace Colon_Arrow (expression end)* expression right_brace; // 无序集合
+set: left_brace (setElement end)* setElement right_brace; // 无序集合
+
+setElement: expression Equal_Arrow Discard; // 无序集合元素
 
 dictionary:  left_brace (dictionaryElement end)* dictionaryElement right_brace; // 字典
 
@@ -418,7 +420,7 @@ typeNullable: Question typeNotNull;
 
 typeArray: left_brack Dot_Dot_Dot typeType right_brack;
 typeList: left_brack Dot_Dot typeType right_brack;
-typeSet: left_brack Colon_Arrow typeType right_brack;
+typeSet: left_brack typeType Equal_Arrow Discard right_brack;
 typeDictionary: left_brack typeType Equal_Arrow typeType right_brack;
 typeStack: left_brack Dot Greater typeType right_brack;
 typeQueue: left_brack Dot Less typeType right_brack;
