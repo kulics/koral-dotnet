@@ -156,8 +156,8 @@ return obj;
 public  override  object VisitSetAssign( SetAssignContext context ){
 var obj = "";
 obj+="{";
-foreach (var i in range(0,context.expression().Length-1,1,true,true)){
-var r = ((Result)(Visit(context.expression(i))));
+foreach (var i in range(0,context.setElement().Length-1,1,true,true)){
+var r = ((Result)(Visit(context.setElement(i))));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
 else {
@@ -236,8 +236,8 @@ return result;
 public  override  object VisitSet( SetContext context ){
 var type = Any;
 var result = (new Result());
-foreach (var i in range(0,context.expression().Length-1,1,true,true)){
-var r = ((Result)(Visit(context.expression(i))));
+foreach (var i in range(0,context.setElement().Length-1,1,true,true)){
+var r = ((Result)(Visit(context.setElement(i))));
 result.text+=run(()=>{if ( i==0 ) {
 type = ((string)(r.data));
 return r.text;}
@@ -250,6 +250,11 @@ return ","+r.text;}
 }
 result.data=(new System.Text.StringBuilder("").Append(Set).Append("<").Append(type).Append(">")).to_str();
 result.text=(new System.Text.StringBuilder("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
+return result;
+}
+public  override  object VisitSetElement( SetElementContext context ){
+var r = ((Result)(Visit(context.expression())));
+var result = (new Result(){data = ((string)(r.data)),text = "{"+r.text+"}"});
 return result;
 }
 public  override  object VisitDictionary( DictionaryContext context ){

@@ -187,6 +187,10 @@ LiteLangVisitor : % me <- {
                 e2 = Visit(context.GetChild(1)).[str]
                 r.data = e2
                 r.text = "(("e2")("r.text"))"
+            } context.GetChild(1).GetType() == typeof[TypeCheckContext]() {
+                e2 = Visit(context.GetChild(1)).[str]
+                r.data = e2
+                r.text = "("r.text".@is<"e2">())"
             } context.GetChild(1).GetType() == typeof[OrElseContext]() {
                 e2 = Visit(context.GetChild(1)).[Result]
                 r.text = "("r.text"??" e2.text ")"
@@ -220,6 +224,10 @@ LiteLangVisitor : % me <- {
     }
 
     %VisitTypeConversion : (context TypeConversionContext -> v any) {
+        <- Visit(context.typeType()).[str]
+    }
+
+    %VisitTypeCheck : (context TypeCheckContext -> v any) {
         <- Visit(context.typeType()).[str]
     }
 

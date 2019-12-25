@@ -153,8 +153,8 @@ LiteLangVisitor : % me <- {
     %VisitSetAssign : (context SetAssignContext -> v any) {
         obj = ""
         obj += "{"
-        i @ 0 ++ context.expression().Length-1 {
-            r = Visit(context.expression(i)).[Result]
+        i @ 0 ++ context.setElement().Length-1 {
+            r = Visit(context.setElement(i)).[Result]
             obj += ? -> i == 0 {
                 r.text
             } _ {
@@ -244,8 +244,8 @@ LiteLangVisitor : % me <- {
     %VisitSet : (context SetContext -> v any) {
         type = Any
         result = Result{}
-        i @ 0 ++ context.expression().Length-1 {
-            r = Visit(context.expression(i)).[Result]
+        i @ 0 ++ context.setElement().Length-1 {
+            r = Visit(context.setElement(i)).[Result]
             result.text += ? -> i == 0 {
                 type = r.data.[str]
                 r.text
@@ -258,6 +258,15 @@ LiteLangVisitor : % me <- {
         }
         result.data = "" Set "<"type">"
         result.text = "(new "result.data"(){ "result.text" })"
+        <- result
+    }
+
+    %VisitSetElement : (context SetElementContext -> v any) {
+        r = Visit(context.expression()).[Result]
+        result = Result{
+            data = r.data.[str]
+            text = "{" + r.text + "}"
+        }
         <- result
     }
 

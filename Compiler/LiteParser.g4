@@ -246,6 +246,7 @@ linq // 联合查询
 | expression op=Question // 可空判断
 | expression orElse // 空值替换
 | expression typeConversion // 类型转换
+| expression typeCheck // 类型判断
 | expression callFunc // 函数调用
 | expression callChannel // 调用通道
 | expression callElement // 访问元素
@@ -286,6 +287,8 @@ callNew: typeType Dot left_paren New_Line? expressionList? New_Line? right_paren
 orElse: Question Bang expression; // 类型转化
 
 typeConversion: Bang left_brack typeType right_brack; // 类型转化
+
+typeCheck: Question left_brack typeType right_brack; // 类型转化
 
 pkgAssign: (pkgAssignElement end)* pkgAssignElement; // 简化赋值
 

@@ -108,6 +108,11 @@ var e2 = ((string)(Visit(context.GetChild(1))));
 r.data=e2;
 r.text=(new System.Text.StringBuilder("((").Append(e2).Append(")(").Append(r.text).Append("))")).to_str();
 }
+else if ( context.GetChild(1).GetType()==@typeof<TypeCheckContext>() ) {
+var e2 = ((string)(Visit(context.GetChild(1))));
+r.data=e2;
+r.text=(new System.Text.StringBuilder("(").Append(r.text).Append(".@is<").Append(e2).Append(">())")).to_str();
+}
 else if ( context.GetChild(1).GetType()==@typeof<OrElseContext>() ) {
 var e2 = ((Result)(Visit(context.GetChild(1))));
 r.text=(new System.Text.StringBuilder("(").Append(r.text).Append("??").Append(e2.text).Append(")")).to_str();
@@ -147,6 +152,9 @@ public  override  object VisitOrElse( OrElseContext context ){
 return ((Result)(Visit(context.expression())));
 }
 public  override  object VisitTypeConversion( TypeConversionContext context ){
+return ((string)(Visit(context.typeType())));
+}
+public  override  object VisitTypeCheck( TypeCheckContext context ){
 return ((string)(Visit(context.typeType())));
 }
 public  override  object VisitCall( CallContext context ){
