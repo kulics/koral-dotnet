@@ -38,11 +38,11 @@ namespaceVariableStatement: (annotationSupport)? id (Equal expression| typeType 
 // 命名空间常量
 namespaceConstantStatement: (annotationSupport)? id (typeType)? Colon expression end;
 // 命名空间函数
-namespaceFunctionStatement: (annotationSupport)? id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
+namespaceFunctionStatement: (annotationSupport)? (id| left_brack id templateDefine right_brack) Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
 (parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 定义包
-packageStatement: (annotationSupport)? id (templateDefine)? (Colon|Equal)
+packageStatement: (annotationSupport)? (id| left_brack id templateDefine right_brack) (Colon|Equal)
  (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))+ end;
 
 packageFieldStatement: (p=Question? id (more id)? Left_Arrow)? left_brace (packageSupportStatement)* right_brace;
@@ -66,7 +66,7 @@ packageNewStatement: (annotationSupport)? (p=Question? id (more id)? Left_Arrow)
 // 定义变量
 packageVariableStatement: (annotationSupport)? id (Equal expression| typeType (Equal expression)?) end;
 // 函数
-packageFunctionStatement: (annotationSupport)? id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
+packageFunctionStatement: (annotationSupport)? (id| left_brack id templateDefine right_brack) Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
 (parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义子方法
 packageControlSubStatement: id (left_paren id right_paren)? left_brace (functionSupportStatement)+ right_brace end;
@@ -76,7 +76,7 @@ packageEventStatement: id left_brack Question right_brack nameSpaceItem end;
 packageImplementStatement: (p=Question? id (more id)? Left_Arrow)? typeType left_brace (implementSupportStatement)* right_brace;
 
 // 实现
-implementStatement: id (templateDefine)? Add_Equal (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))+ end;
+implementStatement: (id| left_brack id templateDefine right_brack) Add_Equal (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))+ end;
 
 // 实现支持的语句
 implementSupportStatement: 
@@ -89,17 +89,17 @@ New_Line;
 // 定义变量
 implementVariableStatement: (annotationSupport)? id (Equal expression| typeType (Equal expression)?) end;
 // 函数
-implementFunctionStatement: (annotationSupport)? id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
+implementFunctionStatement: (annotationSupport)? (id| left_brack id templateDefine right_brack) Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
 (parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 定义变量
 overrideVariableStatement: (annotationSupport)? Cent (n='_')? id (Equal expression| typeType (Equal expression)?) end;
 // 函数
-overrideFunctionStatement: (annotationSupport)? Cent (n='_')? id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
+overrideFunctionStatement: (annotationSupport)? Cent (n='_')? (id| left_brack id templateDefine right_brack) Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
 (parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 协议
-protocolStatement: (annotationSupport)? id (templateDefine)? (Colon|Equal) Cent (p=Question? id (more id)? Left_Arrow)? Discard left_brace (protocolSupportStatement)* right_brace end;
+protocolStatement: (annotationSupport)? (id| left_brack id templateDefine right_brack) (Colon|Equal) Cent (p=Question? id (more id)? Left_Arrow)? Discard left_brace (protocolSupportStatement)* right_brace end;
 // 协议支持的语句
 protocolSupportStatement:
 includeStatement |
@@ -109,11 +109,11 @@ New_Line ;
 // 定义控制
 protocolVariableStatement: (annotationSupport)? id (Equal expression| typeType (Equal expression)?) end;
 // 函数
-protocolFunctionStatement: (annotationSupport)? id (templateDefine)? left_paren parameterClauseIn 
+protocolFunctionStatement: (annotationSupport)? (id| left_brack id templateDefine right_brack) left_paren parameterClauseIn 
 t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line* parameterClauseOut right_paren end;
 
 // 函数
-functionStatement: id (templateDefine)? Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
+functionStatement: (id| left_brack id templateDefine right_brack) Colon left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
  (parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
 // 返回
 returnStatement: Left_Arrow (tupleExpression)? end;
@@ -171,7 +171,7 @@ judgeElseIfStatement: expression left_brace (functionSupportStatement)* right_br
 // 循环
 loopStatement: id At iteratorStatement left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 集合循环
-loopEachStatement: (id Equal_Arrow)? id At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
+loopEachStatement: (left_brack id right_brack)? id At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 条件循环
 loopCaseStatement: At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // else 判断
@@ -214,11 +214,11 @@ idExprItem: id | Discard;
 tupleExpression: expression (more expression)* ; // 元组
 // 基础表达式
 primaryExpression: 
-id (templateCall)?
-| t=Discard
-| left_paren expression right_paren
-| dataStatement
-;
+left_brack id templateCall right_brack |
+id |
+t=Discard |
+left_paren expression right_paren | 
+dataStatement;
 
 // 表达式
 expression:
@@ -260,7 +260,7 @@ linq // 联合查询
 | stringExpression // 字符串插值
 ;
 
-callExpression: call New_Line? id (templateCall)? (callFunc|callChannel|callElement)?;
+callExpression: call New_Line? (id | left_brack id templateCall right_brack) (callFunc|callChannel|callElement)?;
 
 tuple: left_paren (expression (more expression)* )? right_paren; // 元组
 
@@ -276,9 +276,9 @@ annotationItem: id (tuple|lambda)?;
 
 callFunc: (tuple|lambda); // 函数调用
 
-callChannel: Dot left_paren Dot right_paren; // 通道调用
+callChannel: left_brack Dot right_brack; // 通道调用
 
-callElement: Dot left_brack (slice | expression) right_brack; // 元素调用
+callElement: left_brack (slice | expression) right_brack; // 元素调用
 
 callPkg: typeType left_brace (pkgAssign|listAssign|setAssign|dictionaryAssign)? right_brace; // 新建包
 
@@ -307,11 +307,11 @@ list: left_brace (expression end)* expression right_brace; // 列表
 
 set: left_brace (setElement end)* setElement right_brace; // 无序集合
 
-setElement: expression Equal_Arrow Discard; // 无序集合元素
+setElement: left_brack expression right_brack Discard; // 无序集合元素
 
-dictionary:  left_brace (dictionaryElement end)* dictionaryElement right_brace; // 字典
+dictionary: left_brace (dictionaryElement end)* dictionaryElement right_brace; // 字典
 
-dictionaryElement: expression Equal_Arrow expression; // 字典元素
+dictionaryElement: left_brack expression right_brack expression; // 字典元素
 
 slice: sliceFull | sliceStart | sliceEnd;
 
@@ -323,11 +323,11 @@ nameSpaceItem: (id call New_Line?)* id;
 
 name: id (call New_Line? id)* ;
 
-templateDefine: left_brack templateDefineItem (more templateDefineItem)* right_brack;
+templateDefine: templateDefineItem (more templateDefineItem)*;
 
-templateDefineItem: id (id)?; 
+templateDefineItem: id | left_paren id id right_paren; 
 
-templateCall: left_brack typeType (more typeType)* right_brack;
+templateCall: typeType (more typeType)*;
 
 lambda: left_brace (lambdaIn)? t=(Right_Arrow|Right_Flow) New_Line* tupleExpression right_brace
 | left_brace (lambdaIn)? t=(Right_Arrow|Right_Flow) New_Line* 
@@ -421,14 +421,14 @@ typeType: typeNotNull | typeNullable | typeReference;
 typeReference: Bang (typeNotNull | typeNullable);
 typeNullable: Question typeNotNull;
 
-typeArray: left_brack Dot_Dot_Dot typeType right_brack;
-typeList: left_brack Dot_Dot typeType right_brack;
-typeSet: left_brack typeType Equal_Arrow Discard right_brack;
-typeDictionary: left_brack typeType Equal_Arrow typeType right_brack;
-typeStack: left_brack Dot Greater typeType right_brack;
-typeQueue: left_brack Dot Less typeType right_brack;
+typeArray: left_brack Dot right_brack typeType;
+typeList: left_brack right_brack typeType;
+typeSet: left_brack typeType right_brack Discard;
+typeDictionary: left_brack typeType right_brack typeType;
+typeStack: left_brack Greater right_brack typeType;
+typeQueue: left_brack Less right_brack typeType;
 typeChannel: left_brack Dot_Dot Less typeType right_brack;
-typePackage: nameSpaceItem (templateCall)? ;
+typePackage: nameSpaceItem | left_brack nameSpaceItem templateCall right_brack;
 typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line* typeFunctionParameterClause right_paren;
 typeAny: TypeAny;
 

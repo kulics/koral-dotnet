@@ -308,7 +308,7 @@ LiteLangVisitor : % me <- {
                     data = "var"
                 }
             }
-        } context.ChildCount == 2 {
+        } context.ChildCount == 4 {
             id = Visit(context.id()).[Result]
             template = Visit(context.templateCall()).[str]
             <- Result{
