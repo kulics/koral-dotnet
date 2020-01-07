@@ -106,7 +106,7 @@ IDPrivate: '_' [a-zA-Z0-9_]+; // 私有标识符
 IDPublic: [a-zA-Z] [a-zA-Z0-9_]*; // 公有标识符
 Discard: '_'; // 匿名变量
 
-Comment_Block: '{#' .*? '#}' -> skip; // 块注释
+Comment_Block: '#=' .*? '=#' -> skip; // 块注释
 Comment_Line: '#' ~[\r\n]* -> skip; // 行注释
 
 New_Line: '\r'? '\n'; 
