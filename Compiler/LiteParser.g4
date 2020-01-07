@@ -202,7 +202,7 @@ variableStatement: idExpression typeType? Equal expression end;
 // 声明变量
 variableDeclaredStatement: idExpression typeType end;
 // 通道赋值
-channelAssignStatement: expression Dot left_paren Dot right_paren assign expression end;
+channelAssignStatement: expression left_brack Dot right_brack assign expression end;
 // 赋值
 assignStatement: tupleExpression assign tupleExpression end;
 
@@ -286,9 +286,9 @@ callNew: typeType Dot left_paren New_Line? expressionList? New_Line? right_paren
 
 orElse: Question Bang expression; // 类型转化
 
-typeConversion: Bang left_brack typeType right_brack; // 类型转化
+typeConversion: typeType Bang; // 类型转化
 
-typeCheck: Question left_brack typeType right_brack; // 类型转化
+typeCheck: typeType Question; // 类型转化
 
 pkgAssign: (pkgAssignElement end)* pkgAssignElement; // 简化赋值
 
@@ -427,7 +427,7 @@ typeSet: left_brack typeType right_brack Discard;
 typeDictionary: left_brack typeType right_brack typeType;
 typeStack: left_brack Greater right_brack typeType;
 typeQueue: left_brack Less right_brack typeType;
-typeChannel: left_brack Dot_Dot Less typeType right_brack;
+typeChannel: left_brack Less_Less right_brack typeType;
 typePackage: nameSpaceItem | left_brack nameSpaceItem templateCall right_brack;
 typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line* typeFunctionParameterClause right_paren;
 typeAny: TypeAny;
