@@ -169,9 +169,9 @@ judgeIfStatement: Question expression left_brace (functionSupportStatement)* rig
 // else if 判断
 judgeElseIfStatement: expression left_brace (functionSupportStatement)* right_brace;
 // 循环
-loopStatement: id At iteratorStatement left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
+loopStatement: At id (Colon|Equal) iteratorStatement left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 集合循环
-loopEachStatement: (left_brack id right_brack)? id At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
+loopEachStatement: At (left_brack id right_brack)? id (Colon|Equal) expression Dot_Dot left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 条件循环
 loopCaseStatement: At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // else 判断
@@ -375,9 +375,9 @@ judgeCaseExpression: Question Right_Arrow (caseExpressionStatement)+;
 // 判断条件声明
 caseExpressionStatement: caseExprStatement (more caseExprStatement)* left_brace (functionSupportStatement)* tupleExpression right_brace;
 // 循环
-loopExpression: id At Right_Arrow iteratorStatement left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression?;
+loopExpression: At id (Colon|Equal) iteratorStatement Right_Arrow left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression?;
 // 集合循环表达式
-loopEachExpression: (id Colon)? id At Right_Arrow expression left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression?;
+loopEachExpression: At (id Colon)? id (Colon|Equal) expression Dot_Dot Right_Arrow left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression?;
 // else 判断
 loopElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
 // 检查
