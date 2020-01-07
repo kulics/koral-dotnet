@@ -22,7 +22,6 @@ Main : (args [...str]->) {
     Compiled(_ReadPath)
 
     print("Completed")
-    read()
 }
 
 Compiled : (path str->) {

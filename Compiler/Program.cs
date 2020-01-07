@@ -22,7 +22,6 @@ _PathLine = "\\";
 }
 Compiled(_ReadPath);
 print("Completed");
-read();
 }
 public static void Compiled( string path ){
 var Files = Directory.GetFiles(path, "*.lite");
