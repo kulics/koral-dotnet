@@ -30,7 +30,7 @@ typeAliasStatement: id Left_Arrow typeType end;
 typeRedefineStatement: id (Colon|Equal) New_Line* Cent typeType end;
 
 // 枚举
-enumStatement: (annotationSupport)? id (Colon|Equal) New_Line* Cent Question (p=Question? id (more id)? Left_Arrow)?
+enumStatement: (annotationSupport)? id (Colon|Equal) New_Line* Dot_Dot
  left_brace enumSupportStatement* right_brace end;
 
 enumSupportStatement: id (Equal (add)? integerExpr)? end;
