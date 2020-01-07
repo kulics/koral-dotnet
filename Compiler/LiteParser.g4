@@ -352,7 +352,7 @@ bitwiseNotExpression: bitwiseNot expression;
 
 linq: linqHeadItem Right_Arrow New_Line?  (linqItem)* id New_Line? expression;
 
-linqHeadItem: id At expression;
+linqHeadItem: At id (Colon|Equal) expression Dot_Dot;
 
 linqItem: (linqHeadItem | id (expression)?) Right_Arrow New_Line?;
 
