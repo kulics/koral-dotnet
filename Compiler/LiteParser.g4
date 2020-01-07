@@ -48,7 +48,7 @@ packageStatement: (annotationSupport)? (id| left_brack id templateDefine right_b
  (packageNewStatement|packageFieldStatement|packageImplementStatement)
  (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))* end;
 
-packageFieldStatement: (p=Question? id (more id)?)? Coin left_brace (packageSupportStatement)* right_brace;
+packageFieldStatement: Coin (left_paren p=Question? id (more id)? right_paren)? left_brace (packageSupportStatement)* right_brace;
 
 // 包支持的语句
 packageSupportStatement:
@@ -77,7 +77,7 @@ packageControlSubStatement: id (left_paren id right_paren)? left_brace (function
 // 定义包事件
 packageEventStatement: id left_brack Question right_brack nameSpaceItem end;
 // 包实现接口
-packageImplementStatement: (p=Question? id (more id)?)? Coin typeType left_brace (implementSupportStatement)* right_brace;
+packageImplementStatement: Coin typeType (left_paren p=Question? id (more id)? right_paren)? left_brace (implementSupportStatement)* right_brace;
 
 // 实现
 implementStatement: (id| left_brack id templateDefine right_brack) Add_Equal 
@@ -108,7 +108,7 @@ overrideFunctionStatement: (annotationSupport)? Cent (n='_')? (id| left_brack id
 
 // 协议
 protocolStatement: (annotationSupport)? (id| left_brack id templateDefine right_brack) (Colon|Equal) 
-(p=Question? id (more id)?)? Coin Coin left_brace (protocolSupportStatement)* right_brace end;
+Coin Coin (left_paren p=Question? id (more id)? right_paren)? left_brace (protocolSupportStatement)* right_brace end;
 // 协议支持的语句
 protocolSupportStatement:
 includeStatement |
