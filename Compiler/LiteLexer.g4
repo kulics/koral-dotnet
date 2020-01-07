@@ -25,9 +25,6 @@ Dot: '.';
 
 Comma: ',';
 
-Colon_Arrow: ':>';
-Equal_Arrow: '=>';
-
 Right_Arrow: '->';
 Left_Arrow: '<-';
 
