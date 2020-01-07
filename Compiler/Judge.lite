@@ -139,12 +139,14 @@ LiteLangVisitor : % me <- {
 
     %VisitJudgeCaseExpression : (context JudgeCaseExpressionContext -> v any)  {
         r = Result{}
+        expr = Visit(context.expression()).[Result]
+        r.text = "run(()=> { switch ("expr.text") "
         r.text += BlockLeft+Wrap
         item @ context.caseExpressionStatement() {
             temp = Visit(item).[str]
             r.text += temp + Wrap
         }
-        r.text += BlockRight+Wrap
+        r.text += BlockRight+Wrap+"})"
         <- r
     }
 

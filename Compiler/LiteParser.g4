@@ -154,7 +154,7 @@ expressionStatement |
 New_Line;
 
 // 条件判断
-judgeCaseStatement: expression Question (caseStatement)+ end;
+judgeCaseStatement: Question expression Dot_Dot (caseStatement)+ end;
 // 判断条件声明
 caseStatement: caseExprStatement (more caseExprStatement)* left_brace (functionSupportStatement)* right_brace;
 caseExprStatement: Discard | expression | (id|Discard) typeType;
@@ -238,10 +238,10 @@ linq // 联合查询
 | bitwiseNotExpression // 位运算取反
 | negate // 取反
 | judgeExpression // 判断表达式
+| judgeCaseExpression // 条件判断表达式
 | loopExpression // 循环表达式
 | loopEachExpression // 集合循环表达式
 | checkExpression // 检查表达式
-| expression judgeCaseExpression // 条件判断表达式
 | expression op=Bang // 引用判断
 | expression op=Question // 可空判断
 | expression orElse // 空值替换
@@ -371,7 +371,7 @@ judgeExpressionIfStatement: Question Right_Arrow expression left_brace (function
 judgeExpressionElseIfStatement: expression left_brace (functionSupportStatement)* tupleExpression right_brace;
 
 // 条件判断表达式
-judgeCaseExpression: Question Right_Arrow (caseExpressionStatement)+;
+judgeCaseExpression: Question expression Dot_Dot Right_Arrow (caseExpressionStatement)+;
 // 判断条件声明
 caseExpressionStatement: caseExprStatement (more caseExprStatement)* left_brace (functionSupportStatement)* tupleExpression right_brace;
 // 循环
