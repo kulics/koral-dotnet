@@ -157,7 +157,7 @@ New_Line;
 judgeCaseStatement: expression Question (caseStatement)+ end;
 // 判断条件声明
 caseStatement: caseExprStatement (more caseExprStatement)* left_brace (functionSupportStatement)* right_brace;
-caseExprStatement: Discard | expression | (id Left_Arrow)? left_brack typeType right_brack;
+caseExprStatement: Discard | expression | (id|Discard) typeType;
 // 判断
 judgeStatement:
 judgeIfStatement (judgeElseIfStatement)* judgeElseStatement end
