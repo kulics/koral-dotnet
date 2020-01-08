@@ -133,13 +133,18 @@ if ( context.parameterClauseOut()!=null ) {
 pout = (string)(Visit(context.parameterClauseOut()));
 }
 if ( context.t.Type==Right_Flow ) {
-pout = run(()=>{if ( context.Discard()!=null ) {
-return "void";}
+if ( context.Discard()!=null ) {
+pout = "void";
+}
 else if ( pout!="void" ) {
-return (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();}
+if ( context.y!=null ) {
+pout = (new System.Text.StringBuilder("").Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
+}
+pout = (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
+}
 else {
-return Task;}
-});
+pout = Task;
+}
 obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" async static ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
 }
 else {

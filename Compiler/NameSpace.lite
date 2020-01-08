@@ -148,12 +148,15 @@ LiteLangVisitor : $ (me) {
             pout = Visit(context.parameterClauseOut()) str!
         }
         ? context.t.Type == Right_Flow {
-            pout = ? -> context.Discard() >< nil {
-                "void"
+            ? context.Discard() >< nil {
+                pout = "void"
             } pout >< "void" {
-                ""Task"<"pout">"
+                ? context.y >< nil {
+                    pout = ""IEnum"<"pout">"
+                }
+                pout = ""Task"<"pout">"
             } _ {
-                Task
+                pout = Task
             }
             obj += ""id.permission" async static "pout" "id.text""
         } _ {

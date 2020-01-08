@@ -146,12 +146,15 @@ LiteLangVisitor : $ (me) {
             pout = Visit(context.parameterClauseOut()) str!
         }
         ? context.t.Type == Right_Flow {
-            pout = ? -> context.Discard() >< nil {
-                "void"
+            ? context.Discard() >< nil {
+                pout = "void"
             } pout >< "void" {
-                ""Task"<"pout">"
+                ? context.y >< nil {
+                    pout = ""IEnum"<"pout">"
+                }
+                pout = ""Task"<"pout">"
             } _ {
-                Task
+                pout = Task
             }
             obj += ""isVirtual" async "pout" "id.text""
         } _ {
@@ -281,10 +284,13 @@ LiteLangVisitor : $ (me) {
         # 异步
         pout = Visit(context.parameterClauseOut()) str!
         ? context.t.Type == Right_Flow {
-            pout = ? -> pout >< "void" {
-                ""Task"<"pout">"
+            ? pout >< "void" {
+                ? context.y >< nil {
+                    pout = ""IEnum"<"pout">"
+                }
+                pout = ""Task"<"pout">"
             } _ {
-                Task
+                pout = Task
             }
             r.text += pout + " " + id.text
         } _ {
