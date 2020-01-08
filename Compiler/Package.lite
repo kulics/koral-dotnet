@@ -8,11 +8,11 @@
 }
 
 LiteLangVisitor : $ (me) {
-    %VisitIncludeStatement : (context IncludeStatementContext -> v any) {
+    .VisitIncludeStatement : (context IncludeStatementContext -> v any) {
         <- Visit(context.typeType())
     }
 
-    %VisitPackageStatement : (context PackageStatementContext -> v any) {
+    .VisitPackageStatement : (context PackageStatementContext -> v any) {
         id = Visit(context.id()) Result!
 
         obj = ""
@@ -63,7 +63,7 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    %VisitPackageFieldStatement : (context PackageFieldStatementContext -> v any) {
+    .VisitPackageFieldStatement : (context PackageFieldStatementContext -> v any) {
         obj = ""
         extend = ""
         ? context.id(0) >< nil {
@@ -82,7 +82,7 @@ LiteLangVisitor : $ (me) {
         <- Result{text = obj; data = extend}
     }
 
-    %VisitPackageVariableStatement : (context PackageVariableStatementContext -> v any) {
+    .VisitPackageVariableStatement : (context PackageVariableStatementContext -> v any) {
         r1 = Visit(context.id()) Result!
         isMutable = r1.isVirtual
         isVirtual = ""
@@ -132,7 +132,7 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    %VisitPackageFunctionStatement : (context PackageFunctionStatementContext -> v any) {
+    .VisitPackageFunctionStatement : (context PackageFunctionStatementContext -> v any) {
         id = Visit(context.id()) Result!
         isVirtual = ""
         ? id.isVirtual {
@@ -177,7 +177,7 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    %VisitPackageNewStatement : (context PackageNewStatementContext -> v any) {
+    .VisitPackageNewStatement : (context PackageNewStatementContext -> v any) {
         text = ""
         ? context.id(0) >< nil {
             Self = Visit(context.id(0)) Result!
@@ -200,7 +200,7 @@ LiteLangVisitor : $ (me) {
         <- text
     }
 
-    %VisitPackageEventStatement : (context PackageEventStatementContext -> v any) {
+    .VisitPackageEventStatement : (context PackageEventStatementContext -> v any) {
         obj = ""
         id = Visit(context.id()) Result!
         nameSpace = Visit(context.nameSpaceItem())
@@ -208,7 +208,7 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    %VisitProtocolStatement : (context ProtocolStatementContext -> v any) {
+    .VisitProtocolStatement : (context ProtocolStatementContext -> v any) {
         id = Visit(context.id()) Result!
         obj = ""
         interfaceProtocol = ""
@@ -246,7 +246,7 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    %VisitProtocolSubStatement : (context ProtocolSubStatementContext -> v any) {
+    .VisitProtocolSubStatement : (context ProtocolSubStatementContext -> v any) {
         obj = ""
         @ item = context.protocolSupportStatement().. {
             r = Visit(item) Result!
@@ -255,7 +255,7 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    %VisitProtocolVariableStatement : (context ProtocolVariableStatementContext -> v any) {
+    .VisitProtocolVariableStatement : (context ProtocolVariableStatementContext -> v any) {
         id = Visit(context.id()) Result!
         isMutable = id.isVirtual
         r = Result{}
@@ -271,7 +271,7 @@ LiteLangVisitor : $ (me) {
         <- r
     }
 
-    %VisitProtocolFunctionStatement : (context ProtocolFunctionStatementContext -> v any) {
+    .VisitProtocolFunctionStatement : (context ProtocolFunctionStatementContext -> v any) {
         id = Visit(context.id()) Result!
         r = Result{}
         ? context.annotationSupport() >< nil {
@@ -306,7 +306,7 @@ LiteLangVisitor : $ (me) {
         <- r
     }
 
-    %VisitPackageImplementStatement : (context PackageImplementStatementContext -> v any) {
+    .VisitPackageImplementStatement : (context PackageImplementStatementContext -> v any) {
         obj = ""
         ? context.id(0) >< nil {
             Self = Visit(context.id(0)) Result!

@@ -16,7 +16,7 @@ Iterator : $ {
 }
 
 LiteLangVisitor : $ (me) {
-    %VisitIteratorStatement : (context IteratorStatementContext -> v any) {
+    .VisitIteratorStatement : (context IteratorStatementContext -> v any) {
         it = Iterator{}
         #= ? context.op.Type == ">=" | context.op.Text == "<=" {
             it.attach = T
@@ -39,7 +39,7 @@ LiteLangVisitor : $ (me) {
         <- it
     }
 
-    %VisitLoopStatement : (context LoopStatementContext -> v any) {
+    .VisitLoopStatement : (context LoopStatementContext -> v any) {
         obj = ""
         id = (Visit(context.id()) Result!).text
         
@@ -61,7 +61,7 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    %VisitLoopEachStatement : (context LoopEachStatementContext -> v any) {
+    .VisitLoopEachStatement : (context LoopEachStatementContext -> v any) {
         obj = ""
         arr = Visit(context.expression()) Result!
         target = arr.text
@@ -87,7 +87,7 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    %VisitLoopCaseStatement : (context LoopCaseStatementContext -> v any) {
+    .VisitLoopCaseStatement : (context LoopCaseStatementContext -> v any) {
         obj = ""
         expr = Visit(context.expression()) Result!
         obj += "for ( ;"expr.text" ;)"
@@ -104,7 +104,7 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    %VisitLoopElseStatement : (context LoopElseStatementContext -> v any) {
+    .VisitLoopElseStatement : (context LoopElseStatementContext -> v any) {
         obj = BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -113,15 +113,15 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    %VisitLoopJumpStatement : (context LoopJumpStatementContext -> v any) {
+    .VisitLoopJumpStatement : (context LoopJumpStatementContext -> v any) {
         <- "break "Terminate+Wrap""
     }
 
-    %VisitLoopContinueStatement : (context LoopContinueStatementContext -> v any) {
+    .VisitLoopContinueStatement : (context LoopContinueStatementContext -> v any) {
         <- "continue "Terminate+Wrap""
     }
 
-    %VisitLoopExpression : (context LoopExpressionContext -> v any) {
+    .VisitLoopExpression : (context LoopExpressionContext -> v any) {
         obj = ""
         id = (Visit(context.id()) Result!).text
         
@@ -147,7 +147,7 @@ LiteLangVisitor : $ (me) {
         <- Result{ data = "var"; text = obj }
     }
 
-    %VisitLoopEachExpression : (context LoopEachExpressionContext -> v any) {
+    .VisitLoopEachExpression : (context LoopEachExpressionContext -> v any) {
         obj = ""
         arr = Visit(context.expression()) Result!
         target = arr.text
@@ -177,7 +177,7 @@ LiteLangVisitor : $ (me) {
         <- Result{ data = "var"; text = obj }
     }
 
-    %VisitLoopElseExpression : (context LoopElseExpressionContext -> v any) {
+    .VisitLoopElseExpression : (context LoopElseExpressionContext -> v any) {
         obj = BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())

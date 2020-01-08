@@ -8,7 +8,7 @@
 }
 
 LiteLangVisitor : $ (me) {
-    %VisitImplementStatement : (context ImplementStatementContext -> v any) {
+    .VisitImplementStatement : (context ImplementStatementContext -> v any) {
         id = Visit(context.id()) Result!
         
         obj = ""
@@ -58,7 +58,7 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    %VisitImplementVariableStatement : (context ImplementVariableStatementContext -> v any) {
+    .VisitImplementVariableStatement : (context ImplementVariableStatementContext -> v any) {
         r1 = Visit(context.id()) Result!
         isMutable = r1.isVirtual
         isVirtual = ""
@@ -108,7 +108,7 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    %VisitImplementFunctionStatement : (context ImplementFunctionStatementContext -> v any) {
+    .VisitImplementFunctionStatement : (context ImplementFunctionStatementContext -> v any) {
         id = Visit(context.id()) Result!
         isVirtual = ""
         ? id.isVirtual {
@@ -153,7 +153,7 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    %VisitOverrideVariableStatement : (context OverrideVariableStatementContext -> v any) {
+    .VisitOverrideVariableStatement : (context OverrideVariableStatementContext -> v any) {
         r1 = Visit(context.id()) Result!
         isMutable = r1.isVirtual
         isVirtual = " override "
@@ -200,7 +200,7 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    %VisitOverrideFunctionStatement : (context OverrideFunctionStatementContext -> v any) {
+    .VisitOverrideFunctionStatement : (context OverrideFunctionStatementContext -> v any) {
         id = Visit(context.id()) Result!
         isVirtual = " override "
         obj = ""

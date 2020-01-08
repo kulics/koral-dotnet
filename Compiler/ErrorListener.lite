@@ -10,7 +10,7 @@
 ErrorListener : BaseErrorListener % $ (me, base) {
     FileDir str
 
-    %SyntaxError : (recognizer IRecognizer, offendingSymbol ?IToken, 
+    .SyntaxError : (recognizer IRecognizer, offendingSymbol ?IToken, 
             line int, charPositionInLine int, msg str, 
             e ?RecognitionException->) {
         base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
