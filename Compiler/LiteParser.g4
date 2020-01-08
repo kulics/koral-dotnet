@@ -45,14 +45,13 @@ namespaceFunctionStatement: (annotationSupport)? (id| left_brack id templateDefi
 
 // 定义包
 packageStatement: (annotationSupport)? (id| left_brack id templateDefine right_brack) (Colon|Equal)
- (packageNewStatement|packageFieldStatement|packageImplementStatement)
- (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))* end;
+ (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement)
+ (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement))* end;
 
 packageFieldStatement: Coin (left_paren p=Question? id (more id)? right_paren)? left_brace (packageSupportStatement)* right_brace;
 
 // 包支持的语句
 packageSupportStatement:
-includeStatement |
 packageFunctionStatement |
 packageVariableStatement |
 packageEventStatement |
@@ -62,7 +61,7 @@ New_Line
 ;
 
 // 包含
-includeStatement: Cent typeType end;
+includeStatement: typeType;
 // 包构造方法
 packageNewStatement: (annotationSupport)? left_paren parameterClauseIn (Right_Arrow p=Question? id (more id)?)? right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
@@ -79,10 +78,10 @@ packageEventStatement: id left_brack Question right_brack nameSpaceItem end;
 // 包实现接口
 packageImplementStatement: Coin typeType (left_paren p=Question? id (more id)? right_paren)? left_brace (implementSupportStatement)* right_brace;
 
-// 实现
+// 扩展
 implementStatement: (id| left_brack id templateDefine right_brack) Add_Equal 
-(packageNewStatement|packageFieldStatement|packageImplementStatement)
-(Cent (packageNewStatement|packageFieldStatement|packageImplementStatement))* end;
+(packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement)
+(Cent (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement))* end;
 
 // 实现支持的语句
 implementSupportStatement: 
@@ -108,10 +107,13 @@ overrideFunctionStatement: (annotationSupport)? Cent (n='_')? (id| left_brack id
 
 // 协议
 protocolStatement: (annotationSupport)? (id| left_brack id templateDefine right_brack) (Colon|Equal) 
-Coin Coin (left_paren p=Question? id (more id)? right_paren)? left_brace (protocolSupportStatement)* right_brace end;
+(protocolSubStatement (Cent (protocolSubStatement|includeStatement))*|
+includeStatement (Cent (protocolSubStatement|includeStatement))* Cent protocolSubStatement
+ (Cent (protocolSubStatement|includeStatement))* ) end;
+
+protocolSubStatement: Coin Coin (left_paren p=Question? id (more id)? right_paren)? left_brace (protocolSupportStatement)* right_brace;
 // 协议支持的语句
 protocolSupportStatement:
-includeStatement |
 protocolFunctionStatement |
 protocolVariableStatement |
 New_Line ;
