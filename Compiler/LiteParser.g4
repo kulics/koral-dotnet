@@ -74,7 +74,7 @@ packageFunctionStatement: (annotationSupport)? (id| left_brack id templateDefine
 // 定义子方法
 packageControlSubStatement: id (left_paren id right_paren)? left_brace (functionSupportStatement)+ right_brace end;
 // 定义包事件
-packageEventStatement: id left_brack Question right_brack nameSpaceItem end;
+packageEventStatement: id left_brack Right_Arrow right_brack nameSpaceItem end;
 // 包实现接口
 packageImplementStatement: Coin typeType (left_paren p=Question? id (more id)? right_paren)? left_brace (implementSupportStatement)* right_brace;
 
