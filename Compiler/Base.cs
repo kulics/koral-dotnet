@@ -56,13 +56,13 @@ return Result;
 }
 public  override  object VisitId( IdContext context ){
 var r = (new Result(){data = "var"});
-var first = ((Result)(Visit(context.GetChild(0))));
+var first = (Result)(Visit(context.GetChild(0)));
 r.permission=first.permission;
 r.text=first.text;
 r.isVirtual=first.isVirtual;
 if ( context.ChildCount>=2 ) {
 foreach (var i in range(1,context.ChildCount-1,1,true,true)){
-var other = ((Result)(Visit(context.GetChild(i))));
+var other = (Result)(Visit(context.GetChild(i)));
 r.text+=(new System.Text.StringBuilder("_").Append(other.text).Append("")).to_str();
 }
 }
@@ -128,7 +128,7 @@ this.add_id(subID);
 r.text+=")";
 }
 else {
-r = ((Result)(Visit(context.idExprItem(0))));
+r = (Result)(Visit(context.idExprItem(0)));
 if ( this.has_id(r.text) ) {
 r.isDefine=true;
 }
@@ -154,7 +154,7 @@ r.text=F;
 return r;
 }
 public  override  object VisitAnnotationSupport( AnnotationSupportContext context ){
-return ((string)(Visit(context.annotation())));
+return (string)(Visit(context.annotation()));
 }
 public  override  object VisitAnnotation( AnnotationContext context ){
 var obj = "";
@@ -162,7 +162,7 @@ var id = "";
 if ( context.id()!=null ) {
 id = (new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).text).Append(":")).to_str();
 }
-var r = ((string)(Visit(context.annotationList())));
+var r = (string)(Visit(context.annotationList()));
 if ( r!="" ) {
 obj+=(new System.Text.StringBuilder("[").Append(id).Append("").Append(r).Append("]")).to_str();
 }
@@ -171,7 +171,7 @@ return obj;
 public  override  object VisitAnnotationList( AnnotationListContext context ){
 var obj = "";
 foreach (var (i,v) in range(context.annotationItem())){
-string txt = ((string)(this.Visit(v)));
+string txt = (string)(this.Visit(v));
 if ( txt!="" ) {
 obj+=run(()=>{if ( i>0 ) {
 return (new System.Text.StringBuilder(",").Append(txt).Append("")).to_str();}
@@ -268,7 +268,7 @@ return obj;
 public  virtual  void VisitPropertyLambdaIn( LambdaInContext context ,  bool is_get ){
 switch (context.id().Length) {
 case 1 :
-{ var id0 = ((Result)(this.Visit(context.id(0))));
+{ var id0 = (Result)(this.Visit(context.id(0)));
 this.add_id(id0.text);
 if ( is_get ) {
 this.selfPropertyVariable=true;
@@ -282,8 +282,8 @@ this.setID=id0.text;
 case 2 :
 { this.selfPropertyVariable=true;
 this.add_id("_"+this.selfPropertyID);
-var id0 = ((Result)(this.Visit(context.id(0))));
-var id1 = ((Result)(this.Visit(context.id(1))));
+var id0 = (Result)(this.Visit(context.id(0)));
+var id1 = (Result)(this.Visit(context.id(1)));
 this.add_id(id0.text);
 this.add_id(id1.text);
 this.getID=id0.text;

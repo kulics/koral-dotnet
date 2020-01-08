@@ -28,7 +28,7 @@ var Files = Directory.GetFiles(path, "*.lite");
 foreach (var file in Files){
 using (var fsRead = (new FileStream(file, FileMode.Open))) { 
 try {
-var FSLength = ((int)(fsRead.Length));
+var FSLength = (int)(fsRead.Length);
 var ByteBlock = array<byte>(FSLength);
 var r = fsRead.Read(ByteBlock, 0, ByteBlock.Length);
 var Input = Encoding.UTF8.GetString(ByteBlock);

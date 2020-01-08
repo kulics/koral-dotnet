@@ -23,7 +23,7 @@ var lazy = (new list<string>());
 foreach (var item in items){
 content+=run(()=>{if ( item.GetChild(0).@is<UsingStatementContext>() ) {
 lazy.add("}");
-return (new System.Text.StringBuilder("using (").Append(((string)(Visit(item)))).Append(") ").Append(BlockLeft).Append(" ").Append(Wrap).Append("")).to_str();}
+return (new System.Text.StringBuilder("using (").Append((string)(Visit(item))).Append(") ").Append(BlockLeft).Append(" ").Append(Wrap).Append("")).to_str();}
 else {
 return Visit(item);}
 });
@@ -37,11 +37,11 @@ obj+=content;
 return obj;
 }
 public  override  object VisitFunctionStatement( FunctionStatementContext context ){
-var id = ((Result)(Visit(context.id())));
+var id = (Result)(Visit(context.id()));
 var obj = "";
 var pout = "";
 if ( context.parameterClauseOut()!=null ) {
-pout = ((string)(Visit(context.parameterClauseOut())));
+pout = (string)(Visit(context.parameterClauseOut()));
 }
 if ( context.t.Type==Right_Flow ) {
 pout = run(()=>{if ( context.Discard()!=null ) {
@@ -63,7 +63,7 @@ obj+=(new System.Text.StringBuilder("").Append(pout).Append(" ").Append(id.text)
 }
 var templateContract = "";
 if ( context.templateDefine()!=null ) {
-var template = ((TemplateItem)(Visit(context.templateDefine())));
+var template = (TemplateItem)(Visit(context.templateDefine()));
 obj+=template.Template;
 templateContract = template.Contract;
 }
@@ -76,20 +76,20 @@ return obj;
 }
 public  override  object VisitReturnStatement( ReturnStatementContext context ){
 if ( context.tupleExpression()!=null ) {
-var r = ((Result)(Visit(context.tupleExpression())));
+var r = (Result)(Visit(context.tupleExpression()));
 return "return "+r.text+Terminate+Wrap;
 }
 return (new System.Text.StringBuilder("return").Append(Terminate).Append("").Append(Wrap).Append("")).to_str();
 }
 public  override  object VisitReturnAwaitStatement( ReturnAwaitStatementContext context ){
 if ( context.tupleExpression()!=null ) {
-var r = ((Result)(Visit(context.tupleExpression())));
+var r = (Result)(Visit(context.tupleExpression()));
 return "return await "+r.text+Terminate+Wrap;
 }
 return (new System.Text.StringBuilder("return").Append(Terminate).Append("").Append(Wrap).Append("")).to_str();
 }
 public  override  object VisitYieldReturnStatement( YieldReturnStatementContext context ){
-var r = ((Result)(Visit(context.tupleExpression())));
+var r = (Result)(Visit(context.tupleExpression()));
 return "yield return "+r.text+Terminate+Wrap;
 }
 public  override  object VisitYieldBreakStatement( YieldBreakStatementContext context ){
@@ -98,7 +98,7 @@ return (new System.Text.StringBuilder("yield break").Append(Terminate).Append(""
 public  override  object VisitTuple( TupleContext context ){
 var obj = "(";
 foreach (var i in range(0,context.expression().Length-1,1,true,true)){
-var r = ((Result)(Visit(context.expression(i))));
+var r = (Result)(Visit(context.expression(i)));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
 else {
@@ -111,7 +111,7 @@ return (new Result(){data = "var",text = obj});
 public  override  object VisitTupleExpression( TupleExpressionContext context ){
 var obj = "";
 foreach (var i in range(0,context.expression().Length-1,1,true,true)){
-var r = ((Result)(Visit(context.expression(i))));
+var r = (Result)(Visit(context.expression(i)));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
 else {
@@ -127,7 +127,7 @@ public  override  object VisitParameterClauseIn( ParameterClauseInContext contex
 var obj = "(";
 var temp = (new list<string>());
 foreach (var i in range(context.parameter().Length-1,0,1,false,true)){
-var p = ((Parameter)(Visit(context.parameter(i))));
+var p = (Parameter)(Visit(context.parameter(i)));
 temp.add((new System.Text.StringBuilder("").Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value).Append("")).to_str());
 this.add_id(p.id);
 }
@@ -147,14 +147,14 @@ if ( context.parameter().Length==0 ) {
 obj+="void";
 }
 else if ( context.parameter().Length==1 ) {
-var p = ((Parameter)(Visit(context.parameter(0))));
+var p = (Parameter)(Visit(context.parameter(0)));
 obj+=p.type;
 }
 if ( context.parameter().Length>1 ) {
 obj+="( ";
 var temp = (new list<string>());
 foreach (var i in range(context.parameter().Length-1,0,1,false,true)){
-var p = ((Parameter)(Visit(context.parameter(i))));
+var p = (Parameter)(Visit(context.parameter(i)));
 temp.add((new System.Text.StringBuilder("").Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value).Append("")).to_str());
 }
 foreach (var i in range(temp.Count-1,0,1,false,true)){
@@ -170,16 +170,16 @@ return obj;
 }
 public  override  object VisitParameter( ParameterContext context ){
 var p = (new Parameter());
-var id = ((Result)(Visit(context.id())));
+var id = (Result)(Visit(context.id()));
 p.id=id.text;
 p.permission=id.permission;
 if ( context.annotationSupport()!=null ) {
-p.annotation=((string)(Visit(context.annotationSupport())));
+p.annotation=(string)(Visit(context.annotationSupport()));
 }
 if ( context.expression()!=null ) {
 p.value=(new System.Text.StringBuilder("=").Append(((Result)(Visit(context.expression()))).text).Append("")).to_str();
 }
-p.type=((string)(Visit(context.typeType())));
+p.type=(string)(Visit(context.typeType()));
 if ( context.Dot_Dot_Dot()!=null ) {
 p.type="params "+p.type+"[]";
 }

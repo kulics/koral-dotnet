@@ -3,11 +3,11 @@
     "Antlr4/Runtime/Misc"
     "System"
 
-    LiteParser. <- "Compiler" 
-    Compiler_static. <- "Compiler" 
+    LiteParser. = "Compiler" 
+    Compiler_static. = "Compiler" 
 }
 
-Iterator : % {
+Iterator : $ {
     begin Result
     end Result
     step Result
@@ -15,35 +15,35 @@ Iterator : % {
     attach str = T
 }
 
-LiteLangVisitor : % me <- {
+LiteLangVisitor : $ (me) {
     %VisitIteratorStatement : (context IteratorStatementContext -> v any) {
         it = Iterator{}
-        {# ? context.op.Type == ">=" | context.op.Text == "<=" {
+        #= ? context.op.Type == ">=" | context.op.Text == "<=" {
             it.attach = T
-        } #}
+        } =#
         ? context.op.Type == LiteParser.Sub_Sub {
             it.order = F
         }
         ? context.expression().Length == 2 {
-            it.begin = Visit(context.expression(0)).[Result]
-            it.end = Visit(context.expression(1)).[Result]
+            it.begin = Visit(context.expression(0)) Result!
+            it.end = Visit(context.expression(1)) Result!
             it.step = Result{
                 data = I32
                 text = "1"
             }
         } _ {
-            it.begin = Visit(context.expression(0)).[Result]
-            it.end = Visit(context.expression(1)).[Result]
-            it.step = Visit(context.expression(2)).[Result]
+            it.begin = Visit(context.expression(0)) Result!
+            it.end = Visit(context.expression(1)) Result!
+            it.step = Visit(context.expression(2)) Result!
         }
         <- it
     }
 
     %VisitLoopStatement : (context LoopStatementContext -> v any) {
         obj = ""
-        id = Visit(context.id()).[Result].text
+        id = (Visit(context.id()) Result!).text
         
-        it = Visit(context.iteratorStatement()).[Iterator]
+        it = Visit(context.iteratorStatement()) Iterator!
         target = "range("it.begin.text","it.end.text","it.step.text","it.order","it.attach")"
 
         obj += "foreach (var "id" in "target")"
@@ -54,7 +54,7 @@ LiteLangVisitor : % me <- {
         me.delete_current_set()
         obj += BlockRight+Wrap
         ? context.loopElseStatement() >< nil {
-            elseContent = Visit(context.loopElseStatement()).[str]
+            elseContent = Visit(context.loopElseStatement()) str!
             obj = "if (!can_range(" target ")) " + elseContent + "else" + BlockLeft + 
             Wrap + obj + BlockRight + Wrap
         }
@@ -63,14 +63,14 @@ LiteLangVisitor : % me <- {
 
     %VisitLoopEachStatement : (context LoopEachStatementContext -> v any) {
         obj = ""
-        arr = Visit(context.expression()).[Result]
+        arr = Visit(context.expression()) Result!
         target = arr.text
         id = "ea"
         ? context.id().Length == 2 {
             target = "range("target")"
-            id = "("Visit(context.id(0)).[Result].text","Visit(context.id(1)).[Result].text")"
+            id = "("(Visit(context.id(0)) Result!).text","(Visit(context.id(1)) Result!).text")"
         } context.id().Length == 1 {
-            id = Visit(context.id(0)).[Result].text
+            id = (Visit(context.id(0)) Result!).text
         }
 
         obj += "foreach (var "id" in "target")"
@@ -80,7 +80,7 @@ LiteLangVisitor : % me <- {
         me.delete_current_set()
         obj += BlockRight+Wrap
         ? context.loopElseStatement() >< nil {
-            elseContent = Visit(context.loopElseStatement()).[str]
+            elseContent = Visit(context.loopElseStatement()) str!
             obj = "if (!can_range(" target ")) " + elseContent + "else" + BlockLeft + 
             Wrap + obj + BlockRight + Wrap
         }
@@ -89,7 +89,7 @@ LiteLangVisitor : % me <- {
 
     %VisitLoopCaseStatement : (context LoopCaseStatementContext -> v any) {
         obj = ""
-        expr = Visit(context.expression()).[Result]
+        expr = Visit(context.expression()) Result!
         obj += "for ( ;"expr.text" ;)"
         obj += BlockLeft+Wrap
         me.add_current_set()
@@ -97,7 +97,7 @@ LiteLangVisitor : % me <- {
         me.delete_current_set()
         obj += BlockRight+Wrap
         ? context.loopElseStatement() >< nil {
-            elseContent = Visit(context.loopElseStatement()).[str]
+            elseContent = Visit(context.loopElseStatement()) str!
             obj = "if (!(" expr.text ")) " + elseContent + "else" + BlockLeft + 
             Wrap + obj + BlockRight + Wrap
         }
@@ -123,9 +123,9 @@ LiteLangVisitor : % me <- {
 
     %VisitLoopExpression : (context LoopExpressionContext -> v any) {
         obj = ""
-        id = Visit(context.id()).[Result].text
+        id = (Visit(context.id()) Result!).text
         
-        it = Visit(context.iteratorStatement()).[Iterator]
+        it = Visit(context.iteratorStatement()) Iterator!
         target = "range("it.begin.text","it.end.text","it.step.text","it.order","it.attach")"
 
         obj += "runloop("target", ("id")=>"
@@ -133,12 +133,12 @@ LiteLangVisitor : % me <- {
         obj += BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return " Visit(context.tupleExpression()).[Result].text ";"
+        obj += "return " (Visit(context.tupleExpression()) Result!).text ";"
         me.delete_current_set()
         obj += BlockRight
 
         ? context.loopElseExpression() >< nil {
-            elseContent = Visit(context.loopElseExpression()).[str]
+            elseContent = Visit(context.loopElseExpression()) str!
             obj += ", ()=> " elseContent ")"
         } _ {
             obj += ")"
@@ -149,26 +149,26 @@ LiteLangVisitor : % me <- {
 
     %VisitLoopEachExpression : (context LoopEachExpressionContext -> v any) {
         obj = ""
-        arr = Visit(context.expression()).[Result]
+        arr = Visit(context.expression()) Result!
         target = arr.text
         id = "ea"
         ? context.id().Length == 2 {
             target = "range("target")"
-            id = "("Visit(context.id(0)).[Result].text","Visit(context.id(1)).[Result].text")"
+            id = "("(Visit(context.id(0)) Result!).text","(Visit(context.id(1)) Result!).text")"
         } context.id().Length == 1 {
-            id = Visit(context.id(0)).[Result].text
+            id = (Visit(context.id(0)) Result!).text
         }
 
         obj += "runloop("target", ("id")=>"
         obj += BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return " Visit(context.tupleExpression()).[Result].text ";"
+        obj += "return " (Visit(context.tupleExpression()) Result!).text ";"
         me.delete_current_set()
         obj += BlockRight
         
         ? context.loopElseExpression() >< nil {
-            elseContent = Visit(context.loopElseExpression()).[str]
+            elseContent = Visit(context.loopElseExpression()) str!
             obj += ", ()=> " elseContent ")"
         } _ {
             obj += ")"
@@ -181,7 +181,7 @@ LiteLangVisitor : % me <- {
         obj = BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return " Visit(context.tupleExpression()).[Result].text ";"
+        obj += "return " (Visit(context.tupleExpression()) Result!).text ";"
         me.delete_current_set()
         obj += BlockRight
         <- obj

@@ -3,12 +3,11 @@
     "Antlr4/Runtime/Misc"
     "System"
 
-    LiteParser. <- "Compiler" 
-    Compiler_static. <- "Compiler" 
+    LiteParser. = "Compiler" 
+    Compiler_static. = "Compiler" 
 }
 
-ErrorListener : % me, base <- {
-    % BaseErrorListener
+ErrorListener : BaseErrorListener % $ (me, base) {
     FileDir str
 
     %SyntaxError : (recognizer IRecognizer, offendingSymbol ?IToken, 

@@ -10,35 +10,35 @@ namespace Compiler
 {
 public partial class LiteLangVisitor{
 public  override  object VisitCallExpression( CallExpressionContext context ){
-var r = ((Result)(Visit(context.id())));
+var r = (Result)(Visit(context.id()));
 r.text="."+r.text;
 if ( context.templateCall()!=null ) {
-r.text+=((string)(Visit(context.templateCall())));
+r.text+=(string)(Visit(context.templateCall()));
 }
 if ( context.callFunc()!=null ) {
-var e2 = ((Result)(Visit(context.callFunc())));
+var e2 = (Result)(Visit(context.callFunc()));
 r.text=r.text+e2.text;
 }
 else if ( context.callElement()!=null ) {
-var e2 = ((Result)(Visit(context.callElement())));
+var e2 = (Result)(Visit(context.callElement()));
 r.text=r.text+e2.text;
 }
 else if ( context.callChannel()!=null ) {
-var e2 = ((Result)(Visit(context.callChannel())));
+var e2 = (Result)(Visit(context.callChannel()));
 r.text=r.text+e2.text;
 }
 return r;
 }
 public  override  object VisitCallElement( CallElementContext context ){
 if ( context.expression()==null ) {
-return ((new Result(){text = ((string)(Visit(context.slice())))}));
+return ((new Result(){text = (string)(Visit(context.slice()))}));
 }
-var r = ((Result)(Visit(context.expression())));
+var r = (Result)(Visit(context.expression()));
 r.text=(new System.Text.StringBuilder("[").Append(r.text).Append("]")).to_str();
 return r;
 }
 public  override  object VisitSlice( SliceContext context ){
-return ((string)(Visit(context.GetChild(0))));
+return (string)(Visit(context.GetChild(0)));
 }
 public  override  object VisitSliceFull( SliceFullContext context ){
 var order = "";
@@ -53,8 +53,8 @@ case LiteParser.Sub_Sub :
 attach = "true";
 }break;
 }
-var expr1 = ((Result)(Visit(context.expression(0))));
-var expr2 = ((Result)(Visit(context.expression(1))));
+var expr1 = (Result)(Visit(context.expression(0)));
+var expr2 = (Result)(Visit(context.expression(1)));
 return (new System.Text.StringBuilder(".slice(").Append(expr1.text).Append(", ").Append(expr2.text).Append(", ").Append(order).Append(", ").Append(attach).Append(")")).to_str();
 }
 public  override  object VisitSliceStart( SliceStartContext context ){
@@ -70,7 +70,7 @@ case LiteParser.Sub_Sub :
 attach = "true";
 }break;
 }
-var expr = ((Result)(Visit(context.expression())));
+var expr = (Result)(Visit(context.expression()));
 return (new System.Text.StringBuilder(".slice(").Append(expr.text).Append(", null, ").Append(order).Append(", ").Append(attach).Append(")")).to_str();
 }
 public  override  object VisitSliceEnd( SliceEndContext context ){
@@ -86,7 +86,7 @@ case LiteParser.Sub_Sub :
 attach = "true";
 }break;
 }
-var expr = ((Result)(Visit(context.expression())));
+var expr = (Result)(Visit(context.expression()));
 return (new System.Text.StringBuilder(".slice(null, ").Append(expr.text).Append(", ").Append(order).Append(", ").Append(attach).Append(")")).to_str();
 }
 public  override  object VisitCallFunc( CallFuncContext context ){
@@ -143,7 +143,7 @@ public  override  object VisitListAssign( ListAssignContext context ){
 var obj = "";
 obj+="{";
 foreach (var i in range(0,context.expression().Length-1,1,true,true)){
-var r = ((Result)(Visit(context.expression(i))));
+var r = (Result)(Visit(context.expression(i)));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
 else {
@@ -157,7 +157,7 @@ public  override  object VisitSetAssign( SetAssignContext context ){
 var obj = "";
 obj+="{";
 foreach (var i in range(0,context.setElement().Length-1,1,true,true)){
-var r = ((Result)(Visit(context.setElement(i))));
+var r = (Result)(Visit(context.setElement(i)));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
 else {
@@ -171,7 +171,7 @@ public  override  object VisitDictionaryAssign( DictionaryAssignContext context 
 var obj = "";
 obj+="{";
 foreach (var i in range(0,context.dictionaryElement().Length-1,1,true,true)){
-var r = ((DicEle)(Visit(context.dictionaryElement(i))));
+var r = (DicEle)(Visit(context.dictionaryElement(i)));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
 else {
@@ -187,7 +187,7 @@ obj+=Visit(context.name())+" = "+((Result)(Visit(context.expression()))).text;
 return obj;
 }
 public  override  object VisitPkgAnonymous( PkgAnonymousContext context ){
-return (new Result(){data = "var",text = "new"+((string)(Visit(context.pkgAnonymousAssign())))});
+return (new Result(){data = "var",text = "new"+(string)(Visit(context.pkgAnonymousAssign()))});
 }
 public  override  object VisitPkgAnonymousAssign( PkgAnonymousAssignContext context ){
 var obj = "";
@@ -209,7 +209,7 @@ return obj;
 }
 public  override  object VisitCallAwait( CallAwaitContext context ){
 var r = (new Result());
-var expr = ((Result)(Visit(context.expression())));
+var expr = (Result)(Visit(context.expression()));
 r.data="var";
 r.text="await "+expr.text;
 return r;
@@ -218,12 +218,12 @@ public  override  object VisitList( ListContext context ){
 var type = Any;
 var result = (new Result());
 foreach (var i in range(0,context.expression().Length-1,1,true,true)){
-var r = ((Result)(Visit(context.expression(i))));
+var r = (Result)(Visit(context.expression(i)));
 result.text+=run(()=>{if ( i==0 ) {
-type = ((string)(r.data));
+type = (string)(r.data);
 return r.text;}
 else {
-if ( type!=((string)(r.data)) ) {
+if ( type!=(string)(r.data) ) {
 type = Any;
 }
 return ","+r.text;}
@@ -237,12 +237,12 @@ public  override  object VisitSet( SetContext context ){
 var type = Any;
 var result = (new Result());
 foreach (var i in range(0,context.setElement().Length-1,1,true,true)){
-var r = ((Result)(Visit(context.setElement(i))));
+var r = (Result)(Visit(context.setElement(i)));
 result.text+=run(()=>{if ( i==0 ) {
-type = ((string)(r.data));
+type = (string)(r.data);
 return r.text;}
 else {
-if ( type!=((string)(r.data)) ) {
+if ( type!=(string)(r.data) ) {
 type = Any;
 }
 return ","+r.text;}
@@ -253,8 +253,8 @@ result.text=(new System.Text.StringBuilder("(new ").Append(result.data).Append("
 return result;
 }
 public  override  object VisitSetElement( SetElementContext context ){
-var r = ((Result)(Visit(context.expression())));
-var result = (new Result(){data = ((string)(r.data)),text = "{"+r.text+"}"});
+var r = (Result)(Visit(context.expression()));
+var result = (new Result(){data = (string)(r.data),text = "{"+r.text+"}"});
 return result;
 }
 public  override  object VisitDictionary( DictionaryContext context ){
@@ -262,7 +262,7 @@ var key = Any;
 var value = Any;
 var result = (new Result());
 foreach (var i in range(0,context.dictionaryElement().Length-1,1,true,true)){
-var r = ((DicEle)(Visit(context.dictionaryElement(i))));
+var r = (DicEle)(Visit(context.dictionaryElement(i)));
 result.text+=run(()=>{if ( i==0 ) {
 key = r.key;
 value = r.value;
@@ -283,9 +283,9 @@ result.text=(new System.Text.StringBuilder("(new ").Append(result.data).Append("
 return result;
 }
 public  override  object VisitDictionaryElement( DictionaryElementContext context ){
-var r1 = ((Result)(Visit(context.expression(0))));
-var r2 = ((Result)(Visit(context.expression(1))));
-var result = (new DicEle(){key = ((string)(r1.data)),value = ((string)(r2.data)),text = "{"+r1.text+","+r2.text+"}"});
+var r1 = (Result)(Visit(context.expression(0)));
+var r2 = (Result)(Visit(context.expression(1)));
+var result = (new DicEle(){key = (string)(r1.data),value = (string)(r2.data),text = "{"+r1.text+","+r2.text+"}"});
 return result;
 }
 public  override  object VisitFunctionExpression( FunctionExpressionContext context ){
@@ -325,7 +325,7 @@ return r;
 public  override  object VisitLambdaIn( LambdaInContext context ){
 var obj = "";
 foreach (var i in range(0,context.id().Length-1,1,true,true)){
-var r = ((Result)(Visit(context.id(i))));
+var r = (Result)(Visit(context.id(i)));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
 else {

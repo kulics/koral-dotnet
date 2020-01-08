@@ -4,8 +4,8 @@
     "System"
     "System/Collections/Generic"
 
-    LiteParser. <- "Compiler" 
-    Compiler_static. <- "Compiler" 
+    LiteParser. = "Compiler" 
+    Compiler_static. = "Compiler" 
 }
 
 Terminate : ";"
@@ -45,7 +45,7 @@ BlockRight : "}"
 Task : "System.Threading.Tasks.Task"
 IEnum : "System.Collections.Generic.IEnumerable"
 
-Result : % {
+Result : $ {
     data any
     text str
     permission str
@@ -53,19 +53,17 @@ Result : % {
     isDefine bool
 }
 
-LiteLangVisitor : % me <- {
-    % LiteParserBaseVisitor[any]
-
+LiteLangVisitor : [LiteParserBaseVisitor any] % $(me) {
     selfID = ""
     superID = ""
     setID = ""
     getID = ""
     selfPropertyID = ""
-    selfPropertyContent = [..str]{}
+    selfPropertyContent = []str{}
     selfPropertyVariable = false
 
-    AllIDSet = [:>str]{}
-    CurrentIDSet = [.>[:>str]]{}
+    AllIDSet = [str]_{}
+    CurrentIDSet = [>][str]_{}
 
     has_id : (id str -> v bool) {
         <- me.AllIDSet.contains(id) | me.CurrentIDSet.peek().contains(id)
@@ -74,24 +72,24 @@ LiteLangVisitor : % me <- {
         me.CurrentIDSet.peek().add(id)
     }
     add_current_set : (->) {
-        item @ CurrentIDSet.peek() {
+        @ item = CurrentIDSet.peek().. {
             AllIDSet.add(item)
         }
-        me.CurrentIDSet.push([[:>str]]())
+        me.CurrentIDSet.push([str]_{})
     }
     delete_current_set : (->) {
         me.AllIDSet.except_with(me.CurrentIDSet.peek())
         me.CurrentIDSet.pop()
     }
-} % me <- () {
-    me.CurrentIDSet.push([[:>str]]())
+} % (->me) {
+    me.CurrentIDSet.push([str]_{})
 }
 
-LiteLangVisitor : % me <- {
+LiteLangVisitor : $ (me) {
     %VisitProgram : (context ProgramContext -> v any) {
         StatementList = context.statement()
         Result = ""
-        item @ StatementList {
+        @ item = StatementList.. {
             Result += VisitStatement(item)
         }
         <- Result
@@ -99,13 +97,13 @@ LiteLangVisitor : % me <- {
 
     %VisitId : (context IdContext -> v any) {
         r = Result{data = "var"}
-        first = Visit(context.GetChild(0)).[Result]
+        first = Visit(context.GetChild(0)) Result!
         r.permission = first.permission
         r.text = first.text
         r.isVirtual = first.isVirtual
         ? context.ChildCount >= 2 {
-            i @ 1 ++ context.ChildCount-1 {
-                other = Visit(context.GetChild(i)).[Result]
+            @ i = 1 ++ context.ChildCount-1 {
+                other = Visit(context.GetChild(i)) Result!
                 r.text += "_"other.text""
             }
         }
@@ -151,8 +149,8 @@ LiteLangVisitor : % me <- {
         r = Result{data = "var"}
         ? context.idExprItem().Length > 1 {
             r.text = "("
-            (i)v @ context.idExprItem() {
-                subID = Visit(v).[Result].text
+            @ [i]v = context.idExprItem().. {
+                subID = (Visit(v) Result!).text
                 r.text += ? -> i >< 0 {
                     ", " + subID
                 } _ {
@@ -166,7 +164,7 @@ LiteLangVisitor : % me <- {
             }
             r.text += ")"
         } _ {
-            r = Visit(context.idExprItem(0)).[Result]
+            r = Visit(context.idExprItem(0)) Result!
             ? me.has_id(r.text) {
                 r.isDefine = true
             } _ {
@@ -193,17 +191,17 @@ LiteLangVisitor : % me <- {
     }
 
     %VisitAnnotationSupport : (context AnnotationSupportContext -> v any) {
-        <- Visit(context.annotation()).[str]
+        <- Visit(context.annotation()) str!
     }
 
     %VisitAnnotation : (context AnnotationContext -> v any) {
         obj = ""
         id = ""
         ? context.id() >< nil {
-            id = ""Visit(context.id()).[Result].text":"
+            id = ""(Visit(context.id()) Result!).text":"
         }
 
-        r = Visit(context.annotationList()).[str]
+        r = Visit(context.annotationList()) str!
         ? r >< "" {
             obj += "[" id "" r "]"
         }
@@ -212,8 +210,8 @@ LiteLangVisitor : % me <- {
 
     %VisitAnnotationList : (context AnnotationListContext -> v any) {
         obj = ""
-        (i)v @ context.annotationItem() {
-            txt str = me.Visit(v).[str]
+        @ [i]v = context.annotationItem().. {
+            txt str = me.Visit(v) str!
             ? txt >< "" {
                 obj += ? -> i > 0 {
                     "," txt ""
@@ -227,8 +225,8 @@ LiteLangVisitor : % me <- {
 
     %VisitAnnotationItem : (context AnnotationItemContext -> v any) {
         obj = ""
-        obj += me.Visit(context.id()).[Result].text
-        obj ? "get" {
+        obj += (me.Visit(context.id()) Result!).text
+        ? obj.. "get" {
             ? context.lambda() == nil {
                 me.selfPropertyVariable = true
                 me.selfPropertyContent += "get{return _" me.selfPropertyID "; }"
@@ -268,9 +266,9 @@ LiteLangVisitor : % me <- {
             <- ""
         }
         obj += ? -> context.tuple() >< nil {
-            me.Visit(context.tuple()).[Result].text
+            (me.Visit(context.tuple()) Result!).text
         } context.lambda() >< nil {
-            "(" me.Visit(context.lambda()).[Result].text ")"
+            "(" (me.Visit(context.lambda()) Result!).text ")"
         } _ {
             ""
         }
@@ -285,7 +283,7 @@ LiteLangVisitor : % me <- {
         }
 
         ? context.tupleExpression() >< nil {
-            obj += Visit(context.tupleExpression()).[Result].text
+            obj += (Visit(context.tupleExpression()) Result!).text
             ? is_get {
                 obj = "return " + obj
             }
@@ -300,8 +298,8 @@ LiteLangVisitor : % me <- {
     }
 
     VisitPropertyLambdaIn : (context LambdaInContext, is_get bool ->) {
-        context.id().Length ? 1 {
-            id0 = me.Visit(context.id(0)).[Result]
+        ? context.id().Length.. 1 {
+            id0 = me.Visit(context.id(0)) Result!
             me.add_id(id0.text)
             ? is_get {
                 me.selfPropertyVariable = true
@@ -313,8 +311,8 @@ LiteLangVisitor : % me <- {
         } 2 {
             me.selfPropertyVariable = true
             me.add_id("_"+me.selfPropertyID)
-            id0 = me.Visit(context.id(0)).[Result]
-            id1 = me.Visit(context.id(1)).[Result]
+            id0 = me.Visit(context.id(0)) Result!
+            id1 = me.Visit(context.id(1)) Result!
             me.add_id(id0.text)
             me.add_id(id1.text)
             me.getID = id0.text

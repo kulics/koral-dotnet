@@ -3,37 +3,35 @@
     "Antlr4/Runtime/Misc"
     "System"
 
-    LiteParser. <- "Compiler" 
-    Compiler_static. <- "Compiler" 
+    LiteParser. = "Compiler" 
+    Compiler_static. = "Compiler" 
 }
 
-LiteLangVisitor : % me <- {
+LiteLangVisitor : $ (me) {
     %VisitIncludeStatement : (context IncludeStatementContext -> v any) {
         <- Visit(context.typeType())
     }
 
     %VisitPackageStatement : (context PackageStatementContext -> v any) {
-        id = Visit(context.id()).[Result]
+        id = Visit(context.id()) Result!
 
         obj = ""
-        extend = ""
-
-        item @ context.packageFieldStatement() {
-            r = Visit(item).[Result]
-            obj += r.text
-            extend += r.data
+        extend = []str{}
+        @ item = context.includeStatement().. {
+            r = Visit(item) str!
+            extend += r
         }
-        item @ context.packageImplementStatement() {
-            r = Visit(item).[Result]
-            extend += ? -> extend == "" {
-                r.data
-            } _ {
-                "," + r.data
-            }
+        @ item = context.packageFieldStatement().. {
+            r = Visit(item) Result!
             obj += r.text
         }
-        item @ context.packageNewStatement() {
-            r = Visit(item).[str]
+        @ item = context.packageImplementStatement().. {
+            r = Visit(item) Result!
+            extend += r.data str!
+            obj += r.text
+        }
+        @ item = context.packageNewStatement().. {
+            r = Visit(item) str!
             obj += "public " id.text "" r ""
         }
         obj += BlockRight + Wrap
@@ -46,14 +44,18 @@ LiteLangVisitor : % me <- {
         template = ""
         templateContract = ""
         ? context.templateDefine() >< nil {
-            item = Visit(context.templateDefine()).[TemplateItem]
+            item = Visit(context.templateDefine()) TemplateItem!
             template += item.Template
             templateContract = item.Contract
             header += template
         }
 
-        ? extend.Length > 0 {
-            header += ":" + extend
+        ? extend.length > 0 {
+            temp = extend[0]
+            @ i = 1 ++ extend.length-1 {
+                temp += "," + extend[i]
+            }
+            header += ":" + temp
         }
 
         header += templateContract + BlockLeft + Wrap
@@ -65,23 +67,15 @@ LiteLangVisitor : % me <- {
         obj = ""
         extend = ""
         ? context.id(0) >< nil {
-            Self = Visit(context.id(0)).[Result]
+            Self = Visit(context.id(0)) Result!
             me.selfID = Self.text
         }
         ? context.id(1) >< nil {
-            Super = Visit(context.id(1)).[Result]
+            Super = Visit(context.id(1)) Result!
             me.superID = Super.text
         }
-        item @ context.packageSupportStatement() {
-            ? item.GetChild(0).GetType() == typeof[IncludeStatementContext]() {
-                extend += ? -> extend == "" {
-                    Visit(item)
-                } _ {
-                    "," + Visit(item)
-                }
-            } _ {
-                obj += Visit(item)
-            }
+        @ item = context.packageSupportStatement().. {
+            obj += Visit(item)
         }
         me.selfID = ""
         me.superID = ""
@@ -89,7 +83,7 @@ LiteLangVisitor : % me <- {
     }
 
     %VisitPackageVariableStatement : (context PackageVariableStatementContext -> v any) {
-        r1 = Visit(context.id()).[Result]
+        r1 = Visit(context.id()) Result!
         isMutable = r1.isVirtual
         isVirtual = ""
         ? r1.isVirtual {
@@ -98,11 +92,11 @@ LiteLangVisitor : % me <- {
         typ = ""
         r2 Result = nil
         ? context.expression() >< nil {
-            r2 = Visit(context.expression()).[Result]
-            typ = r2.data.[str]
+            r2 = Visit(context.expression()) Result!
+            typ = r2.data str!
         }
         ? context.typeType() >< nil {
-            typ = Visit(context.typeType()).[str]
+            typ = Visit(context.typeType()) str!
         }
         obj = ""
         ? context.annotationSupport() >< nil {
@@ -120,7 +114,7 @@ LiteLangVisitor : % me <- {
             }
             obj = pri + obj
             obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""
-            v @ me.selfPropertyContent {
+            @ v = me.selfPropertyContent.. {
                 obj += v
             }
             obj += BlockRight+Wrap
@@ -139,7 +133,7 @@ LiteLangVisitor : % me <- {
     }
 
     %VisitPackageFunctionStatement : (context PackageFunctionStatementContext -> v any) {
-        id = Visit(context.id()).[Result]
+        id = Visit(context.id()) Result!
         isVirtual = ""
         ? id.isVirtual {
             isVirtual = " virtual "
@@ -149,7 +143,7 @@ LiteLangVisitor : % me <- {
         obj += ""id.permission" "
         pout = ""
         ? context.parameterClauseOut() >< nil {
-            pout = Visit(context.parameterClauseOut()).[str]
+            pout = Visit(context.parameterClauseOut()) str!
         }
         ? context.t.Type == Right_Flow {
             pout = ? -> context.Discard() >< nil {
@@ -171,7 +165,7 @@ LiteLangVisitor : % me <- {
         # 泛型
         templateContract = ""
         ? context.templateDefine() >< nil {
-            template = Visit(context.templateDefine()).[TemplateItem]
+            template = Visit(context.templateDefine()) TemplateItem!
             obj += template.Template
             templateContract = template.Contract
         }
@@ -186,18 +180,18 @@ LiteLangVisitor : % me <- {
     %VisitPackageNewStatement : (context PackageNewStatementContext -> v any) {
         text = ""
         ? context.id(0) >< nil {
-            Self = Visit(context.id(0)).[Result]
+            Self = Visit(context.id(0)) Result!
             me.selfID = Self.text
         }
         ? context.id(1) >< nil {
-            Super = Visit(context.id(1)).[Result]
+            Super = Visit(context.id(1)) Result!
             me.superID = Super.text
         }
         # 获取构造数据
         me.add_current_set()
-        text += Visit(context.parameterClauseIn()).[str]
+        text += Visit(context.parameterClauseIn()) str!
         ? context.expressionList() >< nil {
-            text += ":base(" Visit(context.expressionList()).[Result].text ")"
+            text += ":base(" (Visit(context.expressionList()) Result!).text ")"
         }
         text += BlockLeft + ProcessFunctionSupport(context.functionSupportStatement()) + BlockRight + Wrap
         me.delete_current_set()
@@ -208,29 +202,41 @@ LiteLangVisitor : % me <- {
 
     %VisitPackageEventStatement : (context PackageEventStatementContext -> v any) {
         obj = ""
-        id = Visit(context.id()).[Result]
+        id = Visit(context.id()) Result!
         nameSpace = Visit(context.nameSpaceItem())
         obj += "public event "nameSpace" "id.text + Terminate + Wrap""
         <- obj
     }
 
     %VisitProtocolStatement : (context ProtocolStatementContext -> v any) {
-        id = Visit(context.id(0)).[Result]
+        id = Visit(context.id()) Result!
         obj = ""
         interfaceProtocol = ""
         ptclName = id.text
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
-        item @ context.protocolSupportStatement() {
-            r = Visit(item).[Result]
-            interfaceProtocol += r.text
+        @ item = context.protocolSubStatement().. {
+            r = Visit(item) str!
+            interfaceProtocol += r
+        }
+        extend = []str{}
+        @ item = context.includeStatement().. {
+            r = Visit(item) str!
+            extend += r
         }
         obj += "public partial interface " + ptclName
+        ? extend.length > 0 {
+            temp = extend[0]
+            @ i = 1 ++ extend.length-1 {
+                temp += "," + extend[i]
+            }
+            obj += ":" + temp
+        }
         # 泛型
         templateContract = ""
         ? context.templateDefine() >< nil {
-            template = Visit(context.templateDefine()).[TemplateItem]
+            template = Visit(context.templateDefine()) TemplateItem!
             obj += template.Template
             templateContract = template.Contract
         }
@@ -240,15 +246,24 @@ LiteLangVisitor : % me <- {
         <- obj
     }
 
+    %VisitProtocolSubStatement : (context ProtocolSubStatementContext -> v any) {
+        obj = ""
+        @ item = context.protocolSupportStatement().. {
+            r = Visit(item) Result!
+            obj += r.text
+        }
+        <- obj
+    }
+
     %VisitProtocolVariableStatement : (context ProtocolVariableStatementContext -> v any) {
-        id = Visit(context.id()).[Result]
+        id = Visit(context.id()) Result!
         isMutable = id.isVirtual
         r = Result{}
         ? context.annotationSupport() >< nil {
             r.text += Visit(context.annotationSupport())
         }
         r.permission = "public"
-        type = Visit(context.typeType()).[str]
+        type = Visit(context.typeType()) str!
         r.text += type + " " + id.text
         r.text += BlockLeft
         r.text += "get;set;"
@@ -257,14 +272,14 @@ LiteLangVisitor : % me <- {
     }
 
     %VisitProtocolFunctionStatement : (context ProtocolFunctionStatementContext -> v any) {
-        id = Visit(context.id()).[Result]
+        id = Visit(context.id()) Result!
         r = Result{}
         ? context.annotationSupport() >< nil {
             r.text += Visit(context.annotationSupport())
         }
         r.permission = "public"
         # 异步
-        pout = Visit(context.parameterClauseOut()).[str]
+        pout = Visit(context.parameterClauseOut()) str!
         ? context.t.Type == Right_Flow {
             pout = ? -> pout >< "void" {
                 ""Task"<"pout">"
@@ -283,7 +298,7 @@ LiteLangVisitor : % me <- {
         # 泛型
         templateContract = ""
         ? context.templateDefine() >< nil {
-            template = Visit(context.templateDefine()).[TemplateItem]
+            template = Visit(context.templateDefine()) TemplateItem!
             r.text += template.Template
             templateContract = template.Contract
         }
@@ -294,15 +309,15 @@ LiteLangVisitor : % me <- {
     %VisitPackageImplementStatement : (context PackageImplementStatementContext -> v any) {
         obj = ""
         ? context.id(0) >< nil {
-            Self = Visit(context.id(0)).[Result]
+            Self = Visit(context.id(0)) Result!
             me.selfID = Self.text
         }
         ? context.id(1) >< nil {
-            Super = Visit(context.id(1)).[Result]
+            Super = Visit(context.id(1)) Result!
             me.superID = Super.text
         }
-        extends = Visit(context.typeType()).[str]
-        item @ context.implementSupportStatement() {
+        extends = Visit(context.typeType()) str!
+        @ item = context.implementSupportStatement().. {
             obj += Visit(item)
         }
         me.selfID = ""

@@ -11,7 +11,7 @@ namespace Compiler
 public partial class LiteLangVisitor{
 public  override  object VisitTypeType( TypeTypeContext context ){
 var obj = "";
-obj = ((string)(Visit(context.GetChild(0))));
+obj = (string)(Visit(context.GetChild(0)));
 return obj;
 }
 public  override  object VisitTypeReference( TypeReferenceContext context ){
@@ -26,7 +26,7 @@ return obj;
 }
 public  override  object VisitTypeNullable( TypeNullableContext context ){
 var obj = "";
-obj = ((string)(Visit(context.typeNotNull())));
+obj = (string)(Visit(context.typeNotNull()));
 obj+="?";
 return obj;
 }
@@ -70,8 +70,8 @@ return obj;
 }
 public  override  object VisitTypeFunction( TypeFunctionContext context ){
 var obj = "";
-var @in = ((string)(Visit(context.typeFunctionParameterClause(0))));
-var @out = ((string)(Visit(context.typeFunctionParameterClause(1))));
+var @in = (string)(Visit(context.typeFunctionParameterClause(0)));
+var @out = (string)(Visit(context.typeFunctionParameterClause(1)));
 if ( context.t.Type==Right_Arrow ) {
 if ( @out.Length==0 ) {
 obj = run(()=>{if ( @in.Length==0 ) {
@@ -121,7 +121,7 @@ return Any;
 public  override  object VisitTypeFunctionParameterClause( TypeFunctionParameterClauseContext context ){
 var obj = "";
 foreach (var i in range(0,context.typeType().Length-1,1,true,true)){
-var p = ((string)(Visit(context.typeType(i))));
+var p = (string)(Visit(context.typeType(i)));
 obj+=run(()=>{if ( i==0 ) {
 return p;}
 else {
