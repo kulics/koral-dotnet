@@ -8,10 +8,10 @@ statement: (New_Line)* (annotationSupport)?
 exportStatement (New_Line)* namespaceSupportStatement*;
 
 // 导出命名空间
-exportStatement: TextLiteral left_brace (importStatement|typeAliasStatement|New_Line)* right_brace end;
+exportStatement: stringExpr left_brace (importStatement|typeAliasStatement|New_Line)* right_brace end;
 
 // 导入命名空间
-importStatement: (annotationSupport)? (id call? (Colon|Equal))? TextLiteral end;
+importStatement: (annotationSupport)? (id call? (Colon|Equal))? stringExpr end;
 
 namespaceSupportStatement:
 namespaceFunctionStatement |
@@ -406,12 +406,18 @@ checkErrorExpression: (id|id typeType) left_brace (functionSupportStatement)* tu
 dataStatement:
 floatExpr | 
 integerExpr | 
-t=TextLiteral | 
+stringExpr | 
 t=CharLiteral | 
 t=TrueLiteral | 
 t=FalseLiteral | 
 nilExpr | 
 t=UndefinedLiteral;
+
+// 字符串表达式
+stringExpr: Quote_Open (stringTemplate | TextLiteral)* Quote_Close;
+// 原始字符串表达式
+// rawstringExpr: Quote_Quote_Quote TextLiteral Quote_Quote_Quote;
+stringTemplate: String_Template_Open TrueLiteral;
 
 floatExpr: integerExpr call integerExpr;
 integerExpr: NumberLiteral;

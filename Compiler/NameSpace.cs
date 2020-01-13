@@ -43,7 +43,7 @@ obj+=BlockRight+Wrap;
 return obj;
 }
 public  override  object VisitExportStatement( ExportStatementContext context ){
-var name = context.TextLiteral().GetText();
+var name = (string)(Visit(context.stringExpr()));
 name = name.sub_str(1, name.len()-2);
 name = name.replace("/", ".");
 var obj = (new Namespace(){name = name});
@@ -57,7 +57,7 @@ var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-var ns = context.TextLiteral().GetText();
+var ns = (string)(Visit(context.stringExpr()));
 ns = ns.sub_str(1, ns.len()-2);
 ns = ns.replace("/", ".");
 obj+=run(()=>{if ( context.call()!=null ) {

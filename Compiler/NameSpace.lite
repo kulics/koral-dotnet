@@ -48,7 +48,7 @@ LiteLangVisitor : $ (me) {
     }
 
     .VisitExportStatement : (context ExportStatementContext -> v any) {
-        name = context.TextLiteral().GetText()
+        name = Visit(context.stringExpr()) str!
         name = name.sub_str(1, name.len()-2)
         name = name.replace("/", ".")
         obj = Namespace{
@@ -65,7 +65,7 @@ LiteLangVisitor : $ (me) {
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
-        ns = context.TextLiteral().GetText()
+        ns = Visit(context.stringExpr()) str!
         ns = ns.sub_str(1, ns.len()-2)
         ns = ns.replace("/", ".")
         obj += ? -> context.call() >< nil {

@@ -97,7 +97,6 @@ UndefinedLiteral: 'undef';
 
 NumberLiteral: DIGIT+ ; // 整数
 fragment DIGIT: [0-9] ;   // 单个数字
-TextLiteral: '"' ('\\' [btnfr"\\] | .)*? '"'; // 文本
 CharLiteral: '\'' ('\\\'' | '\\' [btnfr\\] | .)*? '\''; // 单字符
 IDPrivate: '_' [a-zA-Z0-9_]+; // 私有标识符
 IDPublic: [a-zA-Z] [a-zA-Z0-9_]*; // 公有标识符
@@ -110,4 +109,18 @@ New_Line: '\r'? '\n';
 //WS: (' ' |'\t' |'\n' |'\r' )+ -> skip ;
 
 WS: [ \t]+ -> skip; // 空白， 后面的->skip表示antlr4在分析语言的文本时，符合这个规则的词法将被无视
+
+
+Quote_Open: '"' -> pushMode(LineString) ;
+// Quote_Quote_Quote: '"""';
+
+mode LineString ;
+
+Quote_Close: '"' -> popMode;
+
+String_Template_Open: '$[' ;
+
+String_Template_Close: ']' ;
+
+TextLiteral: ('\\' [btnfr"\\] | ~('\\' | '"' | '$' ))+ | '$' ; // 文本
 

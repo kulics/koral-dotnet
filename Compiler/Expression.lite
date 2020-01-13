@@ -411,9 +411,9 @@ LiteLangVisitor : $ (me) {
         } context.integerExpr() >< nil {
             r.data = I32
             r.text = Visit(context.integerExpr()) str!
-        } context.t.Type == TextLiteral {
+        } context.stringExpr() >< nil {
             r.data = Str
-            r.text = context.TextLiteral().GetText()
+            r.text = Visit(context.stringExpr()) str!
         } context.t.Type == LiteParser.CharLiteral {
             r.data = Chr
             r.text = context.CharLiteral().GetText()
@@ -423,9 +423,25 @@ LiteLangVisitor : $ (me) {
         } context.t.Type == LiteParser.FalseLiteral {
             r.data = Bool
             r.text = F
-        }
+        } 
+         #= context.rawstringExpr() >< nil {
+            r.data = Str
+            r.text = Visit(context.rawstringExpr()) str!
+        } =#
         <- r
     }
+
+    .VisitStringExpr : (context StringExprContext -> v any) {
+        value = ""
+        @ v = context.TextLiteral().. {
+            value += v.GetText()
+        }
+        <- "\"" + value + "\""
+    }
+
+    # .VisitRawstringExpr : (context RawstringExprContext -> v any) {
+    #     <- "@\"" + context.TextLiteral().GetText() + "\""
+    # }
 
     .VisitFloatExpr : (context FloatExprContext -> v any) {
         number = ""
