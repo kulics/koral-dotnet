@@ -183,24 +183,24 @@ LiteLangVisitor : $ (me) {
             r.text = e1.text + op + (e2 Result!).text
         } 2 {
             r = Visit(context.GetChild(0)) Result!
-            ? context.GetChild(1).GetType() == [typeof TypeConversionContext]() {
+            ? context.GetChild(1) TypeConversionContext? {
                 e2 = Visit(context.GetChild(1)) str!
                 r.data = e2
                 r.text = "("e2")("r.text")"
-            } context.GetChild(1).GetType() == [typeof TypeCheckContext]() {
+            } context.GetChild(1) TypeCheckContext? {
                 e2 = Visit(context.GetChild(1)) str!
                 r.data = e2
                 r.text = ""r.text".@is<"e2">()"
-            } context.GetChild(1).GetType() == [typeof OrElseContext]() {
+            } context.GetChild(1) OrElseContext? {
                 e2 = Visit(context.GetChild(1)) Result!
                 r.text = "("r.text"??" e2.text ")"
-            } context.GetChild(1).GetType() == [typeof CallExpressionContext]() {
+            } context.GetChild(1) CallExpressionContext? {
                 e2 = Visit(context.GetChild(1)) Result!
                 r.text = r.text + e2.text
-            } context.GetChild(1).GetType() == [typeof CallFuncContext]() {
+            } context.GetChild(1) CallFuncContext? {
                 e2 = Visit(context.GetChild(1)) Result!
                 r.text = r.text + e2.text
-            } context.GetChild(1).GetType() == [typeof CallElementContext]() {
+            } context.GetChild(1) CallElementContext? {
                 e2 = Visit(context.GetChild(1)) Result!
                 r.text = r.text + e2.text
             } _ {
@@ -393,6 +393,9 @@ LiteLangVisitor : $ (me) {
         } context.integerExpr() >< nil {
             r.data = I32
             r.text = Visit(context.integerExpr()) str!
+        } context.rawStringExpr() >< nil {
+            r.data = Str
+            r.text = Visit(context.rawStringExpr()) str!
         } context.stringExpr() >< nil {
             r.data = Str
             r.text = Visit(context.stringExpr()) str!
@@ -406,10 +409,6 @@ LiteLangVisitor : $ (me) {
             r.data = Bool
             r.text = F
         } 
-         #= context.rawstringExpr() >< nil {
-            r.data = Str
-            r.text = Visit(context.rawstringExpr()) str!
-        } =#
         <- r
     }
 
@@ -419,14 +418,15 @@ LiteLangVisitor : $ (me) {
             @ v = context.stringContent().. {
                 text += Visit(v)
             }
-            <- text
+            <- "\"" text "\""
         } _ {
             text = "(new System.Text.StringBuilder()"
-            @ i = 1++context.ChildCount-1 {
+            # 去除前后一个元素
+            @ i = 1++context.ChildCount-2 {
                 v = context.GetChild(i)
                 r = Visit(context.GetChild(i)) str!
-                ? v.GetType() == [typeof StringContentContext]() {
-                    text += ".Append(" r ")"
+                ? v StringContentContext? {
+                    text += ".Append(\"" r "\")"
                 } _ {
                     text += r
                 }
@@ -437,7 +437,7 @@ LiteLangVisitor : $ (me) {
     }
 
     .VisitStringContent : (context StringContentContext -> v any) {
-        <- "\"" context.TextLiteral().GetText() "\""
+        <- context.TextLiteral().GetText() 
     }
 
     .VisitStringTemplate : (context StringTemplateContext -> v any) {
@@ -449,9 +449,51 @@ LiteLangVisitor : $ (me) {
         <- text
     }
 
-    # .VisitRawstringExpr : (context RawstringExprContext -> v any) {
-    #     <- "@\"" + context.TextLiteral().GetText() + "\""
-    # }
+    .VisitRawStringExpr : (context RawStringExprContext -> v any) {
+        text = ""
+        ? context.rawStringTemplate().Length == 0 {
+            # 去除前后一个元素
+            @ i = 1++context.ChildCount-2 {
+                v = context.GetChild(i)
+                r = Visit(context.GetChild(i)) str!
+                ? v RawStringContentContext? {
+                    text += r
+                } _ {
+                    text += "\"\""
+                }
+            }
+            <- "@\"" text "\""
+        } _ {
+            text = "(new System.Text.StringBuilder()"
+            # 去除前后一个元素
+            @ i = 1++context.ChildCount-2 {
+                v = context.GetChild(i)
+                r = Visit(context.GetChild(i)) str!
+                ? v RawStringContentContext? {
+                    text += ".Append(@\"" r "\")"
+                } v RawStringTemplateContext? {
+                    text += r
+                } _ {
+                    text += ".Append('\"')"
+                }
+            }
+            text += ").to_str()"
+            <- text
+        }
+    }
+
+    .VisitRawStringContent : (context RawStringContentContext -> v any) {
+        <- context.RawTextLiteral().GetText()
+    }
+
+    .VisitRawStringTemplate : (context RawStringTemplateContext -> v any) {
+        text = ""
+        @ v = context.expression().. {
+            r = Visit(v) Result!
+            text += ".Append("r.text")"
+        }
+        <- text
+    }
 
     .VisitFloatExpr : (context FloatExprContext -> v any) {
         number = ""

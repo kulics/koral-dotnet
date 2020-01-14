@@ -97,8 +97,8 @@ UndefinedLiteral: 'undef';
 
 NumberLiteral: DIGIT+ ; // 整数
 fragment DIGIT: [0-9] ;   // 单个数字
-Quote_Open: '"' -> pushMode(String) ;
-// Quote_Quote_Quote: '"""';
+Quote_Quote_Quote_Open: '"""' -> pushMode(RawString); // 多行字符串
+Quote_Open: '"' -> pushMode(String); // 单行字符串
 CharLiteral: '\'' ('\\\'' | '\\' [btnfr\\] | .)*? '\''; // 单字符
 IDPrivate: '_' [a-zA-Z0-9_]+; // 私有标识符
 IDPublic: [a-zA-Z] [a-zA-Z0-9_]*; // 公有标识符
@@ -120,3 +120,12 @@ String_Template_Open: '\\{' -> pushMode(DEFAULT_MODE);
 
 TextLiteral: ('\\' [btnfr"\\] | ~('\\' | '"' ))+ ; // 文本
 
+mode RawString;
+
+Quote_Quote_Quote_Close: '"""' -> popMode;
+
+Raw_Quote: '"' ;
+
+Raw_String_Template_Open: '\\{' -> pushMode(DEFAULT_MODE);
+
+RawTextLiteral: ('\\' ~[{] | ~('\\' | '"' ))+ ; // 文本

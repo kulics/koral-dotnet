@@ -103,29 +103,29 @@ r.text=e1.text+op+((Result)(e2)).text;
 }break;
 case 2 :
 { r = (Result)(Visit(context.GetChild(0)));
-if ( context.GetChild(1).GetType()==@typeof<TypeConversionContext>() ) {
+if ( context.GetChild(1).@is<TypeConversionContext>() ) {
 var e2 = (string)(Visit(context.GetChild(1)));
 r.data=e2;
 r.text=(new System.Text.StringBuilder("(").Append(e2).Append(")(").Append(r.text).Append(")")).to_str();
 }
-else if ( context.GetChild(1).GetType()==@typeof<TypeCheckContext>() ) {
+else if ( context.GetChild(1).@is<TypeCheckContext>() ) {
 var e2 = (string)(Visit(context.GetChild(1)));
 r.data=e2;
 r.text=(new System.Text.StringBuilder("").Append(r.text).Append(".@is<").Append(e2).Append(">()")).to_str();
 }
-else if ( context.GetChild(1).GetType()==@typeof<OrElseContext>() ) {
+else if ( context.GetChild(1).@is<OrElseContext>() ) {
 var e2 = (Result)(Visit(context.GetChild(1)));
 r.text=(new System.Text.StringBuilder("(").Append(r.text).Append("??").Append(e2.text).Append(")")).to_str();
 }
-else if ( context.GetChild(1).GetType()==@typeof<CallExpressionContext>() ) {
+else if ( context.GetChild(1).@is<CallExpressionContext>() ) {
 var e2 = (Result)(Visit(context.GetChild(1)));
 r.text=r.text+e2.text;
 }
-else if ( context.GetChild(1).GetType()==@typeof<CallFuncContext>() ) {
+else if ( context.GetChild(1).@is<CallFuncContext>() ) {
 var e2 = (Result)(Visit(context.GetChild(1)));
 r.text=r.text+e2.text;
 }
-else if ( context.GetChild(1).GetType()==@typeof<CallElementContext>() ) {
+else if ( context.GetChild(1).@is<CallElementContext>() ) {
 var e2 = (Result)(Visit(context.GetChild(1)));
 r.text=r.text+e2.text;
 }
@@ -303,6 +303,10 @@ else if ( context.integerExpr()!=null ) {
 r.data=I32;
 r.text=(string)(Visit(context.integerExpr()));
 }
+else if ( context.rawStringExpr()!=null ) {
+r.data=Str;
+r.text=(string)(Visit(context.rawStringExpr()));
+}
 else if ( context.stringExpr()!=null ) {
 r.data=Str;
 r.text=(string)(Visit(context.stringExpr()));
@@ -327,15 +331,15 @@ if ( context.stringTemplate().Length==0 ) {
 foreach (var v in context.stringContent()){
 text+=Visit(v);
 }
-return text;
+return (new System.Text.StringBuilder("\"").Append(text).Append("\"")).to_str();
 }
 else {
 text = "(new System.Text.StringBuilder()";
-foreach (var i in range(1,context.ChildCount-1,1,true,true)){
+foreach (var i in range(1,context.ChildCount-2,1,true,true)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
-if ( v.GetType()==@typeof<StringContentContext>() ) {
-text+=(new System.Text.StringBuilder(".Append(").Append(r).Append(")")).to_str();
+if ( v.@is<StringContentContext>() ) {
+text+=(new System.Text.StringBuilder(".Append(\"").Append(r).Append("\")")).to_str();
 }
 else {
 text+=r;
@@ -346,9 +350,54 @@ return text;
 }
 }
 public  override  object VisitStringContent( StringContentContext context ){
-return (new System.Text.StringBuilder("\"").Append(context.TextLiteral().GetText()).Append("\"")).to_str();
+return context.TextLiteral().GetText();
 }
 public  override  object VisitStringTemplate( StringTemplateContext context ){
+var text = "";
+foreach (var v in context.expression()){
+var r = (Result)(Visit(v));
+text+=(new System.Text.StringBuilder(".Append(").Append(r.text).Append(")")).to_str();
+}
+return text;
+}
+public  override  object VisitRawStringExpr( RawStringExprContext context ){
+var text = "";
+if ( context.rawStringTemplate().Length==0 ) {
+foreach (var i in range(1,context.ChildCount-2,1,true,true)){
+var v = context.GetChild(i);
+var r = (string)(Visit(context.GetChild(i)));
+if ( v.@is<RawStringContentContext>() ) {
+text+=r;
+}
+else {
+text+="\"\"";
+}
+}
+return (new System.Text.StringBuilder("@\"").Append(text).Append("\"")).to_str();
+}
+else {
+text = "(new System.Text.StringBuilder()";
+foreach (var i in range(1,context.ChildCount-2,1,true,true)){
+var v = context.GetChild(i);
+var r = (string)(Visit(context.GetChild(i)));
+if ( v.@is<RawStringContentContext>() ) {
+text+=(new System.Text.StringBuilder(".Append(@\"").Append(r).Append("\")")).to_str();
+}
+else if ( v.@is<RawStringTemplateContext>() ) {
+text+=r;
+}
+else {
+text+=".Append('\"')";
+}
+}
+text+=").to_str()";
+return text;
+}
+}
+public  override  object VisitRawStringContent( RawStringContentContext context ){
+return context.RawTextLiteral().GetText();
+}
+public  override  object VisitRawStringTemplate( RawStringTemplateContext context ){
 var text = "";
 foreach (var v in context.expression()){
 var r = (Result)(Visit(v));

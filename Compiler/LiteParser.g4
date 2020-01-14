@@ -400,6 +400,7 @@ checkErrorExpression: (id|id typeType) left_brace (functionSupportStatement)* tu
 dataStatement:
 floatExpr | 
 integerExpr | 
+rawStringExpr | 
 stringExpr | 
 t=CharLiteral | 
 t=TrueLiteral | 
@@ -409,12 +410,12 @@ t=UndefinedLiteral;
 
 // 字符串表达式
 stringExpr: Quote_Open (stringContent | stringTemplate)* Quote_Close;
-// 原始字符串表达式
-// rawstringExpr: Quote_Quote_Quote TextLiteral Quote_Quote_Quote;
-
 stringContent: TextLiteral;
-
 stringTemplate: String_Template_Open expression (more expression)* Right_Brace;
+// 原始字符串表达式
+rawStringExpr: Quote_Quote_Quote_Open (rawStringContent | rawStringTemplate | Raw_Quote)* Quote_Quote_Quote_Close;
+rawStringContent: RawTextLiteral;
+rawStringTemplate: Raw_String_Template_Open New_Line* expression (more expression)* New_Line* Right_Brace;
 
 floatExpr: integerExpr call integerExpr;
 integerExpr: NumberLiteral;
