@@ -24,13 +24,13 @@ var r1 = (Result)(Visit(context.idExpression()));
 var r2 = (Result)(Visit(context.expression()));
 if ( context.typeType()!=null ) {
 var Type = (string)(Visit(context.typeType()));
-obj = (new System.Text.StringBuilder("").Append(Type).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str()+Terminate+Wrap;
+obj = (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
 }
 else {
 obj = run(()=>{if ( r1.isDefine||r1.text==this.selfID||r1.text==this.superID||r1.text==setID ) {
-return (new System.Text.StringBuilder("").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str()+Terminate+Wrap;}
+return (new System.Text.StringBuilder().Append(r1.text).Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();}
 else {
-return (new System.Text.StringBuilder("var ").Append(r1.text).Append(" = ").Append(r2.text).Append("")).to_str()+Terminate+Wrap;}
+return (new System.Text.StringBuilder().Append("var ").Append(r1.text).Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();}
 });
 }
 return obj;
@@ -39,7 +39,7 @@ public  override  object VisitVariableDeclaredStatement( VariableDeclaredStateme
 var obj = "";
 var Type = (string)(Visit(context.typeType()));
 var r = (Result)(Visit(context.idExpression()));
-obj = (new System.Text.StringBuilder("").Append(Type).Append(" ").Append(r.text).Append("")).to_str()+Terminate+Wrap;
+obj = (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
 return obj;
 }
 public  override  object VisitAssignStatement( AssignStatementContext context ){
@@ -71,7 +71,7 @@ case JudgeCombineContext it :
 { r.data=I32;
 var s1 = e1.text;
 var s2 = ((Result)(e2)).text;
-r.text=(new System.Text.StringBuilder("").Append(s1).Append(" > ").Append(s2).Append(" ? 1 : ( ").Append(s1).Append("==").Append(s2).Append(" ? 0 : -1 )")).to_str();
+r.text=(new System.Text.StringBuilder().Append(s1).Append(" > ").Append(s2).Append(" ? 1 : ( ").Append(s1).Append("==").Append(s2).Append(" ? 0 : -1 )")).to_str();
 return r;
 }break;
 case JudgeContext it :
@@ -95,7 +95,7 @@ return F64;}
 }break;
 case PowContext it :
 { r.data=F64;
-r.text=(new System.Text.StringBuilder("").Append(op).Append("(").Append(e1.text).Append(", ").Append(((Result)(e2)).text).Append(")")).to_str();
+r.text=(new System.Text.StringBuilder().Append(op).Append("(").Append(e1.text).Append(", ").Append(((Result)(e2)).text).Append(")")).to_str();
 return r;
 }break;
 }
@@ -106,16 +106,16 @@ case 2 :
 if ( context.GetChild(1).@is<TypeConversionContext>() ) {
 var e2 = (string)(Visit(context.GetChild(1)));
 r.data=e2;
-r.text=(new System.Text.StringBuilder("(").Append(e2).Append(")(").Append(r.text).Append(")")).to_str();
+r.text=(new System.Text.StringBuilder().Append("(").Append(e2).Append(")(").Append(r.text).Append(")")).to_str();
 }
 else if ( context.GetChild(1).@is<TypeCheckContext>() ) {
 var e2 = (string)(Visit(context.GetChild(1)));
 r.data=e2;
-r.text=(new System.Text.StringBuilder("").Append(r.text).Append(".@is<").Append(e2).Append(">()")).to_str();
+r.text=(new System.Text.StringBuilder().Append(r.text).Append(".@is<").Append(e2).Append(">()")).to_str();
 }
 else if ( context.GetChild(1).@is<OrElseContext>() ) {
 var e2 = (Result)(Visit(context.GetChild(1)));
-r.text=(new System.Text.StringBuilder("(").Append(r.text).Append("??").Append(e2.text).Append(")")).to_str();
+r.text=(new System.Text.StringBuilder().Append("(").Append(r.text).Append("??").Append(e2.text).Append(")")).to_str();
 }
 else if ( context.GetChild(1).@is<CallExpressionContext>() ) {
 var e2 = (Result)(Visit(context.GetChild(1)));
@@ -131,7 +131,7 @@ r.text=r.text+e2.text;
 }
 else {
 if ( context.op.Type==LiteParser.Bang ) {
-r.text=(new System.Text.StringBuilder("ref ").Append(r.text).Append("")).to_str();
+r.text=(new System.Text.StringBuilder().Append("ref ").Append(r.text)).to_str();
 }
 else if ( context.op.Type==LiteParser.Question ) {
 r.text+="?";
@@ -228,7 +228,7 @@ var template = (string)(Visit(context.templateCall()));
 return (new Result(){text = id.text+template,data = id.text+template});
 }
 var r = (Result)(Visit(context.expression()));
-return (new Result(){text = "("+r.text+")",data = r.data});
+return (new Result(){text = (new System.Text.StringBuilder().Append("(").Append(r.text).Append(")")).to_str(),data = r.data});
 }
 public  override  object VisitExpressionList( ExpressionListContext context ){
 var r = (new Result());
@@ -272,7 +272,7 @@ else {
 var id1 = context.id(0).GetText();
 item.Template=id1;
 var id2 = context.id(1).GetText();
-item.Contract=(new System.Text.StringBuilder(" where ").Append(id1).Append(":").Append(id2).Append("")).to_str();
+item.Contract=(new System.Text.StringBuilder().Append(" where ").Append(id1).Append(":").Append(id2)).to_str();
 }
 return item;
 }
@@ -331,7 +331,7 @@ if ( context.stringTemplate().Length==0 ) {
 foreach (var v in context.stringContent()){
 text+=Visit(v);
 }
-return (new System.Text.StringBuilder("\"").Append(text).Append("\"")).to_str();
+return (new System.Text.StringBuilder().Append("\"").Append(text).Append("\"")).to_str();
 }
 else {
 text = "(new System.Text.StringBuilder()";
@@ -339,7 +339,7 @@ foreach (var i in range(1,context.ChildCount-2,1,true,true)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 if ( v.@is<StringContentContext>() ) {
-text+=(new System.Text.StringBuilder(".Append(\"").Append(r).Append("\")")).to_str();
+text+=(new System.Text.StringBuilder().Append(".Append(\"").Append(r).Append("\")")).to_str();
 }
 else {
 text+=r;
@@ -356,7 +356,7 @@ public  override  object VisitStringTemplate( StringTemplateContext context ){
 var text = "";
 foreach (var v in context.expression()){
 var r = (Result)(Visit(v));
-text+=(new System.Text.StringBuilder(".Append(").Append(r.text).Append(")")).to_str();
+text+=(new System.Text.StringBuilder().Append(".Append(").Append(r.text).Append(")")).to_str();
 }
 return text;
 }
@@ -373,7 +373,7 @@ else {
 text+="\"\"";
 }
 }
-return (new System.Text.StringBuilder("@\"").Append(text).Append("\"")).to_str();
+return (new System.Text.StringBuilder().Append("@\"").Append(text).Append("\"")).to_str();
 }
 else {
 text = "(new System.Text.StringBuilder()";
@@ -381,7 +381,7 @@ foreach (var i in range(1,context.ChildCount-2,1,true,true)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 if ( v.@is<RawStringContentContext>() ) {
-text+=(new System.Text.StringBuilder(".Append(@\"").Append(r).Append("\")")).to_str();
+text+=(new System.Text.StringBuilder().Append(".Append(@\"").Append(r).Append("\")")).to_str();
 }
 else if ( v.@is<RawStringTemplateContext>() ) {
 text+=r;
@@ -401,13 +401,13 @@ public  override  object VisitRawStringTemplate( RawStringTemplateContext contex
 var text = "";
 foreach (var v in context.expression()){
 var r = (Result)(Visit(v));
-text+=(new System.Text.StringBuilder(".Append(").Append(r.text).Append(")")).to_str();
+text+=(new System.Text.StringBuilder().Append(".Append(").Append(r.text).Append(")")).to_str();
 }
 return text;
 }
 public  override  object VisitFloatExpr( FloatExprContext context ){
 var number = "";
-number+=Visit(context.integerExpr(0))+"."+Visit(context.integerExpr(1));
+number+=(new System.Text.StringBuilder().Append(Visit(context.integerExpr(0))).Append(".").Append(Visit(context.integerExpr(1)))).to_str();
 return number;
 }
 public  override  object VisitIntegerExpr( IntegerExprContext context ){
@@ -441,9 +441,9 @@ public  override  object VisitLinq( LinqContext context ){
 var r = (new Result(){data = "var"});
 r.text+=(string)(Visit(context.linqHeadItem()));
 foreach (var item in context.linqItem()){
-r.text+=(new System.Text.StringBuilder("").Append(Visit(item)).Append(" ")).to_str();
+r.text+=(new System.Text.StringBuilder().Append(Visit(item)).Append(" ")).to_str();
 }
-r.text+=(new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).text).Append(" ").Append(((Result)(Visit(context.expression()))).text).Append("")).to_str();
+r.text+=(new System.Text.StringBuilder().Append(((Result)(Visit(context.id()))).text).Append(" ").Append(((Result)(Visit(context.expression()))).text)).to_str();
 return r;
 }
 public  override  object VisitLinqItem( LinqItemContext context ){
@@ -452,14 +452,14 @@ return (string)(Visit(context.linqHeadItem()));
 }
 var obj = ((Result)(Visit(context.id()))).text;
 if ( context.expression()!=null ) {
-obj+=(new System.Text.StringBuilder(" ").Append(((Result)(Visit(context.expression()))).text).Append("")).to_str();
+obj+=(new System.Text.StringBuilder().Append(" ").Append(((Result)(Visit(context.expression()))).text)).to_str();
 }
 return obj;
 }
 public  override  object VisitLinqHeadItem( LinqHeadItemContext context ){
 var obj = "";
 var id = (Result)(Visit(context.id()));
-obj+=(new System.Text.StringBuilder("from ").Append(id.text).Append(" in ").Append(((Result)(Visit(context.expression()))).text).Append(" ")).to_str();
+obj+=(new System.Text.StringBuilder().Append("from ").Append(id.text).Append(" in ").Append(((Result)(Visit(context.expression()))).text).Append(" ")).to_str();
 return obj;
 }
 }

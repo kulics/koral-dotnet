@@ -15,10 +15,10 @@ ErrorListener : BaseErrorListener % $ (me, base) {
             e ?RecognitionException->) {
         base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
         print("------Syntax Error------")
-        print("File: "me.FileDir"")
-        print("Line: "line"  Column: "charPositionInLine"")
-        print("OffendingSymbol: "offendingSymbol.Text"")
-        print("Message: "msg"")
+        print("File: \{me.FileDir}")
+        print("Line: \{line}  Column: \{charPositionInLine}")
+        print("OffendingSymbol: \{offendingSymbol.Text}")
+        print("Message: \{msg}")
     }
 }
 

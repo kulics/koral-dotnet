@@ -17,12 +17,12 @@ LiteLangVisitor : $ (me) {
         obj = ""
         ns = Visit(context.exportStatement()) Namespace!
         # import library
-        obj += "using Library;"Wrap"using static Library.Lib;"Wrap""
+        obj += "using Library;\{Wrap}using static Library.Lib;\{Wrap}"
         obj += ns.imports + Wrap
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
-        obj += "namespace "ns.name + Wrap + BlockLeft + Wrap""
+        obj += "namespace \{ns.name, Wrap, BlockLeft, Wrap}"
 
         content = ""
         contentStatic = ""
@@ -39,8 +39,7 @@ LiteLangVisitor : $ (me) {
         }
         obj += content
         ? contentStatic >< "" {
-            obj += "public partial class "ns.name.sub_str(ns.name.last_index_of(".") + 1) "_static" +
-                BlockLeft + Wrap + contentStatic + BlockRight + Wrap
+            obj += "public partial class \{ns.name.sub_str(ns.name.last_index_of(".") + 1)}_static \{BlockLeft, Wrap, contentStatic, BlockRight, Wrap}"
         }
         me.delete_current_set()
         obj += BlockRight + Wrap
@@ -69,11 +68,11 @@ LiteLangVisitor : $ (me) {
         ns = ns.sub_str(1, ns.len()-2)
         ns = ns.replace("/", ".")
         obj += ? -> context.call() >< nil {
-            "using static " + ns + "." + (Visit(context.id()) Result!).text
+            "using static \{ ns }.\{(Visit(context.id()) Result!).text}"
         } context.id() >< nil {
-            "using " + ns + "." + (Visit(context.id()) Result!).text
+            "using \{ns}.\{(Visit(context.id()) Result!).text}"
         } _ {
-            "using " + ns
+            "using \{ns}"
         }
         obj += Terminate + Wrap
         <- obj
@@ -84,7 +83,7 @@ LiteLangVisitor : $ (me) {
         @ i = 0 ++ context.id().Length-1 {
             id = Visit(context.id(i)) Result!
             obj += ? -> i == 0 {
-                "" + id.text
+                id.text
             } _ {
                 "." + id.text
             }
@@ -97,7 +96,7 @@ LiteLangVisitor : $ (me) {
         @ i = 0 ++ context.id().Length-1 {
             id = Visit(context.id(i)) Result!
             obj += ? -> i == 0 {
-                "" + id.text
+                id.text
             } _ {
                 "." + id.text
             }
@@ -114,7 +113,7 @@ LiteLangVisitor : $ (me) {
         ? context.annotationSupport() >< nil {
             header += Visit(context.annotationSupport())
         }
-        header += id.permission + " enum " + id.text + ":" + typ
+        header += "\{id.permission} enum \{id.text}:\{typ}"
         header += Wrap + BlockLeft + Wrap
         @ i = 0 ++ context.enumSupportStatement().Length-1 {
             obj += Visit(context.enumSupportStatement(i))
@@ -152,20 +151,20 @@ LiteLangVisitor : $ (me) {
                 pout = "void"
             } pout >< "void" {
                 ? context.y >< nil {
-                    pout = ""IEnum"<"pout">"
+                    pout = "\{IEnum}<\{pout}>"
                 }
-                pout = ""Task"<"pout">"
+                pout = "\{Task}<\{pout}>"
             } _ {
                 pout = Task
             }
-            obj += ""id.permission" async static "pout" "id.text""
+            obj += "\{id.permission} async static \{pout} \{id.text}"
         } _ {
             ? context.y >< nil {
                 ? pout >< "void" {
-                    pout = ""IEnum"<"pout">"
+                    pout = "\{IEnum}<\{pout}>"
                 }
             }
-            obj += ""id.permission" static "pout" "id.text""
+            obj += "\{id.permission} static \{pout} \{id.text}"
         }
 
         # 泛型
@@ -197,7 +196,7 @@ LiteLangVisitor : $ (me) {
             obj += Visit(context.annotationSupport())
         }
         
-        obj += ""id.permission" const "typ" "id.text" = "expr.text" "Terminate + Wrap""
+        obj += "\{id.permission} const \{typ} \{id.text} = \{expr.text,Terminate, Wrap}"
         <- obj
     }
 
@@ -222,14 +221,14 @@ LiteLangVisitor : $ (me) {
         ? me.selfPropertyContent.len > 0 {
             pri = ""
             ? me.selfPropertyVariable {
-                pri = "private static "typ" _"r1.text"" 
+                pri = "private static \{typ} _\{r1.text}" 
                 ? r2 >< nil {
                     pri += " = " + r2.text
                 }
                 pri += Terminate + Wrap
             }
             obj = pri + obj
-            obj += ""r1.permission" static "typ" "r1.text""BlockLeft""
+            obj += "\{r1.permission} static \{typ} \{r1.text, BlockLeft}"
             @ v = me.selfPropertyContent.. {
                 obj += v
             }
@@ -238,9 +237,9 @@ LiteLangVisitor : $ (me) {
             me.selfPropertyID = ""
             me.selfPropertyVariable = false
         } _ {
-            obj += ""r1.permission" static "typ" "r1.text""
+            obj += "\{r1.permission} static \{typ} \{r1.text}"
             obj += ? -> r2 >< nil {
-                " = "r2.text" "Terminate+Wrap""
+                " = \{r2.text, Terminate, Wrap}"
             } _ {
                 Terminate + Wrap
             }

@@ -103,12 +103,12 @@ LiteLangVisitor : $ (me) {
         r2 = Visit(context.expression()) Result!
         ? context.typeType() >< nil {
             Type = Visit(context.typeType()) str!
-            obj = ""Type" "r1.text" = "r2.text"" + Terminate + Wrap
+            obj = "\{Type} \{r1.text} = \{r2.text, Terminate, Wrap}"
         } _ {
             obj = ? -> r1.isDefine | r1.text == me.selfID | r1.text == me.superID | r1.text == setID {
-                ""r1.text" = "r2.text"" + Terminate + Wrap
+                "\{r1.text} = \{r2.text, Terminate, Wrap}"
             } _ {
-                "var "r1.text" = "r2.text"" + Terminate + Wrap
+                "var \{r1.text} = \{r2.text, Terminate, Wrap}"
             }
         }
         <- obj
@@ -118,7 +118,7 @@ LiteLangVisitor : $ (me) {
         obj = ""
         Type = Visit(context.typeType()) str!
         r = Visit(context.idExpression()) Result!
-        obj = ""Type" "r.text"" + Terminate + Wrap
+        obj = "\{Type} \{r.text, Terminate, Wrap}"
         <- obj
     }
 
@@ -153,7 +153,7 @@ LiteLangVisitor : $ (me) {
                 r.data = I32
                 s1 = e1.text
                 s2 = (e2 Result!).text
-                r.text = ""s1" > "s2" ? 1 : ( "s1"=="s2" ? 0 : -1 )"
+                r.text = "\{s1} > \{s2} ? 1 : ( \{s1}==\{s2} ? 0 : -1 )"
                 <- r
             } _ JudgeContext {
                 # todo 如果左右不是bool类型值，报错
@@ -177,7 +177,7 @@ LiteLangVisitor : $ (me) {
             } _ PowContext {
                 # todo 如果左右部署number类型，报错
                 r.data = F64
-                r.text = ""op"("e1.text", "(e2 Result!).text")"
+                r.text = "\{op}(\{e1.text}, \{(e2 Result!).text})"
                 <- r
             }
             r.text = e1.text + op + (e2 Result!).text
@@ -186,14 +186,14 @@ LiteLangVisitor : $ (me) {
             ? context.GetChild(1) TypeConversionContext? {
                 e2 = Visit(context.GetChild(1)) str!
                 r.data = e2
-                r.text = "("e2")("r.text")"
+                r.text = "(\{e2})(\{r.text})"
             } context.GetChild(1) TypeCheckContext? {
                 e2 = Visit(context.GetChild(1)) str!
                 r.data = e2
-                r.text = ""r.text".@is<"e2">()"
+                r.text = "\{r.text}.@is<\{e2}>()"
             } context.GetChild(1) OrElseContext? {
                 e2 = Visit(context.GetChild(1)) Result!
-                r.text = "("r.text"??" e2.text ")"
+                r.text = "(\{r.text}??\{e2.text})"
             } context.GetChild(1) CallExpressionContext? {
                 e2 = Visit(context.GetChild(1)) Result!
                 r.text = r.text + e2.text
@@ -205,7 +205,7 @@ LiteLangVisitor : $ (me) {
                 r.text = r.text + e2.text
             } _ {
                 ? context.op.Type == LiteParser.Bang {
-                    r.text = "ref "r.text""
+                    r.text = "ref \{r.text}"
                 } context.op.Type == LiteParser.Question {
                     r.text += "?"
                 }
@@ -315,7 +315,7 @@ LiteLangVisitor : $ (me) {
         }
         r = Visit(context.expression()) Result!
         <- Result{
-            text = "(" + r.text + ")"
+            text = "(\{r.text})"
             data = r.data
         }
     }
@@ -363,7 +363,7 @@ LiteLangVisitor : $ (me) {
             id1 = context.id(0).GetText()
             item.Template = id1
             id2 = context.id(1).GetText()
-            item.Contract = " where "id1":"id2""
+            item.Contract = " where \{id1}:\{id2}"
         }
         <- item
     }
@@ -418,7 +418,7 @@ LiteLangVisitor : $ (me) {
             @ v = context.stringContent().. {
                 text += Visit(v)
             }
-            <- "\"" text "\""
+            <- "\"\{text}\""
         } _ {
             text = "(new System.Text.StringBuilder()"
             # 去除前后一个元素
@@ -426,7 +426,7 @@ LiteLangVisitor : $ (me) {
                 v = context.GetChild(i)
                 r = Visit(context.GetChild(i)) str!
                 ? v StringContentContext? {
-                    text += ".Append(\"" r "\")"
+                    text += ".Append(\"\{r}\")"
                 } _ {
                     text += r
                 }
@@ -444,7 +444,7 @@ LiteLangVisitor : $ (me) {
         text = ""
         @ v = context.expression().. {
             r = Visit(v) Result!
-            text += ".Append("r.text")"
+            text += ".Append(\{r.text})"
         }
         <- text
     }
@@ -462,7 +462,7 @@ LiteLangVisitor : $ (me) {
                     text += "\"\""
                 }
             }
-            <- "@\"" text "\""
+            <- "@\"\{text}\""
         } _ {
             text = "(new System.Text.StringBuilder()"
             # 去除前后一个元素
@@ -470,7 +470,7 @@ LiteLangVisitor : $ (me) {
                 v = context.GetChild(i)
                 r = Visit(context.GetChild(i)) str!
                 ? v RawStringContentContext? {
-                    text += ".Append(@\"" r "\")"
+                    text += ".Append(@\"\{r}\")"
                 } v RawStringTemplateContext? {
                     text += r
                 } _ {
@@ -490,14 +490,14 @@ LiteLangVisitor : $ (me) {
         text = ""
         @ v = context.expression().. {
             r = Visit(v) Result!
-            text += ".Append("r.text")"
+            text += ".Append(\{r.text})"
         }
         <- text
     }
 
     .VisitFloatExpr : (context FloatExprContext -> v any) {
         number = ""
-        number += Visit(context.integerExpr(0)) + "." + Visit(context.integerExpr(1))
+        number += "\{Visit(context.integerExpr(0))}.\{Visit(context.integerExpr(1))}"
         <- number
     }
 
@@ -536,9 +536,9 @@ LiteLangVisitor : $ (me) {
         r = Result{data = "var"}
         r.text += Visit(context.linqHeadItem()) str!
         @ item = context.linqItem().. {
-            r.text += "" Visit(item) " "
+            r.text += "\{Visit(item)} "
         }
-        r.text += ""(Visit(context.id()) Result!).text " " (Visit(context.expression()) Result!).text ""
+        r.text += "\{(Visit(context.id()) Result!).text} \{(Visit(context.expression()) Result!).text}"
         <- r
     }
 
@@ -548,7 +548,7 @@ LiteLangVisitor : $ (me) {
         }
         obj = (Visit(context.id()) Result!).text
         ? context.expression() >< nil {
-            obj += " "(Visit(context.expression()) Result!).text""
+            obj += " \{(Visit(context.expression()) Result!).text}"
         }
         <- obj
     }
@@ -556,7 +556,7 @@ LiteLangVisitor : $ (me) {
     .VisitLinqHeadItem : (context LinqHeadItemContext -> v any) {
         obj = ""
         id = Visit(context.id()) Result!
-        obj += "from " id.text " in "(Visit(context.expression()) Result!).text " "
+        obj += "from \{id.text} in \{(Visit(context.expression()) Result!).text} "
         <- obj
     }
 }

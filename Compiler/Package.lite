@@ -32,14 +32,14 @@ LiteLangVisitor : $ (me) {
         }
         @ item = context.packageNewStatement().. {
             r = Visit(item) str!
-            obj += "public " id.text "" r ""
+            obj += "public \{id.text} \{r}"
         }
         obj += BlockRight + Wrap
         header = ""
         ? context.annotationSupport() >< nil {
             header += Visit(context.annotationSupport())
         }
-        header += ""id.permission" partial class "id.text""
+        header += "\{id.permission} partial class \{id.text}"
         # 泛型
         template = ""
         templateContract = ""
@@ -106,14 +106,14 @@ LiteLangVisitor : $ (me) {
         ? me.selfPropertyContent.len > 0 {
             pri = ""
             ? me.selfPropertyVariable {
-                pri = "private "typ" _"r1.text"" 
+                pri = "private \{typ} _\{r1.text}" 
                 ? r2 >< nil {
                     pri += " = " + r2.text
                 }
                 pri += Terminate + Wrap
             }
             obj = pri + obj
-            obj += ""r1.permission" "isVirtual" "typ" "r1.text""BlockLeft""
+            obj += "\{r1.permission} \{isVirtual} \{typ} \{r1.text, BlockLeft}"
             @ v = me.selfPropertyContent.. {
                 obj += v
             }
@@ -122,9 +122,9 @@ LiteLangVisitor : $ (me) {
             me.selfPropertyID = ""
             me.selfPropertyVariable = false
         } _ {
-            obj += ""r1.permission" "typ" "r1.text""
+            obj += "\{r1.permission} \{typ} \{r1.text}"
             obj += ? -> r2 >< nil {
-                " = "r2.text" "Terminate" "Wrap""
+                " = \{r2.text,Terminate, Wrap}"
             } _ {
                 Terminate + Wrap
             }
@@ -140,7 +140,7 @@ LiteLangVisitor : $ (me) {
         }
         obj = ""
         # 异步
-        obj += ""id.permission" "
+        obj += "\{id.permission} "
         pout = ""
         ? context.parameterClauseOut() >< nil {
             pout = Visit(context.parameterClauseOut()) str!
@@ -150,20 +150,20 @@ LiteLangVisitor : $ (me) {
                 pout = "void"
             } pout >< "void" {
                 ? context.y >< nil {
-                    pout = ""IEnum"<"pout">"
+                    pout = "\{IEnum}<\{pout}>"
                 }
-                pout = ""Task"<"pout">"
+                pout = "\{Task}<\{pout}>"
             } _ {
                 pout = Task
             }
-            obj += ""isVirtual" async "pout" "id.text""
+            obj += "\{isVirtual} async \{pout} \{id.text}"
         } _ {
             ? context.y >< nil {
                 ? pout >< "void" {
-                    pout = ""IEnum"<"pout">"
+                    pout = "\{IEnum}<\{pout}>"
                 }
             }
-            obj += ""isVirtual" "pout" "id.text""
+            obj += "\{isVirtual} \{pout} \{id.text}"
         }
         # 泛型
         templateContract = ""
@@ -194,7 +194,7 @@ LiteLangVisitor : $ (me) {
         me.add_current_set()
         text += Visit(context.parameterClauseIn()) str!
         ? context.expressionList() >< nil {
-            text += ":base(" (Visit(context.expressionList()) Result!).text ")"
+            text += ":base(\{(Visit(context.expressionList()) Result!).text})"
         }
         text += BlockLeft + ProcessFunctionSupport(context.functionSupportStatement()) + BlockRight + Wrap
         me.delete_current_set()
@@ -207,7 +207,7 @@ LiteLangVisitor : $ (me) {
         obj = ""
         id = Visit(context.id()) Result!
         nameSpace = Visit(context.nameSpaceItem())
-        obj += "public event "nameSpace" "id.text + Terminate + Wrap""
+        obj += "public event \{nameSpace} \{id.text, Terminate, Wrap}"
         <- obj
     }
 
@@ -228,7 +228,7 @@ LiteLangVisitor : $ (me) {
             r = Visit(item) str!
             extend += r
         }
-        obj += "public partial interface " + ptclName
+        obj += "public partial interface \{ptclName}"
         ? extend.length > 0 {
             temp = extend[0]
             @ i = 1 ++ extend.length-1 {
@@ -286,9 +286,9 @@ LiteLangVisitor : $ (me) {
         ? context.t.Type == Right_Flow {
             ? pout >< "void" {
                 ? context.y >< nil {
-                    pout = ""IEnum"<"pout">"
+                    pout = "\{IEnum}<\{pout}>"
                 }
-                pout = ""Task"<"pout">"
+                pout = "\{Task}<\{pout}>"
             } _ {
                 pout = Task
             }
@@ -296,7 +296,7 @@ LiteLangVisitor : $ (me) {
         } _ {
             ? context.y >< nil {
                 ? pout >< "void" {
-                    pout = ""IEnum"<"pout">"
+                    pout = "\{IEnum}<\{pout}>"
                 }
             }
             r.text += pout + " " + id.text

@@ -32,32 +32,32 @@ return obj;
 }
 public  override  object VisitTypeArray( TypeArrayContext context ){
 var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(Visit(context.typeType())).Append("[]")).to_str();
+obj+=(new System.Text.StringBuilder().Append(Visit(context.typeType())).Append("[]")).to_str();
 return obj;
 }
 public  override  object VisitTypeList( TypeListContext context ){
 var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(Lst).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
+obj+=(new System.Text.StringBuilder().Append(Lst).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
 return obj;
 }
 public  override  object VisitTypeSet( TypeSetContext context ){
 var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(Set).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
+obj+=(new System.Text.StringBuilder().Append(Set).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
 return obj;
 }
 public  override  object VisitTypeDictionary( TypeDictionaryContext context ){
 var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(Dic).Append("<").Append(Visit(context.typeType(0))).Append(",").Append(Visit(context.typeType(1))).Append(">")).to_str();
+obj+=(new System.Text.StringBuilder().Append(Dic).Append("<").Append(Visit(context.typeType(0))).Append(", ").Append(Visit(context.typeType(1))).Append(">")).to_str();
 return obj;
 }
 public  override  object VisitTypeStack( TypeStackContext context ){
 var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(Stk).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
+obj+=(new System.Text.StringBuilder().Append(Stk).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
 return obj;
 }
 public  override  object VisitTypeQueue( TypeQueueContext context ){
 var obj = "";
-obj+=(new System.Text.StringBuilder("").Append(Que).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
+obj+=(new System.Text.StringBuilder().Append(Que).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
 return obj;
 }
 public  override  object VisitTypePackage( TypePackageContext context ){
@@ -77,39 +77,39 @@ if ( @out.Length==0 ) {
 obj = run(()=>{if ( @in.Length==0 ) {
 return "Action";}
 else {
-return (new System.Text.StringBuilder("Action<").Append(@in).Append(">")).to_str();}
+return (new System.Text.StringBuilder().Append("Action<").Append(@in).Append(">")).to_str();}
 });
 }
 else {
 if ( @out.first_index_of(",")>=0 ) {
-@out = (new System.Text.StringBuilder("(").Append(@out).Append(")")).to_str();
+@out = (new System.Text.StringBuilder().Append("(").Append(@out).Append(")")).to_str();
 }
 if ( context.y!=null ) {
-@out = (new System.Text.StringBuilder("").Append(IEnum).Append("<").Append(@out).Append(">")).to_str();
+@out = (new System.Text.StringBuilder().Append(IEnum).Append("<").Append(@out).Append(">")).to_str();
 }
 obj = run(()=>{if ( @in.Length==0 ) {
-return (new System.Text.StringBuilder("Func<").Append(@out).Append(">")).to_str();}
+return (new System.Text.StringBuilder().Append("Func<").Append(@out).Append(">")).to_str();}
 else {
-return (new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(@out).Append(">")).to_str();}
+return (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(@out).Append(">")).to_str();}
 });
 }
 }
 else {
 if ( @out.Length==0 ) {
 obj = run(()=>{if ( @in.Length==0 ) {
-return (new System.Text.StringBuilder("Func<").Append(Task).Append(">")).to_str();}
+return (new System.Text.StringBuilder().Append("Func<").Append(Task).Append(">")).to_str();}
 else {
-return (new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(Task).Append(">")).to_str();}
+return (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append(">")).to_str();}
 });
 }
 else {
 if ( context.y!=null ) {
-@out = (new System.Text.StringBuilder("").Append(IEnum).Append("<(").Append(@out).Append(")>")).to_str();
+@out = (new System.Text.StringBuilder().Append(IEnum).Append("<(").Append(@out).Append(")>")).to_str();
 }
 obj = run(()=>{if ( @in.Length==0 ) {
-return (new System.Text.StringBuilder("Func<").Append(Task).Append("<").Append(@out).Append(">>")).to_str();}
+return (new System.Text.StringBuilder().Append("Func<").Append(Task).Append("<").Append(@out).Append(">>")).to_str();}
 else {
-return (new System.Text.StringBuilder("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).to_str();}
+return (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).to_str();}
 });
 }
 }
@@ -125,7 +125,7 @@ var p = (string)(Visit(context.typeType(i)));
 obj+=run(()=>{if ( i==0 ) {
 return p;}
 else {
-return (new System.Text.StringBuilder(", ").Append(p).Append("")).to_str();}
+return ", "+p;}
 });
 }
 return obj;

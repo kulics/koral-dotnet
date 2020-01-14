@@ -63,11 +63,11 @@ r.isVirtual=first.isVirtual;
 if ( context.ChildCount>=2 ) {
 foreach (var i in range(1,context.ChildCount-1,1,true,true)){
 var other = (Result)(Visit(context.GetChild(i)));
-r.text+=(new System.Text.StringBuilder("_").Append(other.text).Append("")).to_str();
+r.text+=(new System.Text.StringBuilder().Append("_").Append(other.text)).to_str();
 }
 }
 if ( keywords.Exists((t)=>t==r.text) ) {
-r.text=(new System.Text.StringBuilder("@").Append(r.text).Append("")).to_str();
+r.text=(new System.Text.StringBuilder().Append("@").Append(r.text)).to_str();
 }
 if ( r.text==selfID ) {
 r.text="this";
@@ -160,11 +160,11 @@ public  override  object VisitAnnotation( AnnotationContext context ){
 var obj = "";
 var id = "";
 if ( context.id()!=null ) {
-id = (new System.Text.StringBuilder("").Append(((Result)(Visit(context.id()))).text).Append(":")).to_str();
+id = (new System.Text.StringBuilder().Append(((Result)(Visit(context.id()))).text).Append(":")).to_str();
 }
 var r = (string)(Visit(context.annotationList()));
 if ( r!="" ) {
-obj+=(new System.Text.StringBuilder("[").Append(id).Append("").Append(r).Append("]")).to_str();
+obj+=(new System.Text.StringBuilder().Append("[").Append(id).Append(r).Append("]")).to_str();
 }
 return obj;
 }
@@ -174,7 +174,7 @@ foreach (var (i,v) in range(context.annotationItem())){
 string txt = (string)(this.Visit(v));
 if ( txt!="" ) {
 obj+=run(()=>{if ( i>0 ) {
-return (new System.Text.StringBuilder(",").Append(txt).Append("")).to_str();}
+return ","+txt;}
 else {
 return txt;}
 });
@@ -189,40 +189,40 @@ switch (obj) {
 case "get" :
 { if ( context.lambda()==null ) {
 this.selfPropertyVariable=true;
-this.selfPropertyContent+=(new System.Text.StringBuilder("get{return _").Append(this.selfPropertyID).Append("; }")).to_str();
+this.selfPropertyContent+=(new System.Text.StringBuilder().Append("get{return _").Append(this.selfPropertyID).Append("; }")).to_str();
 }
 else {
-this.selfPropertyContent+=(new System.Text.StringBuilder("get{").Append(this.VisitPropertyLambda(context.lambda(), true)).Append("}")).to_str();
+this.selfPropertyContent+=(new System.Text.StringBuilder().Append("get{").Append(this.VisitPropertyLambda(context.lambda(), true)).Append("}")).to_str();
 }
 return "";
 }break;
 case "set" :
 { if ( context.lambda()==null ) {
 this.selfPropertyVariable=true;
-this.selfPropertyContent+=(new System.Text.StringBuilder("set{_").Append(this.selfPropertyID).Append("=value;}")).to_str();
+this.selfPropertyContent+=(new System.Text.StringBuilder().Append("set{_").Append(this.selfPropertyID).Append("=value;}")).to_str();
 }
 else {
-this.selfPropertyContent+=(new System.Text.StringBuilder("set{").Append(this.VisitPropertyLambda(context.lambda(), false)).Append("}")).to_str();
+this.selfPropertyContent+=(new System.Text.StringBuilder().Append("set{").Append(this.VisitPropertyLambda(context.lambda(), false)).Append("}")).to_str();
 }
 return "";
 }break;
 case "_get" :
 { if ( context.lambda()==null ) {
 this.selfPropertyVariable=true;
-this.selfPropertyContent+=(new System.Text.StringBuilder("private get{return _").Append(this.selfPropertyID).Append("; }")).to_str();
+this.selfPropertyContent+=(new System.Text.StringBuilder().Append("private get{return _").Append(this.selfPropertyID).Append("; }")).to_str();
 }
 else {
-this.selfPropertyContent+=(new System.Text.StringBuilder("private get{").Append(this.VisitPropertyLambda(context.lambda(), true)).Append("}")).to_str();
+this.selfPropertyContent+=(new System.Text.StringBuilder().Append("private get{").Append(this.VisitPropertyLambda(context.lambda(), true)).Append("}")).to_str();
 }
 return "";
 }break;
 case "_set" :
 { if ( context.lambda()==null ) {
 this.selfPropertyVariable=true;
-this.selfPropertyContent+=(new System.Text.StringBuilder("private set{_").Append(this.selfPropertyID).Append("=value;}")).to_str();
+this.selfPropertyContent+=(new System.Text.StringBuilder().Append("private set{_").Append(this.selfPropertyID).Append("=value;}")).to_str();
 }
 else {
-this.selfPropertyContent+=(new System.Text.StringBuilder("private set{").Append(this.VisitPropertyLambda(context.lambda(), false)).Append("}")).to_str();
+this.selfPropertyContent+=(new System.Text.StringBuilder().Append("private set{").Append(this.VisitPropertyLambda(context.lambda(), false)).Append("}")).to_str();
 }
 return "";
 }break;
@@ -238,7 +238,7 @@ return "";
 obj+=run(()=>{if ( context.tuple()!=null ) {
 return ((Result)(this.Visit(context.tuple()))).text;}
 else if ( context.lambda()!=null ) {
-return (new System.Text.StringBuilder("(").Append(((Result)(this.Visit(context.lambda()))).text).Append(")")).to_str();}
+return (new System.Text.StringBuilder().Append("(").Append(((Result)(this.Visit(context.lambda()))).text).Append(")")).to_str();}
 else {
 return "";}
 });

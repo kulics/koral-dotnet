@@ -34,7 +34,7 @@ if ( context.expression()==null ) {
 return ((new Result(){text = (string)(Visit(context.slice()))}));
 }
 var r = (Result)(Visit(context.expression()));
-r.text=(new System.Text.StringBuilder("[").Append(r.text).Append("]")).to_str();
+r.text=(new System.Text.StringBuilder().Append("[").Append(r.text).Append("]")).to_str();
 return r;
 }
 public  override  object VisitSlice( SliceContext context ){
@@ -55,7 +55,7 @@ attach = "true";
 }
 var expr1 = (Result)(Visit(context.expression(0)));
 var expr2 = (Result)(Visit(context.expression(1)));
-return (new System.Text.StringBuilder(".slice(").Append(expr1.text).Append(", ").Append(expr2.text).Append(", ").Append(order).Append(", ").Append(attach).Append(")")).to_str();
+return (new System.Text.StringBuilder().Append(".slice(").Append(expr1.text).Append(", ").Append(expr2.text).Append(", ").Append(order).Append(", ").Append(attach).Append(")")).to_str();
 }
 public  override  object VisitSliceStart( SliceStartContext context ){
 var order = "";
@@ -71,7 +71,7 @@ attach = "true";
 }break;
 }
 var expr = (Result)(Visit(context.expression()));
-return (new System.Text.StringBuilder(".slice(").Append(expr.text).Append(", null, ").Append(order).Append(", ").Append(attach).Append(")")).to_str();
+return (new System.Text.StringBuilder().Append(".slice(").Append(expr.text).Append(", null, ").Append(order).Append(", ").Append(attach).Append(")")).to_str();
 }
 public  override  object VisitSliceEnd( SliceEndContext context ){
 var order = "";
@@ -87,20 +87,20 @@ attach = "true";
 }break;
 }
 var expr = (Result)(Visit(context.expression()));
-return (new System.Text.StringBuilder(".slice(null, ").Append(expr.text).Append(", ").Append(order).Append(", ").Append(attach).Append(")")).to_str();
+return (new System.Text.StringBuilder().Append(".slice(null, ").Append(expr.text).Append(", ").Append(order).Append(", ").Append(attach).Append(")")).to_str();
 }
 public  override  object VisitCallFunc( CallFuncContext context ){
 var r = (new Result(){data = "var"});
 r.text+=run(()=>{if ( context.tuple()!=null ) {
 return ((Result)(Visit(context.tuple()))).text;}
 else {
-return (new System.Text.StringBuilder("(").Append(((Result)(Visit(context.lambda()))).text).Append(")")).to_str();}
+return (new System.Text.StringBuilder().Append("(").Append(((Result)(Visit(context.lambda()))).text).Append(")")).to_str();}
 });
 return r;
 }
 public  override  object VisitCallPkg( CallPkgContext context ){
 var r = (new Result(){data = Visit(context.typeType())});
-r.text=(new System.Text.StringBuilder("(new ").Append(Visit(context.typeType())).Append("()")).to_str();
+r.text=(new System.Text.StringBuilder().Append("(new ").Append(Visit(context.typeType())).Append("()")).to_str();
 if ( context.pkgAssign()!=null ) {
 r.text+=Visit(context.pkgAssign());
 }
@@ -122,7 +122,7 @@ var param = "";
 if ( context.expressionList()!=null ) {
 param = ((Result)(Visit(context.expressionList()))).text;
 }
-r.text=(new System.Text.StringBuilder("(new ").Append(Visit(context.typeType())).Append("(").Append(param).Append(")")).to_str();
+r.text=(new System.Text.StringBuilder().Append("(new ").Append(Visit(context.typeType())).Append("(").Append(param).Append(")")).to_str();
 r.text+=")";
 return r;
 }
@@ -183,7 +183,7 @@ return obj;
 }
 public  override  object VisitPkgAssignElement( PkgAssignElementContext context ){
 var obj = "";
-obj+=Visit(context.name())+" = "+((Result)(Visit(context.expression()))).text;
+obj+=(new System.Text.StringBuilder().Append(Visit(context.name())).Append(" = ").Append(((Result)(Visit(context.expression()))).text)).to_str();
 return obj;
 }
 public  override  object VisitPkgAnonymous( PkgAnonymousContext context ){
@@ -204,7 +204,7 @@ return obj;
 }
 public  override  object VisitPkgAnonymousAssignElement( PkgAnonymousAssignElementContext context ){
 var obj = "";
-obj+=Visit(context.name())+" = "+((Result)(Visit(context.expression()))).text;
+obj+=(new System.Text.StringBuilder().Append(Visit(context.name())).Append(" = ").Append(((Result)(Visit(context.expression()))).text)).to_str();
 return obj;
 }
 public  override  object VisitCallAwait( CallAwaitContext context ){
@@ -229,8 +229,8 @@ type = Any;
 return ","+r.text;}
 });
 }
-result.data=(new System.Text.StringBuilder("").Append(Lst).Append("<").Append(type).Append(">")).to_str();
-result.text=(new System.Text.StringBuilder("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
+result.data=(new System.Text.StringBuilder().Append(Lst).Append("<").Append(type).Append(">")).to_str();
+result.text=(new System.Text.StringBuilder().Append("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
 return result;
 }
 public  override  object VisitSet( SetContext context ){
@@ -248,13 +248,13 @@ type = Any;
 return ","+r.text;}
 });
 }
-result.data=(new System.Text.StringBuilder("").Append(Set).Append("<").Append(type).Append(">")).to_str();
-result.text=(new System.Text.StringBuilder("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
+result.data=(new System.Text.StringBuilder().Append(Set).Append("<").Append(type).Append(">")).to_str();
+result.text=(new System.Text.StringBuilder().Append("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
 return result;
 }
 public  override  object VisitSetElement( SetElementContext context ){
 var r = (Result)(Visit(context.expression()));
-var result = (new Result(){data = (string)(r.data),text = "{"+r.text+"}"});
+var result = (new Result(){data = (string)(r.data),text = (new System.Text.StringBuilder().Append("{").Append(r.text).Append("}")).to_str()});
 return result;
 }
 public  override  object VisitDictionary( DictionaryContext context ){
@@ -277,15 +277,15 @@ value = Any;
 return ","+r.text;}
 });
 }
-var type = key+","+value;
-result.data=(new System.Text.StringBuilder("").Append(Dic).Append("<").Append(type).Append(">")).to_str();
-result.text=(new System.Text.StringBuilder("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
+var type = (new System.Text.StringBuilder().Append(key).Append(", ").Append(value)).to_str();
+result.data=(new System.Text.StringBuilder().Append(Dic).Append("<").Append(type).Append(">")).to_str();
+result.text=(new System.Text.StringBuilder().Append("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
 return result;
 }
 public  override  object VisitDictionaryElement( DictionaryElementContext context ){
 var r1 = (Result)(Visit(context.expression(0)));
 var r2 = (Result)(Visit(context.expression(1)));
-var result = (new DicEle(){key = (string)(r1.data),value = (string)(r2.data),text = "{"+r1.text+","+r2.text+"}"});
+var result = (new DicEle(){key = (string)(r1.data),value = (string)(r2.data),text = (new System.Text.StringBuilder().Append("{").Append(r1.text).Append(", ").Append(r2.text).Append("}")).to_str()});
 return result;
 }
 public  override  object VisitFunctionExpression( FunctionExpressionContext context ){
@@ -317,7 +317,7 @@ if ( context.tupleExpression()!=null ) {
 r.text+=((Result)(Visit(context.tupleExpression()))).text;
 }
 else {
-r.text+="{"+ProcessFunctionSupport(context.functionSupportStatement())+"}";
+r.text+=(new System.Text.StringBuilder().Append("{").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append("}")).to_str();
 }
 this.delete_current_set();
 return r;

@@ -23,7 +23,7 @@ var lazy = (new list<string>());
 foreach (var item in items){
 content+=run(()=>{if ( item.GetChild(0).@is<UsingStatementContext>() ) {
 lazy.add("}");
-return (new System.Text.StringBuilder("using (").Append((string)(Visit(item))).Append(") ").Append(BlockLeft).Append(" ").Append(Wrap).Append("")).to_str();}
+return (new System.Text.StringBuilder().Append("using (").Append((string)(Visit(item))).Append(") ").Append(BlockLeft).Append(Wrap)).to_str();}
 else {
 return Visit(item);}
 });
@@ -47,19 +47,19 @@ if ( context.t.Type==Right_Flow ) {
 pout = run(()=>{if ( context.Discard()!=null ) {
 return "void";}
 else if ( pout!="void" ) {
-return (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();}
+return (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).to_str();}
 else {
 return Task;}
 });
-obj+=(new System.Text.StringBuilder(" async ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
+obj+=(new System.Text.StringBuilder().Append(" async ").Append(pout).Append(" ").Append(id.text)).to_str();
 }
 else {
 if ( context.y!=null ) {
 if ( pout!="void" ) {
-pout = (new System.Text.StringBuilder("").Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
+pout = (new System.Text.StringBuilder().Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
 }
 }
-obj+=(new System.Text.StringBuilder("").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
+obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).to_str();
 }
 var templateContract = "";
 if ( context.templateDefine()!=null ) {
@@ -68,7 +68,7 @@ obj+=template.Template;
 templateContract = template.Contract;
 }
 this.add_current_set();
-obj+=(new System.Text.StringBuilder("").Append(Visit(context.parameterClauseIn())).Append(" ").Append(templateContract).Append(" ").Append(Wrap).Append(" ").Append(BlockLeft).Append(" ").Append(Wrap).Append("")).to_str();
+obj+=(new System.Text.StringBuilder().Append(Visit(context.parameterClauseIn())).Append(" ").Append(templateContract).Append(Wrap).Append(BlockLeft).Append(Wrap).Append(" ")).to_str();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 this.delete_current_set();
@@ -77,23 +77,23 @@ return obj;
 public  override  object VisitReturnStatement( ReturnStatementContext context ){
 if ( context.tupleExpression()!=null ) {
 var r = (Result)(Visit(context.tupleExpression()));
-return "return "+r.text+Terminate+Wrap;
+return (new System.Text.StringBuilder().Append("return ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
 }
-return (new System.Text.StringBuilder("return").Append(Terminate).Append("").Append(Wrap).Append("")).to_str();
+return (new System.Text.StringBuilder().Append("return").Append(Terminate).Append(Wrap)).to_str();
 }
 public  override  object VisitReturnAwaitStatement( ReturnAwaitStatementContext context ){
 if ( context.tupleExpression()!=null ) {
 var r = (Result)(Visit(context.tupleExpression()));
-return "return await "+r.text+Terminate+Wrap;
+return (new System.Text.StringBuilder().Append("return await ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
 }
-return (new System.Text.StringBuilder("return").Append(Terminate).Append("").Append(Wrap).Append("")).to_str();
+return (new System.Text.StringBuilder().Append("return").Append(Terminate).Append(Wrap)).to_str();
 }
 public  override  object VisitYieldReturnStatement( YieldReturnStatementContext context ){
 var r = (Result)(Visit(context.tupleExpression()));
-return "yield return "+r.text+Terminate+Wrap;
+return (new System.Text.StringBuilder().Append("yield return ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
 }
 public  override  object VisitYieldBreakStatement( YieldBreakStatementContext context ){
-return (new System.Text.StringBuilder("yield break").Append(Terminate).Append("").Append(Wrap).Append("")).to_str();
+return (new System.Text.StringBuilder().Append("yield break").Append(Terminate).Append(Wrap)).to_str();
 }
 public  override  object VisitTuple( TupleContext context ){
 var obj = "(";
@@ -102,7 +102,7 @@ var r = (Result)(Visit(context.expression(i)));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
 else {
-return (new System.Text.StringBuilder(", ").Append(r.text).Append("")).to_str();}
+return ", "+r.text;}
 });
 }
 obj+=")";
@@ -115,11 +115,11 @@ var r = (Result)(Visit(context.expression(i)));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
 else {
-return (new System.Text.StringBuilder(", ").Append(r.text).Append("")).to_str();}
+return ", "+r.text;}
 });
 }
 if ( context.expression().Length>1 ) {
-obj = (new System.Text.StringBuilder("(").Append(obj).Append(")")).to_str();
+obj = (new System.Text.StringBuilder().Append("(").Append(obj).Append(")")).to_str();
 }
 return (new Result(){data = "var",text = obj});
 }
@@ -128,14 +128,14 @@ var obj = "(";
 var temp = (new list<string>());
 foreach (var i in range(context.parameter().Length-1,0,1,false,true)){
 var p = (Parameter)(Visit(context.parameter(i)));
-temp.add((new System.Text.StringBuilder("").Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value).Append("")).to_str());
+temp.add((new System.Text.StringBuilder().Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value)).to_str());
 this.add_id(p.id);
 }
 foreach (var i in range(temp.Count-1,0,1,false,true)){
 obj+=run(()=>{if ( i==temp.Count-1 ) {
 return temp[i];}
 else {
-return (new System.Text.StringBuilder(", ").Append(temp[i]).Append("")).to_str();}
+return ", "+temp[i];}
 });
 }
 obj+=")";
@@ -155,13 +155,13 @@ obj+="( ";
 var temp = (new list<string>());
 foreach (var i in range(context.parameter().Length-1,0,1,false,true)){
 var p = (Parameter)(Visit(context.parameter(i)));
-temp.add((new System.Text.StringBuilder("").Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value).Append("")).to_str());
+temp.add((new System.Text.StringBuilder().Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value)).to_str());
 }
 foreach (var i in range(temp.Count-1,0,1,false,true)){
 obj+=run(()=>{if ( i==temp.Count-1 ) {
 return temp[i];}
 else {
-return (new System.Text.StringBuilder(", ").Append(temp[i]).Append("")).to_str();}
+return ", "+temp[i];}
 });
 }
 obj+=" )";
@@ -177,11 +177,11 @@ if ( context.annotationSupport()!=null ) {
 p.annotation=(string)(Visit(context.annotationSupport()));
 }
 if ( context.expression()!=null ) {
-p.value=(new System.Text.StringBuilder("=").Append(((Result)(Visit(context.expression()))).text).Append("")).to_str();
+p.value=(new System.Text.StringBuilder().Append("= ").Append(((Result)(Visit(context.expression()))).text)).to_str();
 }
 p.type=(string)(Visit(context.typeType()));
 if ( context.Dot_Dot_Dot()!=null ) {
-p.type="params "+p.type+"[]";
+p.type=(new System.Text.StringBuilder().Append("params ").Append(p.type).Append("[]")).to_str();
 }
 return p;
 }

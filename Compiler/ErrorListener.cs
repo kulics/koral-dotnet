@@ -13,10 +13,10 @@ public string FileDir;
 public  override  void SyntaxError( IRecognizer recognizer ,  IToken? offendingSymbol ,  int line ,  int charPositionInLine ,  string msg ,  RecognitionException? e ){
 base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e);
 print("------Syntax Error------");
-print((new System.Text.StringBuilder("File: ").Append(this.FileDir).Append("")).to_str());
-print((new System.Text.StringBuilder("Line: ").Append(line).Append("  Column: ").Append(charPositionInLine).Append("")).to_str());
-print((new System.Text.StringBuilder("OffendingSymbol: ").Append(offendingSymbol.Text).Append("")).to_str());
-print((new System.Text.StringBuilder("Message: ").Append(msg).Append("")).to_str());
+print((new System.Text.StringBuilder().Append("File: ").Append(this.FileDir)).to_str());
+print((new System.Text.StringBuilder().Append("Line: ").Append(line).Append("  Column: ").Append(charPositionInLine)).to_str());
+print((new System.Text.StringBuilder().Append("OffendingSymbol: ").Append(offendingSymbol.Text)).to_str());
+print((new System.Text.StringBuilder().Append("Message: ").Append(msg)).to_str());
 }
 }
 }

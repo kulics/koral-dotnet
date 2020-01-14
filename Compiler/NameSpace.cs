@@ -16,12 +16,12 @@ public partial class LiteLangVisitor{
 public  override  object VisitStatement( StatementContext context ){
 var obj = "";
 var ns = (Namespace)(Visit(context.exportStatement()));
-obj+=(new System.Text.StringBuilder("using Library;").Append(Wrap).Append("using static Library.Lib;").Append(Wrap).Append("")).to_str();
+obj+=(new System.Text.StringBuilder().Append("using Library;").Append(Wrap).Append("using static Library.Lib;").Append(Wrap)).to_str();
 obj+=ns.imports+Wrap;
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-obj+=(new System.Text.StringBuilder("namespace ").Append(ns.name+Wrap+BlockLeft+Wrap).Append("")).to_str();
+obj+=(new System.Text.StringBuilder().Append("namespace ").Append(ns.name).Append(Wrap).Append(BlockLeft).Append(Wrap)).to_str();
 var content = "";
 var contentStatic = "";
 this.add_current_set();
@@ -36,7 +36,7 @@ content+=Visit(item);
 }
 obj+=content;
 if ( contentStatic!="" ) {
-obj+=(new System.Text.StringBuilder("public partial class ").Append(ns.name.sub_str(ns.name.last_index_of(".")+1)).Append("_static")).to_str()+BlockLeft+Wrap+contentStatic+BlockRight+Wrap;
+obj+=(new System.Text.StringBuilder().Append("public partial class ").Append(ns.name.sub_str(ns.name.last_index_of(".")+1)).Append("_static ").Append(BlockLeft).Append(Wrap).Append(contentStatic).Append(BlockRight).Append(Wrap)).to_str();
 }
 this.delete_current_set();
 obj+=BlockRight+Wrap;
@@ -61,11 +61,11 @@ var ns = (string)(Visit(context.stringExpr()));
 ns = ns.sub_str(1, ns.len()-2);
 ns = ns.replace("/", ".");
 obj+=run(()=>{if ( context.call()!=null ) {
-return "using static "+ns+"."+((Result)(Visit(context.id()))).text;}
+return (new System.Text.StringBuilder().Append("using static ").Append(ns).Append(".").Append(((Result)(Visit(context.id()))).text)).to_str();}
 else if ( context.id()!=null ) {
-return "using "+ns+"."+((Result)(Visit(context.id()))).text;}
+return (new System.Text.StringBuilder().Append("using ").Append(ns).Append(".").Append(((Result)(Visit(context.id()))).text)).to_str();}
 else {
-return "using "+ns;}
+return (new System.Text.StringBuilder().Append("using ").Append(ns)).to_str();}
 });
 obj+=Terminate+Wrap;
 return obj;
@@ -75,7 +75,7 @@ var obj = "";
 foreach (var i in range(0,context.id().Length-1,1,true,true)){
 var id = (Result)(Visit(context.id(i)));
 obj+=run(()=>{if ( i==0 ) {
-return ""+id.text;}
+return id.text;}
 else {
 return "."+id.text;}
 });
@@ -87,7 +87,7 @@ var obj = "";
 foreach (var i in range(0,context.id().Length-1,1,true,true)){
 var id = (Result)(Visit(context.id(i)));
 obj+=run(()=>{if ( i==0 ) {
-return ""+id.text;}
+return id.text;}
 else {
 return "."+id.text;}
 });
@@ -102,7 +102,7 @@ var typ = "int";
 if ( context.annotationSupport()!=null ) {
 header+=Visit(context.annotationSupport());
 }
-header+=id.permission+" enum "+id.text+":"+typ;
+header+=(new System.Text.StringBuilder().Append(id.permission).Append(" enum ").Append(id.text).Append(":").Append(typ)).to_str();
 header+=Wrap+BlockLeft+Wrap;
 foreach (var i in range(0,context.enumSupportStatement().Length-1,1,true,true)){
 obj+=Visit(context.enumSupportStatement(i));
@@ -138,22 +138,22 @@ pout = "void";
 }
 else if ( pout!="void" ) {
 if ( context.y!=null ) {
-pout = (new System.Text.StringBuilder("").Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
+pout = (new System.Text.StringBuilder().Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
 }
-pout = (new System.Text.StringBuilder("").Append(Task).Append("<").Append(pout).Append(">")).to_str();
+pout = (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).to_str();
 }
 else {
 pout = Task;
 }
-obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" async static ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
+obj+=(new System.Text.StringBuilder().Append(id.permission).Append(" async static ").Append(pout).Append(" ").Append(id.text)).to_str();
 }
 else {
 if ( context.y!=null ) {
 if ( pout!="void" ) {
-pout = (new System.Text.StringBuilder("").Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
+pout = (new System.Text.StringBuilder().Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
 }
 }
-obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" static ").Append(pout).Append(" ").Append(id.text).Append("")).to_str();
+obj+=(new System.Text.StringBuilder().Append(id.permission).Append(" static ").Append(pout).Append(" ").Append(id.text)).to_str();
 }
 var templateContract = "";
 if ( context.templateDefine()!=null ) {
@@ -180,7 +180,7 @@ var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-obj+=(new System.Text.StringBuilder("").Append(id.permission).Append(" const ").Append(typ).Append(" ").Append(id.text).Append(" = ").Append(expr.text).Append(" ").Append(Terminate+Wrap).Append("")).to_str();
+obj+=(new System.Text.StringBuilder().Append(id.permission).Append(" const ").Append(typ).Append(" ").Append(id.text).Append(" = ").Append(expr.text).Append(Terminate).Append(Wrap)).to_str();
 return obj;
 }
 public  override  object VisitNamespaceVariableStatement( NamespaceVariableStatementContext context ){
@@ -204,14 +204,14 @@ obj+=Visit(context.annotationSupport());
 if ( this.selfPropertyContent.len>0 ) {
 var pri = "";
 if ( this.selfPropertyVariable ) {
-pri = (new System.Text.StringBuilder("private static ").Append(typ).Append(" _").Append(r1.text).Append("")).to_str();
+pri = (new System.Text.StringBuilder().Append("private static ").Append(typ).Append(" _").Append(r1.text)).to_str();
 if ( r2!=null ) {
 pri+=" = "+r2.text;
 }
 pri+=Terminate+Wrap;
 }
 obj = pri+obj;
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append("").Append(BlockLeft).Append("")).to_str();
+obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append(BlockLeft)).to_str();
 foreach (var v in this.selfPropertyContent){
 obj+=v;
 }
@@ -221,9 +221,9 @@ this.selfPropertyID="";
 this.selfPropertyVariable=false;
 }
 else {
-obj+=(new System.Text.StringBuilder("").Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append("")).to_str();
+obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text)).to_str();
 obj+=run(()=>{if ( r2!=null ) {
-return (new System.Text.StringBuilder(" = ").Append(r2.text).Append(" ").Append(Terminate+Wrap).Append("")).to_str();}
+return (new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();}
 else {
 return Terminate+Wrap;}
 });

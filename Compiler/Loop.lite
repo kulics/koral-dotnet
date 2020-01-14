@@ -44,19 +44,18 @@ LiteLangVisitor : $ (me) {
         id = (Visit(context.id()) Result!).text
         
         it = Visit(context.iteratorStatement()) Iterator!
-        target = "range("it.begin.text","it.end.text","it.step.text","it.order","it.attach")"
+        target = "range(\{it.begin.text}, \{it.end.text}, \{it.step.text}, \{it.order}, \{it.attach})"
 
-        obj += "foreach (var "id" in "target")"
+        obj += "foreach (var \{id} in \{target})"
 
-        obj += BlockLeft+Wrap
+        obj += BlockLeft + Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
-        obj += BlockRight+Wrap
+        obj += BlockRight + Wrap
         ? context.loopElseStatement() >< nil {
             elseContent = Visit(context.loopElseStatement()) str!
-            obj = "if (!can_range(" target ")) " + elseContent + "else" + BlockLeft + 
-            Wrap + obj + BlockRight + Wrap
+            obj = "if (!can_range(\{ target })) \{elseContent} else \{BlockLeft,Wrap, obj, BlockRight, Wrap}"
         }
         <- obj
     }
@@ -67,13 +66,13 @@ LiteLangVisitor : $ (me) {
         target = arr.text
         id = "ea"
         ? context.id().Length == 2 {
-            target = "range("target")"
-            id = "("(Visit(context.id(0)) Result!).text","(Visit(context.id(1)) Result!).text")"
+            target = "range(\{target})"
+            id = "(\{(Visit(context.id(0)) Result!).text}, \{(Visit(context.id(1)) Result!).text})"
         } context.id().Length == 1 {
             id = (Visit(context.id(0)) Result!).text
         }
 
-        obj += "foreach (var "id" in "target")"
+        obj += "foreach (var \{id} in \{target})"
         obj += BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -81,8 +80,7 @@ LiteLangVisitor : $ (me) {
         obj += BlockRight+Wrap
         ? context.loopElseStatement() >< nil {
             elseContent = Visit(context.loopElseStatement()) str!
-            obj = "if (!can_range(" target ")) " + elseContent + "else" + BlockLeft + 
-            Wrap + obj + BlockRight + Wrap
+            obj = "if (!can_range(\{ target })) \{elseContent} else \{BlockLeft, Wrap, obj, BlockRight, Wrap}"
         }
         <- obj
     }
@@ -90,7 +88,7 @@ LiteLangVisitor : $ (me) {
     .VisitLoopCaseStatement : (context LoopCaseStatementContext -> v any) {
         obj = ""
         expr = Visit(context.expression()) Result!
-        obj += "for ( ;"expr.text" ;)"
+        obj += "for ( ;\{expr.text} ;)"
         obj += BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -98,8 +96,7 @@ LiteLangVisitor : $ (me) {
         obj += BlockRight+Wrap
         ? context.loopElseStatement() >< nil {
             elseContent = Visit(context.loopElseStatement()) str!
-            obj = "if (!(" expr.text ")) " + elseContent + "else" + BlockLeft + 
-            Wrap + obj + BlockRight + Wrap
+            obj = "if (!(\{ expr.text })) \{elseContent} else \{BlockLeft, Wrap, obj, BlockRight, Wrap}"
         }
         <- obj
     }
@@ -114,11 +111,11 @@ LiteLangVisitor : $ (me) {
     }
 
     .VisitLoopJumpStatement : (context LoopJumpStatementContext -> v any) {
-        <- "break "Terminate+Wrap""
+        <- "break\{Terminate, Wrap}"
     }
 
     .VisitLoopContinueStatement : (context LoopContinueStatementContext -> v any) {
-        <- "continue "Terminate+Wrap""
+        <- "continue\{Terminate, Wrap}"
     }
 
     .VisitLoopExpression : (context LoopExpressionContext -> v any) {
@@ -126,20 +123,20 @@ LiteLangVisitor : $ (me) {
         id = (Visit(context.id()) Result!).text
         
         it = Visit(context.iteratorStatement()) Iterator!
-        target = "range("it.begin.text","it.end.text","it.step.text","it.order","it.attach")"
+        target = "range(\{it.begin.text}, \{it.end.text}, \{it.step.text}, \{it.order}, \{it.attach})"
 
-        obj += "runloop("target", ("id")=>"
+        obj += "runloop(\{target}, (\{id})=>"
 
         obj += BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return " (Visit(context.tupleExpression()) Result!).text ";"
+        obj += "return \{(Visit(context.tupleExpression()) Result!).text};"
         me.delete_current_set()
         obj += BlockRight
 
         ? context.loopElseExpression() >< nil {
             elseContent = Visit(context.loopElseExpression()) str!
-            obj += ", ()=> " elseContent ")"
+            obj += ", ()=> \{elseContent})"
         } _ {
             obj += ")"
         }
@@ -153,23 +150,23 @@ LiteLangVisitor : $ (me) {
         target = arr.text
         id = "ea"
         ? context.id().Length == 2 {
-            target = "range("target")"
-            id = "("(Visit(context.id(0)) Result!).text","(Visit(context.id(1)) Result!).text")"
+            target = "range(\{target})"
+            id = "(\{(Visit(context.id(0)) Result!).text}, \{(Visit(context.id(1)) Result!).text})"
         } context.id().Length == 1 {
             id = (Visit(context.id(0)) Result!).text
         }
 
-        obj += "runloop("target", ("id")=>"
+        obj += "runloop(\{target}, (\{id})=>"
         obj += BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return " (Visit(context.tupleExpression()) Result!).text ";"
+        obj += "return \{(Visit(context.tupleExpression()) Result!).text};"
         me.delete_current_set()
         obj += BlockRight
         
         ? context.loopElseExpression() >< nil {
             elseContent = Visit(context.loopElseExpression()) str!
-            obj += ", ()=> " elseContent ")"
+            obj += ", ()=> \{elseContent})"
         } _ {
             obj += ")"
         }
@@ -181,7 +178,7 @@ LiteLangVisitor : $ (me) {
         obj = BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return " (Visit(context.tupleExpression()) Result!).text ";"
+        obj += "return \{(Visit(context.tupleExpression()) Result!).text};"
         me.delete_current_set()
         obj += BlockRight
         <- obj

@@ -104,12 +104,12 @@ LiteLangVisitor : $ (me) {
         ? context.ChildCount >= 2 {
             @ i = 1 ++ context.ChildCount-1 {
                 other = Visit(context.GetChild(i)) Result!
-                r.text += "_"other.text""
+                r.text += "_\{other.text}"
             }
         }
 
         ? keywords.Exists{t -> t == r.text} {
-            r.text = "@"r.text""
+            r.text = "@\{r.text}"
         }
         ? r.text == selfID {
             r.text = "this"
@@ -198,12 +198,12 @@ LiteLangVisitor : $ (me) {
         obj = ""
         id = ""
         ? context.id() >< nil {
-            id = ""(Visit(context.id()) Result!).text":"
+            id = "\{(Visit(context.id()) Result!).text}:"
         }
 
         r = Visit(context.annotationList()) str!
         ? r >< "" {
-            obj += "[" id "" r "]"
+            obj += "[\{id, r}]"
         }
         <- obj
     }
@@ -214,7 +214,7 @@ LiteLangVisitor : $ (me) {
             txt str = me.Visit(v) str!
             ? txt >< "" {
                 obj += ? -> i > 0 {
-                    "," txt ""
+                    "," + txt
                 } _ {
                     txt
                 }
@@ -229,33 +229,33 @@ LiteLangVisitor : $ (me) {
         ? obj.. "get" {
             ? context.lambda() == nil {
                 me.selfPropertyVariable = true
-                me.selfPropertyContent += "get{return _" me.selfPropertyID "; }"
+                me.selfPropertyContent += "get{return _\{ me.selfPropertyID }; }"
             } _ {
-                me.selfPropertyContent += "get{" me.VisitPropertyLambda(context.lambda(), true) "}"
+                me.selfPropertyContent += "get{\{ me.VisitPropertyLambda(context.lambda(), true) }}"
             }
             <- ""
         } "set" {
             ? context.lambda() == nil {
                 me.selfPropertyVariable = true
-                me.selfPropertyContent += "set{_" me.selfPropertyID "=value;}"
+                me.selfPropertyContent += "set{_\{ me.selfPropertyID }=value;}"
             } _ {
-                me.selfPropertyContent += "set{" me.VisitPropertyLambda(context.lambda(), false) "}"
+                me.selfPropertyContent += "set{\{ me.VisitPropertyLambda(context.lambda(), false) }}"
             }
             <- ""
         } "_get" {
             ? context.lambda() == nil {
                 me.selfPropertyVariable = true
-                me.selfPropertyContent += "private get{return _" me.selfPropertyID "; }"
+                me.selfPropertyContent += "private get{return _\{ me.selfPropertyID }; }"
             } _ {
-                me.selfPropertyContent += "private get{" me.VisitPropertyLambda(context.lambda(), true) "}"
+                me.selfPropertyContent += "private get{\{ me.VisitPropertyLambda(context.lambda(), true) }}"
             }
             <- ""
         } "_set" {
             ? context.lambda() == nil {
                 me.selfPropertyVariable = true
-                me.selfPropertyContent += "private set{_" me.selfPropertyID "=value;}"
+                me.selfPropertyContent += "private set{_\{ me.selfPropertyID }=value;}"
             } _ {
-                me.selfPropertyContent += "private set{" me.VisitPropertyLambda(context.lambda(), false) "}"
+                me.selfPropertyContent += "private set{\{ me.VisitPropertyLambda(context.lambda(), false) }}"
             }
             <- ""
         } "add" {
@@ -268,7 +268,7 @@ LiteLangVisitor : $ (me) {
         obj += ? -> context.tuple() >< nil {
             (me.Visit(context.tuple()) Result!).text
         } context.lambda() >< nil {
-            "(" (me.Visit(context.lambda()) Result!).text ")"
+            "(\{ (me.Visit(context.lambda()) Result!).text })"
         } _ {
             ""
         }
