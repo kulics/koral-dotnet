@@ -414,7 +414,7 @@ stringExpr: Quote_Open (stringContent | stringTemplate)* Quote_Close;
 
 stringContent: TextLiteral;
 
-stringTemplate: String_Template_Open expression (more expression)* Right_Brack;
+stringTemplate: String_Template_Open expression (more expression)* Right_Brace;
 
 floatExpr: integerExpr call integerExpr;
 integerExpr: NumberLiteral;

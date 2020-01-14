@@ -43,10 +43,10 @@ Semi: ';';
 
 Left_Paren:             '(';
 Right_Paren:             ')';
-Left_Brace:             '{';
-Right_Brace:             '}';
-Left_Brack:             '[' -> pushMode(DEFAULT_MODE);
-Right_Brack:            ']' -> popMode;
+Left_Brace:             '{' -> pushMode(DEFAULT_MODE);
+Right_Brace:             '}' -> popMode;
+Left_Brack:             '[';
+Right_Brack:            ']';
 
 Colon: ':';
 
@@ -116,7 +116,7 @@ mode String;
 
 Quote_Close: '"' -> popMode;
 
-String_Template_Open: '\\[' -> pushMode(DEFAULT_MODE);
+String_Template_Open: '\\{' -> pushMode(DEFAULT_MODE);
 
 TextLiteral: ('\\' [btnfr"\\] | ~('\\' | '"' ))+ ; // 文本
 
