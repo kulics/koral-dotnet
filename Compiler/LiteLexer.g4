@@ -45,8 +45,8 @@ Left_Paren:             '(';
 Right_Paren:             ')';
 Left_Brace:             '{';
 Right_Brace:             '}';
-Left_Brack:             '[';
-Right_Brack:             ']';
+Left_Brack:             '[' -> pushMode(DEFAULT_MODE);
+Right_Brack:            ']' -> popMode;
 
 Colon: ':';
 
@@ -97,6 +97,8 @@ UndefinedLiteral: 'undef';
 
 NumberLiteral: DIGIT+ ; // 整数
 fragment DIGIT: [0-9] ;   // 单个数字
+Quote_Open: '"' -> pushMode(String) ;
+// Quote_Quote_Quote: '"""';
 CharLiteral: '\'' ('\\\'' | '\\' [btnfr\\] | .)*? '\''; // 单字符
 IDPrivate: '_' [a-zA-Z0-9_]+; // 私有标识符
 IDPublic: [a-zA-Z] [a-zA-Z0-9_]*; // 公有标识符
@@ -110,17 +112,11 @@ New_Line: '\r'? '\n';
 
 WS: [ \t]+ -> skip; // 空白， 后面的->skip表示antlr4在分析语言的文本时，符合这个规则的词法将被无视
 
-
-Quote_Open: '"' -> pushMode(LineString) ;
-// Quote_Quote_Quote: '"""';
-
-mode LineString ;
+mode String;
 
 Quote_Close: '"' -> popMode;
 
-String_Template_Open: '$[' ;
+String_Template_Open: '\\[' -> pushMode(DEFAULT_MODE);
 
-String_Template_Close: ']' ;
-
-TextLiteral: ('\\' [btnfr"\\] | ~('\\' | '"' | '$' ))+ | '$' ; // 文本
+TextLiteral: ('\\' [btnfr"\\] | ~('\\' | '"' ))+ ; // 文本
 

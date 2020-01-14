@@ -269,9 +269,7 @@ expression judgeCombine expression | // 组合判断表达式
 expression judge expression | // 判断型表达式
 expression add expression | // 和型表达式
 expression mul expression | // 积型表达式
-expression pow expression | // 幂型表达式
-stringExpression; // 字符串插值
-
+expression pow expression; // 幂型表达式
 
 callExpression: call New_Line? (id | left_brack id templateCall right_brack) (callFunc|callChannel|callElement)?;
 
@@ -369,10 +367,6 @@ linqHeadItem: At id (Colon|Equal) expression Dot_Dot;
 
 linqItem: (linqHeadItem | id (expression)?) Right_Arrow New_Line?;
 
-stringExpression: TextLiteral (stringExpressionElement)+;
-
-stringExpressionElement: expression TextLiteral;
-
 // 判断表达式
 judgeExpression: judgeExpressionIfStatement (judgeExpressionElseIfStatement)* judgeExpressionElseStatement;
 
@@ -414,10 +408,13 @@ nilExpr |
 t=UndefinedLiteral;
 
 // 字符串表达式
-stringExpr: Quote_Open (stringTemplate | TextLiteral)* Quote_Close;
+stringExpr: Quote_Open (stringContent | stringTemplate)* Quote_Close;
 // 原始字符串表达式
 // rawstringExpr: Quote_Quote_Quote TextLiteral Quote_Quote_Quote;
-stringTemplate: String_Template_Open TrueLiteral;
+
+stringContent: TextLiteral;
+
+stringTemplate: String_Template_Open expression (more expression)* Right_Brack;
 
 floatExpr: integerExpr call integerExpr;
 integerExpr: NumberLiteral;

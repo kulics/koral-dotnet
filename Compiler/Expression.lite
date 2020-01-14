@@ -382,24 +382,6 @@ LiteLangVisitor : $ (me) {
         <- obj
     }
 
-    .VisitStringExpression : (context StringExpressionContext -> v any) {
-        text = "(new System.Text.StringBuilder("context.TextLiteral().GetText()")"
-        @ item = context.stringExpressionElement().. {
-            text += Visit(item)
-        }
-        text += ").to_str()"
-        <- Result{
-            data = Str
-            text = text
-        }
-    }
-
-    .VisitStringExpressionElement : (context StringExpressionElementContext -> v any) {
-        r = Visit(context.expression()) Result!
-        text = context.TextLiteral().GetText()
-        <- ".Append("r.text").Append("text")"
-    }
-
     .VisitDataStatement : (context DataStatementContext -> v any) {
         r = Result{}
         ? context.nilExpr() >< nil {
@@ -432,11 +414,39 @@ LiteLangVisitor : $ (me) {
     }
 
     .VisitStringExpr : (context StringExprContext -> v any) {
-        value = ""
-        @ v = context.TextLiteral().. {
-            value += v.GetText()
+        text = ""
+        ? context.stringTemplate().Length == 0 {
+            @ v = context.stringContent().. {
+                text += Visit(v)
+            }
+            <- text
+        } _ {
+            text = "(new System.Text.StringBuilder()"
+            @ i = 1++context.ChildCount-1 {
+                v = context.GetChild(i)
+                r = Visit(context.GetChild(i)) str!
+                ? v.GetType() == [typeof StringContentContext]() {
+                    text += ".Append(" r ")"
+                } _ {
+                    text += r
+                }
+            }
+            text += ").to_str()"
+            <- text
         }
-        <- "\"" + value + "\""
+    }
+
+    .VisitStringContent : (context StringContentContext -> v any) {
+        <- "\"" context.TextLiteral().GetText() "\""
+    }
+
+    .VisitStringTemplate : (context StringTemplateContext -> v any) {
+        text = ""
+        @ v = context.expression().. {
+            r = Visit(v) Result!
+            text += ".Append("r.text")"
+        }
+        <- text
     }
 
     # .VisitRawstringExpr : (context RawstringExprContext -> v any) {
