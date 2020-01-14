@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Compiler
 {
-public partial class Compiler_static{
+public partial class Compiler_static {
 protected static string _ReadPath;
 protected static string _PathLine;
 public static void Main( string[] args ){
@@ -26,7 +26,7 @@ print("Completed");
 public static void Compiled( string path ){
 var Files = Directory.GetFiles(path, "*.lite");
 foreach (var file in Files){
-using (var fsRead = (new FileStream(file, FileMode.Open))) { 
+using (var fsRead = (new FileStream(file, FileMode.Open))) {
 try {
 var FSLength = (int)(fsRead.Length);
 var ByteBlock = array<byte>(FSLength);
@@ -43,7 +43,7 @@ var AST = Parser.program();
 var Visitor = (new LiteLangVisitor());
 var Result = Visitor.Visit(AST);
 var ByteResult = Encoding.UTF8.GetBytes(Result.to_str());
-using (var fsWrite = (new FileStream((new System.Text.StringBuilder().Append(_ReadPath).Append(file.sub_str(0, file.Length-5)).Append(".cs")).to_str(), FileMode.Create))) { 
+using (var fsWrite = (new FileStream((new System.Text.StringBuilder().Append(_ReadPath).Append(file.sub_str(0, file.Length-5)).Append(".cs")).to_str(), FileMode.Create))) {
 fsWrite.Write(ByteResult, 0, ByteResult.Length);
 }}catch( Exception err )
 {

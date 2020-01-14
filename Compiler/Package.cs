@@ -20,6 +20,10 @@ foreach (var item in context.includeStatement()){
 var r = (string)(Visit(item));
 extend+=r;
 }
+foreach (var item in context.packageStaticStatement()){
+var r = (Result)(Visit(item));
+obj+=r.text;
+}
 foreach (var item in context.packageFieldStatement()){
 var r = (Result)(Visit(item));
 obj+=r.text;
@@ -49,13 +53,109 @@ header+=template;
 }
 if ( extend.length>0 ) {
 var temp = extend[0];
-foreach (var i in range(1,extend.length-1,1,true,true)){
+foreach (var i in range(1, extend.length-1, 1, true, true)){
 temp+=","+extend[i];
 }
 header+=":"+temp;
 }
 header+=templateContract+BlockLeft+Wrap;
 obj = header+obj;
+return obj;
+}
+public  override  object VisitPackageStaticStatement( PackageStaticStatementContext context ){
+var obj = "";
+foreach (var item in context.packageStaticSupportStatement()){
+obj+=Visit(item);
+}
+return (new Result(){text = obj});
+}
+public  override  object VisitPackageStaticVariableStatement( PackageStaticVariableStatementContext context ){
+var r1 = (Result)(Visit(context.id()));
+var typ = "";
+Result r2 = null;
+if ( context.expression()!=null ) {
+r2 = (Result)(Visit(context.expression()));
+typ = (string)(r2.data);
+}
+if ( context.typeType()!=null ) {
+typ = (string)(Visit(context.typeType()));
+}
+var obj = "";
+if ( context.annotationSupport()!=null ) {
+this.selfPropertyID=r1.text;
+obj+=Visit(context.annotationSupport());
+}
+if ( this.selfPropertyContent.len>0 ) {
+var pri = "";
+if ( this.selfPropertyVariable ) {
+pri = (new System.Text.StringBuilder().Append("private static ").Append(typ).Append(" _").Append(r1.text)).to_str();
+if ( r2!=null ) {
+pri+=" = "+r2.text;
+}
+pri+=Terminate+Wrap;
+}
+obj = pri+obj;
+obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append(BlockLeft)).to_str();
+foreach (var v in this.selfPropertyContent){
+obj+=v;
+}
+obj+=BlockRight+Wrap;
+this.selfPropertyContent.clear();
+this.selfPropertyID="";
+this.selfPropertyVariable=false;
+}
+else {
+obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text)).to_str();
+obj+=run(()=>{if ( r2!=null ) {
+return (new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();}
+else {
+return Terminate+Wrap;}
+});
+}
+return obj;
+}
+public  override  object VisitPackageStaticFunctionStatement( PackageStaticFunctionStatementContext context ){
+var id = (Result)(Visit(context.id()));
+var obj = "";
+obj+=(new System.Text.StringBuilder().Append(id.permission).Append(" static ")).to_str();
+var pout = "";
+if ( context.parameterClauseOut()!=null ) {
+pout = (string)(Visit(context.parameterClauseOut()));
+}
+if ( context.t.Type==Right_Flow ) {
+if ( context.Discard()!=null ) {
+pout = "void";
+}
+else if ( pout!="void" ) {
+if ( context.y!=null ) {
+pout = (new System.Text.StringBuilder().Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
+}
+pout = (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).to_str();
+}
+else {
+pout = Task;
+}
+obj+=(new System.Text.StringBuilder().Append("async ").Append(pout).Append(" ").Append(id.text)).to_str();
+}
+else {
+if ( context.y!=null ) {
+if ( pout!="void" ) {
+pout = (new System.Text.StringBuilder().Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
+}
+}
+obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).to_str();
+}
+var templateContract = "";
+if ( context.templateDefine()!=null ) {
+var template = (TemplateItem)(Visit(context.templateDefine()));
+obj+=template.Template;
+templateContract = template.Contract;
+}
+this.add_current_set();
+obj+=Visit(context.parameterClauseIn())+templateContract+BlockLeft+Wrap;
+obj+=ProcessFunctionSupport(context.functionSupportStatement());
+this.delete_current_set();
+obj+=BlockRight+Wrap;
 return obj;
 }
 public  override  object VisitPackageFieldStatement( PackageFieldStatementContext context ){
@@ -222,7 +322,7 @@ extend+=r;
 obj+=(new System.Text.StringBuilder().Append("public partial interface ").Append(ptclName)).to_str();
 if ( extend.length>0 ) {
 var temp = extend[0];
-foreach (var i in range(1,extend.length-1,1,true,true)){
+foreach (var i in range(1, extend.length-1, 1, true, true)){
 temp+=","+extend[i];
 }
 obj+=":"+temp;

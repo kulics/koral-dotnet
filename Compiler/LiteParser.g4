@@ -45,8 +45,21 @@ namespaceFunctionStatement: (annotationSupport)? (id| left_brack id templateDefi
 
 // 定义包
 packageStatement: (annotationSupport)? (id| left_brack id templateDefine right_brack) (Colon|Equal)
- (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement)
- (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement))* end;
+ (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement|packageStaticStatement)
+ (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement|packageStaticStatement))* end;
+
+packageStaticStatement: left_brace (packageStaticSupportStatement)* right_brace;
+// 包静态语句
+packageStaticSupportStatement:
+packageStaticFunctionStatement |
+packageStaticVariableStatement;
+
+// 定义变量
+packageStaticVariableStatement: (annotationSupport)? id (Equal expression| typeType (Equal expression)?) end;
+// 函数
+packageStaticFunctionStatement: (annotationSupport)? (id| left_brack id templateDefine right_brack) Colon
+ left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
+(parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
 
 packageFieldStatement: Coin (left_paren p=Question? id (more id)? right_paren)? left_brace (packageSupportStatement)* right_brace;
 
@@ -57,8 +70,7 @@ packageVariableStatement |
 packageEventStatement |
 overrideFunctionStatement |
 overrideVariableStatement |
-New_Line
-;
+New_Line;
 
 // 包含
 includeStatement: typeType;

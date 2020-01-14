@@ -17,15 +17,15 @@ public bool isVirtual;
 public bool isDefine;
 }
 public partial class LiteLangVisitor:LiteParserBaseVisitor<object>{
-public string selfID = "" ; 
-public string superID = "" ; 
-public string setID = "" ; 
-public string getID = "" ; 
-public string selfPropertyID = "" ; 
-public list<string> selfPropertyContent = (new list<string>()) ; 
-public bool selfPropertyVariable = false ; 
-public hashset<string> AllIDSet = (new hashset<string>()) ; 
-public stack<hashset<string>> CurrentIDSet = (new stack<hashset<string>>()) ; 
+public string selfID = "";
+public string superID = "";
+public string setID = "";
+public string getID = "";
+public string selfPropertyID = "";
+public list<string> selfPropertyContent = (new list<string>());
+public bool selfPropertyVariable = false;
+public hashset<string> AllIDSet = (new hashset<string>());
+public stack<hashset<string>> CurrentIDSet = (new stack<hashset<string>>());
 public  virtual  bool has_id( string id ){
 return this.AllIDSet.contains(id)||this.CurrentIDSet.peek().contains(id);
 }
@@ -42,7 +42,7 @@ public  virtual  void delete_current_set(){
 this.AllIDSet.except_with(this.CurrentIDSet.peek());
 this.CurrentIDSet.pop();
 }
-public LiteLangVisitor(){this.CurrentIDSet.push((new hashset<string>()));
+public LiteLangVisitor (){this.CurrentIDSet.push((new hashset<string>()));
 }
 }
 public partial class LiteLangVisitor{
@@ -61,7 +61,7 @@ r.permission=first.permission;
 r.text=first.text;
 r.isVirtual=first.isVirtual;
 if ( context.ChildCount>=2 ) {
-foreach (var i in range(1,context.ChildCount-1,1,true,true)){
+foreach (var i in range(1, context.ChildCount-1, 1, true, true)){
 var other = (Result)(Visit(context.GetChild(i)));
 r.text+=(new System.Text.StringBuilder().Append("_").Append(other.text)).to_str();
 }
@@ -111,7 +111,7 @@ public  override  object VisitIdExpression( IdExpressionContext context ){
 var r = (new Result(){data = "var"});
 if ( context.idExprItem().Length>1 ) {
 r.text="(";
-foreach (var (i,v) in range(context.idExprItem())){
+foreach (var (i, v) in range(context.idExprItem())){
 var subID = ((Result)(Visit(v))).text;
 r.text+=run(()=>{if ( i!=0 ) {
 return ", "+subID;}
@@ -170,7 +170,7 @@ return obj;
 }
 public  override  object VisitAnnotationList( AnnotationListContext context ){
 var obj = "";
-foreach (var (i,v) in range(context.annotationItem())){
+foreach (var (i, v) in range(context.annotationItem())){
 string txt = (string)(this.Visit(v));
 if ( txt!="" ) {
 obj+=run(()=>{if ( i>0 ) {
@@ -195,7 +195,7 @@ else {
 this.selfPropertyContent+=(new System.Text.StringBuilder().Append("get{").Append(this.VisitPropertyLambda(context.lambda(), true)).Append("}")).to_str();
 }
 return "";
-}break;
+} break;
 case "set" :
 { if ( context.lambda()==null ) {
 this.selfPropertyVariable=true;
@@ -205,7 +205,7 @@ else {
 this.selfPropertyContent+=(new System.Text.StringBuilder().Append("set{").Append(this.VisitPropertyLambda(context.lambda(), false)).Append("}")).to_str();
 }
 return "";
-}break;
+} break;
 case "_get" :
 { if ( context.lambda()==null ) {
 this.selfPropertyVariable=true;
@@ -215,7 +215,7 @@ else {
 this.selfPropertyContent+=(new System.Text.StringBuilder().Append("private get{").Append(this.VisitPropertyLambda(context.lambda(), true)).Append("}")).to_str();
 }
 return "";
-}break;
+} break;
 case "_set" :
 { if ( context.lambda()==null ) {
 this.selfPropertyVariable=true;
@@ -225,15 +225,15 @@ else {
 this.selfPropertyContent+=(new System.Text.StringBuilder().Append("private set{").Append(this.VisitPropertyLambda(context.lambda(), false)).Append("}")).to_str();
 }
 return "";
-}break;
+} break;
 case "add" :
 { todo("not yet");
 return "";
-}break;
+} break;
 case "remove" :
 { todo("not yet");
 return "";
-}break;
+} break;
 }
 obj+=run(()=>{if ( context.tuple()!=null ) {
 return ((Result)(this.Visit(context.tuple()))).text;}
@@ -278,7 +278,7 @@ this.getID=id0.text;
 else {
 this.setID=id0.text;
 }
-}break;
+} break;
 case 2 :
 { this.selfPropertyVariable=true;
 this.add_id("_"+this.selfPropertyID);
@@ -288,39 +288,39 @@ this.add_id(id0.text);
 this.add_id(id1.text);
 this.getID=id0.text;
 this.setID=id1.text;
-}break;
+} break;
 }
 }
 }
-public partial class Compiler_static{
-public const string Terminate = ";" ;
-public const string Wrap = "\r\n" ;
-public const string Any = "object" ;
-public const string Int = "int" ;
-public const string Num = "double" ;
-public const string I8 = "sbyte" ;
-public const string I16 = "short" ;
-public const string I32 = "int" ;
-public const string I64 = "long" ;
-public const string U8 = "byte" ;
-public const string U16 = "ushort" ;
-public const string U32 = "uint" ;
-public const string U64 = "ulong" ;
-public const string F32 = "float" ;
-public const string F64 = "double" ;
-public const string Bool = "bool" ;
-public const string T = "true" ;
-public const string F = "false" ;
-public const string Chr = "char" ;
-public const string Str = "string" ;
-public const string Lst = "list" ;
-public const string Set = "hashset" ;
-public const string Dic = "dictionary" ;
-public const string Stk = "stack" ;
-public const string Que = "queue" ;
-public const string BlockLeft = "{" ;
-public const string BlockRight = "}" ;
-public const string Task = "System.Threading.Tasks.Task" ;
-public const string IEnum = "System.Collections.Generic.IEnumerable" ;
+public partial class Compiler_static {
+public const string Terminate = ";";
+public const string Wrap = "\r\n";
+public const string Any = "object";
+public const string Int = "int";
+public const string Num = "double";
+public const string I8 = "sbyte";
+public const string I16 = "short";
+public const string I32 = "int";
+public const string I64 = "long";
+public const string U8 = "byte";
+public const string U16 = "ushort";
+public const string U32 = "uint";
+public const string U64 = "ulong";
+public const string F32 = "float";
+public const string F64 = "double";
+public const string Bool = "bool";
+public const string T = "true";
+public const string F = "false";
+public const string Chr = "char";
+public const string Str = "string";
+public const string Lst = "list";
+public const string Set = "hashset";
+public const string Dic = "dictionary";
+public const string Stk = "stack";
+public const string Que = "queue";
+public const string BlockLeft = "{";
+public const string BlockRight = "}";
+public const string Task = "System.Threading.Tasks.Task";
+public const string IEnum = "System.Collections.Generic.IEnumerable";
 }
 }

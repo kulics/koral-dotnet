@@ -73,10 +73,10 @@ var s1 = e1.text;
 var s2 = ((Result)(e2)).text;
 r.text=(new System.Text.StringBuilder().Append(s1).Append(" > ").Append(s2).Append(" ? 1 : ( ").Append(s1).Append("==").Append(s2).Append(" ? 0 : -1 )")).to_str();
 return r;
-}break;
+} break;
 case JudgeContext it :
 { r.data=Bool;
-}break;
+} break;
 case AddContext it :
 { r.data=run(()=>{if ( (string)(e1.data)==Str||((string)(((Result)(e2)).data))==Str ) {
 return Str;}
@@ -85,22 +85,22 @@ return I32;}
 else {
 return F64;}
 });
-}break;
+} break;
 case MulContext it :
 { r.data=run(()=>{if ( (string)(e1.data)==I32&&((string)(((Result)(e2)).data))==I32 ) {
 return I32;}
 else {
 return F64;}
 });
-}break;
+} break;
 case PowContext it :
 { r.data=F64;
 r.text=(new System.Text.StringBuilder().Append(op).Append("(").Append(e1.text).Append(", ").Append(((Result)(e2)).text).Append(")")).to_str();
 return r;
-}break;
+} break;
 }
 r.text=e1.text+op+((Result)(e2)).text;
-}break;
+} break;
 case 2 :
 { r = (Result)(Visit(context.GetChild(0)));
 if ( context.GetChild(1).@is<TypeConversionContext>() ) {
@@ -137,10 +137,10 @@ else if ( context.op.Type==LiteParser.Question ) {
 r.text+="?";
 }
 }
-}break;
+} break;
 case 1 :
 { r = (Result)(Visit(context.GetChild(0)));
-}break;
+} break;
 }
 return r;
 }
@@ -233,7 +233,7 @@ return (new Result(){text = (new System.Text.StringBuilder().Append("(").Append(
 public  override  object VisitExpressionList( ExpressionListContext context ){
 var r = (new Result());
 var obj = "";
-foreach (var i in range(0,context.expression().Length-1,1,true,true)){
+foreach (var i in range(0, context.expression().Length-1, 1, true, true)){
 var temp = (Result)(Visit(context.expression(i)));
 obj+=run(()=>{if ( i==0 ) {
 return temp.text;}
@@ -248,7 +248,7 @@ return r;
 public  override  object VisitTemplateDefine( TemplateDefineContext context ){
 var item = (new TemplateItem());
 item.Template+="<";
-foreach (var i in range(0,context.templateDefineItem().Length-1,1,true,true)){
+foreach (var i in range(0, context.templateDefineItem().Length-1, 1, true, true)){
 if ( i>0 ) {
 item.Template+=",";
 if ( item.Contract.len()>0 ) {
@@ -279,7 +279,7 @@ return item;
 public  override  object VisitTemplateCall( TemplateCallContext context ){
 var obj = "";
 obj+="<";
-foreach (var i in range(0,context.typeType().Length-1,1,true,true)){
+foreach (var i in range(0, context.typeType().Length-1, 1, true, true)){
 if ( i>0 ) {
 obj+=",";
 }
@@ -335,7 +335,7 @@ return (new System.Text.StringBuilder().Append("\"").Append(text).Append("\"")).
 }
 else {
 text = "(new System.Text.StringBuilder()";
-foreach (var i in range(1,context.ChildCount-2,1,true,true)){
+foreach (var i in range(1, context.ChildCount-2, 1, true, true)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 if ( v.@is<StringContentContext>() ) {
@@ -363,7 +363,7 @@ return text;
 public  override  object VisitRawStringExpr( RawStringExprContext context ){
 var text = "";
 if ( context.rawStringTemplate().Length==0 ) {
-foreach (var i in range(1,context.ChildCount-2,1,true,true)){
+foreach (var i in range(1, context.ChildCount-2, 1, true, true)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 if ( v.@is<RawStringContentContext>() ) {
@@ -377,7 +377,7 @@ return (new System.Text.StringBuilder().Append("@\"").Append(text).Append("\""))
 }
 else {
 text = "(new System.Text.StringBuilder()";
-foreach (var i in range(1,context.ChildCount-2,1,true,true)){
+foreach (var i in range(1, context.ChildCount-2, 1, true, true)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 if ( v.@is<RawStringContentContext>() ) {
@@ -463,7 +463,7 @@ obj+=(new System.Text.StringBuilder().Append("from ").Append(id.text).Append(" i
 return obj;
 }
 }
-public partial class Compiler_static{
-public static list<string> keywords = (new list<string>(){ "abstract","as","base","bool","break","byte","case","catch","char","checked","class","const","continue","decimal","default","delegate","do","double","enum","event","explicit","extern","false","finally","fixed","float","for","foreach","goto","implicit","in","int","interface","internal","is","lock","long","namespace","new","null","object","operator","out","override","params","private","protected","public","readonly","ref","return","sbyte","sealed","short","sizeof","stackalloc","static","string","struct","switch","this","throw","true","try","typeof","uint","ulong","unchecked","unsafe","ushort","using","virtual","void","volatile","while" }) ;
+public partial class Compiler_static {
+public static list<string> keywords = (new list<string>(){ "abstract","as","base","bool","break","byte","case","catch","char","checked","class","const","continue","decimal","default","delegate","do","double","enum","event","explicit","extern","false","finally","fixed","float","for","foreach","goto","implicit","in","int","interface","internal","is","lock","long","namespace","new","null","object","operator","out","override","params","private","protected","public","readonly","ref","return","sbyte","sealed","short","sizeof","stackalloc","static","string","struct","switch","this","throw","true","try","typeof","uint","ulong","unchecked","unsafe","ushort","using","virtual","void","volatile","while" });
 }
 }

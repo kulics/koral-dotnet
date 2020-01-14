@@ -12,8 +12,8 @@ public partial class Iterator{
 public Result begin;
 public Result end;
 public Result step;
-public string order = T ; 
-public string attach = T ; 
+public string order = T;
+public string attach = T;
 }
 public partial class LiteLangVisitor{
 public  override  object VisitIteratorStatement( IteratorStatementContext context ){
