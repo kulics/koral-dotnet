@@ -35,6 +35,10 @@ Equal: '=';
 
 Less_Less: '<<';
 Greater_Greater: '>>';
+And_And: '&&';
+Or_Or: '||';
+Xor_Xor: '^^';
+Wave_Wave: '~~';
 
 Less: '<';
 Greater: '>';

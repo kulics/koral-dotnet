@@ -491,12 +491,12 @@ boolExpr: t=TrueLiteral|t=FalseLiteral;
 
 bitwise: (bitwiseAnd | bitwiseOr | bitwiseXor 
 | bitwiseLeftShift | bitwiseRightShift) (New_Line)?;
-bitwiseAnd: Grave And Grave;
-bitwiseOr: Grave Or Grave;
-bitwiseNot: Grave Wave Grave;
-bitwiseXor: Grave Xor Grave;
-bitwiseLeftShift: Grave Less Grave;
-bitwiseRightShift: Grave Greater Grave;
+bitwiseAnd: And_And;
+bitwiseOr: Or_Or;
+bitwiseNot: Wave_Wave;
+bitwiseXor: Xor_Xor;
+bitwiseLeftShift: Less_Less;
+bitwiseRightShift: Greater_Greater;
 judgeCombine: Combine_Equal;
 judge: op=(Or | And | Equal_Equal | Not_Equal | Less_Equal | Greater_Equal | Less | Greater) (New_Line)?;
 assign: op=(Equal | Add_Equal | Sub_Equal | Mul_Equal | Div_Equal | Mod_Equal) (New_Line)?;
