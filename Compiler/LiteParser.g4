@@ -193,7 +193,7 @@ judgeIfStatement: Question expression left_brace (functionSupportStatement)* rig
 // else if 判断
 judgeElseIfStatement: expression left_brace (functionSupportStatement)* right_brace;
 // 循环
-loopStatement: At id (Colon|Equal) iteratorStatement left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
+loopStatement: At id (Colon|Equal) iteratorStatement Dot_Dot left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 集合循环
 loopEachStatement: At (left_brack id right_brack)? id (Colon|Equal) expression Dot_Dot
  left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
@@ -203,8 +203,8 @@ loopCaseStatement: At expression left_brace (functionSupportStatement)* right_br
 loopElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
 // 跳出循环
 loopJumpStatement: Wave At end;
-// 跳出当前循环
-loopContinueStatement: Xor At end;
+// 跳过当前循环
+loopContinueStatement: Dot_Dot At end;
 // 检查
 checkStatement: 
 Bang left_brace (functionSupportStatement)* right_brace (checkErrorStatement)* checkFinallyStatment end
@@ -219,8 +219,7 @@ checkFinallyStatment: Discard left_brace (functionSupportStatement)* right_brace
 checkReportStatement: Bang Left_Arrow expression end;
 
 // 迭代器
-iteratorStatement: expression op=(Add_Add|Sub_Sub) expression Xor expression | 
-expression op=(Add_Add|Sub_Sub) expression;
+iteratorStatement: expression Wave? Xor (left_paren expression right_paren)? expression;
 
 // 定义变量
 variableStatement: idExpression typeType? Equal expression end;
@@ -338,9 +337,9 @@ dictionaryElement: left_brack expression right_brack expression; // 字典元素
 
 slice: sliceFull | sliceStart | sliceEnd;
 
-sliceFull: expression op=(Add_Add|Sub_Sub) expression; 
-sliceStart: expression op=(Add_Add|Sub_Sub);
-sliceEnd: op=(Add_Add|Sub_Sub) expression; 
+sliceFull: expression Wave? Xor expression; 
+sliceStart: expression Wave? Xor;
+sliceEnd: Wave? Xor expression; 
 
 nameSpaceItem: (id call New_Line?)* id;
 
@@ -395,7 +394,7 @@ judgeCaseExpression: Question expression Dot_Dot Right_Arrow (caseExpressionStat
 caseExpressionStatement: caseExprStatement (more caseExprStatement)* 
 left_brace (functionSupportStatement)* tupleExpression right_brace;
 // 循环
-loopExpression: At id (Colon|Equal) iteratorStatement Right_Arrow 
+loopExpression: At id (Colon|Equal) iteratorStatement Dot_Dot Right_Arrow 
 left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression?;
 // 集合循环表达式
 loopEachExpression: At (id Colon)? id (Colon|Equal) expression Dot_Dot Right_Arrow 

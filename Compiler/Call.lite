@@ -43,10 +43,10 @@ LiteLangVisitor : $ (me) {
     .VisitSliceFull : (context SliceFullContext -> v any) {
         order = ""
         attach = ""
-        ? context.op.Type.. LiteParser.Add_Add {
+        ? context.Wave() == nil {
             order = "true"
             attach = "true"
-        } LiteParser.Sub_Sub {
+        } _ {
             order = "false"
             attach = "true"
         }
@@ -58,10 +58,10 @@ LiteLangVisitor : $ (me) {
     .VisitSliceStart : (context SliceStartContext -> v any) {
         order = ""
         attach = ""
-        ? context.op.Type.. LiteParser.Add_Add {
+        ? context.Wave() == nil {
             order = "true"
             attach = "true"
-        } LiteParser.Sub_Sub {
+        } _ {
             order = "false"
             attach = "true"
         }
@@ -72,10 +72,10 @@ LiteLangVisitor : $ (me) {
     .VisitSliceEnd : (context SliceEndContext -> v any) {
         order = ""
         attach = ""
-        ? context.op.Type.. LiteParser.Add_Add {
+        ? context.Wave() == nil {
             order = "true"
             attach = "true"
-        } LiteParser.Sub_Sub {
+        } _ {
             order = "false"
             attach = "true"
         }

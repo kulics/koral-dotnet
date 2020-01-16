@@ -18,7 +18,7 @@ public string attach = T;
 public partial class LiteLangVisitor{
 public  override  object VisitIteratorStatement( IteratorStatementContext context ){
 var it = (new Iterator());
-if ( context.op.Type==LiteParser.Sub_Sub ) {
+if ( context.Wave()!=null ) {
 it.order=F;
 }
 if ( context.expression().Length==2 ) {
@@ -28,8 +28,8 @@ it.step=(new Result(){data = I32,text = "1"});
 }
 else {
 it.begin=(Result)(Visit(context.expression(0)));
-it.end=(Result)(Visit(context.expression(1)));
-it.step=(Result)(Visit(context.expression(2)));
+it.end=(Result)(Visit(context.expression(2)));
+it.step=(Result)(Visit(context.expression(1)));
 }
 return it;
 }

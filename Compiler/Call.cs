@@ -43,15 +43,13 @@ return (string)(Visit(context.GetChild(0)));
 public  override  object VisitSliceFull( SliceFullContext context ){
 var order = "";
 var attach = "";
-switch (context.op.Type) {
-case LiteParser.Add_Add :
-{ order = "true";
+if ( context.Wave()==null ) {
+order = "true";
 attach = "true";
-} break;
-case LiteParser.Sub_Sub :
-{ order = "false";
+}
+else {
+order = "false";
 attach = "true";
-} break;
 }
 var expr1 = (Result)(Visit(context.expression(0)));
 var expr2 = (Result)(Visit(context.expression(1)));
@@ -60,15 +58,13 @@ return (new System.Text.StringBuilder().Append(".slice(").Append(expr1.text).App
 public  override  object VisitSliceStart( SliceStartContext context ){
 var order = "";
 var attach = "";
-switch (context.op.Type) {
-case LiteParser.Add_Add :
-{ order = "true";
+if ( context.Wave()==null ) {
+order = "true";
 attach = "true";
-} break;
-case LiteParser.Sub_Sub :
-{ order = "false";
+}
+else {
+order = "false";
 attach = "true";
-} break;
 }
 var expr = (Result)(Visit(context.expression()));
 return (new System.Text.StringBuilder().Append(".slice(").Append(expr.text).Append(", null, ").Append(order).Append(", ").Append(attach).Append(")")).to_str();
@@ -76,15 +72,13 @@ return (new System.Text.StringBuilder().Append(".slice(").Append(expr.text).Appe
 public  override  object VisitSliceEnd( SliceEndContext context ){
 var order = "";
 var attach = "";
-switch (context.op.Type) {
-case LiteParser.Add_Add :
-{ order = "true";
+if ( context.Wave()==null ) {
+order = "true";
 attach = "true";
-} break;
-case LiteParser.Sub_Sub :
-{ order = "false";
+}
+else {
+order = "false";
 attach = "true";
-} break;
 }
 var expr = (Result)(Visit(context.expression()));
 return (new System.Text.StringBuilder().Append(".slice(null, ").Append(expr.text).Append(", ").Append(order).Append(", ").Append(attach).Append(")")).to_str();

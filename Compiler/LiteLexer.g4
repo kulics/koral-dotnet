@@ -4,9 +4,6 @@ Pow:    '*^';
 Root:   '/^';
 Log:    '\\^';
 
-Add_Add: '++';
-Sub_Sub: '--';
-
 Add_Equal:         '+=';
 Sub_Equal:         '-=';
 Mul_Equal:         '*=';
