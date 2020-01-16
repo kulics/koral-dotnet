@@ -1,8 +1,8 @@
 lexer grammar LiteLexer;
 
-Pow:    '*^';
-Root:   '/^';
-Log:    '\\^';
+Pow:    '{*}';
+Root:   '{/}';
+Log:    '{\\}';
 
 Add_Equal:         '+=';
 Sub_Equal:         '-=';
