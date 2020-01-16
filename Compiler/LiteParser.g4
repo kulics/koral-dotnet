@@ -428,8 +428,8 @@ rawStringExpr: Quote_Quote_Quote_Open (rawStringContent | rawStringTemplate | Ra
 rawStringContent: RawTextLiteral;
 rawStringTemplate: Raw_String_Template_Open New_Line* expression (more expression)* New_Line* Right_Brace;
 
-floatExpr: integerExpr call integerExpr;
-integerExpr: NumberLiteral;
+floatExpr: FloatLiteral;
+integerExpr: DecimalLiteral | BinaryLiteral | OctalLiteral | HexLiteral;
 
 // 类型
 typeNotNull:

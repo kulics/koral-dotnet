@@ -496,14 +496,12 @@ LiteLangVisitor : $ (me) {
     }
 
     .VisitFloatExpr : (context FloatExprContext -> v any) {
-        number = ""
-        number += "\{Visit(context.integerExpr(0))}.\{Visit(context.integerExpr(1))}"
+        number = context.FloatLiteral().GetText()
         <- number
     }
 
     .VisitIntegerExpr : (context IntegerExprContext -> v any) {
-        number = ""
-        number += context.NumberLiteral().GetText()
+        number = context.GetChild(0).GetText()
         <- number
     }
 

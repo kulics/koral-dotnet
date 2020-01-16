@@ -96,8 +96,13 @@ TrueLiteral: 'true';
 FalseLiteral: 'false';
 UndefinedLiteral: 'undef';
 
-NumberLiteral: DIGIT+ ; // 整数
-fragment DIGIT: [0-9] ;   // 单个数字
+FloatLiteral: Digit (Exponent | '.' Digit Exponent?);
+DecimalLiteral: Digit;
+BinaryLiteral: '0' [bB] [0-1_]* [0-1]; 
+OctalLiteral: '0' [oO] [0-7_]* [0-7];
+HexLiteral: '0' [xX] [a-fA-F0-9_]* [a-fA-F0-9];
+fragment Digit: [0-9] | [0-9] [0-9_]* [0-9];   // 单个数字
+fragment Exponent: [eE] [+-]? [0-9]+;
 Quote_Quote_Quote_Open: '"""' -> pushMode(RawString); // 多行字符串
 Quote_Open: '"' -> pushMode(String); // 单行字符串
 CharLiteral: '\'' ('\\\'' | '\\' [btnfr\\] | .)*? '\''; // 单字符

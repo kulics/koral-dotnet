@@ -406,13 +406,11 @@ text+=(new System.Text.StringBuilder().Append(".Append(").Append(r.text).Append(
 return text;
 }
 public  override  object VisitFloatExpr( FloatExprContext context ){
-var number = "";
-number+=(new System.Text.StringBuilder().Append(Visit(context.integerExpr(0))).Append(".").Append(Visit(context.integerExpr(1)))).to_str();
+var number = context.FloatLiteral().GetText();
 return number;
 }
 public  override  object VisitIntegerExpr( IntegerExprContext context ){
-var number = "";
-number+=context.NumberLiteral().GetText();
+var number = context.GetChild(0).GetText();
 return number;
 }
 public  override  object VisitPlusMinus( PlusMinusContext context ){
