@@ -1,4 +1,4 @@
-lexer grammar LiteLexer;
+lexer grammar KLexer;
 
 Pow:    '{*}';
 Root:   '{/}';

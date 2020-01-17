@@ -4,7 +4,7 @@
     "System"
     "System/Collections/Generic"
 
-    LiteParser. = "Compiler" 
+    KParser. = "Compiler" 
     Compiler_static. = "Compiler" 
 }
 
@@ -53,7 +53,7 @@ Result : $ {
     isDefine bool
 }
 
-LiteLangVisitor : [LiteParserBaseVisitor any] % $(me) {
+LiteLangVisitor : [KParserBaseVisitor any] % $(me) {
     selfID = ""
     superID = ""
     setID = ""

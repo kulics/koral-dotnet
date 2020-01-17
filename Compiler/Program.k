@@ -26,7 +26,7 @@ Main : (args [.]str->) {
 
 Compiled : (path str->) {
     # 获取相对路径下所有文件
-    Files = Directory.GetFiles(path, "*.lite")
+    Files = Directory.GetFiles(path, "*.k")
     @ file = Files.. {
         # 文件流读文件
         ! fsRead = FileStream.(file, FileMode.Open)
@@ -37,9 +37,9 @@ Compiled : (path str->) {
             Input = Encoding.UTF8.GetString(ByteBlock)
 
             Stream = AntlrInputStream.(Input)
-            Lexer = LiteLexer.(Stream)
+            Lexer = KLexer.(Stream)
             Tokens = CommonTokenStream.(Lexer)
-            Parser = LiteParser.(Tokens)
+            Parser = KParser.(Tokens)
             Parser.BuildParseTree = true
             Parser.RemoveErrorListeners()
             Parser.AddErrorListener(ErrorListener{ FileDir = file })
@@ -51,7 +51,7 @@ Compiled : (path str->) {
 
             # 文件流写文件,使用覆盖模式
             ByteResult = Encoding.UTF8.GetBytes(Result.to_str())  # 转换为字节
-            ! fsWrite = FileStream.("\{_ReadPath, file.sub_str(0, file.Length - 5)}.cs", FileMode.Create)
+            ! fsWrite = FileStream.("\{_ReadPath, file.sub_str(0, file.Length - 2)}.cs", FileMode.Create)
             fsWrite.Write(ByteResult, 0, ByteResult.Length)
         } err Exception {
             print(err)

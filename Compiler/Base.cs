@@ -4,7 +4,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;
 using System.Collections.Generic;
-using static Compiler.LiteParser;
+using static Compiler.KParser;
 using static Compiler.Compiler_static;
 
 namespace Compiler
@@ -16,7 +16,7 @@ public string permission;
 public bool isVirtual;
 public bool isDefine;
 }
-public partial class LiteLangVisitor:LiteParserBaseVisitor<object>{
+public partial class LiteLangVisitor:KParserBaseVisitor<object>{
 public string selfID = "";
 public string superID = "";
 public string setID = "";

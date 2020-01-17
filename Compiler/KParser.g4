@@ -1,6 +1,6 @@
-parser grammar LiteParser;
+parser grammar KParser;
 
-options { tokenVocab=LiteLexer; }
+options { tokenVocab=KLexer; }
 
 program: statement+;
 

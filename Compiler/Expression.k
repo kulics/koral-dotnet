@@ -3,7 +3,7 @@
     "Antlr4/Runtime/Misc"
     "System"
 
-    LiteParser. = "Compiler" 
+    KParser. = "Compiler" 
     Compiler_static. = "Compiler" 
 }
 
@@ -204,9 +204,9 @@ LiteLangVisitor : $ (me) {
                 e2 = Visit(context.GetChild(1)) Result!
                 r.text = r.text + e2.text
             } _ {
-                ? context.op.Type == LiteParser.Bang {
+                ? context.op.Type == KParser.Bang {
                     r.text = "ref \{r.text}"
-                } context.op.Type == LiteParser.Question {
+                } context.op.Type == KParser.Question {
                     r.text += "?"
                 }
             }
@@ -283,9 +283,9 @@ LiteLangVisitor : $ (me) {
     }
 
     .VisitPow : (context PowContext -> v any) {
-        <- ? context.op.Type.. -> LiteParser.Root {
+        <- ? context.op.Type.. -> KParser.Root {
                 "root"
-            } LiteParser.Log {
+            } KParser.Log {
                 "log"
             } _ {
                 "pow"
@@ -399,13 +399,13 @@ LiteLangVisitor : $ (me) {
         } context.stringExpr() >< nil {
             r.data = Str
             r.text = Visit(context.stringExpr()) str!
-        } context.t.Type == LiteParser.CharLiteral {
+        } context.t.Type == KParser.CharLiteral {
             r.data = Chr
             r.text = context.CharLiteral().GetText()
-        } context.t.Type == LiteParser.TrueLiteral {
+        } context.t.Type == KParser.TrueLiteral {
             r.data = Bool
             r.text = T
-        } context.t.Type == LiteParser.FalseLiteral {
+        } context.t.Type == KParser.FalseLiteral {
             r.data = Bool
             r.text = F
         } 

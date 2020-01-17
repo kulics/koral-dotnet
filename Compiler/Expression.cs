@@ -3,7 +3,7 @@ using static Library.Lib;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;
-using static Compiler.LiteParser;
+using static Compiler.KParser;
 using static Compiler.Compiler_static;
 
 namespace Compiler
@@ -130,10 +130,10 @@ var e2 = (Result)(Visit(context.GetChild(1)));
 r.text=r.text+e2.text;
 }
 else {
-if ( context.op.Type==LiteParser.Bang ) {
+if ( context.op.Type==KParser.Bang ) {
 r.text=(new System.Text.StringBuilder().Append("ref ").Append(r.text)).to_str();
 }
-else if ( context.op.Type==LiteParser.Question ) {
+else if ( context.op.Type==KParser.Question ) {
 r.text+="?";
 }
 }
@@ -200,9 +200,9 @@ return context.op.Text;
 }
 public  override  object VisitPow( PowContext context ){
 return run(()=> { switch (context.op.Type) {
-case LiteParser.Root :
+case KParser.Root :
 {return "root";}break;
-case LiteParser.Log :
+case KParser.Log :
 {return "log";}break;
 default:
 {return "pow";}break;
@@ -311,15 +311,15 @@ else if ( context.stringExpr()!=null ) {
 r.data=Str;
 r.text=(string)(Visit(context.stringExpr()));
 }
-else if ( context.t.Type==LiteParser.CharLiteral ) {
+else if ( context.t.Type==KParser.CharLiteral ) {
 r.data=Chr;
 r.text=context.CharLiteral().GetText();
 }
-else if ( context.t.Type==LiteParser.TrueLiteral ) {
+else if ( context.t.Type==KParser.TrueLiteral ) {
 r.data=Bool;
 r.text=T;
 }
-else if ( context.t.Type==LiteParser.FalseLiteral ) {
+else if ( context.t.Type==KParser.FalseLiteral ) {
 r.data=Bool;
 r.text=F;
 }

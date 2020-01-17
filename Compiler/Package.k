@@ -3,7 +3,7 @@
     "Antlr4/Runtime/Misc"
     "System"
 
-    LiteParser. = "Compiler" 
+    KParser. = "Compiler" 
     Compiler_static. = "Compiler" 
 }
 

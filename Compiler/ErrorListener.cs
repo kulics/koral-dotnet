@@ -3,7 +3,7 @@ using static Library.Lib;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;
-using static Compiler.LiteParser;
+using static Compiler.KParser;
 using static Compiler.Compiler_static;
 
 namespace Compiler
