@@ -51,7 +51,7 @@ namespace Library {
             }
             return temp;
         }
-        public list<T> slice(int? startIndex, int? endIndex, bool order = true, bool attach = true) {
+        public list<T> slice(int? startIndex, int? endIndex, bool order = true) {
             if (startIndex == null && endIndex == null) {
                 return this;
             } else if (endIndex == null) {
@@ -219,7 +219,7 @@ namespace Library {
             }
             return temp;
         }
-        public static list<T> slice<T>(this List<T> it, int? startIndex, int? endIndex, bool order = true, bool attach = true) {
+        public static list<T> slice<T>(this List<T> it, int? startIndex, int? endIndex, bool order = true) {
             if (startIndex == null && endIndex == null) {
                 return it.sub_list(0, it.len() - 1);
             } else if (endIndex == null) {

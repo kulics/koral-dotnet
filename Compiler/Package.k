@@ -56,7 +56,7 @@ KLangVisitor : $ (me) {
 
         ? extend.length > 0 {
             temp = extend[0]
-            @ i = 1 ^ extend.length-1.. {
+            @ i = 1 ~ extend.length-1.. {
                 temp += "," + extend[i]
             }
             header += ":" + temp
@@ -332,7 +332,7 @@ KLangVisitor : $ (me) {
         obj += "public partial interface \{ptclName}"
         ? extend.length > 0 {
             temp = extend[0]
-            @ i = 1 ^ extend.length-1.. {
+            @ i = 1 ~ extend.length-1.. {
                 temp += "," + extend[i]
             }
             obj += ":" + temp

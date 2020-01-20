@@ -86,7 +86,7 @@ namespace Library {
         public static int cap<T>(List<T> it) => it.Capacity;
         public static int capacity<T>(List<T> it) => it.Capacity;
 
-        public static IEnumerable<int> range(int begin, int end, int step = 1, bool order = true, bool attach = true) {
+        public static IEnumerable<int> range(int begin, int end, int step = 1, bool order = true) {
             if (order) {
                 for (int index = begin; index <= end; index += step) {
                     yield return index;

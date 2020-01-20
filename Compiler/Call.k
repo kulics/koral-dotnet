@@ -109,7 +109,7 @@ KLangVisitor : $ (me) {
     .VisitPkgAssign : (context PkgAssignContext -> v any) {
         obj = ""
         obj += "{"
-        @ i = 0 ^ context.pkgAssignElement().Length-1.. {
+        @ i = 0 ~ context.pkgAssignElement().Length-1.. {
             obj += ? -> i == 0 {
                 Visit(context.pkgAssignElement(i))
             } _ {
@@ -123,7 +123,7 @@ KLangVisitor : $ (me) {
     .VisitListAssign : (context ListAssignContext -> v any) {
         obj = ""
         obj += "{"
-        @ i = 0 ^ context.expression().Length-1.. {
+        @ i = 0 ~ context.expression().Length-1.. {
             r = Visit(context.expression(i)) Result!
             obj += ? -> i == 0 {
                 r.text
@@ -138,7 +138,7 @@ KLangVisitor : $ (me) {
     .VisitSetAssign : (context SetAssignContext -> v any) {
         obj = ""
         obj += "{"
-        @ i = 0 ^ context.setElement().Length-1.. {
+        @ i = 0 ~ context.setElement().Length-1.. {
             r = Visit(context.setElement(i)) Result!
             obj += ? -> i == 0 {
                 r.text
@@ -153,7 +153,7 @@ KLangVisitor : $ (me) {
     .VisitDictionaryAssign : (context DictionaryAssignContext -> v any) {
         obj = ""
         obj += "{"
-        @ i = 0 ^ context.dictionaryElement().Length-1.. {
+        @ i = 0 ~ context.dictionaryElement().Length-1.. {
             r = Visit(context.dictionaryElement(i)) DicEle!
             obj += ? -> i == 0 {
                 r.text
@@ -181,7 +181,7 @@ KLangVisitor : $ (me) {
     .VisitPkgAnonymousAssign : (context PkgAnonymousAssignContext -> v any) {
         obj = ""
         obj += "{"
-        @ i = 0 ^ context.pkgAnonymousAssignElement().Length-1.. {
+        @ i = 0 ~ context.pkgAnonymousAssignElement().Length-1.. {
             obj += ? -> i == 0 {
                 Visit(context.pkgAnonymousAssignElement(i))
             } _ {
@@ -209,7 +209,7 @@ KLangVisitor : $ (me) {
     .VisitList : (context ListContext -> v any) {
         type = Any
         result = Result{}
-        @ i = 0 ^ context.expression().Length-1.. {
+        @ i = 0 ~ context.expression().Length-1.. {
             r = Visit(context.expression(i)) Result!
             result.text += ? -> i == 0 {
                 type = r.data str!
@@ -229,7 +229,7 @@ KLangVisitor : $ (me) {
     .VisitSet : (context SetContext -> v any) {
         type = Any
         result = Result{}
-        @ i = 0 ^ context.setElement().Length-1.. {
+        @ i = 0 ~ context.setElement().Length-1.. {
             r = Visit(context.setElement(i)) Result!
             result.text += ? -> i == 0 {
                 type = r.data str!
@@ -259,7 +259,7 @@ KLangVisitor : $ (me) {
         key = Any
         value = Any
         result = Result{}
-        @ i = 0 ^ context.dictionaryElement().Length-1.. {
+        @ i = 0 ~ context.dictionaryElement().Length-1.. {
             r = Visit(context.dictionaryElement(i)) DicEle!
             result.text += ? -> i == 0 {
                 key = r.key
@@ -332,7 +332,7 @@ KLangVisitor : $ (me) {
 
     .VisitLambdaIn : (context LambdaInContext -> v any) {
         obj = ""
-        @ i = 0 ^ context.id().Length-1.. {
+        @ i = 0 ~ context.id().Length-1.. {
             r = Visit(context.id(i)) Result!
             obj += ? -> i == 0 {
                 r.text

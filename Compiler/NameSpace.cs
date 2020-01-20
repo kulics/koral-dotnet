@@ -72,7 +72,7 @@ return obj;
 }
 public  override  object VisitNameSpaceItem( NameSpaceItemContext context ){
 var obj = "";
-foreach (var i in range(0, context.id().Length-1, 1, true, true)){
+foreach (var i in range(0, context.id().Length-1, 1, true)){
 var id = (Result)(Visit(context.id(i)));
 obj+=run(()=>{if ( i==0 ) {
 return id.text;}
@@ -84,7 +84,7 @@ return obj;
 }
 public  override  object VisitName( NameContext context ){
 var obj = "";
-foreach (var i in range(0, context.id().Length-1, 1, true, true)){
+foreach (var i in range(0, context.id().Length-1, 1, true)){
 var id = (Result)(Visit(context.id(i)));
 obj+=run(()=>{if ( i==0 ) {
 return id.text;}
@@ -104,7 +104,7 @@ header+=Visit(context.annotationSupport());
 }
 header+=(new System.Text.StringBuilder().Append(id.permission).Append(" enum ").Append(id.text).Append(":").Append(typ)).to_str();
 header+=Wrap+BlockLeft+Wrap;
-foreach (var i in range(0, context.enumSupportStatement().Length-1, 1, true, true)){
+foreach (var i in range(0, context.enumSupportStatement().Length-1, 1, true)){
 obj+=Visit(context.enumSupportStatement(i));
 }
 obj+=BlockRight+Terminate+Wrap;
