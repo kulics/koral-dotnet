@@ -88,24 +88,12 @@ namespace Library {
 
         public static IEnumerable<int> range(int begin, int end, int step = 1, bool order = true, bool attach = true) {
             if (order) {
-                if (attach) {
-                    for (int index = begin; index <= end; index += step) {
-                        yield return index;
-                    }
-                } else {
-                    for (int index = begin; index < end; index += step) {
-                        yield return index;
-                    }
+                for (int index = begin; index <= end; index += step) {
+                    yield return index;
                 }
             } else {
-                if (attach) {
-                    for (int index = begin; index >= end; index -= step) {
-                        yield return index;
-                    }
-                } else {
-                    for (int index = begin; index > end; index -= step) {
-                        yield return index;
-                    }
+                for (int index = begin; index >= end; index -= step) {
+                    yield return index;
                 }
             }
         }

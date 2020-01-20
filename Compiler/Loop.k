@@ -12,16 +12,12 @@ Iterator : $ {
     end Result
     step Result
     order str = T
-    attach str = T
 }
 
-LiteLangVisitor : $ (me) {
+KLangVisitor : $ (me) {
     .VisitIteratorStatement : (context IteratorStatementContext -> v any) {
         it = Iterator{}
-        #= ? context.op.Type == ">=" | context.op.Text == "<=" {
-            it.attach = T
-        } =#
-        ? context.Wave() >< nil {
+        ? context.Tilde() == nil {
             it.order = F
         }
         ? context.expression().Length == 2 {
@@ -44,7 +40,7 @@ LiteLangVisitor : $ (me) {
         id = (Visit(context.id()) Result!).text
         
         it = Visit(context.iteratorStatement()) Iterator!
-        target = "range(\{it.begin.text}, \{it.end.text}, \{it.step.text}, \{it.order}, \{it.attach})"
+        target = "range(\{it.begin.text}, \{it.end.text}, \{it.step.text}, \{it.order})"
 
         obj += "foreach (var \{id} in \{target})"
 
@@ -123,7 +119,7 @@ LiteLangVisitor : $ (me) {
         id = (Visit(context.id()) Result!).text
         
         it = Visit(context.iteratorStatement()) Iterator!
-        target = "range(\{it.begin.text}, \{it.end.text}, \{it.step.text}, \{it.order}, \{it.attach})"
+        target = "range(\{it.begin.text}, \{it.end.text}, \{it.step.text}, \{it.order})"
 
         obj += "runloop(\{target}, (\{id})=>"
 

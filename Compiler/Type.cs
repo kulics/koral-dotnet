@@ -8,7 +8,7 @@ using static Compiler.Compiler_static;
 
 namespace Compiler
 {
-public partial class LiteLangVisitor{
+public partial class KLangVisitor{
 public  override  object VisitTypeType( TypeTypeContext context ){
 var obj = "";
 obj = (string)(Visit(context.GetChild(0)));

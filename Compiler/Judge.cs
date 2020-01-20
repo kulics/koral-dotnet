@@ -8,7 +8,7 @@ using static Compiler.Compiler_static;
 
 namespace Compiler
 {
-public partial class LiteLangVisitor{
+public partial class KLangVisitor{
 public  override  object VisitJudgeCaseStatement( JudgeCaseStatementContext context ){
 var obj = "";
 var expr = (Result)(Visit(context.expression()));

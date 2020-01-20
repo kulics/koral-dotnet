@@ -53,7 +53,7 @@ Result : $ {
     isDefine bool
 }
 
-LiteLangVisitor : [KParserBaseVisitor any] % $(me) {
+KLangVisitor : [KParserBaseVisitor any] % $(me) {
     selfID = ""
     superID = ""
     setID = ""
@@ -85,7 +85,7 @@ LiteLangVisitor : [KParserBaseVisitor any] % $(me) {
     me.CurrentIDSet.push([str]_{})
 }
 
-LiteLangVisitor : $ (me) {
+KLangVisitor : $ (me) {
     .VisitProgram : (context ProgramContext -> v any) {
         StatementList = context.statement()
         Result = ""

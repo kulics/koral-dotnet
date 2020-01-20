@@ -17,7 +17,7 @@ public string key;
 public string value;
 public string text;
 }
-public partial class LiteLangVisitor{
+public partial class KLangVisitor{
 public  override  object VisitVariableStatement( VariableStatementContext context ){
 var obj = "";
 var r1 = (Result)(Visit(context.idExpression()));
@@ -199,15 +199,7 @@ return "%";
 return context.op.Text;
 }
 public  override  object VisitPow( PowContext context ){
-return run(()=> { switch (context.op.Type) {
-case KParser.Root :
-{return "root";}break;
-case KParser.Log :
-{return "log";}break;
-default:
-{return "pow";}break;
-}
-});
+return "pow";
 }
 public  override  object VisitPrimaryExpression( PrimaryExpressionContext context ){
 if ( context.ChildCount==1 ) {

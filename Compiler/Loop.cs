@@ -13,12 +13,11 @@ public Result begin;
 public Result end;
 public Result step;
 public string order = T;
-public string attach = T;
 }
-public partial class LiteLangVisitor{
+public partial class KLangVisitor{
 public  override  object VisitIteratorStatement( IteratorStatementContext context ){
 var it = (new Iterator());
-if ( context.Wave()!=null ) {
+if ( context.Tilde()==null ) {
 it.order=F;
 }
 if ( context.expression().Length==2 ) {
@@ -37,7 +36,7 @@ public  override  object VisitLoopStatement( LoopStatementContext context ){
 var obj = "";
 var id = ((Result)(Visit(context.id()))).text;
 var it = (Iterator)(Visit(context.iteratorStatement()));
-var target = (new System.Text.StringBuilder().Append("range(").Append(it.begin.text).Append(", ").Append(it.end.text).Append(", ").Append(it.step.text).Append(", ").Append(it.order).Append(", ").Append(it.attach).Append(")")).to_str();
+var target = (new System.Text.StringBuilder().Append("range(").Append(it.begin.text).Append(", ").Append(it.end.text).Append(", ").Append(it.step.text).Append(", ").Append(it.order).Append(")")).to_str();
 obj+=(new System.Text.StringBuilder().Append("foreach (var ").Append(id).Append(" in ").Append(target).Append(")")).to_str();
 obj+=BlockLeft+Wrap;
 this.add_current_set();
@@ -107,7 +106,7 @@ public  override  object VisitLoopExpression( LoopExpressionContext context ){
 var obj = "";
 var id = ((Result)(Visit(context.id()))).text;
 var it = (Iterator)(Visit(context.iteratorStatement()));
-var target = (new System.Text.StringBuilder().Append("range(").Append(it.begin.text).Append(", ").Append(it.end.text).Append(", ").Append(it.step.text).Append(", ").Append(it.order).Append(", ").Append(it.attach).Append(")")).to_str();
+var target = (new System.Text.StringBuilder().Append("range(").Append(it.begin.text).Append(", ").Append(it.end.text).Append(", ").Append(it.step.text).Append(", ").Append(it.order).Append(")")).to_str();
 obj+=(new System.Text.StringBuilder().Append("runloop(").Append(target).Append(", (").Append(id).Append(")=>")).to_str();
 obj+=BlockLeft+Wrap;
 this.add_current_set();

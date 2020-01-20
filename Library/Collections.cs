@@ -55,18 +55,9 @@ namespace Library {
             if (startIndex == null && endIndex == null) {
                 return this;
             } else if (endIndex == null) {
-                if (attach) {
-                    return sub_list(startIndex ?? 0, last_index);
-                } else {
-                    return sub_list(startIndex ?? 0, last_index - 1);
-                }
-            } else // (startIndex == null)
-              {
-                if (attach) {
-                    return sub_list(0, endIndex ?? 0);
-                } else {
-                    return sub_list(0, endIndex ?? 0 - 1);
-                }
+                return sub_list(startIndex ?? 0, last_index);
+            } else { // (startIndex == null)
+                return sub_list(0, endIndex ?? 0);
             }
         }
         public int first_index_of(T item) => IndexOf(item);
@@ -232,18 +223,9 @@ namespace Library {
             if (startIndex == null && endIndex == null) {
                 return it.sub_list(0, it.len() - 1);
             } else if (endIndex == null) {
-                if (attach) {
                     return it.sub_list(startIndex ?? 0, it.len() - 1);
-                } else {
-                    return it.sub_list(startIndex ?? 0, it.len() - 1 - 1);
-                }
-            } else // (startIndex == null)
-              {
-                if (attach) {
-                    return it.sub_list(0, endIndex ?? 0);
-                } else {
-                    return it.sub_list(0, endIndex ?? 0 - 1);
-                }
+            } else { // (startIndex == null)
+                return it.sub_list(0, endIndex ?? 0);
             }
         }
         public static int first_index_of<T>(this List<T> it, T item) => it.IndexOf(item);

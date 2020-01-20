@@ -7,7 +7,7 @@
     Compiler_static. = "Compiler" 
 }
 
-LiteLangVisitor : $ (me) {
+KLangVisitor : $ (me) {
     .VisitJudgeCaseStatement : (context JudgeCaseStatementContext -> v any)  {
         obj = ""
         expr = Visit(context.expression()) Result!

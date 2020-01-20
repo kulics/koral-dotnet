@@ -96,7 +96,7 @@ DicEle : $ {
     text str
 }
 
-LiteLangVisitor : $ (me) {
+KLangVisitor : $ (me) {
     .VisitVariableStatement : (context VariableStatementContext -> v any) {
         obj = ""
         r1 = Visit(context.idExpression()) Result!
@@ -175,7 +175,7 @@ LiteLangVisitor : $ (me) {
                     F64
                 }
             } _ PowContext {
-                # todo 如果左右部署number类型，报错
+                # todo 如果左右不是number类型，报错
                 r.data = F64
                 r.text = "\{op}(\{e1.text}, \{(e2 Result!).text})"
                 <- r
@@ -283,13 +283,7 @@ LiteLangVisitor : $ (me) {
     }
 
     .VisitPow : (context PowContext -> v any) {
-        <- ? context.op.Type.. -> KParser.Root {
-                "root"
-            } KParser.Log {
-                "log"
-            } _ {
-                "pow"
-            }
+        <- "pow"
     }
 
     .VisitPrimaryExpression : (context PrimaryExpressionContext -> v any) {

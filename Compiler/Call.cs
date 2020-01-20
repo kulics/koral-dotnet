@@ -8,7 +8,7 @@ using static Compiler.Compiler_static;
 
 namespace Compiler
 {
-public partial class LiteLangVisitor{
+public partial class KLangVisitor{
 public  override  object VisitCallExpression( CallExpressionContext context ){
 var r = (Result)(Visit(context.id()));
 r.text="."+r.text;
@@ -41,47 +41,29 @@ public  override  object VisitSlice( SliceContext context ){
 return (string)(Visit(context.GetChild(0)));
 }
 public  override  object VisitSliceFull( SliceFullContext context ){
-var order = "";
-var attach = "";
-if ( context.Wave()==null ) {
-order = "true";
-attach = "true";
-}
-else {
+var order = "true";
+if ( context.Tilde()==null ) {
 order = "false";
-attach = "true";
 }
 var expr1 = (Result)(Visit(context.expression(0)));
 var expr2 = (Result)(Visit(context.expression(1)));
-return (new System.Text.StringBuilder().Append(".slice(").Append(expr1.text).Append(", ").Append(expr2.text).Append(", ").Append(order).Append(", ").Append(attach).Append(")")).to_str();
+return (new System.Text.StringBuilder().Append(".slice(").Append(expr1.text).Append(", ").Append(expr2.text).Append(", ").Append(order).Append(")")).to_str();
 }
 public  override  object VisitSliceStart( SliceStartContext context ){
-var order = "";
-var attach = "";
-if ( context.Wave()==null ) {
-order = "true";
-attach = "true";
-}
-else {
+var order = "true";
+if ( context.Tilde()==null ) {
 order = "false";
-attach = "true";
 }
 var expr = (Result)(Visit(context.expression()));
-return (new System.Text.StringBuilder().Append(".slice(").Append(expr.text).Append(", null, ").Append(order).Append(", ").Append(attach).Append(")")).to_str();
+return (new System.Text.StringBuilder().Append(".slice(").Append(expr.text).Append(", null, ").Append(order).Append(")")).to_str();
 }
 public  override  object VisitSliceEnd( SliceEndContext context ){
-var order = "";
-var attach = "";
-if ( context.Wave()==null ) {
-order = "true";
-attach = "true";
-}
-else {
+var order = "true";
+if ( context.Tilde()==null ) {
 order = "false";
-attach = "true";
 }
 var expr = (Result)(Visit(context.expression()));
-return (new System.Text.StringBuilder().Append(".slice(null, ").Append(expr.text).Append(", ").Append(order).Append(", ").Append(attach).Append(")")).to_str();
+return (new System.Text.StringBuilder().Append(".slice(null, ").Append(expr.text).Append(", ").Append(order).Append(")")).to_str();
 }
 public  override  object VisitCallFunc( CallFuncContext context ){
 var r = (new Result(){data = "var"});

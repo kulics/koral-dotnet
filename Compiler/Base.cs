@@ -16,7 +16,7 @@ public string permission;
 public bool isVirtual;
 public bool isDefine;
 }
-public partial class LiteLangVisitor:KParserBaseVisitor<object>{
+public partial class KLangVisitor:KParserBaseVisitor<object>{
 public string selfID = "";
 public string superID = "";
 public string setID = "";
@@ -42,10 +42,10 @@ public  virtual  void delete_current_set(){
 this.AllIDSet.except_with(this.CurrentIDSet.peek());
 this.CurrentIDSet.pop();
 }
-public LiteLangVisitor (){this.CurrentIDSet.push((new hashset<string>()));
+public KLangVisitor (){this.CurrentIDSet.push((new hashset<string>()));
 }
 }
-public partial class LiteLangVisitor{
+public partial class KLangVisitor{
 public  override  object VisitProgram( ProgramContext context ){
 var StatementList = context.statement();
 var Result = "";

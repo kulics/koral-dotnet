@@ -12,7 +12,7 @@ public partial class Namespace{
 public string name;
 public string imports;
 }
-public partial class LiteLangVisitor{
+public partial class KLangVisitor{
 public  override  object VisitStatement( StatementContext context ){
 var obj = "";
 var ns = (Namespace)(Visit(context.exportStatement()));

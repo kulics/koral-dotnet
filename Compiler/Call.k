@@ -7,7 +7,7 @@
     Compiler_static. = "Compiler" 
 }
 
-LiteLangVisitor : $ (me) {
+KLangVisitor : $ (me) {
     .VisitCallExpression : (context CallExpressionContext -> v any) {
         r = Visit(context.id()) Result!
         r.text = "." + r.text
@@ -41,46 +41,31 @@ LiteLangVisitor : $ (me) {
     }
 
     .VisitSliceFull : (context SliceFullContext -> v any) {
-        order = ""
-        attach = ""
-        ? context.Wave() == nil {
-            order = "true"
-            attach = "true"
-        } _ {
+        order = "true"
+        ? context.Tilde() == nil {
             order = "false"
-            attach = "true"
         }
         expr1 = Visit(context.expression(0)) Result!
         expr2 = Visit(context.expression(1)) Result!
-        <- ".slice(\{expr1.text}, \{expr2.text}, \{order}, \{attach})"
+        <- ".slice(\{expr1.text}, \{expr2.text}, \{order})"
     }
 
     .VisitSliceStart : (context SliceStartContext -> v any) {
-        order = ""
-        attach = ""
-        ? context.Wave() == nil {
-            order = "true"
-            attach = "true"
-        } _ {
+        order = "true"
+        ? context.Tilde() == nil {
             order = "false"
-            attach = "true"
         }
         expr = Visit(context.expression()) Result!
-        <- ".slice(\{expr.text}, null, \{order}, \{attach})"
+        <- ".slice(\{expr.text}, null, \{order})"
     }
 
     .VisitSliceEnd : (context SliceEndContext -> v any) {
-        order = ""
-        attach = ""
-        ? context.Wave() == nil {
-            order = "true"
-            attach = "true"
-        } _ {
+        order = "true"
+        ? context.Tilde() == nil {
             order = "false"
-            attach = "true"
         }
         expr = Visit(context.expression()) Result!
-        <- ".slice(null, \{expr.text}, \{order}, \{attach})"
+        <- ".slice(null, \{expr.text}, \{order})"
     }
 
     .VisitCallFunc : (context CallFuncContext -> v any) {

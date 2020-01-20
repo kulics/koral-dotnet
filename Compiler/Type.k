@@ -7,7 +7,7 @@
     Compiler_static. = "Compiler" 
 }
 
-LiteLangVisitor : $ (me) {
+KLangVisitor : $ (me) {
     .VisitTypeType : (context TypeTypeContext -> v any) {
         obj = ""
         obj = Visit(context.GetChild(0)) str!

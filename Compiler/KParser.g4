@@ -202,7 +202,7 @@ loopCaseStatement: At expression left_brace (functionSupportStatement)* right_br
 // else 判断
 loopElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
 // 跳出循环
-loopJumpStatement: Wave At end;
+loopJumpStatement: Tilde At end;
 // 跳过当前循环
 loopContinueStatement: Dot_Dot At end;
 // 检查
@@ -219,7 +219,7 @@ checkFinallyStatment: Discard left_brace (functionSupportStatement)* right_brace
 checkReportStatement: Bang Left_Arrow expression end;
 
 // 迭代器
-iteratorStatement: expression Wave? Xor (left_paren expression right_paren)? expression;
+iteratorStatement: expression (Tilde|Tilde_Tilde) (left_paren expression right_paren)? expression;
 
 // 定义变量
 variableStatement: idExpression typeType? Equal expression end;
@@ -335,11 +335,11 @@ dictionary: left_brace (dictionaryElement end)* dictionaryElement right_brace; /
 
 dictionaryElement: left_brack expression right_brack expression; // 字典元素
 
-slice: sliceFull | sliceStart | sliceEnd;
+slice: sliceStart | sliceEnd | sliceFull;
 
-sliceFull: expression Wave? Xor expression; 
-sliceStart: expression Wave? Xor;
-sliceEnd: Wave? Xor expression; 
+sliceFull: expression (Tilde|Tilde_Tilde) expression; 
+sliceStart: expression (Tilde|Tilde_Tilde) Discard;
+sliceEnd: Discard (Tilde|Tilde_Tilde) expression; 
 
 nameSpaceItem: (id call New_Line?)* id;
 
@@ -492,18 +492,18 @@ bitwise: (bitwiseAnd | bitwiseOr | bitwiseXor
 | bitwiseLeftShift | bitwiseRightShift) (New_Line)?;
 bitwiseAnd: And_And;
 bitwiseOr: Or_Or;
-bitwiseNot: Wave_Wave;
-bitwiseXor: Xor_Xor;
+bitwiseNot: Tilde_Tilde;
+bitwiseXor: Caret_Caret;
 bitwiseLeftShift: Less_Less;
 bitwiseRightShift: Greater_Greater;
 judgeCombine: Combine_Equal;
 judge: op=(Or | And | Equal_Equal | Not_Equal | Less_Equal | Greater_Equal | Less | Greater) (New_Line)?;
-assign: op=(Equal | Add_Equal | Sub_Equal | Mul_Equal | Div_Equal | Mod_Equal) (New_Line)?;
+assign: op=(Equal | Add_Equal | Sub_Equal | Mul_Equal | Div_Equal | Mod_Equal | Pow_Equal) (New_Line)?;
 add: op=(Add | Sub) (New_Line)?;
 mul: op=(Mul | Div | Mod) (New_Line)?;
-pow: op=(Pow | Root | Log) (New_Line)?;
+pow: Caret (New_Line)?;
 call: op=Dot (New_Line)?;
-wave: op=Wave;
+wave: op=Tilde;
 
 id: (idItem);
 

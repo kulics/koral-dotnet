@@ -46,7 +46,7 @@ Compiled : (path str->) {
 
             AST = Parser.program()
 
-            Visitor = LiteLangVisitor{}
+            Visitor = KLangVisitor{}
             Result = Visitor.Visit(AST)
 
             # 文件流写文件,使用覆盖模式

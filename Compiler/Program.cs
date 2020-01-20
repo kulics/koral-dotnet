@@ -40,7 +40,7 @@ Parser.BuildParseTree=true;
 Parser.RemoveErrorListeners();
 Parser.AddErrorListener((new ErrorListener(){FileDir = file}));
 var AST = Parser.program();
-var Visitor = (new LiteLangVisitor());
+var Visitor = (new KLangVisitor());
 var Result = Visitor.Visit(AST);
 var ByteResult = Encoding.UTF8.GetBytes(Result.to_str());
 using (var fsWrite = (new FileStream((new System.Text.StringBuilder().Append(_ReadPath).Append(file.sub_str(0, file.Length-2)).Append(".cs")).to_str(), FileMode.Create))) {

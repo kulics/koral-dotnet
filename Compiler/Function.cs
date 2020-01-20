@@ -15,7 +15,7 @@ public string value;
 public string annotation;
 public string permission;
 }
-public partial class LiteLangVisitor{
+public partial class KLangVisitor{
 public  virtual  string ProcessFunctionSupport( FunctionSupportStatementContext[] items ){
 var obj = "";
 var content = "";

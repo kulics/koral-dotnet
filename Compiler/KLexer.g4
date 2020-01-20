@@ -1,14 +1,11 @@
 lexer grammar KLexer;
 
-Pow:    '{*}';
-Root:   '{/}';
-Log:    '{\\}';
-
 Add_Equal:         '+=';
 Sub_Equal:         '-=';
 Mul_Equal:         '*=';
 Div_Equal:         '/=';
 Mod_Equal:        '\\=';
+Pow_Equal:			'^=';
 
 Equal_Equal:        '==';
 Less_Equal:         '<=';
@@ -34,8 +31,8 @@ Less_Less: '<<';
 Greater_Greater: '>>';
 And_And: '&&';
 Or_Or: '||';
-Xor_Xor: '^^';
-Wave_Wave: '~~';
+Caret_Caret: '^^';
+Tilde_Tilde: '~~';
 
 Less: '<';
 Greater: '>';
@@ -60,7 +57,7 @@ Bang: '!';
 Coin: '$';
 Cent: '%';
 
-Wave: '~';
+Tilde: '~';
 
 Add:    '+';
 Sub:    '-';
@@ -70,7 +67,7 @@ Mod:   '\\';
 
 And:    '&';
 Or:     '|';
-Xor:    '^';
+Caret:    '^';
 
 Grave:  '`';
 
