@@ -30,10 +30,14 @@ KLangVisitor : $ (me) {
         # pre process to get type id
         @ item = context.namespaceSupportStatement().. {
             child = item.GetChild(0)
-            ? child.GetType() == [typeof PackageStatementContext]() {
+            type = child.GetType()
+            ? type == [typeof PackageStatementContext]() {
                 childContext = child PackageStatementContext!
                 id = Visit(childContext.id()) Result!
                 me.add_type(id.text)
+            } type == [typeof TypeTagStatementContext]() {
+                childContext = child TypeTagStatementContext!
+                me.add_type(childContext.Comment_Tag().GetText().sub_str(2))
             }
         }
         @ item = context.namespaceSupportStatement().. {
@@ -254,5 +258,9 @@ KLangVisitor : $ (me) {
             }
         }
         <- obj
+    }
+
+    .VisitTypeTagStatement : (context TypeTagStatementContext -> v any) {
+        <- ""
     }
 }

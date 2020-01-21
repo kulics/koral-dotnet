@@ -27,10 +27,15 @@ var contentStatic = "";
 this.add_current_set();
 foreach (var item in context.namespaceSupportStatement()){
 var child = item.GetChild(0);
-if ( child.GetType()==@typeof<PackageStatementContext>() ) {
+var type = child.GetType();
+if ( type==@typeof<PackageStatementContext>() ) {
 var childContext = (PackageStatementContext)(child);
 var id = (Result)(Visit(childContext.id()));
 this.add_type(id.text);
+}
+else if ( type==@typeof<TypeTagStatementContext>() ) {
+var childContext = (TypeTagStatementContext)(child);
+this.add_type(childContext.Comment_Tag().GetText().sub_str(2));
 }
 }
 foreach (var item in context.namespaceSupportStatement()){
@@ -237,6 +242,9 @@ return Terminate+Wrap;}
 });
 }
 return obj;
+}
+public  override  object VisitTypeTagStatement( TypeTagStatementContext context ){
+return "";
 }
 }
 }

@@ -123,7 +123,7 @@ r.text=r.text+e2.text;
 }
 else if ( context.GetChild(1).@is<CallFuncContext>() ) {
 var e2 = (Result)(Visit(context.GetChild(1)));
-if ( this.is_type(r.text) ) {
+if ( this.is_type(r.rootID) ) {
 r.text=(new System.Text.StringBuilder().Append("(new ").Append(r.text).Append(e2.text).Append(")")).to_str();
 }
 else {
@@ -222,7 +222,7 @@ return (new Result(){text = "_",data = "var"});
 else if ( context.ChildCount==4 ) {
 var id = (Result)(Visit(context.id()));
 var template = (string)(Visit(context.templateCall()));
-return (new Result(){text = id.text+template,data = id.text+template});
+return (new Result(){text = id.text+template,data = id.text+template,rootID = id.text});
 }
 var r = (Result)(Visit(context.expression()));
 return (new Result(){text = (new System.Text.StringBuilder().Append("(").Append(r.text).Append(")")).to_str(),data = r.data});

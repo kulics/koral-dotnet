@@ -22,12 +22,15 @@ protocolStatement |
 implementStatement |
 enumStatement |
 typeRedefineStatement |
+typeTagStatement |
 New_Line ;
 
 // 类型别名
-typeAliasStatement: id Left_Arrow typeType end;
+typeAliasStatement: id (Colon|Equal) typeType end;
 // 类型重定义
-typeRedefineStatement: id (Colon|Equal) New_Line* Cent typeType end;
+typeRedefineStatement: id (Colon|Equal) New_Line* typeType end;
+// 特殊类型注释
+typeTagStatement: Comment_Tag; 
 
 // 枚举
 enumStatement: (annotationSupport)? id (Colon|Equal) New_Line* Dot_Dot

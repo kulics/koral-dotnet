@@ -15,6 +15,7 @@ public string text;
 public string permission;
 public bool isVirtual;
 public bool isDefine;
+public string rootID = "";
 }
 public partial class KLangVisitor:KParserBaseVisitor<object>{
 public string selfID = "";
@@ -88,6 +89,7 @@ r.text="value";
 else if ( r.text==getID ) {
 r.text="_"+selfPropertyID;
 }
+r.rootID=r.text;
 return r;
 }
 public  override  object VisitIdItem( IdItemContext context ){

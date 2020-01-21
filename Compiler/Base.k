@@ -51,6 +51,7 @@ Result : $ {
     permission str
     isVirtual bool
     isDefine bool
+    rootID str = ""
 }
 
 KLangVisitor : [KParserBaseVisitor any] % $(me) {
@@ -127,6 +128,7 @@ KLangVisitor : $ (me) {
         } r.text == getID {
             r.text = "_" + selfPropertyID
         }
+        r.rootID = r.text
         <- r
     }
 

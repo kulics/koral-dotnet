@@ -199,7 +199,7 @@ KLangVisitor : $ (me) {
                 r.text = r.text + e2.text
             } context.GetChild(1) CallFuncContext? {
                 e2 = Visit(context.GetChild(1)) Result!
-                ? me.is_type(r.text) {
+                ? me.is_type(r.rootID) {
                     r.text = "(new \{r.text, e2.text})"
                 } _ {
                     r.text = r.text + e2.text
@@ -309,6 +309,7 @@ KLangVisitor : $ (me) {
             <- Result{
                 text = id.text + template
                 data = id.text + template
+                rootID = id.text
             }
         }
         r = Visit(context.expression()) Result!
