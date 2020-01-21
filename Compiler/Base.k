@@ -64,6 +64,7 @@ KLangVisitor : [KParserBaseVisitor any] % $(me) {
 
     AllIDSet = [str]_{}
     CurrentIDSet = [>][str]_{}
+    TypeIdSet = [str]_{}
 
     has_id : (id str -> v bool) {
         <- me.AllIDSet.contains(id) | me.CurrentIDSet.peek().contains(id)
@@ -80,6 +81,12 @@ KLangVisitor : [KParserBaseVisitor any] % $(me) {
     delete_current_set : (->) {
         me.AllIDSet.except_with(me.CurrentIDSet.peek())
         me.CurrentIDSet.pop()
+    }
+    is_type : (id str->v bool) {
+        <- me.TypeIdSet.contains(id)
+    }
+    add_type : (id str ->) {
+        me.TypeIdSet.add(id)
     }
 } % (->me) {
     me.CurrentIDSet.push([str]_{})

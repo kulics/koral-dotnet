@@ -26,6 +26,7 @@ public list<string> selfPropertyContent = (new list<string>());
 public bool selfPropertyVariable = false;
 public hashset<string> AllIDSet = (new hashset<string>());
 public stack<hashset<string>> CurrentIDSet = (new stack<hashset<string>>());
+public hashset<string> TypeIdSet = (new hashset<string>());
 public  virtual  bool has_id( string id ){
 return this.AllIDSet.contains(id)||this.CurrentIDSet.peek().contains(id);
 }
@@ -41,6 +42,12 @@ this.CurrentIDSet.push((new hashset<string>()));
 public  virtual  void delete_current_set(){
 this.AllIDSet.except_with(this.CurrentIDSet.peek());
 this.CurrentIDSet.pop();
+}
+public  virtual  bool is_type( string id ){
+return this.TypeIdSet.contains(id);
+}
+public  virtual  void add_type( string id ){
+this.TypeIdSet.add(id);
 }
 public KLangVisitor (){this.CurrentIDSet.push((new hashset<string>()));
 }

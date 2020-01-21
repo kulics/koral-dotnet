@@ -199,7 +199,11 @@ KLangVisitor : $ (me) {
                 r.text = r.text + e2.text
             } context.GetChild(1) CallFuncContext? {
                 e2 = Visit(context.GetChild(1)) Result!
-                r.text = r.text + e2.text
+                ? me.is_type(r.text) {
+                    r.text = "(new \{r.text, e2.text})"
+                } _ {
+                    r.text = r.text + e2.text
+                }
             } context.GetChild(1) CallElementContext? {
                 e2 = Visit(context.GetChild(1)) Result!
                 r.text = r.text + e2.text

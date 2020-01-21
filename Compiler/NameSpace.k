@@ -27,6 +27,15 @@ KLangVisitor : $ (me) {
         content = ""
         contentStatic = ""
         me.add_current_set()
+        # pre process to get type id
+        @ item = context.namespaceSupportStatement().. {
+            child = item.GetChild(0)
+            ? child.GetType() == [typeof PackageStatementContext]() {
+                childContext = child PackageStatementContext!
+                id = Visit(childContext.id()) Result!
+                me.add_type(id.text)
+            }
+        }
         @ item = context.namespaceSupportStatement().. {
             type = item.GetChild(0).GetType()
             ? type == [typeof NamespaceVariableStatementContext]() |

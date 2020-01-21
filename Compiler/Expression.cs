@@ -123,7 +123,12 @@ r.text=r.text+e2.text;
 }
 else if ( context.GetChild(1).@is<CallFuncContext>() ) {
 var e2 = (Result)(Visit(context.GetChild(1)));
+if ( this.is_type(r.text) ) {
+r.text=(new System.Text.StringBuilder().Append("(new ").Append(r.text).Append(e2.text).Append(")")).to_str();
+}
+else {
 r.text=r.text+e2.text;
+}
 }
 else if ( context.GetChild(1).@is<CallElementContext>() ) {
 var e2 = (Result)(Visit(context.GetChild(1)));

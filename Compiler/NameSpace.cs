@@ -26,6 +26,14 @@ var content = "";
 var contentStatic = "";
 this.add_current_set();
 foreach (var item in context.namespaceSupportStatement()){
+var child = item.GetChild(0);
+if ( child.GetType()==@typeof<PackageStatementContext>() ) {
+var childContext = (PackageStatementContext)(child);
+var id = (Result)(Visit(childContext.id()));
+this.add_type(id.text);
+}
+}
+foreach (var item in context.namespaceSupportStatement()){
 var type = item.GetChild(0).GetType();
 if ( type==@typeof<NamespaceVariableStatementContext>()||type==@typeof<NamespaceFunctionStatementContext>()||type==@typeof<NamespaceConstantStatementContext>() ) {
 contentStatic+=Visit(item);

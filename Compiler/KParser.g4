@@ -248,7 +248,6 @@ dataStatement;
 expression:
 linq | // 联合查询
 primaryExpression | 
-callNew | // 构造类对象
 callPkg | // 新建包 
 callAwait | // 异步等待调用
 callAsync | // 创建异步调用
@@ -272,6 +271,7 @@ expression orElse | // 空值替换
 expression typeConversion | // 类型转换
 expression typeCheck | // 类型判断
 expression callFunc | // 函数调用
+callNew | // 构造类对象
 expression callChannel | // 调用通道
 expression callElement | // 访问元素
 expression callExpression | // 链式调用
@@ -304,7 +304,7 @@ callElement: left_brack (slice | expression) right_brack; // 元素调用
 
 callPkg: typeType left_brace (pkgAssign|listAssign|setAssign|dictionaryAssign)? right_brace; // 新建包
 
-callNew: typeType Dot left_paren New_Line? expressionList? New_Line? right_paren; // 构造类对象
+callNew: typeType left_paren New_Line? expressionList? New_Line? right_paren; // 构造类对象
 
 orElse: Question Bang expression; // 类型转化
 
