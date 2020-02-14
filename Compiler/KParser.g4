@@ -425,11 +425,11 @@ t=UndefinedLiteral;
 // 字符串表达式
 stringExpr: Quote_Open (stringContent | stringTemplate)* Quote_Close;
 stringContent: TextLiteral;
-stringTemplate: String_Template_Open expression (more expression)* Right_Brace;
+stringTemplate: String_Template_Open (expression end)* expression Right_Brace;
 // 原始字符串表达式
 rawStringExpr: Quote_Quote_Quote_Open (rawStringContent | rawStringTemplate | Raw_Quote)* Quote_Quote_Quote_Close;
 rawStringContent: RawTextLiteral;
-rawStringTemplate: Raw_String_Template_Open New_Line* expression (more expression)* New_Line* Right_Brace;
+rawStringTemplate: Raw_String_Template_Open New_Line* (expression end)* expression New_Line* Right_Brace;
 
 floatExpr: FloatLiteral;
 integerExpr: DecimalLiteral | BinaryLiteral | OctalLiteral | HexLiteral;
