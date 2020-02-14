@@ -49,7 +49,7 @@ namespaceFunctionStatement: (annotationSupport)? (id| left_brack id templateDefi
 // 定义包
 packageStatement: (annotationSupport)? (id| left_brack id templateDefine right_brack) (Colon|Equal)
  (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement|packageStaticStatement)
- (Cent (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement|packageStaticStatement))* end;
+ (And (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement|packageStaticStatement))* end;
 
 packageStaticStatement: left_brace (packageStaticSupportStatement)* right_brace;
 // 包静态语句
@@ -78,7 +78,7 @@ New_Line;
 // 包含
 includeStatement: typeType;
 // 包构造方法
-packageNewStatement: (annotationSupport)? left_paren parameterClauseIn (Right_Arrow p=Question? id (more id)?)? right_paren
+packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arrow p=Question? id (more id)? right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
 // 定义变量
 packageVariableStatement: (annotationSupport)? id (Equal expression| typeType (Equal expression)?) end;
@@ -96,7 +96,7 @@ packageImplementStatement: Coin typeType (left_paren p=Question? id (more id)? r
 // 扩展
 implementStatement: (id| left_brack id templateDefine right_brack) Add_Equal 
 (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement)
-(Cent (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement))* end;
+(And (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement))* end;
 
 // 实现支持的语句
 implementSupportStatement: 
@@ -122,9 +122,9 @@ overrideFunctionStatement: (annotationSupport)? Dot (n='_')? (id| left_brack id 
 
 // 协议
 protocolStatement: (annotationSupport)? (id| left_brack id templateDefine right_brack) (Colon|Equal) 
-(protocolSubStatement (Cent (protocolSubStatement|includeStatement))*|
-includeStatement (Cent (protocolSubStatement|includeStatement))* Cent protocolSubStatement
- (Cent (protocolSubStatement|includeStatement))* ) end;
+(protocolSubStatement (And (protocolSubStatement|includeStatement))*|
+includeStatement (And (protocolSubStatement|includeStatement))* And protocolSubStatement
+ (And (protocolSubStatement|includeStatement))* ) end;
 
 protocolSubStatement: Coin Coin (left_paren p=Question? id (more id)? right_paren)? left_brace (protocolSupportStatement)* right_brace;
 // 协议支持的语句
@@ -271,8 +271,6 @@ checkExpression | // 检查表达式
 expression op=Bang | // 引用判断
 expression op=Question | // 可空判断
 expression orElse | // 空值替换
-expression typeConversion | // 类型转换
-expression typeCheck | // 类型判断
 expression callFunc | // 函数调用
 callNew | // 构造类对象
 expression callChannel | // 调用通道
@@ -283,7 +281,9 @@ expression judgeCombine expression | // 组合判断表达式
 expression judge expression | // 判断型表达式
 expression add expression | // 和型表达式
 expression mul expression | // 积型表达式
-expression pow expression; // 幂型表达式
+expression pow expression | // 幂型表达式
+expression typeConversion | // 类型转换
+expression typeCheck; // 类型判断
 
 callExpression: call New_Line? (id | left_brack id templateCall right_brack) (callFunc|callChannel|callElement)?;
 
@@ -309,7 +309,7 @@ callPkg: typeType left_brace (pkgAssign|listAssign|setAssign|dictionaryAssign)? 
 
 callNew: typeType left_paren New_Line? expressionList? New_Line? right_paren; // 构造类对象
 
-orElse: Question Bang expression; // 类型转化
+orElse: Question Question expression; // 类型转化
 
 typeConversion: typeType Bang; // 类型转化
 
