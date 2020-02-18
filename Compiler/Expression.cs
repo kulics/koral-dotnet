@@ -129,6 +129,7 @@ else if ( context.GetChild(1).@is<CallFuncContext>() ) {
 var e2 = (Result)(Visit(context.GetChild(1)));
 if ( this.is_type(r.rootID) ) {
 r.text=(new System.Text.StringBuilder().Append("(new ").Append(r.text).Append(e2.text).Append(")")).to_str();
+r.data=r.rootID;
 }
 else {
 r.text=r.text+e2.text;

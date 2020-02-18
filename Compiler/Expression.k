@@ -206,6 +206,7 @@ KLangVisitor : $ (me) {
                 e2 = Visit(context.GetChild(1)) Result!
                 ? me.is_type(r.rootID) {
                     r.text = "(new \{r.text; e2.text})"
+                    r.data = r.rootID
                 } _ {
                     r.text = r.text + e2.text
                 }
