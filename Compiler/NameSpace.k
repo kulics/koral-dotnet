@@ -60,9 +60,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitExportStatement : (context ExportStatementContext -> v any) {
-        name = Visit(context.stringExpr()) str!
-        name = name.sub_str(1, name.len()-2)
-        name = name.replace("/", ".")
+        name = Visit(context.nameSpaceItem()) str!
         obj = Namespace{
             name = name
         }
@@ -77,11 +75,9 @@ KLangVisitor : $ (me) {
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
-        ns = Visit(context.stringExpr()) str!
-        ns = ns.sub_str(1, ns.len()-2)
-        ns = ns.replace("/", ".")
-        obj += ? -> context.call() >< nil {
-            "using static \{ ns }.\{(Visit(context.id()) Result!).text}"
+        ns = Visit(context.nameSpaceItem()) str!
+        obj += ? -> context.Discard() >< nil {
+            "using static \{ ns }"
         } context.id() >< nil {
             "using \{ns}.\{(Visit(context.id()) Result!).text}"
         } _ {

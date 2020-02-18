@@ -56,9 +56,7 @@ obj+=BlockRight+Wrap;
 return obj;
 }
 public  override  object VisitExportStatement( ExportStatementContext context ){
-var name = (string)(Visit(context.stringExpr()));
-name = name.sub_str(1, name.len()-2);
-name = name.replace("/", ".");
+var name = (string)(Visit(context.nameSpaceItem()));
 var obj = (new Namespace(){name = name});
 foreach (var item in context.importStatement()){
 obj.imports+=(string)(Visit(item));
@@ -70,11 +68,9 @@ var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-var ns = (string)(Visit(context.stringExpr()));
-ns = ns.sub_str(1, ns.len()-2);
-ns = ns.replace("/", ".");
-obj+=run(()=>{if ( context.call()!=null ) {
-return (new System.Text.StringBuilder().Append("using static ").Append(ns).Append(".").Append(((Result)(Visit(context.id()))).text)).to_str();}
+var ns = (string)(Visit(context.nameSpaceItem()));
+obj+=run(()=>{if ( context.Discard()!=null ) {
+return (new System.Text.StringBuilder().Append("using static ").Append(ns)).to_str();}
 else if ( context.id()!=null ) {
 return (new System.Text.StringBuilder().Append("using ").Append(ns).Append(".").Append(((Result)(Visit(context.id()))).text)).to_str();}
 else {

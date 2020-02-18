@@ -8,10 +8,10 @@ statement: (New_Line)* (annotationSupport)?
 exportStatement (New_Line)* namespaceSupportStatement*;
 
 // 导出命名空间
-exportStatement: stringExpr left_brace (importStatement|typeAliasStatement|New_Line)* right_brace end;
+exportStatement: nameSpaceItem call left_brace (importStatement|typeAliasStatement|New_Line)* right_brace end;
 
 // 导入命名空间
-importStatement: (annotationSupport)? (id call? (Colon|Equal))? stringExpr end;
+importStatement: (annotationSupport)? ((id|Discard) (Colon|Equal))? nameSpaceItem stringExpr? end;
 
 namespaceSupportStatement:
 namespaceFunctionStatement |
