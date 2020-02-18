@@ -1,11 +1,13 @@
-"Compiler" {
-    "Antlr4/Runtime"
-    "Antlr4/Runtime/Misc"
-    "System"
+Compiler . {
+    Antlr4.Runtime
+    Antlr4.Runtime.Misc
+    System
+    System.Collections.Generic
 
-    KParser. = "Compiler" 
-    Compiler_static. = "Compiler" 
+    _ = Compiler.KParser
+    _ = Compiler.Compiler_static
 }
+
 
 Parameter : $ {
     id str
@@ -23,7 +25,7 @@ KLangVisitor : $ (me) {
         @ item = items.. {
             content += ? -> item.GetChild(0) UsingStatementContext? {
                 lazy.add("}")
-                "using (\{Visit(item) str!}) \{BlockLeft, Wrap}"
+                "using (\{Visit(item) str!}) \{BlockLeft; Wrap}"
             } _ {
                 Visit(item)
             }
@@ -70,7 +72,7 @@ KLangVisitor : $ (me) {
             templateContract = template.Contract
         }
         me.add_current_set()
-        obj += "\{Visit(context.parameterClauseIn())} \{templateContract, Wrap, BlockLeft, Wrap} "
+        obj += "\{Visit(context.parameterClauseIn())} \{templateContract; Wrap; BlockLeft; Wrap} "
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += BlockRight + Wrap
         me.delete_current_set()
@@ -80,26 +82,26 @@ KLangVisitor : $ (me) {
     .VisitReturnStatement : (context ReturnStatementContext -> v any) {
         ? context.tupleExpression() >< nil {
             r = Visit(context.tupleExpression()) Result!
-            <- "return \{r.text, Terminate, Wrap}"
+            <- "return \{r.text; Terminate; Wrap}"
         }
-        <- "return\{Terminate, Wrap}"
+        <- "return\{Terminate; Wrap}"
     }
 
     .VisitReturnAwaitStatement : (context ReturnAwaitStatementContext -> v any) {
         ? context.tupleExpression() >< nil {
             r = Visit(context.tupleExpression()) Result!
-            <- "return await \{r.text, Terminate, Wrap}"
+            <- "return await \{r.text; Terminate; Wrap}"
         }
-        <- "return\{Terminate, Wrap}"
+        <- "return\{Terminate; Wrap}"
     }
 
     .VisitYieldReturnStatement : (context YieldReturnStatementContext -> v any) {
         r = Visit(context.tupleExpression()) Result!
-        <- "yield return \{r.text, Terminate, Wrap}"
+        <- "yield return \{r.text; Terminate; Wrap}"
     }
 
     .VisitYieldBreakStatement : (context YieldBreakStatementContext -> v any) {
-        <- "yield break\{Terminate, Wrap}"
+        <- "yield break\{Terminate; Wrap}"
     }
 
     .VisitTuple : (context TupleContext -> v any) {

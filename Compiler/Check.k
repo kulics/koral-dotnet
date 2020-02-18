@@ -1,15 +1,17 @@
-"Compiler" {
-    "Antlr4/Runtime"
-    "Antlr4/Runtime/Misc"
-    "System"
+Compiler . {
+    Antlr4.Runtime
+    Antlr4.Runtime.Misc
+    System
+    System.Collections.Generic
 
-    KParser. = "Compiler" 
-    Compiler_static. = "Compiler" 
+    _ = Compiler.KParser
+    _ = Compiler.Compiler_static
 }
+
 
 KLangVisitor : $ (me) {
     .VisitCheckStatement : (context CheckStatementContext -> v any) {
-        obj = "try \{BlockLeft, Wrap}"
+        obj = "try \{BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
@@ -35,7 +37,7 @@ KLangVisitor : $ (me) {
             Type = Visit(context.typeType()) str!
         }
 
-        obj += "catch( \{Type} \{ID} )\{Wrap, BlockLeft, Wrap}"
+        obj += "catch( \{Type} \{ID} )\{Wrap; BlockLeft; Wrap}"
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight
@@ -43,7 +45,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitCheckFinallyStatment : (context CheckFinallyStatmentContext -> v any) {
-        obj = "finally \{Wrap, BlockLeft, Wrap}"
+        obj = "finally \{Wrap; BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
@@ -65,7 +67,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitCheckExpression : (context CheckExpressionContext -> v any) {
-        obj = "run(()=> { \{Wrap}try \{BlockLeft, Wrap}"
+        obj = "run(()=> { \{Wrap}try \{BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += "return \{ (Visit(context.tupleExpression()) Result!).text };"
@@ -93,7 +95,7 @@ KLangVisitor : $ (me) {
             Type = Visit(context.typeType()) str!
         }
 
-        obj += "catch( \{Type} \{ID} )\{Wrap, BlockLeft, Wrap}"
+        obj += "catch( \{Type} \{ID} )\{Wrap; BlockLeft; Wrap}"
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += "return \{ (Visit(context.tupleExpression()) Result!).text };"
         me.delete_current_set()
@@ -102,7 +104,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitCheckReportStatement : (context CheckReportStatementContext -> v any) {
-        obj = "throw \{(Visit(context.expression()) Result!).text, Terminate, Wrap}"
+        obj = "throw \{(Visit(context.expression()) Result!).text; Terminate; Wrap}"
         <- obj
     }
 }

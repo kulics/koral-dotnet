@@ -1,13 +1,15 @@
-"Compiler" {
-    "Antlr4/Runtime"
-    "Antlr4/Runtime/Misc"
-    "System"
+Compiler . {
+    Antlr4.Runtime
+    Antlr4.Runtime.Misc
+    System
+    System.Collections.Generic
 
-    KParser. = "Compiler" 
-    Compiler_static. = "Compiler" 
+    _ = Compiler.KParser
+    _ = Compiler.Compiler_static
 }
 
-ErrorListener : BaseErrorListener % $ (me, base) {
+
+ErrorListener : BaseErrorListener & $ (me, base) {
     FileDir str
 
     .SyntaxError : (recognizer IRecognizer, offendingSymbol ?IToken, 

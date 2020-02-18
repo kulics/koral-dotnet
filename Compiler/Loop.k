@@ -1,11 +1,13 @@
-"Compiler" {
-    "Antlr4/Runtime"
-    "Antlr4/Runtime/Misc"
-    "System"
+Compiler . {
+    Antlr4.Runtime
+    Antlr4.Runtime.Misc
+    System
+    System.Collections.Generic
 
-    KParser. = "Compiler" 
-    Compiler_static. = "Compiler" 
+    _ = Compiler.KParser
+    _ = Compiler.Compiler_static
 }
+
 
 Iterator : $ {
     begin Result
@@ -51,7 +53,7 @@ KLangVisitor : $ (me) {
         obj += BlockRight + Wrap
         ? context.loopElseStatement() >< nil {
             elseContent = Visit(context.loopElseStatement()) str!
-            obj = "if (!can_range(\{ target })) \{elseContent} else \{BlockLeft,Wrap, obj, BlockRight, Wrap}"
+            obj = "if (!can_range(\{ target })) \{elseContent} else \{BlockLeft; Wrap; obj; BlockRight; Wrap}"
         }
         <- obj
     }
@@ -76,7 +78,7 @@ KLangVisitor : $ (me) {
         obj += BlockRight+Wrap
         ? context.loopElseStatement() >< nil {
             elseContent = Visit(context.loopElseStatement()) str!
-            obj = "if (!can_range(\{ target })) \{elseContent} else \{BlockLeft, Wrap, obj, BlockRight, Wrap}"
+            obj = "if (!can_range(\{ target })) \{elseContent} else \{BlockLeft; Wrap; obj; BlockRight; Wrap}"
         }
         <- obj
     }
@@ -92,7 +94,7 @@ KLangVisitor : $ (me) {
         obj += BlockRight+Wrap
         ? context.loopElseStatement() >< nil {
             elseContent = Visit(context.loopElseStatement()) str!
-            obj = "if (!(\{ expr.text })) \{elseContent} else \{BlockLeft, Wrap, obj, BlockRight, Wrap}"
+            obj = "if (!(\{ expr.text })) \{elseContent} else \{BlockLeft; Wrap; obj; BlockRight; Wrap}"
         }
         <- obj
     }
@@ -107,11 +109,11 @@ KLangVisitor : $ (me) {
     }
 
     .VisitLoopJumpStatement : (context LoopJumpStatementContext -> v any) {
-        <- "break\{Terminate, Wrap}"
+        <- "break\{Terminate; Wrap}"
     }
 
     .VisitLoopContinueStatement : (context LoopContinueStatementContext -> v any) {
-        <- "continue\{Terminate, Wrap}"
+        <- "continue\{Terminate; Wrap}"
     }
 
     .VisitLoopExpression : (context LoopExpressionContext -> v any) {

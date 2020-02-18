@@ -1,8 +1,8 @@
-"Compiler" {
-    "Antlr4/Runtime"
-    "System"
-    "System/IO"
-    "System/Text"
+Compiler . {
+    Antlr4.Runtime
+    System
+    System.IO
+    System.Text
 }
 
 _ReadPath str
@@ -51,7 +51,7 @@ Compiled : (path str->) {
 
             # 文件流写文件,使用覆盖模式
             ByteResult = Encoding.UTF8.GetBytes(Result.to_str())  # 转换为字节
-            ! fsWrite = FileStream("\{_ReadPath, file.sub_str(0, file.Length - 2)}.cs", FileMode.Create)
+            ! fsWrite = FileStream("\{_ReadPath; file.sub_str(0, file.Length - 2)}.cs", FileMode.Create)
             fsWrite.Write(ByteResult, 0, ByteResult.Length)
         } err Exception {
             print(err)

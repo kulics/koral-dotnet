@@ -1,11 +1,13 @@
-"Compiler" {
-    "Antlr4/Runtime"
-    "Antlr4/Runtime/Misc"
-    "System"
+Compiler . {
+    Antlr4.Runtime
+    Antlr4.Runtime.Misc
+    System
+    System.Collections.Generic
 
-    KParser. = "Compiler" 
-    Compiler_static. = "Compiler" 
+    _ = Compiler.KParser
+    _ = Compiler.Compiler_static
 }
+
 
 KLangVisitor : $ (me) {
     .VisitImplementStatement : (context ImplementStatementContext -> v any) {
@@ -89,7 +91,7 @@ KLangVisitor : $ (me) {
                 pri += Terminate + Wrap
             }
             obj = pri + obj
-            obj += "\{r1.permission} \{isVirtual} \{typ} \{r1.text, BlockLeft}"
+            obj += "\{r1.permission} \{isVirtual} \{typ} \{r1.text; BlockLeft}"
             @ v = me.selfPropertyContent.. {
                 obj += v
             }
@@ -100,7 +102,7 @@ KLangVisitor : $ (me) {
         } _ {
             obj += "\{r1.permission} \{typ} \{r1.text}"
             obj += ? -> r2 >< nil {
-                " = \{r2.text, Terminate, Wrap}"
+                " = \{r2.text; Terminate; Wrap}"
             } _ {
                 Terminate + Wrap
             }
@@ -184,7 +186,7 @@ KLangVisitor : $ (me) {
                 pri += Terminate + Wrap
             }
             obj = pri + obj
-            obj += "\{r1.permission} \{isVirtual} \{typ} \{r1.text, BlockLeft}"
+            obj += "\{r1.permission} \{isVirtual} \{typ} \{r1.text; BlockLeft}"
             @ v = me.selfPropertyContent.. {
                 obj += v
             }
@@ -195,7 +197,7 @@ KLangVisitor : $ (me) {
         } _ {
             obj += "\{r1.permission} \{typ} \{r1.text}"
             obj += ? -> r2 >< nil {
-                " = \{r2.text, Terminate, Wrap}"
+                " = \{r2.text; Terminate; Wrap}"
             } _ {
                 Terminate + Wrap
             }

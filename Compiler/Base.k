@@ -1,11 +1,11 @@
-"Compiler" {
-    "Antlr4/Runtime"
-    "Antlr4/Runtime/Misc"
-    "System"
-    "System/Collections/Generic"
+Compiler . {
+    Antlr4.Runtime
+    Antlr4.Runtime.Misc
+    System
+    System.Collections.Generic
 
-    KParser. = "Compiler" 
-    Compiler_static. = "Compiler" 
+    _ = Compiler.KParser
+    _ = Compiler.Compiler_static
 }
 
 Terminate : ";"
@@ -54,7 +54,7 @@ Result : $ {
     rootID str = ""
 }
 
-KLangVisitor : [KParserBaseVisitor any] % $(me) {
+KLangVisitor : [KParserBaseVisitor any] & $(me) {
     selfID = ""
     superID = ""
     setID = ""
@@ -89,7 +89,7 @@ KLangVisitor : [KParserBaseVisitor any] % $(me) {
     add_type : (id str ->) {
         me.TypeIdSet.add(id)
     }
-} % (->me) {
+} & (->me) {
     me.CurrentIDSet.push([str]_{})
 }
 
@@ -212,7 +212,7 @@ KLangVisitor : $ (me) {
 
         r = Visit(context.annotationList()) str!
         ? r >< "" {
-            obj += "[\{id, r}]"
+            obj += "[\{id; r}]"
         }
         <- obj
     }

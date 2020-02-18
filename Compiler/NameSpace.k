@@ -1,11 +1,13 @@
-"Compiler" {
-    "Antlr4/Runtime"
-    "Antlr4/Runtime/Misc"
-    "System"
+Compiler . {
+    Antlr4.Runtime
+    Antlr4.Runtime.Misc
+    System
+    System.Collections.Generic
 
-    KParser. = "Compiler" 
-    Compiler_static. = "Compiler" 
+    _ = Compiler.KParser
+    _ = Compiler.Compiler_static
 }
+
 
 Namespace : $ {
     name str
@@ -22,7 +24,7 @@ KLangVisitor : $ (me) {
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
-        obj += "namespace \{ns.name, Wrap, BlockLeft, Wrap}"
+        obj += "namespace \{ns.name; Wrap; BlockLeft; Wrap}"
 
         content = ""
         contentStatic = ""
@@ -52,7 +54,7 @@ KLangVisitor : $ (me) {
         }
         obj += content
         ? contentStatic >< "" {
-            obj += "public partial class \{ns.name.sub_str(ns.name.last_index_of(".") + 1)}_static \{BlockLeft, Wrap, contentStatic, BlockRight, Wrap}"
+            obj += "public partial class \{ns.name.sub_str(ns.name.last_index_of(".") + 1)}_static \{BlockLeft; Wrap; contentStatic; BlockRight; Wrap}"
         }
         me.delete_current_set()
         obj += BlockRight + Wrap
@@ -205,7 +207,7 @@ KLangVisitor : $ (me) {
             obj += Visit(context.annotationSupport())
         }
         
-        obj += "\{id.permission} const \{typ} \{id.text} = \{expr.text,Terminate, Wrap}"
+        obj += "\{id.permission} const \{typ} \{id.text} = \{expr.text; Terminate; Wrap}"
         <- obj
     }
 
@@ -237,7 +239,7 @@ KLangVisitor : $ (me) {
                 pri += Terminate + Wrap
             }
             obj = pri + obj
-            obj += "\{r1.permission} static \{typ} \{r1.text, BlockLeft}"
+            obj += "\{r1.permission} static \{typ} \{r1.text; BlockLeft}"
             @ v = me.selfPropertyContent.. {
                 obj += v
             }
@@ -248,7 +250,7 @@ KLangVisitor : $ (me) {
         } _ {
             obj += "\{r1.permission} static \{typ} \{r1.text}"
             obj += ? -> r2 >< nil {
-                " = \{r2.text, Terminate, Wrap}"
+                " = \{r2.text; Terminate; Wrap}"
             } _ {
                 Terminate + Wrap
             }

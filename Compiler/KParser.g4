@@ -276,14 +276,15 @@ callNew | // 构造类对象
 expression callChannel | // 调用通道
 expression callElement | // 访问元素
 expression callExpression | // 链式调用
-expression bitwise expression | // 位运算表达式
-expression judgeCombine expression | // 组合判断表达式
-expression judge expression | // 判断型表达式
-expression add expression | // 和型表达式
-expression mul expression | // 积型表达式
 expression pow expression | // 幂型表达式
+expression mul expression | // 积型表达式
+expression add expression | // 和型表达式
+expression bitwise expression | // 位运算表达式
 expression typeConversion | // 类型转换
-expression typeCheck; // 类型判断
+expression typeCheck | // 类型判断
+expression compareCombine expression | // 组合比较表达式
+expression compare expression | // 比较表达式
+expression logic expression; // 逻辑表达式
 
 callExpression: call New_Line? (id | left_brack id templateCall right_brack) (callFunc|callChannel|callElement)?;
 
@@ -499,8 +500,9 @@ bitwiseNot: Tilde_Tilde;
 bitwiseXor: Caret_Caret;
 bitwiseLeftShift: Less_Less;
 bitwiseRightShift: Greater_Greater;
-judgeCombine: Combine_Equal;
-judge: op=(Or | And | Equal_Equal | Not_Equal | Less_Equal | Greater_Equal | Less | Greater) (New_Line)?;
+compareCombine: Combine_Equal;
+compare: op=(Equal_Equal | Not_Equal | Less_Equal | Greater_Equal | Less | Greater) (New_Line)?;
+logic: op=(And | Or) (New_Line)?;
 assign: op=(Equal | Add_Equal | Sub_Equal | Mul_Equal | Div_Equal | Mod_Equal | Pow_Equal) (New_Line)?;
 add: op=(Add | Sub) (New_Line)?;
 mul: op=(Mul | Div | Mod) (New_Line)?;

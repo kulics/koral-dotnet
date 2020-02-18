@@ -3,6 +3,7 @@ using static Library.Lib;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;
+using System.Collections.Generic;
 using static Compiler.KParser;
 using static Compiler.Compiler_static;
 
@@ -67,14 +68,17 @@ case 3 :
 var e2 = Visit(context.GetChild(2));
 var op = Visit(context.GetChild(1));
 switch (context.GetChild(1)) {
-case JudgeCombineContext it :
+case CompareCombineContext it :
 { r.data=I32;
 var s1 = e1.text;
 var s2 = ((Result)(e2)).text;
 r.text=(new System.Text.StringBuilder().Append(s1).Append(" > ").Append(s2).Append(" ? 1 : ( ").Append(s1).Append("==").Append(s2).Append(" ? 0 : -1 )")).to_str();
 return r;
 } break;
-case JudgeContext it :
+case CompareContext it :
+{ r.data=Bool;
+} break;
+case LogicContext it :
 { r.data=Bool;
 } break;
 case AddContext it :
@@ -182,11 +186,14 @@ return "<<";
 public  override  object VisitBitwiseRightShift( BitwiseRightShiftContext context ){
 return ">>";
 }
-public  override  object VisitJudge( JudgeContext context ){
+public  override  object VisitCompare( CompareContext context ){
 if ( context.op.Type==Not_Equal ) {
 return "!=";
 }
-else if ( context.op.Type==And ) {
+return context.op.Text;
+}
+public  override  object VisitLogic( LogicContext context ){
+if ( context.op.Type==And ) {
 return "&&";
 }
 else if ( context.op.Type==Or ) {

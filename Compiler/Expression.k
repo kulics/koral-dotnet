@@ -1,11 +1,13 @@
-"Compiler" {
-    "Antlr4/Runtime"
-    "Antlr4/Runtime/Misc"
-    "System"
+Compiler . {
+    Antlr4.Runtime
+    Antlr4.Runtime.Misc
+    System
+    System.Collections.Generic
 
-    KParser. = "Compiler" 
-    Compiler_static. = "Compiler" 
+    _ = Compiler.KParser
+    _ = Compiler.Compiler_static
 }
+
 
 keywords = {
     "abstract"
@@ -103,12 +105,12 @@ KLangVisitor : $ (me) {
         r2 = Visit(context.expression()) Result!
         ? context.typeType() >< nil {
             Type = Visit(context.typeType()) str!
-            obj = "\{Type} \{r1.text} = \{r2.text, Terminate, Wrap}"
+            obj = "\{Type} \{r1.text} = \{r2.text; Terminate; Wrap}"
         } _ {
             obj = ? -> r1.isDefine | r1.text == me.selfID | r1.text == me.superID | r1.text == setID {
-                "\{r1.text} = \{r2.text, Terminate, Wrap}"
+                "\{r1.text} = \{r2.text; Terminate; Wrap}"
             } _ {
-                "var \{r1.text} = \{r2.text, Terminate, Wrap}"
+                "var \{r1.text} = \{r2.text; Terminate; Wrap}"
             }
         }
         <- obj
@@ -118,7 +120,7 @@ KLangVisitor : $ (me) {
         obj = ""
         Type = Visit(context.typeType()) str!
         r = Visit(context.idExpression()) Result!
-        obj = "\{Type} \{r.text, Terminate, Wrap}"
+        obj = "\{Type} \{r.text; Terminate; Wrap}"
         <- obj
     }
 
@@ -149,13 +151,16 @@ KLangVisitor : $ (me) {
             e2 = Visit(context.GetChild(2))
             op = Visit(context.GetChild(1))
 
-            ? context.GetChild(1).. _ JudgeCombineContext {
+            ? context.GetChild(1).. _ CompareCombineContext {
                 r.data = I32
                 s1 = e1.text
                 s2 = (e2 Result!).text
                 r.text = "\{s1} > \{s2} ? 1 : ( \{s1}==\{s2} ? 0 : -1 )"
                 <- r
-            } _ JudgeContext {
+            } _ CompareContext {
+                # todo 如果左右不是bool类型值，报错
+                r.data = Bool
+            } _ LogicContext {
                 # todo 如果左右不是bool类型值，报错
                 r.data = Bool
             } _ AddContext {
@@ -200,7 +205,7 @@ KLangVisitor : $ (me) {
             } context.GetChild(1) CallFuncContext? {
                 e2 = Visit(context.GetChild(1)) Result!
                 ? me.is_type(r.rootID) {
-                    r.text = "(new \{r.text, e2.text})"
+                    r.text = "(new \{r.text; e2.text})"
                 } _ {
                     r.text = r.text + e2.text
                 }
@@ -264,10 +269,15 @@ KLangVisitor : $ (me) {
         <- ">>"
     }
 
-    .VisitJudge : (context JudgeContext -> v any) {
+    .VisitCompare : (context CompareContext -> v any) {
         ? context.op.Type == Not_Equal {
             <- "!="
-        } context.op.Type == And {
+        }
+        <- context.op.Text
+    }
+
+    .VisitLogic : (context LogicContext -> v any) {
+        ? context.op.Type == And {
             <- "&&"
         } context.op.Type == Or {
             <- "||"

@@ -3,6 +3,7 @@ using static Library.Lib;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;
+using System.Collections.Generic;
 using static Compiler.KParser;
 using static Compiler.Compiler_static;
 
@@ -163,7 +164,7 @@ obj+=(new System.Text.StringBuilder().Append(Visit(context.name())).Append(" = "
 return obj;
 }
 public  override  object VisitPkgAnonymous( PkgAnonymousContext context ){
-return (new Result(){data = "var",text = "new"+(string)(Visit(context.pkgAnonymousAssign()))});
+return (new Result(){data = "var",text = (string)("new"+Visit(context.pkgAnonymousAssign()))});
 }
 public  override  object VisitPkgAnonymousAssign( PkgAnonymousAssignContext context ){
 var obj = "";
@@ -199,7 +200,7 @@ result.text+=run(()=>{if ( i==0 ) {
 type = (string)(r.data);
 return r.text;}
 else {
-if ( type!=(string)(r.data) ) {
+if ( type!=((string)(r.data)) ) {
 type = Any;
 }
 return ","+r.text;}

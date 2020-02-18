@@ -1,10 +1,11 @@
-"Compiler" {
-    "Antlr4/Runtime"
-    "Antlr4/Runtime/Misc"
-    "System"
+Compiler . {
+    Antlr4.Runtime
+    Antlr4.Runtime.Misc
+    System
+    System.Collections.Generic
 
-    KParser. = "Compiler" 
-    Compiler_static. = "Compiler" 
+    _ = Compiler.KParser
+    _ = Compiler.Compiler_static
 }
 
 KLangVisitor : $ (me) {
@@ -215,7 +216,7 @@ KLangVisitor : $ (me) {
                 type = r.data str!
                 r.text
             } _ {
-                ? type >< r.data str! {
+                ? type >< (r.data str!) {
                     type = Any
                 }
                 "," + r.text
