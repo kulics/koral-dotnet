@@ -89,7 +89,7 @@ KLangVisitor : [KParserBaseVisitor any] & $(me) {
     add_type : (id str ->) {
         me.TypeIdSet.add(id)
     }
-} & (->me) {
+} & (->$me) {
     me.CurrentIDSet.push([str]_{})
 }
 
