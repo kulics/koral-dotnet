@@ -28,11 +28,7 @@ var Type = (string)(Visit(context.typeType()));
 obj = (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
 }
 else {
-obj = run(()=>{if ( r1.isDefine||r1.text==this.selfID||r1.text==this.superID||r1.text==setID ) {
-return (new System.Text.StringBuilder().Append(r1.text).Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();}
-else {
-return (new System.Text.StringBuilder().Append("var ").Append(r1.text).Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();}
-});
+obj = (new System.Text.StringBuilder().Append("var ").Append(r1.text).Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
 }
 return obj;
 }
