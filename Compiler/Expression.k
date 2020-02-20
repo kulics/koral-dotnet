@@ -215,7 +215,7 @@ KLangVisitor : $ (me) {
                 e2 = Visit(context.GetChild(1)) Result!
                 r.text = r.text + e2.text
             } _ {
-                ? context.op.Type == KParser.Bang {
+                ? context.op.Type == KParser.Coin {
                     r.text = "ref \{r.text}"
                 } context.op.Type == KParser.Question {
                     r.text += "?"

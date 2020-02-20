@@ -16,16 +16,6 @@ KLangVisitor : $ (me) {
         <- obj
     }
 
-    .VisitTypeReference : (context TypeReferenceContext -> v any) {
-        obj = "ref "
-        ? context.typeNullable() >< nil {
-            obj += Visit(context.typeNullable())
-        } context.typeNotNull() >< nil {
-            obj += Visit(context.typeNotNull())
-        }
-        <- obj
-    }
-
     .VisitTypeNullable : (context TypeNullableContext -> v any) {
         obj = ""
         obj = Visit(context.typeNotNull()) str!

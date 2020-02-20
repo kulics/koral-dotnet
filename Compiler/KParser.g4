@@ -154,7 +154,7 @@ parameterClauseIn: parameter? (more parameter)*;
 // 出参
 parameterClauseOut: parameter? (more parameter)*;
 // 参数结构
-parameter: (annotationSupport)? id (Dot_Dot|Dot_Dot_Dot)? typeType (Equal expression)?;
+parameter: (annotationSupport)? Coin? id (Dot_Dot|Dot_Dot_Dot)? typeType (Equal expression)?;
 
 // 函数支持的语句
 functionSupportStatement:
@@ -268,7 +268,7 @@ judgeCaseExpression | // 条件判断表达式
 loopExpression | // 循环表达式
 loopEachExpression | // 集合循环表达式
 checkExpression | // 检查表达式
-expression op=Bang | // 引用判断
+expression op=Coin | // 取引用
 expression op=Question | // 可空判断
 expression orElse | // 空值替换
 expression callFunc | // 函数调用
@@ -449,9 +449,8 @@ typeBasic |
 typePackage | 
 typeFunction;
 
-typeType: typeNotNull | typeNullable | typeReference;
+typeType: typeNotNull | typeNullable;
 
-typeReference: Bang (typeNotNull | typeNullable);
 typeNullable: Question typeNotNull;
 
 typeArray: left_brack Dot right_brack typeType;

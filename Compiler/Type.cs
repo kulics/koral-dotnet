@@ -15,16 +15,6 @@ var obj = "";
 obj = (string)(Visit(context.GetChild(0)));
 return obj;
 }
-public  override  object VisitTypeReference( TypeReferenceContext context ){
-var obj = "ref ";
-if ( context.typeNullable()!=null ) {
-obj+=Visit(context.typeNullable());
-}
-else if ( context.typeNotNull()!=null ) {
-obj+=Visit(context.typeNotNull());
-}
-return obj;
-}
 public  override  object VisitTypeNullable( TypeNullableContext context ){
 var obj = "";
 obj = (string)(Visit(context.typeNotNull()));

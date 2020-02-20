@@ -136,7 +136,7 @@ var e2 = (Result)(Visit(context.GetChild(1)));
 r.text=r.text+e2.text;
 }
 else {
-if ( context.op.Type==KParser.Bang ) {
+if ( context.op.Type==KParser.Coin ) {
 r.text=(new System.Text.StringBuilder().Append("ref ").Append(r.text)).to_str();
 }
 else if ( context.op.Type==KParser.Question ) {
