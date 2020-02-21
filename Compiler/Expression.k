@@ -490,6 +490,9 @@ KLangVisitor : $ (me) {
     }
 
     .VisitStringContent : (context StringContentContext -> v any) {
+        ? context.TextLiteral().GetText() == "\\$" {
+            <- "$"
+        }
         <- context.TextLiteral().GetText() 
     }
 
@@ -536,6 +539,9 @@ KLangVisitor : $ (me) {
     }
 
     .VisitRawStringContent : (context RawStringContentContext -> v any) {
+        ? context.RawTextLiteral().GetText() == "\\$" {
+            <- "$"
+        }
         <- context.RawTextLiteral().GetText()
     }
 

@@ -379,6 +379,9 @@ return text;
 }
 }
 public  override  object VisitStringContent( StringContentContext context ){
+if ( context.TextLiteral().GetText()=="\\$" ) {
+return "$";
+}
 return context.TextLiteral().GetText();
 }
 public  override  object VisitStringTemplate( StringTemplateContext context ){
@@ -424,6 +427,9 @@ return text;
 }
 }
 public  override  object VisitRawStringContent( RawStringContentContext context ){
+if ( context.RawTextLiteral().GetText()=="\\$" ) {
+return "$";
+}
 return context.RawTextLiteral().GetText();
 }
 public  override  object VisitRawStringTemplate( RawStringTemplateContext context ){

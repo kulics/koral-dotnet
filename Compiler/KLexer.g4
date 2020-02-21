@@ -1,10 +1,10 @@
 lexer grammar KLexer;
 
-Add_Equal:         '+=';
-Sub_Equal:         '-=';
-Mul_Equal:         '*=';
-Div_Equal:         '/=';
-Mod_Equal:        '\\=';
+Add_Equal:         	'+=';
+Sub_Equal:         	'-=';
+Mul_Equal:         	'*=';
+Div_Equal:         	'/=';
+Mod_Equal:        	'%=';
 Pow_Equal:			'^=';
 
 Equal_Equal:        '==';
@@ -13,29 +13,29 @@ Greater_Equal:      '>=';
 Not_Equal:          '><';
 Combine_Equal:      '<>';
 
-Dot_Dot_Dot: '...';
-Dot_Dot: '..';
-Dot: '.';
+Dot_Dot_Dot: 	'...';
+Dot_Dot: 		'..';
+Dot: 			'.';
 
-Comma: ',';
+Comma: 	',';
 
-Right_Arrow: '->';
-Left_Arrow: '<-';
+Right_Arrow: 	'->';
+Left_Arrow: 	'<-';
 
-Right_Flow: '->>';
-Left_Flow: '<<-';
+Right_Flow: 	'->>';
+Left_Flow: 		'<<-';
 
-Equal: '=';
+Equal: 	'=';
 
-Less_Less: '<<';
-Greater_Greater: '>>';
-And_And: '&&';
-Or_Or: '||';
-Caret_Caret: '^^';
-Tilde_Tilde: '~~';
+Less_Less: 			'<<';
+Greater_Greater: 	'>>';
+And_And: 			'&&';
+Or_Or: 				'||';
+Caret_Caret: 		'^^';
+Tilde_Tilde: 		'~~';
 
-Less: '<';
-Greater: '>';
+Less: 		'<';
+Greater: 	'>';
 
 Semi: ';';
 
@@ -70,23 +70,23 @@ Caret:    '^';
 
 Grave:  '`';
 
-TypeI8: 'i8';
-TypeU8: 'u8';
-TypeI16: 'i16';
-TypeU16: 'u16';
-TypeI32: 'i32';
-TypeU32: 'u32';
-TypeI64: 'i64';
-TypeU64: 'u64';
-TypeF32: 'f32';
-TypeF64: 'f64';
-TypeChr: 'chr';
-TypeStr: 'str';
-TypeBool: 'bool';
-TypeInt: 'int';
-TypeNum: 'num';
-TypeByte: 'byte';
-TypeAny: 'any';
+TypeI8: 	'i8';
+TypeU8: 	'u8';
+TypeI16: 	'i16';
+TypeU16: 	'u16';
+TypeI32: 	'i32';
+TypeU32: 	'u32';
+TypeI64: 	'i64';
+TypeU64: 	'u64';
+TypeF32: 	'f32';
+TypeF64: 	'f64';
+TypeChr: 	'chr';
+TypeStr: 	'str';
+TypeBool: 	'bool';
+TypeInt: 	'int';
+TypeNum: 	'num';
+TypeByte: 	'byte';
+TypeAny: 	'any';
 NilLiteral: 'nil';
 TrueLiteral: 'true';
 FalseLiteral: 'false';
@@ -842,9 +842,9 @@ mode String;
 
 Quote_Close: '"' -> popMode;
 
-String_Template_Open: '\\{' -> pushMode(DEFAULT_MODE);
+String_Template_Open: '${' -> pushMode(DEFAULT_MODE);
 
-TextLiteral: ('\\' [btnfr"\\] | ~('\\' | '"' ))+ ; // 文本
+TextLiteral: '\\' [btnfr"\\$] | ~('\\' | '"' | '$' )+ | '$' ; // 文本
 
 mode RawString;
 
@@ -852,6 +852,6 @@ Quote_Quote_Quote_Close: '"""' -> popMode;
 
 Raw_Quote: '"' ;
 
-Raw_String_Template_Open: '\\{' -> pushMode(DEFAULT_MODE);
+Raw_String_Template_Open: '${' -> pushMode(DEFAULT_MODE);
 
-RawTextLiteral: ('\\' ~[{] | ~('\\' | '"' ))+ ; // 文本
+RawTextLiteral: '\\$' | ~( '"' | '$' )+ | '$' ; // 文本
