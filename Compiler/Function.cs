@@ -184,7 +184,7 @@ p.type=(string)(Visit(context.typeType()));
 if ( context.Dot_Dot_Dot()!=null ) {
 p.type=(new System.Text.StringBuilder().Append("params ").Append(p.type).Append("[]")).to_str();
 }
-if ( context.Coin()!=null ) {
+if ( context.Bang()!=null ) {
 p.type=(new System.Text.StringBuilder().Append("ref ").Append(p.type)).to_str();
 }
 return p;

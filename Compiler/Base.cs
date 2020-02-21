@@ -116,39 +116,43 @@ r.isVirtual=true;
 }
 return r;
 }
-public  override  object VisitIdExpression( IdExpressionContext context ){
-var r = (new Result(){data = "var"});
-if ( context.idExprItem().Length>1 ) {
-r.text="(";
-foreach (var (i, v) in range(context.idExprItem())){
-var subID = ((Result)(Visit(v))).text;
-r.text+=run(()=>{if ( i!=0 ) {
-return ", "+subID;}
-else {
-return subID;}
-});
-if ( this.has_id(subID) ) {
-r.isDefine=true;
+public  override  object VisitVarId( VarIdContext context ){
+if ( context.Discard()!=null ) {
+return "_";
 }
 else {
-this.add_id(subID);
-}
-}
-r.text+=")";
+var id = ((Result)(Visit(context.id()))).text;
+if ( this.has_id(id) ) {
 }
 else {
-r = (Result)(Visit(context.idExprItem(0)));
-if ( this.has_id(r.text) ) {
-r.isDefine=true;
+this.add_id(id);
+}
+if ( context.typeType()!=null ) {
+return Visit(context.typeType())+" "+id;
 }
 else {
-this.add_id(r.text);
+return "var "+id;
 }
 }
-return r;
 }
-public  override  object VisitIdExprItem( IdExprItemContext context ){
-return Visit(context.GetChild(0));
+public  override  object VisitConstId( ConstIdContext context ){
+if ( context.Discard()!=null ) {
+return "_";
+}
+else {
+var id = ((Result)(Visit(context.id()))).text;
+if ( this.has_id(id) ) {
+}
+else {
+this.add_id(id);
+}
+if ( context.typeType()!=null ) {
+return Visit(context.typeType())+" "+id;
+}
+else {
+return "var "+id;
+}
+}
 }
 public  override  object VisitBoolExpr( BoolExprContext context ){
 var r = (new Result());

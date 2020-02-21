@@ -19,23 +19,51 @@ public string value;
 public string text;
 }
 public partial class KLangVisitor{
-public  override  object VisitVariableStatement( VariableStatementContext context ){
+public  override  object VisitVarStatement( VarStatementContext context ){
 var obj = "";
-var r1 = (Result)(Visit(context.idExpression()));
-var r2 = (Result)(Visit(context.expression()));
-if ( context.typeType()!=null ) {
-var Type = (string)(Visit(context.typeType()));
-obj = (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+foreach (var (i, v) in range(context.varId())){
+if ( i!=0 ) {
+obj+=","+Visit(v);
 }
 else {
-obj = (new System.Text.StringBuilder().Append("var ").Append(r1.text).Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+obj+=Visit(v);
 }
+}
+if ( context.varId().Length>1 ) {
+obj = "("+obj+")";
+}
+var r2 = (Result)(Visit(context.tupleExpression()));
+obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+return obj;
+}
+public  override  object VisitBindStatement( BindStatementContext context ){
+var obj = "";
+foreach (var (i, v) in range(context.constId())){
+if ( i!=0 ) {
+obj+=","+Visit(v);
+}
+else {
+obj+=Visit(v);
+}
+}
+if ( context.constId().Length>1 ) {
+obj = "("+obj+")";
+}
+var r2 = (Result)(Visit(context.tupleExpression()));
+obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
 return obj;
 }
 public  override  object VisitVariableDeclaredStatement( VariableDeclaredStatementContext context ){
 var obj = "";
 var Type = (string)(Visit(context.typeType()));
-var r = (Result)(Visit(context.idExpression()));
+var r = (Result)(Visit(context.id()));
+obj = (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
+return obj;
+}
+public  override  object VisitConstantDeclaredStatement( ConstantDeclaredStatementContext context ){
+var obj = "";
+var Type = (string)(Visit(context.typeType()));
+var r = (Result)(Visit(context.id()));
 obj = (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
 return obj;
 }
@@ -136,7 +164,7 @@ var e2 = (Result)(Visit(context.GetChild(1)));
 r.text=r.text+e2.text;
 }
 else {
-if ( context.op.Type==KParser.Coin ) {
+if ( context.op.Type==KParser.Bang ) {
 r.text=(new System.Text.StringBuilder().Append("ref ").Append(r.text)).to_str();
 }
 else if ( context.op.Type==KParser.Question ) {

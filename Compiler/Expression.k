@@ -99,28 +99,70 @@ DicEle : $ {
 }
 
 KLangVisitor : $ (me) {
-    .VisitVariableStatement : (context VariableStatementContext -> v any) {
+    # .VisitVariableStatement : (context VariableStatementContext -> v any) {
+    #     obj = ""
+    #     r1 = Visit(context.idExpression()) Result!
+    #     r2 = Visit(context.expression()) Result!
+    #     ? context.typeType() >< nil {
+    #         Type = Visit(context.typeType()) str!
+    #         obj = "\{Type} \{r1.text} = \{r2.text; Terminate; Wrap}"
+    #     } _ {
+    #         # obj = ? -> r1.isDefine | r1.text == me.selfID | r1.text == me.superID | r1.text == setID {
+    #         #     "\{r1.text} = \{r2.text; Terminate; Wrap}"
+    #         # } _ {
+    #         #     "var \{r1.text} = \{r2.text; Terminate; Wrap}"
+    #         # }
+    #         obj = "var \{r1.text} = \{r2.text; Terminate; Wrap}"
+    #     }
+    #     <- obj
+    # }
+
+    .VisitVarStatement : (context VarStatementContext -> v any) {
         obj = ""
-        r1 = Visit(context.idExpression()) Result!
-        r2 = Visit(context.expression()) Result!
-        ? context.typeType() >< nil {
-            Type = Visit(context.typeType()) str!
-            obj = "\{Type} \{r1.text} = \{r2.text; Terminate; Wrap}"
-        } _ {
-            # obj = ? -> r1.isDefine | r1.text == me.selfID | r1.text == me.superID | r1.text == setID {
-            #     "\{r1.text} = \{r2.text; Terminate; Wrap}"
-            # } _ {
-            #     "var \{r1.text} = \{r2.text; Terminate; Wrap}"
-            # }
-            obj = "var \{r1.text} = \{r2.text; Terminate; Wrap}"
+        @ [i]v = context.varId().. {
+            ? i >< 0 {
+                obj += "," + Visit(v)
+            } _ {
+                obj += Visit(v)
+            }
         }
+        ? context.varId().Length > 1 {
+            obj = "(" + obj + ")"
+        }
+        r2 = Visit(context.tupleExpression()) Result!
+        obj += " = \{r2.text; Terminate; Wrap}"
+        <- obj
+    }
+
+    .VisitBindStatement : (context BindStatementContext -> v any) {
+        obj = ""
+        @ [i]v = context.constId().. {
+            ? i >< 0 {
+                obj += "," + Visit(v)
+            } _ {
+                obj += Visit(v)
+            }
+        }
+        ? context.constId().Length > 1 {
+            obj = "(" + obj + ")"
+        }
+        r2 = Visit(context.tupleExpression()) Result!
+        obj += " = \{r2.text; Terminate; Wrap}"
         <- obj
     }
 
     .VisitVariableDeclaredStatement : (context VariableDeclaredStatementContext -> v any) {
         obj = ""
         Type = Visit(context.typeType()) str!
-        r = Visit(context.idExpression()) Result!
+        r = Visit(context.id()) Result!
+        obj = "\{Type} \{r.text; Terminate; Wrap}"
+        <- obj
+    }
+
+    .VisitConstantDeclaredStatement : (context ConstantDeclaredStatementContext -> v any) {
+        obj = ""
+        Type = Visit(context.typeType()) str!
+        r = Visit(context.id()) Result!
         obj = "\{Type} \{r.text; Terminate; Wrap}"
         <- obj
     }
@@ -215,7 +257,7 @@ KLangVisitor : $ (me) {
                 e2 = Visit(context.GetChild(1)) Result!
                 r.text = r.text + e2.text
             } _ {
-                ? context.op.Type == KParser.Coin {
+                ? context.op.Type == KParser.Bang {
                     r.text = "ref \{r.text}"
                 } context.op.Type == KParser.Question {
                     r.text += "?"

@@ -202,7 +202,7 @@ KLangVisitor : $ (me) {
         ? context.Dot_Dot_Dot() >< nil {
             p.type = "params \{p.type}[]"
         }
-        ? context.Coin() >< nil {
+        ? context.Bang() >< nil {
             p.type = "ref \{p.type}"
         }
         <- p
