@@ -11,12 +11,12 @@ Compiler . {
 
 KLangVisitor : $ (me) {
     .VisitCheckStatement : (context CheckStatementContext -> v any) {
-        obj = "try \{BlockLeft; Wrap}"
+        obj! = "try ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight
-        @ item = context.checkErrorStatement().. {
+        @ item : context.checkErrorStatement().. {
             obj += Visit(item) + Wrap
         }
 
@@ -28,16 +28,16 @@ KLangVisitor : $ (me) {
 
     .VisitCheckErrorStatement : (context CheckErrorStatementContext -> v any) {
         me.add_current_set()
-        obj = ""
-        ID = (Visit(context.id()) Result!).text
+        obj! = ""
+        ID : (Visit(context.id()) Result!).text
         me.add_id(ID)
 
-        Type = "Exception"
+        Type! = "Exception"
         ? context.typeType() >< nil {
             Type = Visit(context.typeType()) str!
         }
 
-        obj += "catch( \{Type} \{ID} )\{Wrap; BlockLeft; Wrap}"
+        obj += "catch( ${Type} ${ID} )${Wrap; BlockLeft; Wrap}"
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight
@@ -45,7 +45,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitCheckFinallyStatment : (context CheckFinallyStatmentContext -> v any) {
-        obj = "finally \{Wrap; BlockLeft; Wrap}"
+        obj! = "finally ${Wrap; BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
@@ -54,26 +54,26 @@ KLangVisitor : $ (me) {
     }
 
     .VisitUsingStatement : (context UsingStatementContext -> v any) {
-        obj = ""
-        r1 = Visit(context.expression(0)) Result!
-        r2 = Visit(context.expression(1)) Result!
+        obj! = ""
+        r1 : Visit(context.expression(0)) Result!
+        r2 : Visit(context.expression(1)) Result!
         obj = ? -> context.typeType() >< nil {
-            Type = Visit(context.typeType()) str!
-            "\{Type} \{r1.text} = \{r2.text}"
+            Type! = Visit(context.typeType()) str!
+            "${Type} ${r1.text} = ${r2.text}"
         } _ {
-            "var \{r1.text} = \{r2.text}"
+            "var ${r1.text} = ${r2.text}"
         }
         <- obj
     }
 
     .VisitCheckExpression : (context CheckExpressionContext -> v any) {
-        obj = "run(()=> { \{Wrap}try \{BlockLeft; Wrap}"
+        obj! = "run(()=> { ${Wrap}try ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return \{ (Visit(context.tupleExpression()) Result!).text };"
+        obj += "return ${ (Visit(context.tupleExpression()) Result!).text };"
         me.delete_current_set()
         obj += BlockRight + Wrap
-        @ item = context.checkErrorExpression().. {
+        @ item : context.checkErrorExpression().. {
             obj += Visit(item) + Wrap
         }
 
@@ -86,25 +86,25 @@ KLangVisitor : $ (me) {
 
     .VisitCheckErrorExpression : (context CheckErrorExpressionContext -> v any) {
         me.add_current_set()
-        obj = ""
-        ID = (Visit(context.id()) Result!).text
+        obj! = ""
+        ID : (Visit(context.id()) Result!).text
         me.add_id(ID)
 
-        Type = "Exception"
+        Type! = "Exception"
         ? context.typeType() >< nil {
             Type = Visit(context.typeType()) str!
         }
 
-        obj += "catch( \{Type} \{ID} )\{Wrap; BlockLeft; Wrap}"
+        obj += "catch( ${Type} ${ID} )${Wrap; BlockLeft; Wrap}"
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return \{ (Visit(context.tupleExpression()) Result!).text };"
+        obj += "return ${ (Visit(context.tupleExpression()) Result!).text };"
         me.delete_current_set()
         obj += BlockRight
         <- obj
     }
 
     .VisitCheckReportStatement : (context CheckReportStatementContext -> v any) {
-        obj = "throw \{(Visit(context.expression()) Result!).text; Terminate; Wrap}"
+        obj! = "throw ${(Visit(context.expression()) Result!).text; Terminate; Wrap}"
         <- obj
     }
 }

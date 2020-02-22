@@ -12,12 +12,12 @@ namespace Compiler
 public partial class KLangVisitor{
 public  override  object VisitTypeType( TypeTypeContext context ){
 var obj = "";
-obj = (string)(Visit(context.GetChild(0)));
+obj=(string)(Visit(context.GetChild(0)));
 return obj;
 }
 public  override  object VisitTypeNullable( TypeNullableContext context ){
 var obj = "";
-obj = (string)(Visit(context.typeNotNull()));
+obj=(string)(Visit(context.typeNotNull()));
 obj+="?";
 return obj;
 }
@@ -65,7 +65,7 @@ var @in = (string)(Visit(context.typeFunctionParameterClause(0)));
 var @out = (string)(Visit(context.typeFunctionParameterClause(1)));
 if ( context.t.Type==Right_Arrow ) {
 if ( @out.Length==0 ) {
-obj = run(()=>{if ( @in.Length==0 ) {
+obj=run(()=>{if ( @in.Length==0 ) {
 return "Action";}
 else {
 return (new System.Text.StringBuilder().Append("Action<").Append(@in).Append(">")).to_str();}
@@ -73,12 +73,12 @@ return (new System.Text.StringBuilder().Append("Action<").Append(@in).Append(">"
 }
 else {
 if ( @out.first_index_of(",")>=0 ) {
-@out = (new System.Text.StringBuilder().Append("(").Append(@out).Append(")")).to_str();
+@out=(new System.Text.StringBuilder().Append("(").Append(@out).Append(")")).to_str();
 }
 if ( context.y!=null ) {
-@out = (new System.Text.StringBuilder().Append(IEnum).Append("<").Append(@out).Append(">")).to_str();
+@out=(new System.Text.StringBuilder().Append(IEnum).Append("<").Append(@out).Append(">")).to_str();
 }
-obj = run(()=>{if ( @in.Length==0 ) {
+obj=run(()=>{if ( @in.Length==0 ) {
 return (new System.Text.StringBuilder().Append("Func<").Append(@out).Append(">")).to_str();}
 else {
 return (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(@out).Append(">")).to_str();}
@@ -87,7 +87,7 @@ return (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ")
 }
 else {
 if ( @out.Length==0 ) {
-obj = run(()=>{if ( @in.Length==0 ) {
+obj=run(()=>{if ( @in.Length==0 ) {
 return (new System.Text.StringBuilder().Append("Func<").Append(Task).Append(">")).to_str();}
 else {
 return (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append(">")).to_str();}
@@ -95,9 +95,9 @@ return (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ")
 }
 else {
 if ( context.y!=null ) {
-@out = (new System.Text.StringBuilder().Append(IEnum).Append("<(").Append(@out).Append(")>")).to_str();
+@out=(new System.Text.StringBuilder().Append(IEnum).Append("<(").Append(@out).Append(")>")).to_str();
 }
-obj = run(()=>{if ( @in.Length==0 ) {
+obj=run(()=>{if ( @in.Length==0 ) {
 return (new System.Text.StringBuilder().Append("Func<").Append(Task).Append("<").Append(@out).Append(">>")).to_str();}
 else {
 return (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).to_str();}

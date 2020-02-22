@@ -10,17 +10,17 @@ Compiler . {
 
 
 ErrorListener : BaseErrorListener & $ (me, base) {
-    FileDir str
+    FileDir! str
 
     .SyntaxError : (recognizer IRecognizer, offendingSymbol ?IToken, 
             line int, charPositionInLine int, msg str, 
             e ?RecognitionException->) {
         base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
         print("------Syntax Error------")
-        print("File: \{me.FileDir}")
-        print("Line: \{line}  Column: \{charPositionInLine}")
-        print("OffendingSymbol: \{offendingSymbol.Text}")
-        print("Message: \{msg}")
+        print("File: ${me.FileDir}")
+        print("Line: ${line}  Column: ${charPositionInLine}")
+        print("OffendingSymbol: ${offendingSymbol.Text}")
+        print("Message: ${msg}")
     }
 }
 

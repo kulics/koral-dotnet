@@ -173,7 +173,7 @@ public  override  object VisitAnnotation( AnnotationContext context ){
 var obj = "";
 var id = "";
 if ( context.id()!=null ) {
-id = (new System.Text.StringBuilder().Append(((Result)(Visit(context.id()))).text).Append(":")).to_str();
+id=(new System.Text.StringBuilder().Append(((Result)(Visit(context.id()))).text).Append(":")).to_str();
 }
 var r = (string)(Visit(context.annotationList()));
 if ( r!="" ) {
@@ -184,7 +184,7 @@ return obj;
 public  override  object VisitAnnotationList( AnnotationListContext context ){
 var obj = "";
 foreach (var (i, v) in range(context.annotationItem())){
-string txt = (string)(this.Visit(v));
+var txt = (string)(this.Visit(v));
 if ( txt!="" ) {
 obj+=run(()=>{if ( i>0 ) {
 return ","+txt;}
@@ -266,7 +266,7 @@ this.VisitPropertyLambdaIn(context.lambdaIn(), is_get);
 if ( context.tupleExpression()!=null ) {
 obj+=((Result)(Visit(context.tupleExpression()))).text;
 if ( is_get ) {
-obj = "return "+obj;
+obj="return "+obj;
 }
 obj+=Terminate;
 }

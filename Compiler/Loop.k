@@ -10,15 +10,15 @@ Compiler . {
 
 
 Iterator : $ {
-    begin Result
-    end Result
-    step Result
-    order str = T
+    begin!  Result
+    end!    Result
+    step!   Result
+    order!  str = T
 }
 
 KLangVisitor : $ (me) {
     .VisitIteratorStatement : (context IteratorStatementContext -> v any) {
-        it = Iterator{}
+        it : Iterator{}
         ? context.Tilde() == nil {
             it.order = F
         }
@@ -38,13 +38,13 @@ KLangVisitor : $ (me) {
     }
 
     .VisitLoopStatement : (context LoopStatementContext -> v any) {
-        obj = ""
-        id = (Visit(context.id()) Result!).text
+        obj! = ""
+        id : (Visit(context.id()) Result!).text
         
-        it = Visit(context.iteratorStatement()) Iterator!
-        target = "range(\{it.begin.text}, \{it.end.text}, \{it.step.text}, \{it.order})"
+        it : Visit(context.iteratorStatement()) Iterator!
+        target : "range(${it.begin.text}, ${it.end.text}, ${it.step.text}, ${it.order})"
 
-        obj += "foreach (var \{id} in \{target})"
+        obj += "foreach (var ${id} in ${target})"
 
         obj += BlockLeft + Wrap
         me.add_current_set()
@@ -52,55 +52,55 @@ KLangVisitor : $ (me) {
         me.delete_current_set()
         obj += BlockRight + Wrap
         ? context.loopElseStatement() >< nil {
-            elseContent = Visit(context.loopElseStatement()) str!
-            obj = "if (!can_range(\{ target })) \{elseContent} else \{BlockLeft; Wrap; obj; BlockRight; Wrap}"
+            elseContent : Visit(context.loopElseStatement()) str!
+            obj = "if (!can_range(${ target })) ${elseContent} else ${BlockLeft; Wrap; obj; BlockRight; Wrap}"
         }
         <- obj
     }
 
     .VisitLoopEachStatement : (context LoopEachStatementContext -> v any) {
-        obj = ""
-        arr = Visit(context.expression()) Result!
-        target = arr.text
-        id = "ea"
+        obj! = ""
+        arr : Visit(context.expression()) Result!
+        target! = arr.text
+        id! = "ea"
         ? context.id().Length == 2 {
-            target = "range(\{target})"
-            id = "(\{(Visit(context.id(0)) Result!).text}, \{(Visit(context.id(1)) Result!).text})"
+            target = "range(${target})"
+            id = "(${(Visit(context.id(0)) Result!).text}, ${(Visit(context.id(1)) Result!).text})"
         } context.id().Length == 1 {
             id = (Visit(context.id(0)) Result!).text
         }
 
-        obj += "foreach (var \{id} in \{target})"
+        obj += "foreach (var ${id} in ${target})"
         obj += BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight+Wrap
         ? context.loopElseStatement() >< nil {
-            elseContent = Visit(context.loopElseStatement()) str!
-            obj = "if (!can_range(\{ target })) \{elseContent} else \{BlockLeft; Wrap; obj; BlockRight; Wrap}"
+            elseContent : Visit(context.loopElseStatement()) str!
+            obj = "if (!can_range(${ target })) ${elseContent} else ${BlockLeft; Wrap; obj; BlockRight; Wrap}"
         }
         <- obj
     }
 
     .VisitLoopCaseStatement : (context LoopCaseStatementContext -> v any) {
-        obj = ""
-        expr = Visit(context.expression()) Result!
-        obj += "for ( ;\{expr.text} ;)"
+        obj! = ""
+        expr : Visit(context.expression()) Result!
+        obj += "for ( ;${expr.text} ;)"
         obj += BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight+Wrap
         ? context.loopElseStatement() >< nil {
-            elseContent = Visit(context.loopElseStatement()) str!
-            obj = "if (!(\{ expr.text })) \{elseContent} else \{BlockLeft; Wrap; obj; BlockRight; Wrap}"
+            elseContent : Visit(context.loopElseStatement()) str!
+            obj = "if (!(${ expr.text })) ${elseContent} else ${BlockLeft; Wrap; obj; BlockRight; Wrap}"
         }
         <- obj
     }
 
     .VisitLoopElseStatement : (context LoopElseStatementContext -> v any) {
-        obj = BlockLeft+Wrap
+        obj! = BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
@@ -109,32 +109,32 @@ KLangVisitor : $ (me) {
     }
 
     .VisitLoopJumpStatement : (context LoopJumpStatementContext -> v any) {
-        <- "break\{Terminate; Wrap}"
+        <- "break${Terminate; Wrap}"
     }
 
     .VisitLoopContinueStatement : (context LoopContinueStatementContext -> v any) {
-        <- "continue\{Terminate; Wrap}"
+        <- "continue${Terminate; Wrap}"
     }
 
     .VisitLoopExpression : (context LoopExpressionContext -> v any) {
-        obj = ""
-        id = (Visit(context.id()) Result!).text
+        obj! = ""
+        id : (Visit(context.id()) Result!).text
         
-        it = Visit(context.iteratorStatement()) Iterator!
-        target = "range(\{it.begin.text}, \{it.end.text}, \{it.step.text}, \{it.order})"
+        it : Visit(context.iteratorStatement()) Iterator!
+        target : "range(${it.begin.text}, ${it.end.text}, ${it.step.text}, ${it.order})"
 
-        obj += "runloop(\{target}, (\{id})=>"
+        obj += "runloop(${target}, (${id})=>"
 
         obj += BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return \{(Visit(context.tupleExpression()) Result!).text};"
+        obj += "return ${(Visit(context.tupleExpression()) Result!).text};"
         me.delete_current_set()
         obj += BlockRight
 
         ? context.loopElseExpression() >< nil {
-            elseContent = Visit(context.loopElseExpression()) str!
-            obj += ", ()=> \{elseContent})"
+            elseContent : Visit(context.loopElseExpression()) str!
+            obj += ", ()=> ${elseContent})"
         } _ {
             obj += ")"
         }
@@ -143,28 +143,28 @@ KLangVisitor : $ (me) {
     }
 
     .VisitLoopEachExpression : (context LoopEachExpressionContext -> v any) {
-        obj = ""
-        arr = Visit(context.expression()) Result!
-        target = arr.text
-        id = "ea"
+        obj! = ""
+        arr : Visit(context.expression()) Result!
+        target! = arr.text
+        id! = "ea"
         ? context.id().Length == 2 {
-            target = "range(\{target})"
-            id = "(\{(Visit(context.id(0)) Result!).text}, \{(Visit(context.id(1)) Result!).text})"
+            target = "range(${target})"
+            id = "(${(Visit(context.id(0)) Result!).text}, ${(Visit(context.id(1)) Result!).text})"
         } context.id().Length == 1 {
             id = (Visit(context.id(0)) Result!).text
         }
 
-        obj += "runloop(\{target}, (\{id})=>"
+        obj += "runloop(${target}, (${id})=>"
         obj += BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return \{(Visit(context.tupleExpression()) Result!).text};"
+        obj += "return ${(Visit(context.tupleExpression()) Result!).text};"
         me.delete_current_set()
         obj += BlockRight
         
         ? context.loopElseExpression() >< nil {
-            elseContent = Visit(context.loopElseExpression()) str!
-            obj += ", ()=> \{elseContent})"
+            elseContent : Visit(context.loopElseExpression()) str!
+            obj += ", ()=> ${elseContent})"
         } _ {
             obj += ")"
         }
@@ -173,10 +173,10 @@ KLangVisitor : $ (me) {
     }
 
     .VisitLoopElseExpression : (context LoopElseExpressionContext -> v any) {
-        obj = BlockLeft+Wrap
+        obj! = BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return \{(Visit(context.tupleExpression()) Result!).text};"
+        obj += "return ${(Visit(context.tupleExpression()) Result!).text};"
         me.delete_current_set()
         obj += BlockRight
         <- obj

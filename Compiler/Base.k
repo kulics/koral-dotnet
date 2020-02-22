@@ -46,26 +46,26 @@ Task : "System.Threading.Tasks.Task"
 IEnum : "System.Collections.Generic.IEnumerable"
 
 Result : $ {
-    data any
-    text str
-    permission str
-    isVirtual bool
-    isDefine bool
-    rootID str = ""
+    data! any
+    text! str
+    permission! str
+    isVirtual! bool
+    isDefine! bool
+    rootID! str = ""
 }
 
 KLangVisitor : [KParserBaseVisitor any] & $(me) {
-    selfID = ""
-    superID = ""
-    setID = ""
-    getID = ""
-    selfPropertyID = ""
-    selfPropertyContent = []str{}
-    selfPropertyVariable = false
+    selfID! = ""
+    superID! = ""
+    setID! = ""
+    getID! = ""
+    selfPropertyID! = ""
+    selfPropertyContent! = []str{}
+    selfPropertyVariable! = false
 
-    AllIDSet = [str]_{}
-    CurrentIDSet = [>][str]_{}
-    TypeIdSet = [str]_{}
+    AllIDSet! = [str]_{}
+    CurrentIDSet! = [>][str]_{}
+    TypeIdSet! = [str]_{}
 
     has_id : (id str -> v bool) {
         <- me.AllIDSet.contains(id) | me.CurrentIDSet.peek().contains(id)
@@ -74,7 +74,7 @@ KLangVisitor : [KParserBaseVisitor any] & $(me) {
         me.CurrentIDSet.peek().add(id)
     }
     add_current_set : (->) {
-        @ item = CurrentIDSet.peek().. {
+        @ item : CurrentIDSet.peek().. {
             AllIDSet.add(item)
         }
         me.CurrentIDSet.push([str]_{})
@@ -95,29 +95,29 @@ KLangVisitor : [KParserBaseVisitor any] & $(me) {
 
 KLangVisitor : $ (me) {
     .VisitProgram : (context ProgramContext -> v any) {
-        StatementList = context.statement()
-        Result = ""
-        @ item = StatementList.. {
+        StatementList : context.statement()
+        Result! = ""
+        @ item : StatementList.. {
             Result += VisitStatement(item)
         }
         <- Result
     }
 
     .VisitId : (context IdContext -> v any) {
-        r = Result{data = "var"}
-        first = Visit(context.GetChild(0)) Result!
+        r : Result{data = "var"}
+        first : Visit(context.GetChild(0)) Result!
         r.permission = first.permission
         r.text = first.text
         r.isVirtual = first.isVirtual
         ? context.ChildCount >= 2 {
-            @ i = 1 ~ context.ChildCount-1.. {
-                other = Visit(context.GetChild(i)) Result!
-                r.text += "_\{other.text}"
+            @ i : 1 ~ context.ChildCount-1.. {
+                other : Visit(context.GetChild(i)) Result!
+                r.text += "_${other.text}"
             }
         }
 
         ? keywords.Exists{t -> t == r.text} {
-            r.text = "@\{r.text}"
+            r.text = "@${r.text}"
         }
         ? r.text == selfID {
             r.text = "this"
@@ -133,7 +133,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitIdItem : (context IdItemContext -> v any) {
-        r = Result{data = "var"}
+        r : Result{data = "var"}
         ? context.typeBasic() >< nil {
             r.permission = "public"
             r.text += context.typeBasic().GetText()
@@ -187,7 +187,7 @@ KLangVisitor : $ (me) {
         ? context.Discard() >< nil {
             <- "_"
         } _ {
-            id = (Visit(context.id()) Result!).text
+            id : (Visit(context.id()) Result!).text
             ? me.has_id(id) {
                 # r.isDefine = true
             } _ {
@@ -205,7 +205,7 @@ KLangVisitor : $ (me) {
         ? context.Discard() >< nil {
             <- "_"
         } _ {
-            id = (Visit(context.id()) Result!).text
+            id : (Visit(context.id()) Result!).text
             ? me.has_id(id) {
                 # r.isDefine = true
             } _ {
@@ -220,7 +220,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitBoolExpr : (context BoolExprContext -> v any) {
-        r = Result{}
+        r : Result{}
         ? context.t.Type == TrueLiteral {
             r.data = Bool
             r.text = T
@@ -236,23 +236,23 @@ KLangVisitor : $ (me) {
     }
 
     .VisitAnnotation : (context AnnotationContext -> v any) {
-        obj = ""
-        id = ""
+        obj! = ""
+        id! = ""
         ? context.id() >< nil {
-            id = "\{(Visit(context.id()) Result!).text}:"
+            id = "${(Visit(context.id()) Result!).text}:"
         }
 
-        r = Visit(context.annotationList()) str!
+        r : Visit(context.annotationList()) str!
         ? r >< "" {
-            obj += "[\{id; r}]"
+            obj += "[${id; r}]"
         }
         <- obj
     }
 
     .VisitAnnotationList : (context AnnotationListContext -> v any) {
-        obj = ""
-        @ [i]v = context.annotationItem().. {
-            txt str = me.Visit(v) str!
+        obj! = ""
+        @ [i]v : context.annotationItem().. {
+            txt : me.Visit(v) str!
             ? txt >< "" {
                 obj += ? -> i > 0 {
                     "," + txt
@@ -265,38 +265,38 @@ KLangVisitor : $ (me) {
     }
 
     .VisitAnnotationItem : (context AnnotationItemContext -> v any) {
-        obj = ""
+        obj! = ""
         obj += (me.Visit(context.id()) Result!).text
         ? obj.. "get" {
             ? context.lambda() == nil {
                 me.selfPropertyVariable = true
-                me.selfPropertyContent += "get{return _\{ me.selfPropertyID }; }"
+                me.selfPropertyContent += "get{return _${ me.selfPropertyID }; }"
             } _ {
-                me.selfPropertyContent += "get{\{ me.VisitPropertyLambda(context.lambda(), true) }}"
+                me.selfPropertyContent += "get{${ me.VisitPropertyLambda(context.lambda(), true) }}"
             }
             <- ""
         } "set" {
             ? context.lambda() == nil {
                 me.selfPropertyVariable = true
-                me.selfPropertyContent += "set{_\{ me.selfPropertyID }=value;}"
+                me.selfPropertyContent += "set{_${ me.selfPropertyID }=value;}"
             } _ {
-                me.selfPropertyContent += "set{\{ me.VisitPropertyLambda(context.lambda(), false) }}"
+                me.selfPropertyContent += "set{${ me.VisitPropertyLambda(context.lambda(), false) }}"
             }
             <- ""
         } "_get" {
             ? context.lambda() == nil {
                 me.selfPropertyVariable = true
-                me.selfPropertyContent += "private get{return _\{ me.selfPropertyID }; }"
+                me.selfPropertyContent += "private get{return _${ me.selfPropertyID }; }"
             } _ {
-                me.selfPropertyContent += "private get{\{ me.VisitPropertyLambda(context.lambda(), true) }}"
+                me.selfPropertyContent += "private get{${ me.VisitPropertyLambda(context.lambda(), true) }}"
             }
             <- ""
         } "_set" {
             ? context.lambda() == nil {
                 me.selfPropertyVariable = true
-                me.selfPropertyContent += "private set{_\{ me.selfPropertyID }=value;}"
+                me.selfPropertyContent += "private set{_${ me.selfPropertyID }=value;}"
             } _ {
-                me.selfPropertyContent += "private set{\{ me.VisitPropertyLambda(context.lambda(), false) }}"
+                me.selfPropertyContent += "private set{${ me.VisitPropertyLambda(context.lambda(), false) }}"
             }
             <- ""
         } "add" {
@@ -309,7 +309,7 @@ KLangVisitor : $ (me) {
         obj += ? -> context.tuple() >< nil {
             (me.Visit(context.tuple()) Result!).text
         } context.lambda() >< nil {
-            "(\{ (me.Visit(context.lambda()) Result!).text })"
+            "(${ (me.Visit(context.lambda()) Result!).text })"
         } _ {
             ""
         }
@@ -318,7 +318,7 @@ KLangVisitor : $ (me) {
 
     VisitPropertyLambda : (context LambdaContext, is_get bool -> v str) {
         me.add_current_set()
-        obj = ""
+        obj! = ""
         ? context.lambdaIn() >< nil {
             me.VisitPropertyLambdaIn(context.lambdaIn(), is_get)
         }
@@ -340,7 +340,7 @@ KLangVisitor : $ (me) {
 
     VisitPropertyLambdaIn : (context LambdaInContext, is_get bool ->) {
         ? context.id().Length.. 1 {
-            id0 = me.Visit(context.id(0)) Result!
+            id0 : me.Visit(context.id(0)) Result!
             me.add_id(id0.text)
             ? is_get {
                 me.selfPropertyVariable = true
@@ -352,8 +352,8 @@ KLangVisitor : $ (me) {
         } 2 {
             me.selfPropertyVariable = true
             me.add_id("_"+me.selfPropertyID)
-            id0 = me.Visit(context.id(0)) Result!
-            id1 = me.Visit(context.id(1)) Result!
+            id0 : me.Visit(context.id(0)) Result!
+            id1 : me.Visit(context.id(1)) Result!
             me.add_id(id0.text)
             me.add_id(id1.text)
             me.getID = id0.text

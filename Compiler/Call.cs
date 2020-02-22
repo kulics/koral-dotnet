@@ -44,7 +44,7 @@ return (string)(Visit(context.GetChild(0)));
 public  override  object VisitSliceFull( SliceFullContext context ){
 var order = "true";
 if ( context.Tilde()==null ) {
-order = "false";
+order="false";
 }
 var expr1 = (Result)(Visit(context.expression(0)));
 var expr2 = (Result)(Visit(context.expression(1)));
@@ -53,7 +53,7 @@ return (new System.Text.StringBuilder().Append(".slice(").Append(expr1.text).App
 public  override  object VisitSliceStart( SliceStartContext context ){
 var order = "true";
 if ( context.Tilde()==null ) {
-order = "false";
+order="false";
 }
 var expr = (Result)(Visit(context.expression()));
 return (new System.Text.StringBuilder().Append(".slice(").Append(expr.text).Append(", null, ").Append(order).Append(")")).to_str();
@@ -61,7 +61,7 @@ return (new System.Text.StringBuilder().Append(".slice(").Append(expr.text).Appe
 public  override  object VisitSliceEnd( SliceEndContext context ){
 var order = "true";
 if ( context.Tilde()==null ) {
-order = "false";
+order="false";
 }
 var expr = (Result)(Visit(context.expression()));
 return (new System.Text.StringBuilder().Append(".slice(null, ").Append(expr.text).Append(", ").Append(order).Append(")")).to_str();
@@ -97,7 +97,7 @@ public  override  object VisitCallNew( CallNewContext context ){
 var r = (new Result(){data = Visit(context.typeType())});
 var param = "";
 if ( context.expressionList()!=null ) {
-param = ((Result)(Visit(context.expressionList()))).text;
+param=((Result)(Visit(context.expressionList()))).text;
 }
 r.text=(new System.Text.StringBuilder().Append("(new ").Append(Visit(context.typeType())).Append("(").Append(param).Append(")")).to_str();
 r.text+=")";
@@ -197,11 +197,11 @@ var result = (new Result());
 foreach (var i in range(0, context.expression().Length-1, 1, true)){
 var r = (Result)(Visit(context.expression(i)));
 result.text+=run(()=>{if ( i==0 ) {
-type = (string)(r.data);
+type=(string)(r.data);
 return r.text;}
 else {
 if ( type!=((string)(r.data)) ) {
-type = Any;
+type=Any;
 }
 return ","+r.text;}
 });
@@ -216,11 +216,11 @@ var result = (new Result());
 foreach (var i in range(0, context.setElement().Length-1, 1, true)){
 var r = (Result)(Visit(context.setElement(i)));
 result.text+=run(()=>{if ( i==0 ) {
-type = (string)(r.data);
+type=(string)(r.data);
 return r.text;}
 else {
 if ( type!=(string)(r.data) ) {
-type = Any;
+type=Any;
 }
 return ","+r.text;}
 });
@@ -241,15 +241,15 @@ var result = (new Result());
 foreach (var i in range(0, context.dictionaryElement().Length-1, 1, true)){
 var r = (DicEle)(Visit(context.dictionaryElement(i)));
 result.text+=run(()=>{if ( i==0 ) {
-key = r.key;
-value = r.value;
+key=r.key;
+value=r.value;
 return r.text;}
 else {
 if ( key!=r.key ) {
-key = Any;
+key=Any;
 }
 if ( value!=r.value ) {
-value = Any;
+value=Any;
 }
 return ","+r.text;}
 });

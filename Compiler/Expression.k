@@ -9,7 +9,7 @@ Compiler . {
 }
 
 
-keywords = {
+keywords! = {
     "abstract"
     "as"
     "base"
@@ -88,14 +88,14 @@ keywords = {
 }
 
 TemplateItem : $ {
-    Template str
-    Contract str
+    Template! str
+    Contract! str
 }
 
 DicEle : $ {
-    key str
-    value str
-    text str
+    key! str
+    value! str
+    text! str
 }
 
 KLangVisitor : $ (me) {
@@ -118,8 +118,8 @@ KLangVisitor : $ (me) {
     # }
 
     .VisitVarStatement : (context VarStatementContext -> v any) {
-        obj = ""
-        @ [i]v = context.varId().. {
+        obj! = ""
+        @ [i]v : context.varId().. {
             ? i >< 0 {
                 obj += "," + Visit(v)
             } _ {
@@ -129,14 +129,14 @@ KLangVisitor : $ (me) {
         ? context.varId().Length > 1 {
             obj = "(" + obj + ")"
         }
-        r2 = Visit(context.tupleExpression()) Result!
-        obj += " = \{r2.text; Terminate; Wrap}"
+        r2 : Visit(context.tupleExpression()) Result!
+        obj += " = ${r2.text; Terminate; Wrap}"
         <- obj
     }
 
     .VisitBindStatement : (context BindStatementContext -> v any) {
-        obj = ""
-        @ [i]v = context.constId().. {
+        obj! = ""
+        @ [i]v : context.constId().. {
             ? i >< 0 {
                 obj += "," + Visit(v)
             } _ {
@@ -146,59 +146,56 @@ KLangVisitor : $ (me) {
         ? context.constId().Length > 1 {
             obj = "(" + obj + ")"
         }
-        r2 = Visit(context.tupleExpression()) Result!
-        obj += " = \{r2.text; Terminate; Wrap}"
+        r2 : Visit(context.tupleExpression()) Result!
+        obj += " = ${r2.text; Terminate; Wrap}"
         <- obj
     }
 
     .VisitVariableDeclaredStatement : (context VariableDeclaredStatementContext -> v any) {
-        obj = ""
-        Type = Visit(context.typeType()) str!
-        r = Visit(context.id()) Result!
-        obj = "\{Type} \{r.text; Terminate; Wrap}"
+        obj! = ""
+        Type : Visit(context.typeType()) str!
+        r : Visit(context.id()) Result!
+        obj = "${Type} ${r.text; Terminate; Wrap}"
         <- obj
     }
 
     .VisitConstantDeclaredStatement : (context ConstantDeclaredStatementContext -> v any) {
-        obj = ""
-        Type = Visit(context.typeType()) str!
-        r = Visit(context.id()) Result!
-        obj = "\{Type} \{r.text; Terminate; Wrap}"
+        obj! = ""
+        Type : Visit(context.typeType()) str!
+        r : Visit(context.id()) Result!
+        obj = "${Type} ${r.text; Terminate; Wrap}"
         <- obj
     }
 
     .VisitAssignStatement : (context AssignStatementContext -> v any) {
-        r1 = Visit(context.tupleExpression(0)) Result!
-        r2 = Visit(context.tupleExpression(1)) Result!
-        obj = r1.text + Visit(context.assign()) + r2.text + Terminate + Wrap
+        r1 : Visit(context.tupleExpression(0)) Result!
+        r2 : Visit(context.tupleExpression(1)) Result!
+        obj! = r1.text + Visit(context.assign()) + r2.text + Terminate + Wrap
         <- obj
     }
 
     .VisitAssign : (context AssignContext -> v any) {
-        ? context.op.Type == Mod_Equal {
-            <- "%="
-        }
         <- context.op.Text
     }
 
     .VisitExpressionStatement : (context ExpressionStatementContext -> v any) {
-        r = Visit(context.expression()) Result!
+        r : Visit(context.expression()) Result!
         <- r.text + Terminate + Wrap
     }
 
     .VisitExpression : (context ExpressionContext -> v any) {
-        count = context.ChildCount
-        r = Result{}
+        count : context.ChildCount
+        r! = Result{}
         ? count.. 3 {
-            e1 = Visit(context.GetChild(0)) Result!
-            e2 = Visit(context.GetChild(2))
-            op = Visit(context.GetChild(1))
+            e1! = Visit(context.GetChild(0)) Result!
+            e2! = Visit(context.GetChild(2))
+            op! = Visit(context.GetChild(1))
 
             ? context.GetChild(1).. _ CompareCombineContext {
                 r.data = I32
-                s1 = e1.text
-                s2 = (e2 Result!).text
-                r.text = "\{s1} > \{s2} ? 1 : ( \{s1}==\{s2} ? 0 : -1 )"
+                s1 : e1.text
+                s2 : (e2 Result!).text
+                r.text = "${s1} > ${s2} ? 1 : ( ${s1}==${s2} ? 0 : -1 )"
                 <- r
             } _ CompareContext {
                 # todo 如果左右不是bool类型值，报错
@@ -208,16 +205,16 @@ KLangVisitor : $ (me) {
                 r.data = Bool
             } _ AddContext {
                 # todo 如果左右不是number或text类型值，报错
-                r.data = ? -> e1.data str! == Str | ((e2 Result!).data str!) == Str {
+                r.data = ? -> e1.data str! == Str | (e2 Result!).data str! == Str {
                     Str
-                } e1.data str! == I32 & ((e2 Result!).data str!) == I32 {
+                } e1.data str! == I32 & (e2 Result!).data str! == I32 {
                     I32
                 } _ {
                     F64
                 }
             } _ MulContext {
                 # todo 如果左右不是number类型值，报错
-                r.data = ? -> e1.data str! == I32 & ((e2 Result!).data str!) == I32 {
+                r.data = ? -> e1.data str! == I32 & (e2 Result!).data str! == I32 {
                     I32
                 } _ {
                     F64
@@ -225,40 +222,40 @@ KLangVisitor : $ (me) {
             } _ PowContext {
                 # todo 如果左右不是number类型，报错
                 r.data = F64
-                r.text = "\{op}(\{e1.text}, \{(e2 Result!).text})"
+                r.text = "${op}(${e1.text}, ${(e2 Result!).text})"
                 <- r
             }
             r.text = e1.text + op + (e2 Result!).text
         } 2 {
             r = Visit(context.GetChild(0)) Result!
             ? context.GetChild(1) TypeConversionContext? {
-                e2 = Visit(context.GetChild(1)) str!
+                e2 : Visit(context.GetChild(1)) str!
                 r.data = e2
-                r.text = "(\{e2})(\{r.text})"
+                r.text = "(${e2})(${r.text})"
             } context.GetChild(1) TypeCheckContext? {
-                e2 = Visit(context.GetChild(1)) str!
+                e2 : Visit(context.GetChild(1)) str!
                 r.data = e2
-                r.text = "\{r.text}.@is<\{e2}>()"
+                r.text = "${r.text}.@is<${e2}>()"
             } context.GetChild(1) OrElseContext? {
-                e2 = Visit(context.GetChild(1)) Result!
-                r.text = "(\{r.text}??\{e2.text})"
+                e2 : Visit(context.GetChild(1)) Result!
+                r.text = "(${r.text}??${e2.text})"
             } context.GetChild(1) CallExpressionContext? {
-                e2 = Visit(context.GetChild(1)) Result!
+                e2 : Visit(context.GetChild(1)) Result!
                 r.text = r.text + e2.text
             } context.GetChild(1) CallFuncContext? {
-                e2 = Visit(context.GetChild(1)) Result!
+                e2 : Visit(context.GetChild(1)) Result!
                 ? me.is_type(r.rootID) {
-                    r.text = "(new \{r.text; e2.text})"
+                    r.text = "(new ${r.text; e2.text})"
                     r.data = r.rootID
                 } _ {
                     r.text = r.text + e2.text
                 }
             } context.GetChild(1) CallElementContext? {
-                e2 = Visit(context.GetChild(1)) Result!
+                e2 : Visit(context.GetChild(1)) Result!
                 r.text = r.text + e2.text
             } _ {
                 ? context.op.Type == KParser.Bang {
-                    r.text = "ref \{r.text}"
+                    r.text = "ref ${r.text}"
                 } context.op.Type == KParser.Question {
                     r.text += "?"
                 }
@@ -334,9 +331,6 @@ KLangVisitor : $ (me) {
     }
 
     .VisitMul : (context MulContext -> v any) {
-        ? context.op.Type == Mod {
-            <- "%"
-        }
         <- context.op.Text
     }
 
@@ -346,7 +340,7 @@ KLangVisitor : $ (me) {
 
     .VisitPrimaryExpression : (context PrimaryExpressionContext -> v any) {
         ? context.ChildCount == 1 {
-            c = context.GetChild(0)
+            c : context.GetChild(0)
             ? c DataStatementContext? {
                 <- Visit(context.dataStatement())
             } c IdContext? {
@@ -358,15 +352,15 @@ KLangVisitor : $ (me) {
                 }
             }
         } context.ChildCount == 4 {
-            id = Visit(context.id()) Result!
-            template = Visit(context.templateCall()) str!
+            id : Visit(context.id()) Result!
+            template : Visit(context.templateCall()) str!
             <- Result{
                 text = id.text + template
                 data = id.text + template
                 rootID = id.text
             }
         }
-        r = Visit(context.expression()) Result!
+        r : Visit(context.expression()) Result!
         <- Result{
             text = "(\{r.text})"
             data = r.data
@@ -374,10 +368,10 @@ KLangVisitor : $ (me) {
     }
 
     .VisitExpressionList : (context ExpressionListContext -> v any) {
-        r = Result{}
-        obj = ""
-        @ i = 0 ~ context.expression().Length-1.. {
-            temp = Visit(context.expression(i)) Result!
+        r : Result{}
+        obj! = ""
+        @ i : 0 ~ context.expression().Length-1.. {
+            temp : Visit(context.expression(i)) Result!
             obj += ? -> i == 0 {
                 temp.text
             } _ {
@@ -390,16 +384,16 @@ KLangVisitor : $ (me) {
     }
 
     .VisitTemplateDefine : (context TemplateDefineContext -> v any) {
-        item = TemplateItem{}
+        item! = TemplateItem{}
         item.Template += "<"
-        @ i = 0 ~ context.templateDefineItem().Length-1.. {
+        @ i : 0 ~ context.templateDefineItem().Length-1.. {
             ? i > 0 {
                 item.Template += ","
                 ? item.Contract.len() > 0 {
                     item.Contract += ","
                 }
             }
-            r = Visit(context.templateDefineItem(i)) TemplateItem!
+            r : Visit(context.templateDefineItem(i)) TemplateItem!
             item.Template += r.Template
             item.Contract += r.Contract
         }
@@ -408,27 +402,27 @@ KLangVisitor : $ (me) {
     }
 
     .VisitTemplateDefineItem : (context TemplateDefineItemContext -> v any) {
-        item = TemplateItem{}
+        item! = TemplateItem{}
         ? context.id().len() == 1 {
-            id1 = context.id(0).GetText()
+            id1 : context.id(0).GetText()
             item.Template = id1
         } _ {
-            id1 = context.id(0).GetText()
+            id1 : context.id(0).GetText()
             item.Template = id1
-            id2 = context.id(1).GetText()
+            id2 : context.id(1).GetText()
             item.Contract = " where \{id1}:\{id2}"
         }
         <- item
     }
 
     .VisitTemplateCall : (context TemplateCallContext -> v any) {
-        obj = ""
+        obj! = ""
         obj += "<"
-        @ i = 0 ~ context.typeType().Length-1.. {
+        @ i : 0 ~ context.typeType().Length-1.. {
             ? i > 0 {
                 obj += ","
             }
-            r = Visit(context.typeType(i))
+            r : Visit(context.typeType(i))
             obj += r
         }
         obj += ">"
@@ -436,7 +430,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitDataStatement : (context DataStatementContext -> v any) {
-        r = Result{}
+        r! = Result{}
         ? context.nilExpr() >< nil {
             r.data = Any
             r.text = "null"
@@ -466,20 +460,20 @@ KLangVisitor : $ (me) {
     }
 
     .VisitStringExpr : (context StringExprContext -> v any) {
-        text = ""
+        text! = ""
         ? context.stringTemplate().Length == 0 {
-            @ v = context.stringContent().. {
+            @ v : context.stringContent().. {
                 text += Visit(v)
             }
-            <- "\"\{text}\""
+            <- "\"${text}\""
         } _ {
             text = "(new System.Text.StringBuilder()"
             # 去除前后一个元素
-            @ i = 1 ~ context.ChildCount-2.. {
-                v = context.GetChild(i)
-                r = Visit(context.GetChild(i)) str!
+            @ i : 1 ~ context.ChildCount-2.. {
+                v : context.GetChild(i)
+                r : Visit(context.GetChild(i)) str!
                 ? v StringContentContext? {
-                    text += ".Append(\"\{r}\")"
+                    text += ".Append(\"${r}\")"
                 } _ {
                     text += r
                 }
@@ -497,36 +491,36 @@ KLangVisitor : $ (me) {
     }
 
     .VisitStringTemplate : (context StringTemplateContext -> v any) {
-        text = ""
-        @ v = context.expression().. {
-            r = Visit(v) Result!
-            text += ".Append(\{r.text})"
+        text! = ""
+        @ v : context.expression().. {
+            r : Visit(v) Result!
+            text += ".Append(${r.text})"
         }
         <- text
     }
 
     .VisitRawStringExpr : (context RawStringExprContext -> v any) {
-        text = ""
+        text! = ""
         ? context.rawStringTemplate().Length == 0 {
             # 去除前后一个元素
-            @ i = 1 ~ context.ChildCount-2.. {
-                v = context.GetChild(i)
-                r = Visit(context.GetChild(i)) str!
+            @ i : 1 ~ context.ChildCount-2.. {
+                v : context.GetChild(i)
+                r : Visit(context.GetChild(i)) str!
                 ? v RawStringContentContext? {
                     text += r
                 } _ {
                     text += "\"\""
                 }
             }
-            <- "@\"\{text}\""
+            <- "@\"${text}\""
         } _ {
             text = "(new System.Text.StringBuilder()"
             # 去除前后一个元素
-            @ i = 1 ~ context.ChildCount-2.. {
-                v = context.GetChild(i)
-                r = Visit(context.GetChild(i)) str!
+            @ i : 1 ~ context.ChildCount-2.. {
+                v : context.GetChild(i)
+                r : Visit(context.GetChild(i)) str!
                 ? v RawStringContentContext? {
-                    text += ".Append(@\"\{r}\")"
+                    text += ".Append(@\"${r}\")"
                 } v RawStringTemplateContext? {
                     text += r
                 } _ {
@@ -546,56 +540,56 @@ KLangVisitor : $ (me) {
     }
 
     .VisitRawStringTemplate : (context RawStringTemplateContext -> v any) {
-        text = ""
-        @ v = context.expression().. {
-            r = Visit(v) Result!
-            text += ".Append(\{r.text})"
+        text! = ""
+        @ v : context.expression().. {
+            r : Visit(v) Result!
+            text += ".Append(${r.text})"
         }
         <- text
     }
 
     .VisitFloatExpr : (context FloatExprContext -> v any) {
-        number = context.FloatLiteral().GetText()
+        number! = context.FloatLiteral().GetText()
         <- number
     }
 
     .VisitIntegerExpr : (context IntegerExprContext -> v any) {
-        number = context.GetChild(0).GetText()
+        number! = context.GetChild(0).GetText()
         <- number
     }
 
     .VisitPlusMinus : (context PlusMinusContext -> v any) {
-        r = Result{}
-        expr = Visit(context.expression()) Result!
-        op = Visit(context.add())
+        r! = Result{}
+        expr : Visit(context.expression()) Result!
+        op : Visit(context.add())
         r.data = expr.data
         r.text = op + expr.text
         <- r
     }
 
     .VisitNegate : (context NegateContext -> v any) {
-        r = Result{}
-        expr = Visit(context.expression()) Result!
+        r! = Result{}
+        expr : Visit(context.expression()) Result!
         r.data = expr.data
         r.text = "!" + expr.text
         <- r
     }
 
     .VisitBitwiseNotExpression : (context BitwiseNotExpressionContext -> v any) {
-        r = Result{}
-        expr = Visit(context.expression()) Result!
+        r! = Result{}
+        expr : Visit(context.expression()) Result!
         r.data = expr.data
         r.text = "~" + expr.text
         <- r
     }
 
     .VisitLinq : (context LinqContext -> v any) {
-        r = Result{data = "var"}
+        r! = Result{data = "var"}
         r.text += Visit(context.linqHeadItem()) str!
-        @ item = context.linqItem().. {
-            r.text += "\{Visit(item)} "
+        @ item : context.linqItem().. {
+            r.text += "${Visit(item)} "
         }
-        r.text += "\{(Visit(context.id()) Result!).text} \{(Visit(context.expression()) Result!).text}"
+        r.text += "${(Visit(context.id()) Result!).text} ${(Visit(context.expression()) Result!).text}"
         <- r
     }
 
@@ -603,17 +597,17 @@ KLangVisitor : $ (me) {
         ? context.linqHeadItem() >< nil {
             <- Visit(context.linqHeadItem()) str!
         }
-        obj = (Visit(context.id()) Result!).text
+        obj! = (Visit(context.id()) Result!).text
         ? context.expression() >< nil {
-            obj += " \{(Visit(context.expression()) Result!).text}"
+            obj += " ${(Visit(context.expression()) Result!).text}"
         }
         <- obj
     }
 
     .VisitLinqHeadItem : (context LinqHeadItemContext -> v any) {
-        obj = ""
-        id = Visit(context.id()) Result!
-        obj += "from \{id.text} in \{(Visit(context.expression()) Result!).text} "
+        obj! = ""
+        id : Visit(context.id()) Result!
+        obj += "from ${id.text} in ${(Visit(context.expression()) Result!).text} "
         <- obj
     }
 }

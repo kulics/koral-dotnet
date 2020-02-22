@@ -10,19 +10,19 @@ Compiler . {
 
 KLangVisitor : $ (me) {
     .VisitCallExpression : (context CallExpressionContext -> v any) {
-        r = Visit(context.id()) Result!
+        r : Visit(context.id()) Result!
         r.text = "." + r.text
         ? context.templateCall() >< nil {
             r.text += Visit(context.templateCall()) str!
         }
         ? context.callFunc() >< nil {
-            e2 = Visit(context.callFunc()) Result!
+            e2 : Visit(context.callFunc()) Result!
             r.text = r.text + e2.text
         } context.callElement() >< nil {
-            e2 = Visit(context.callElement()) Result!
+            e2 : Visit(context.callElement()) Result!
             r.text = r.text + e2.text
         } context.callChannel() >< nil {
-            e2 = Visit(context.callChannel()) Result!
+            e2 : Visit(context.callChannel()) Result!
             r.text = r.text + e2.text
         }
         <- r
@@ -32,8 +32,8 @@ KLangVisitor : $ (me) {
         ? context.expression() == nil {
             <- (Result{ text = Visit(context.slice()) str! })
         }
-        r = Visit(context.expression()) Result!
-        r.text = "[\{ r.text }]"
+        r : Visit(context.expression()) Result!
+        r.text = "[${ r.text }]"
         <- r
     }
 
@@ -42,47 +42,47 @@ KLangVisitor : $ (me) {
     }
 
     .VisitSliceFull : (context SliceFullContext -> v any) {
-        order = "true"
+        order! = "true"
         ? context.Tilde() == nil {
             order = "false"
         }
-        expr1 = Visit(context.expression(0)) Result!
-        expr2 = Visit(context.expression(1)) Result!
-        <- ".slice(\{expr1.text}, \{expr2.text}, \{order})"
+        expr1 : Visit(context.expression(0)) Result!
+        expr2 : Visit(context.expression(1)) Result!
+        <- ".slice(${expr1.text}, ${expr2.text}, ${order})"
     }
 
     .VisitSliceStart : (context SliceStartContext -> v any) {
-        order = "true"
+        order! = "true"
         ? context.Tilde() == nil {
             order = "false"
         }
-        expr = Visit(context.expression()) Result!
-        <- ".slice(\{expr.text}, null, \{order})"
+        expr : Visit(context.expression()) Result!
+        <- ".slice(${expr.text}, null, ${order})"
     }
 
     .VisitSliceEnd : (context SliceEndContext -> v any) {
-        order = "true"
+        order! = "true"
         ? context.Tilde() == nil {
             order = "false"
         }
-        expr = Visit(context.expression()) Result!
-        <- ".slice(null, \{expr.text}, \{order})"
+        expr : Visit(context.expression()) Result!
+        <- ".slice(null, ${expr.text}, ${order})"
     }
 
     .VisitCallFunc : (context CallFuncContext -> v any) {
-        r = Result{data = "var"}
+        r : Result{data = "var"}
         r.text += ? -> context.tuple() >< nil {
             (Visit(context.tuple()) Result!).text
         } _ {
-            "(\{ (Visit(context.lambda()) Result!).text })"
+            "(${ (Visit(context.lambda()) Result!).text })"
         }
 
         <- r
     }
 
     .VisitCallPkg : (context CallPkgContext -> v any) {
-        r = Result{data = Visit(context.typeType())}
-        r.text = "(new \{Visit(context.typeType())}()"
+        r : Result{data = Visit(context.typeType())}
+        r.text = "(new ${Visit(context.typeType())}()"
         ? context.pkgAssign() >< nil {
             r.text += Visit(context.pkgAssign())
         } context.listAssign() >< nil {
@@ -97,20 +97,20 @@ KLangVisitor : $ (me) {
     }
 
     .VisitCallNew : (context CallNewContext -> v any) {
-        r = Result{data = Visit(context.typeType())}
-        param = ""
+        r : Result{data = Visit(context.typeType())}
+        param! = ""
         ? context.expressionList() >< nil {
             param = (Visit(context.expressionList()) Result!).text
         }
-        r.text = "(new \{Visit(context.typeType())}(\{param})"
+        r.text = "(new ${Visit(context.typeType())}(${param})"
         r.text += ")"
         <- r
     }
 
     .VisitPkgAssign : (context PkgAssignContext -> v any) {
-        obj = ""
+        obj! = ""
         obj += "{"
-        @ i = 0 ~ context.pkgAssignElement().Length-1.. {
+        @ i : 0 ~ context.pkgAssignElement().Length-1.. {
             obj += ? -> i == 0 {
                 Visit(context.pkgAssignElement(i))
             } _ {
@@ -122,10 +122,10 @@ KLangVisitor : $ (me) {
     }
 
     .VisitListAssign : (context ListAssignContext -> v any) {
-        obj = ""
+        obj! = ""
         obj += "{"
-        @ i = 0 ~ context.expression().Length-1.. {
-            r = Visit(context.expression(i)) Result!
+        @ i : 0 ~ context.expression().Length-1.. {
+            r : Visit(context.expression(i)) Result!
             obj += ? -> i == 0 {
                 r.text
             } _ {
@@ -137,10 +137,10 @@ KLangVisitor : $ (me) {
     }
 
     .VisitSetAssign : (context SetAssignContext -> v any) {
-        obj = ""
+        obj! = ""
         obj += "{"
-        @ i = 0 ~ context.setElement().Length-1.. {
-            r = Visit(context.setElement(i)) Result!
+        @ i : 0 ~ context.setElement().Length-1.. {
+            r : Visit(context.setElement(i)) Result!
             obj += ? -> i == 0 {
                 r.text
             } _ {
@@ -152,10 +152,10 @@ KLangVisitor : $ (me) {
     }
 
     .VisitDictionaryAssign : (context DictionaryAssignContext -> v any) {
-        obj = ""
+        obj! = ""
         obj += "{"
-        @ i = 0 ~ context.dictionaryElement().Length-1.. {
-            r = Visit(context.dictionaryElement(i)) DicEle!
+        @ i : 0 ~ context.dictionaryElement().Length-1.. {
+            r : Visit(context.dictionaryElement(i)) DicEle!
             obj += ? -> i == 0 {
                 r.text
             } _ {
@@ -167,8 +167,8 @@ KLangVisitor : $ (me) {
     }
 
     .VisitPkgAssignElement : (context PkgAssignElementContext -> v any) {
-        obj = ""
-        obj += "\{Visit(context.name())} = \{(Visit(context.expression()) Result!).text}"
+        obj! = ""
+        obj += "${Visit(context.name())} = ${(Visit(context.expression()) Result!).text}"
         <- obj
     }
 
@@ -180,9 +180,9 @@ KLangVisitor : $ (me) {
     }
 
     .VisitPkgAnonymousAssign : (context PkgAnonymousAssignContext -> v any) {
-        obj = ""
+        obj! = ""
         obj += "{"
-        @ i = 0 ~ context.pkgAnonymousAssignElement().Length-1.. {
+        @ i : 0 ~ context.pkgAnonymousAssignElement().Length-1.. {
             obj += ? -> i == 0 {
                 Visit(context.pkgAnonymousAssignElement(i))
             } _ {
@@ -194,24 +194,24 @@ KLangVisitor : $ (me) {
     }
 
     .VisitPkgAnonymousAssignElement : (context PkgAnonymousAssignElementContext -> v any) {
-        obj = ""
-        obj += "\{Visit(context.name())} = \{(Visit(context.expression()) Result!).text}"
+        obj! = ""
+        obj += "${Visit(context.name())} = ${(Visit(context.expression()) Result!).text}"
         <- obj
     }
 
     .VisitCallAwait : (context CallAwaitContext -> v any) {
-        r = Result{}
-        expr = Visit(context.expression()) Result!
+        r : Result{}
+        expr : Visit(context.expression()) Result!
         r.data = "var"
         r.text = "await " + expr.text
         <- r
     }
 
     .VisitList : (context ListContext -> v any) {
-        type = Any
-        result = Result{}
-        @ i = 0 ~ context.expression().Length-1.. {
-            r = Visit(context.expression(i)) Result!
+        type! = Any
+        result : Result{}
+        @ i : 0 ~ context.expression().Length-1.. {
+            r : Visit(context.expression(i)) Result!
             result.text += ? -> i == 0 {
                 type = r.data str!
                 r.text
@@ -222,16 +222,16 @@ KLangVisitor : $ (me) {
                 "," + r.text
             }
         }
-        result.data = "\{Lst}<\{type}>"
-        result.text = "(new \{result.data}(){ \{result.text} })"
+        result.data = "${Lst}<${type}>"
+        result.text = "(new ${result.data}(){ ${result.text} })"
         <- result
     }
 
     .VisitSet : (context SetContext -> v any) {
-        type = Any
-        result = Result{}
-        @ i = 0 ~ context.setElement().Length-1.. {
-            r = Visit(context.setElement(i)) Result!
+        type! = Any
+        result : Result{}
+        @ i : 0 ~ context.setElement().Length-1.. {
+            r : Visit(context.setElement(i)) Result!
             result.text += ? -> i == 0 {
                 type = r.data str!
                 r.text
@@ -242,26 +242,26 @@ KLangVisitor : $ (me) {
                 "," + r.text
             }
         }
-        result.data = "\{Set}<\{type}>"
-        result.text = "(new \{result.data}(){ \{result.text} })"
+        result.data = "${Set}<${type}>"
+        result.text = "(new ${result.data}(){ ${result.text} })"
         <- result
     }
 
     .VisitSetElement : (context SetElementContext -> v any) {
-        r = Visit(context.expression()) Result!
-        result = Result{
+        r : Visit(context.expression()) Result!
+        result : Result{
             data = r.data str!
-            text = "{\{r.text}}"
+            text = "{${r.text}}"
         }
         <- result
     }
 
     .VisitDictionary : (context DictionaryContext -> v any) {
-        key = Any
-        value = Any
-        result = Result{}
-        @ i = 0 ~ context.dictionaryElement().Length-1.. {
-            r = Visit(context.dictionaryElement(i)) DicEle!
+        key! = Any
+        value! = Any
+        result : Result{}
+        @ i : 0 ~ context.dictionaryElement().Length-1.. {
+            r : Visit(context.dictionaryElement(i)) DicEle!
             result.text += ? -> i == 0 {
                 key = r.key
                 value = r.value
@@ -276,25 +276,25 @@ KLangVisitor : $ (me) {
                 "," + r.text
             }
         }
-        type = "\{key}, \{value}"
-        result.data = "\{Dic}<\{type}>"
-        result.text = "(new \{result.data}(){ \{result.text} })"
+        type : "${key}, ${value}"
+        result.data = "${Dic}<${type}>"
+        result.text = "(new ${result.data}(){ ${result.text} })"
         <- result
     }
 
     .VisitDictionaryElement : (context DictionaryElementContext -> v any) {
-        r1 = Visit(context.expression(0)) Result!
-        r2 = Visit(context.expression(1)) Result!
-        result = DicEle{
+        r1 : Visit(context.expression(0)) Result!
+        r2 : Visit(context.expression(1)) Result!
+        result : DicEle{
             key = r1.data str!
             value = r2.data str!
-            text = "{\{r1.text}, \{r2.text}}"
+            text = "{${r1.text}, ${r2.text}}"
         }
         <- result
     }
 
     .VisitFunctionExpression : (context FunctionExpressionContext -> v any) {
-        r = Result{}
+        r : Result{}
         # 异步
         ? context.t.Type == Right_Flow {
             r.text += " async "
@@ -310,7 +310,7 @@ KLangVisitor : $ (me) {
 
     .VisitLambda : (context LambdaContext -> v any) {
         me.add_current_set()
-        r = Result{data = "var"}
+        r : Result{data = "var"}
         # 异步
         ? context.t.Type == Right_Flow {
             r.text += "async "
@@ -325,16 +325,16 @@ KLangVisitor : $ (me) {
         ? context.tupleExpression() >< nil {
             r.text += (Visit(context.tupleExpression()) Result!).text
         } _ {
-            r.text += "{\{ProcessFunctionSupport(context.functionSupportStatement())}}"
+            r.text += "{${ProcessFunctionSupport(context.functionSupportStatement())}}"
         }
         me.delete_current_set()
         <- r
     }
 
     .VisitLambdaIn : (context LambdaInContext -> v any) {
-        obj = ""
-        @ i = 0 ~ context.id().Length-1.. {
-            r = Visit(context.id(i)) Result!
+        obj! = ""
+        @ i : 0 ~ context.id().Length-1.. {
+            r : Visit(context.id(i)) Result!
             obj += ? -> i == 0 {
                 r.text
             } _ {

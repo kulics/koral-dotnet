@@ -10,28 +10,28 @@ Compiler . {
 
 
 Parameter : $ {
-    id str
-    type str
-    value str
-    annotation str
-    permission str
+    id! str
+    type! str
+    value! str
+    annotation! str
+    permission! str
 }
 
 KLangVisitor : $ (me) {
     ProcessFunctionSupport : (items [.]FunctionSupportStatementContext -> v str) {
-        obj = ""
-        content = ""
-        lazy = []str{}
-        @ item = items.. {
+        obj! = ""
+        content! = ""
+        lazy! = []str{}
+        @ item : items.. {
             content += ? -> item.GetChild(0) UsingStatementContext? {
                 lazy.add("}")
-                "using (\{Visit(item) str!}) \{BlockLeft; Wrap}"
+                "using (${Visit(item) str!}) ${BlockLeft; Wrap}"
             } _ {
                 Visit(item)
             }
         }
         ? lazy.Count > 0 {
-            @ i = lazy.Count-1 ~~ 0.. {
+            @ i : lazy.Count-1 ~~ 0.. {
                 content += BlockRight
             }
         }
@@ -40,10 +40,10 @@ KLangVisitor : $ (me) {
     }
 
     .VisitFunctionStatement : (context FunctionStatementContext -> v any) {
-        id = Visit(context.id()) Result!
-        obj = ""
+        id! = Visit(context.id()) Result!
+        obj! = ""
         # 异步
-        pout = ""
+        pout! = ""
         ? context.parameterClauseOut() >< nil {
             pout = Visit(context.parameterClauseOut()) str!
         }
@@ -51,28 +51,28 @@ KLangVisitor : $ (me) {
             pout = ? -> context.Discard() >< nil {
                 "void"
             } pout >< "void" {
-                "\{Task}<\{pout}>"
+                "${Task}<${pout}>"
             } _ {
                 Task
             }
-            obj += " async \{pout} \{id.text}"
+            obj += " async ${pout} ${id.text}"
         } _ {
             ? context.y >< nil {
                 ? pout >< "void" {
-                    pout = "\{IEnum}<\{pout}>"
+                    pout = "${IEnum}<${pout}>"
                 }
             }
-            obj += "\{pout} \{id.text}"
+            obj += "${pout} ${id.text}"
         }
         # 泛型
-        templateContract = ""
+        templateContract! = ""
         ? context.templateDefine() >< nil {
-            template = Visit(context.templateDefine()) TemplateItem!
+            template : Visit(context.templateDefine()) TemplateItem!
             obj += template.Template
             templateContract = template.Contract
         }
         me.add_current_set()
-        obj += "\{Visit(context.parameterClauseIn())} \{templateContract; Wrap; BlockLeft; Wrap} "
+        obj += "${Visit(context.parameterClauseIn())} ${templateContract; Wrap; BlockLeft; Wrap} "
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += BlockRight + Wrap
         me.delete_current_set()
@@ -81,33 +81,33 @@ KLangVisitor : $ (me) {
 
     .VisitReturnStatement : (context ReturnStatementContext -> v any) {
         ? context.tupleExpression() >< nil {
-            r = Visit(context.tupleExpression()) Result!
-            <- "return \{r.text; Terminate; Wrap}"
+            r : Visit(context.tupleExpression()) Result!
+            <- "return ${r.text; Terminate; Wrap}"
         }
-        <- "return\{Terminate; Wrap}"
+        <- "return${Terminate; Wrap}"
     }
 
     .VisitReturnAwaitStatement : (context ReturnAwaitStatementContext -> v any) {
         ? context.tupleExpression() >< nil {
-            r = Visit(context.tupleExpression()) Result!
-            <- "return await \{r.text; Terminate; Wrap}"
+            r : Visit(context.tupleExpression()) Result!
+            <- "return await ${r.text; Terminate; Wrap}"
         }
-        <- "return\{Terminate; Wrap}"
+        <- "return${Terminate; Wrap}"
     }
 
     .VisitYieldReturnStatement : (context YieldReturnStatementContext -> v any) {
-        r = Visit(context.tupleExpression()) Result!
-        <- "yield return \{r.text; Terminate; Wrap}"
+        r : Visit(context.tupleExpression()) Result!
+        <- "yield return ${r.text; Terminate; Wrap}"
     }
 
     .VisitYieldBreakStatement : (context YieldBreakStatementContext -> v any) {
-        <- "yield break\{Terminate; Wrap}"
+        <- "yield break${Terminate; Wrap}"
     }
 
     .VisitTuple : (context TupleContext -> v any) {
-        obj = "("
-        @ i = 0 ~ context.expression().Length-1.. {
-            r = Visit(context.expression(i)) Result!
+        obj! = "("
+        @ i : 0 ~ context.expression().Length-1.. {
+            r : Visit(context.expression(i)) Result!
             obj += ? -> i == 0 {
                 r.text
             } _ {
@@ -122,9 +122,9 @@ KLangVisitor : $ (me) {
     }
 
     .VisitTupleExpression : (context TupleExpressionContext -> v any) {
-        obj = ""
-        @ i = 0 ~ context.expression().Length-1.. {
-            r = Visit(context.expression(i)) Result!
+        obj! = ""
+        @ i : 0 ~ context.expression().Length-1.. {
+            r : Visit(context.expression(i)) Result!
             obj += ? -> i == 0 {
                 r.text
             } _ {
@@ -132,7 +132,7 @@ KLangVisitor : $ (me) {
             }
         }
         ? context.expression().Length > 1 {
-            obj = "(\{obj})"
+            obj = "(${obj})"
         }
         <- Result{
             data = "var"
@@ -141,14 +141,14 @@ KLangVisitor : $ (me) {
     }
 
     .VisitParameterClauseIn : (context ParameterClauseInContext -> v any) {
-        obj = "("
-        temp = []str{}
-        @ i = context.parameter().Length-1 ~~ 0.. {
-            p = Visit(context.parameter(i)) Parameter!
-            temp.add("\{p.annotation} \{p.type} \{p.id} \{p.value}")
+        obj! = "("
+        temp! = []str{}
+        @ i : context.parameter().Length-1 ~~ 0.. {
+            p : Visit(context.parameter(i)) Parameter!
+            temp.add("${p.annotation} ${p.type} ${p.id} ${p.value}")
             me.add_id(p.id)
         }
-        @ i = temp.Count-1 ~~ 0.. {
+        @ i : temp.Count-1 ~~ 0.. {
             obj += ? -> i == temp.Count - 1 {
                 temp[i]
             } _ {
@@ -161,21 +161,21 @@ KLangVisitor : $ (me) {
     }
 
     .VisitParameterClauseOut : (context ParameterClauseOutContext -> v any) {
-        obj = ""
+        obj! = ""
         ? context.parameter().Length == 0 {
             obj += "void"
         } context.parameter().Length == 1 {
-            p = Visit(context.parameter(0)) Parameter!
+            p : Visit(context.parameter(0)) Parameter!
             obj += p.type
         }
         ? context.parameter().Length > 1 {
             obj += "( "
-            temp = []str{}
-            @ i = context.parameter().Length-1 ~~ 0.. {
-                p = Visit(context.parameter(i)) Parameter!
-                temp.add("\{p.annotation} \{p.type} \{p.id} \{p.value}")
+            temp! = []str{}
+            @ i : context.parameter().Length-1 ~~ 0.. {
+                p : Visit(context.parameter(i)) Parameter!
+                temp.add("${p.annotation} ${p.type} ${p.id} ${p.value}")
             }
-            @ i = temp.Count-1 ~~ 0.. {
+            @ i : temp.Count-1 ~~ 0.. {
                 obj += ? -> i == temp.Count - 1 {
                     temp[i]
                 } _ {
@@ -188,22 +188,22 @@ KLangVisitor : $ (me) {
     }
 
     .VisitParameter : (context ParameterContext -> v any) {
-        p = Parameter{}
-        id = Visit(context.id()) Result!
+        p : Parameter{}
+        id : Visit(context.id()) Result!
         p.id = id.text
         p.permission = id.permission
         ? context.annotationSupport() >< nil {
             p.annotation = Visit(context.annotationSupport()) str!
         }
         ? context.expression() >< nil {
-            p.value = "= \{(Visit(context.expression()) Result!).text}"
+            p.value = "= ${(Visit(context.expression()) Result!).text}"
         }
         p.type = Visit(context.typeType()) str!
         ? context.Dot_Dot_Dot() >< nil {
-            p.type = "params \{p.type}[]"
+            p.type = "params ${p.type}[]"
         }
         ? context.Bang() >< nil {
-            p.type = "ref \{p.type}"
+            p.type = "ref ${p.type}"
         }
         <- p
     }

@@ -30,7 +30,7 @@ obj+=Visit(v);
 }
 }
 if ( context.varId().Length>1 ) {
-obj = "("+obj+")";
+obj="("+obj+")";
 }
 var r2 = (Result)(Visit(context.tupleExpression()));
 obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
@@ -47,7 +47,7 @@ obj+=Visit(v);
 }
 }
 if ( context.constId().Length>1 ) {
-obj = "("+obj+")";
+obj="("+obj+")";
 }
 var r2 = (Result)(Visit(context.tupleExpression()));
 obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
@@ -57,14 +57,14 @@ public  override  object VisitVariableDeclaredStatement( VariableDeclaredStateme
 var obj = "";
 var Type = (string)(Visit(context.typeType()));
 var r = (Result)(Visit(context.id()));
-obj = (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
+obj=(new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
 return obj;
 }
 public  override  object VisitConstantDeclaredStatement( ConstantDeclaredStatementContext context ){
 var obj = "";
 var Type = (string)(Visit(context.typeType()));
 var r = (Result)(Visit(context.id()));
-obj = (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
+obj=(new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
 return obj;
 }
 public  override  object VisitAssignStatement( AssignStatementContext context ){
@@ -74,9 +74,6 @@ var obj = r1.text+Visit(context.assign())+r2.text+Terminate+Wrap;
 return obj;
 }
 public  override  object VisitAssign( AssignContext context ){
-if ( context.op.Type==Mod_Equal ) {
-return "%=";
-}
 return context.op.Text;
 }
 public  override  object VisitExpressionStatement( ExpressionStatementContext context ){
@@ -106,16 +103,16 @@ case LogicContext it :
 { r.data=Bool;
 } break;
 case AddContext it :
-{ r.data=run(()=>{if ( (string)(e1.data)==Str||((string)(((Result)(e2)).data))==Str ) {
+{ r.data=run(()=>{if ( (string)(e1.data)==Str||(string)(((Result)(e2)).data)==Str ) {
 return Str;}
-else if ( (string)(e1.data)==I32&&((string)(((Result)(e2)).data))==I32 ) {
+else if ( (string)(e1.data)==I32&&(string)(((Result)(e2)).data)==I32 ) {
 return I32;}
 else {
 return F64;}
 });
 } break;
 case MulContext it :
-{ r.data=run(()=>{if ( (string)(e1.data)==I32&&((string)(((Result)(e2)).data))==I32 ) {
+{ r.data=run(()=>{if ( (string)(e1.data)==I32&&(string)(((Result)(e2)).data)==I32 ) {
 return I32;}
 else {
 return F64;}
@@ -130,7 +127,7 @@ return r;
 r.text=e1.text+op+((Result)(e2)).text;
 } break;
 case 2 :
-{ r = (Result)(Visit(context.GetChild(0)));
+{ r=(Result)(Visit(context.GetChild(0)));
 if ( context.GetChild(1).@is<TypeConversionContext>() ) {
 var e2 = (string)(Visit(context.GetChild(1)));
 r.data=e2;
@@ -173,7 +170,7 @@ r.text+="?";
 }
 } break;
 case 1 :
-{ r = (Result)(Visit(context.GetChild(0)));
+{ r=(Result)(Visit(context.GetChild(0)));
 } break;
 }
 return r;
@@ -230,9 +227,6 @@ public  override  object VisitAdd( AddContext context ){
 return context.op.Text;
 }
 public  override  object VisitMul( MulContext context ){
-if ( context.op.Type==Mod ) {
-return "%";
-}
 return context.op.Text;
 }
 public  override  object VisitPow( PowContext context ){
@@ -257,7 +251,7 @@ var template = (string)(Visit(context.templateCall()));
 return (new Result(){text = id.text+template,data = id.text+template,rootID = id.text});
 }
 var r = (Result)(Visit(context.expression()));
-return (new Result(){text = (new System.Text.StringBuilder().Append("(").Append(r.text).Append(")")).to_str(),data = r.data});
+return (new Result(){text = "(r.text})",data = r.data});
 }
 public  override  object VisitExpressionList( ExpressionListContext context ){
 var r = (new Result());
@@ -301,7 +295,7 @@ else {
 var id1 = context.id(0).GetText();
 item.Template=id1;
 var id2 = context.id(1).GetText();
-item.Contract=(new System.Text.StringBuilder().Append(" where ").Append(id1).Append(":").Append(id2)).to_str();
+item.Contract=" where id1}:id2}";
 }
 return item;
 }
@@ -363,12 +357,12 @@ text+=Visit(v);
 return (new System.Text.StringBuilder().Append("\"").Append(text).Append("\"")).to_str();
 }
 else {
-text = "(new System.Text.StringBuilder()";
+text="(new System.Text.StringBuilder()";
 foreach (var i in range(1, context.ChildCount-2, 1, true)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 if ( v.@is<StringContentContext>() ) {
-text+=(new System.Text.StringBuilder().Append(".Append(\"").Append(r).Append("\")")).to_str();
+text+=(new System.Text.StringBuilder().Append(".Append(").Append("\"").Append(r).Append("\"").Append(")")).to_str();
 }
 else {
 text+=r;
@@ -405,15 +399,15 @@ else {
 text+="\"\"";
 }
 }
-return (new System.Text.StringBuilder().Append("@\"").Append(text).Append("\"")).to_str();
+return (new System.Text.StringBuilder().Append("@").Append("\"").Append(text).Append("\"")).to_str();
 }
 else {
-text = "(new System.Text.StringBuilder()";
+text="(new System.Text.StringBuilder()";
 foreach (var i in range(1, context.ChildCount-2, 1, true)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 if ( v.@is<RawStringContentContext>() ) {
-text+=(new System.Text.StringBuilder().Append(".Append(@\"").Append(r).Append("\")")).to_str();
+text+=(new System.Text.StringBuilder().Append(".Append(@").Append("\"").Append(r).Append("\"").Append(")")).to_str();
 }
 else if ( v.@is<RawStringTemplateContext>() ) {
 text+=r;

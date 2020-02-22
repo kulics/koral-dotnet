@@ -13,12 +13,12 @@ protected static string _PathLine;
 public static void Main( string[] args ){
 var os = Environment.OSVersion.Platform;
 if ( os==PlatformID.Unix||os==PlatformID.MacOSX ) {
-_ReadPath = "./";
-_PathLine = "/";
+_ReadPath="./";
+_PathLine="/";
 }
 else {
-_ReadPath = ".\\";
-_PathLine = "\\";
+_ReadPath=".\\";
+_PathLine="\\";
 }
 Compiled(_ReadPath);
 print("Completed");
@@ -43,7 +43,7 @@ var AST = Parser.program();
 var Visitor = (new KLangVisitor());
 var Result = Visitor.Visit(AST);
 var ByteResult = Encoding.UTF8.GetBytes(Result.to_str());
-using (var fsWrite = (new FileStream((new System.Text.StringBuilder().Append(_ReadPath).Append(file.sub_str(0, file.Length-2)).Append(".cs")).to_str(), FileMode.Create))) {
+using (var fsWrite = (new FileStream("_ReadPath; file.sub_str(0, file.Length - 2)}.cs", FileMode.Create))) {
 fsWrite.Write(ByteResult, 0, ByteResult.Length);
 }}catch( Exception err )
 {

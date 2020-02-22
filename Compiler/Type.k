@@ -11,56 +11,56 @@ Compiler . {
 
 KLangVisitor : $ (me) {
     .VisitTypeType : (context TypeTypeContext -> v any) {
-        obj = ""
+        obj! = ""
         obj = Visit(context.GetChild(0)) str!
         <- obj
     }
 
     .VisitTypeNullable : (context TypeNullableContext -> v any) {
-        obj = ""
+        obj! = ""
         obj = Visit(context.typeNotNull()) str!
         obj += "?"
         <- obj
     }
 
     .VisitTypeArray : (context TypeArrayContext -> v any) {
-        obj = ""
-        obj += "\{Visit(context.typeType())}[]"
+        obj! = ""
+        obj += "${Visit(context.typeType())}[]"
         <- obj
     }
 
     .VisitTypeList : (context TypeListContext -> v any) {
-        obj = ""
-        obj += "\{Lst}<\{Visit(context.typeType())}>"
+        obj! = ""
+        obj += "${Lst}<${Visit(context.typeType())}>"
         <- obj
     }
 
     .VisitTypeSet : (context TypeSetContext -> v any) {
-        obj = ""
-        obj += "\{Set}<\{Visit(context.typeType())}>"
+        obj! = ""
+        obj += "${Set}<${Visit(context.typeType())}>"
         <- obj
     }
 
     .VisitTypeDictionary : (context TypeDictionaryContext -> v any) {
-        obj = ""
-        obj += "\{Dic}<\{Visit(context.typeType(0))}, \{Visit(context.typeType(1))}>"
+        obj! = ""
+        obj += "${Dic}<${Visit(context.typeType(0))}, ${Visit(context.typeType(1))}>"
         <- obj
     }
 
     .VisitTypeStack : (context TypeStackContext -> v any) {
-        obj = ""
-        obj += "\{Stk}<\{Visit(context.typeType())}>"
+        obj! = ""
+        obj += "${Stk}<${Visit(context.typeType())}>"
         <- obj
     }
 
     .VisitTypeQueue : (context TypeQueueContext -> v any) {
-        obj = ""
-        obj += "\{Que}<\{Visit(context.typeType())}>"
+        obj! = ""
+        obj += "${Que}<${Visit(context.typeType())}>"
         <- obj
     }
 
     .VisitTypePackage : (context TypePackageContext -> v any) {
-        obj = ""
+        obj! = ""
         obj += Visit(context.nameSpaceItem())
         ? context.templateCall() >< nil {
             obj += Visit(context.templateCall())
@@ -69,44 +69,44 @@ KLangVisitor : $ (me) {
     }
 
     .VisitTypeFunction : (context TypeFunctionContext -> v any) {
-        obj = ""
-        in = Visit(context.typeFunctionParameterClause(0)) str!
-        out = Visit(context.typeFunctionParameterClause(1)) str!
+        obj! = ""
+        in! = Visit(context.typeFunctionParameterClause(0)) str!
+        out! = Visit(context.typeFunctionParameterClause(1)) str!
         ? context.t.Type == Right_Arrow {
             ? out.Length == 0 {
                 obj = ? -> in.Length == 0 {
                     "Action"
                 } _ {
-                    "Action<\{in}>"
+                    "Action<${in}>"
                 }
             } _ {
                 ? out.first_index_of(",") >= 0 {
-                    out = "(\{out})"
+                    out = "(${out})"
                 }
                 ? context.y >< nil {
-                    out = "\{IEnum}<\{out}>"
+                    out = "${IEnum}<${out}>"
                 }
                 obj = ? -> in.Length == 0 {
-                    "Func<\{out}>"
+                    "Func<${out}>"
                 } _ {
-                    "Func<\{in}, \{out}>"
+                    "Func<${in}, ${out}>"
                 }
             }
         } _ {
             ? out.Length == 0 {
                 obj = ? -> in.Length == 0 {
-                    "Func<\{Task}>"
+                    "Func<${Task}>"
                 } _ {
-                    "Func<\{in}, \{Task}>"
+                    "Func<${in}, ${Task}>"
                 }
             } _ {
                 ? context.y >< nil {
-                    out = "\{IEnum}<(\{out})>"
+                    out = "${IEnum}<(${out})>"
                 }
                 obj = ? -> in.Length == 0 {
-                    "Func<\{Task}<\{out}>>"
+                    "Func<${Task}<${out}>>"
                 } _ {
-                    "Func<\{in}, \{Task}<\{out}>>"
+                    "Func<${in}, ${Task}<${out}>>"
                 }
             }
         }
@@ -118,9 +118,9 @@ KLangVisitor : $ (me) {
     }
 
     .VisitTypeFunctionParameterClause : (context TypeFunctionParameterClauseContext -> v any) {
-        obj = ""
-        @ i = 0 ~ context.typeType().Length-1.. {
-            p = Visit(context.typeType(i)) str!
+        obj! = ""
+        @ i : 0 ~ context.typeType().Length-1.. {
+            p : Visit(context.typeType(i)) str!
             obj += ? -> i == 0 {
                 p
             } _ {

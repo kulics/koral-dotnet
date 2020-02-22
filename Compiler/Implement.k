@@ -11,43 +11,43 @@ Compiler . {
 
 KLangVisitor : $ (me) {
     .VisitImplementStatement : (context ImplementStatementContext -> v any) {
-        id = Visit(context.id()) Result!
+        id : Visit(context.id()) Result!
         
-        obj = ""
-        extend = []str{}
-        @ item = context.includeStatement().. {
-            r = Visit(item) str!
+        obj! = ""
+        extend! = []str{}
+        @ item : context.includeStatement().. {
+            r : Visit(item) str!
             extend += r
         }
-        @ item = context.packageFieldStatement().. {
-            r = Visit(item) Result!
+        @ item : context.packageFieldStatement().. {
+            r : Visit(item) Result!
             obj += r.text
         }
-        @ item = context.packageImplementStatement().. {
-            r = Visit(item) Result!
+        @ item : context.packageImplementStatement().. {
+            r : Visit(item) Result!
             extend += r.data str!
             obj += r.text
         }
-        @ item = context.packageNewStatement().. {
-            r = Visit(item) str!
-            obj += "public \{id.text} \{r}"
+        @ item : context.packageNewStatement().. {
+            r : Visit(item) str!
+            obj += "public ${id.text} ${r}"
         }
         obj += BlockRight + Wrap
-        header = ""
-        header += "\{id.permission} partial class \{id.text}"
+        header! = ""
+        header += "${id.permission} partial class ${id.text}"
         # 泛型
-        template = ""
-        templateContract = ""
+        template! = ""
+        templateContract! = ""
         ? context.templateDefine() >< nil {
-            item = Visit(context.templateDefine()) TemplateItem!
+            item : Visit(context.templateDefine()) TemplateItem!
             template += item.Template
             templateContract = item.Contract
             header += template
         }
 
         ? extend.length > 0 {
-            temp = extend[0]
-            @ i = 1 ~ extend.length-1.. {
+            temp : extend[0]
+            @ i : 1 ~ extend.length-1.. {
                 temp += "," + extend[i]
             }
             header += ":" + temp
@@ -61,14 +61,14 @@ KLangVisitor : $ (me) {
     }
 
     .VisitImplementVariableStatement : (context ImplementVariableStatementContext -> v any) {
-        r1 = Visit(context.id()) Result!
-        isMutable = r1.isVirtual
-        isVirtual = ""
+        r1 : Visit(context.id()) Result!
+        isMutable! = r1.isVirtual
+        isVirtual! = ""
         ? r1.isVirtual {
             isVirtual = " virtual "
         }
-        typ = ""
-        r2 Result = nil
+        typ! = ""
+        r2! Result = nil
         ? context.expression() >< nil {
             r2 = Visit(context.expression()) Result!
             typ = r2.data str!
@@ -76,23 +76,23 @@ KLangVisitor : $ (me) {
         ? context.typeType() >< nil {
             typ = Visit(context.typeType()) str!
         }
-        obj = ""
+        obj! = ""
         ? context.annotationSupport() >< nil {
             me.selfPropertyID = r1.text
             obj += Visit(context.annotationSupport())
         }
         ? me.selfPropertyContent.len > 0 {
-            pri = ""
+            pri! = ""
             ? me.selfPropertyVariable {
-                pri = "private \{typ} _\{r1.text}" 
+                pri = "private ${typ} _${r1.text}" 
                 ? r2 >< nil {
                     pri += " = " + r2.text
                 }
                 pri += Terminate + Wrap
             }
             obj = pri + obj
-            obj += "\{r1.permission} \{isVirtual} \{typ} \{r1.text; BlockLeft}"
-            @ v = me.selfPropertyContent.. {
+            obj += "${r1.permission} ${isVirtual} ${typ} ${r1.text; BlockLeft}"
+            @ v : me.selfPropertyContent.. {
                 obj += v
             }
             obj += BlockRight+Wrap
@@ -100,9 +100,9 @@ KLangVisitor : $ (me) {
             me.selfPropertyID = ""
             me.selfPropertyVariable = false
         } _ {
-            obj += "\{r1.permission} \{typ} \{r1.text}"
+            obj += "${r1.permission} ${typ} ${r1.text}"
             obj += ? -> r2 >< nil {
-                " = \{r2.text; Terminate; Wrap}"
+                " = ${r2.text; Terminate; Wrap}"
             } _ {
                 Terminate + Wrap
             }
@@ -111,15 +111,15 @@ KLangVisitor : $ (me) {
     }
 
     .VisitImplementFunctionStatement : (context ImplementFunctionStatementContext -> v any) {
-        id = Visit(context.id()) Result!
-        isVirtual = ""
+        id : Visit(context.id()) Result!
+        isVirtual! = ""
         ? id.isVirtual {
             isVirtual = " virtual "
         }
-        obj = ""
+        obj! = ""
         # 异步
-        obj += "\{id.permission} "
-        pout = ""
+        obj += "${id.permission} "
+        pout! = ""
         ? context.parameterClauseOut() >< nil {
             pout = Visit(context.parameterClauseOut()) str!
         }
@@ -128,25 +128,25 @@ KLangVisitor : $ (me) {
                 pout = "void"
             } pout >< "void" {
                 ? context.y >< nil {
-                    pout = "\{IEnum}<\{pout}>"
+                    pout = "${IEnum}<${pout}>"
                 }
-                pout = "\{Task}<\{pout}>"
+                pout = "${Task}<${pout}>"
             } _ {
                 pout = Task
             }
-            obj += "\{isVirtual} async \{pout} \{id.text}"
+            obj += "${isVirtual} async ${pout} ${id.text}"
         } _ {
             ? context.y >< nil {
                 ? pout >< "void" {
-                    pout = "\{IEnum}<\{pout}>"
+                    pout = "${IEnum}<${pout}>"
                 }
             }
-            obj += "\{isVirtual} \{pout} \{id.text}"
+            obj += "${isVirtual} ${pout} ${id.text}"
         }
         # 泛型
-        templateContract = ""
+        templateContract! = ""
         ? context.templateDefine() >< nil {
-            template = Visit(context.templateDefine()) TemplateItem!
+            template : Visit(context.templateDefine()) TemplateItem!
             obj += template.Template
             templateContract = template.Contract
         }
@@ -159,11 +159,11 @@ KLangVisitor : $ (me) {
     }
 
     .VisitOverrideVariableStatement : (context OverrideVariableStatementContext -> v any) {
-        r1 = Visit(context.id()) Result!
-        isMutable = r1.isVirtual
-        isVirtual = " override "
-        typ = ""
-        r2 Result = nil
+        r1 : Visit(context.id()) Result!
+        isMutable! = r1.isVirtual
+        isVirtual! = " override "
+        typ! = ""
+        r2! Result = nil
         ? context.expression() >< nil {
             r2 = Visit(context.expression()) Result!
             typ = r2.data str!
@@ -171,23 +171,23 @@ KLangVisitor : $ (me) {
         ? context.typeType() >< nil {
             typ = Visit(context.typeType()) str!
         }
-        obj = ""
+        obj! = ""
         ? context.annotationSupport() >< nil {
             me.selfPropertyID = r1.text
             obj += Visit(context.annotationSupport())
         }
         ? me.selfPropertyContent.len > 0 {
-            pri = ""
+            pri! = ""
             ? me.selfPropertyVariable {
-                pri = "private \{typ} _\{r1.text}" 
+                pri = "private ${typ} _${r1.text}" 
                 ? r2 >< nil {
                     pri += " = " + r2.text
                 }
                 pri += Terminate + Wrap
             }
             obj = pri + obj
-            obj += "\{r1.permission} \{isVirtual} \{typ} \{r1.text; BlockLeft}"
-            @ v = me.selfPropertyContent.. {
+            obj += "${r1.permission} ${isVirtual} ${typ} ${r1.text; BlockLeft}"
+            @ v : me.selfPropertyContent.. {
                 obj += v
             }
             obj += BlockRight+Wrap
@@ -195,9 +195,9 @@ KLangVisitor : $ (me) {
             me.selfPropertyID = ""
             me.selfPropertyVariable = false
         } _ {
-            obj += "\{r1.permission} \{typ} \{r1.text}"
+            obj += "${r1.permission} ${typ} ${r1.text}"
             obj += ? -> r2 >< nil {
-                " = \{r2.text; Terminate; Wrap}"
+                " = ${r2.text; Terminate; Wrap}"
             } _ {
                 Terminate + Wrap
             }
@@ -206,16 +206,16 @@ KLangVisitor : $ (me) {
     }
 
     .VisitOverrideFunctionStatement : (context OverrideFunctionStatementContext -> v any) {
-        id = Visit(context.id()) Result!
-        isVirtual = " override "
-        obj = ""
+        id : Visit(context.id()) Result!
+        isVirtual! = " override "
+        obj! = ""
         # 异步
         obj += ? -> context.n >< nil {
             "protected "
         } _ {
-            "\{id.permission} "
+            "${id.permission} "
         }
-        pout = ""
+        pout! = ""
         ? context.parameterClauseOut() >< nil {
             pout = Visit(context.parameterClauseOut()) str!
         }
@@ -224,25 +224,25 @@ KLangVisitor : $ (me) {
                 pout = "void"
             } pout >< "void" {
                 ? context.y >< nil {
-                    pout = "\{IEnum}<\{pout}>"
+                    pout = "${IEnum}<${pout}>"
                 }
-                pout = "\{Task}<\{pout}>"
+                pout = "${Task}<${pout}>"
             } _ {
                 pout = Task
             }
-            obj += "\{isVirtual} async \{pout} \{id.text}"
+            obj += "${isVirtual} async ${pout} ${id.text}"
         } _ {
             ? context.y >< nil {
                 ? pout >< "void" {
-                    pout = "\{IEnum}<\{pout}>"
+                    pout = "${IEnum}<${pout}>"
                 }
             }
-            obj += "\{isVirtual} \{pout} \{id.text}"
+            obj += "${isVirtual} ${pout} ${id.text}"
         }
         # 泛型
-        templateContract = ""
+        templateContract! = ""
         ? context.templateDefine() >< nil {
-            template = Visit(context.templateDefine()) TemplateItem!
+            template : Visit(context.templateDefine()) TemplateItem!
             obj += template.Template
             templateContract = template.Contract
         }

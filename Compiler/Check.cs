@@ -31,7 +31,7 @@ var ID = ((Result)(Visit(context.id()))).text;
 this.add_id(ID);
 var Type = "Exception";
 if ( context.typeType()!=null ) {
-Type = (string)(Visit(context.typeType()));
+Type=(string)(Visit(context.typeType()));
 }
 obj+=(new System.Text.StringBuilder().Append("catch( ").Append(Type).Append(" ").Append(ID).Append(" )").Append(Wrap).Append(BlockLeft).Append(Wrap)).to_str();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -51,7 +51,7 @@ public  override  object VisitUsingStatement( UsingStatementContext context ){
 var obj = "";
 var r1 = (Result)(Visit(context.expression(0)));
 var r2 = (Result)(Visit(context.expression(1)));
-obj = run(()=>{if ( context.typeType()!=null ) {
+obj=run(()=>{if ( context.typeType()!=null ) {
 var Type = (string)(Visit(context.typeType()));
 return (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r1.text).Append(" = ").Append(r2.text)).to_str();}
 else {
@@ -82,7 +82,7 @@ var ID = ((Result)(Visit(context.id()))).text;
 this.add_id(ID);
 var Type = "Exception";
 if ( context.typeType()!=null ) {
-Type = (string)(Visit(context.typeType()));
+Type=(string)(Visit(context.typeType()));
 }
 obj+=(new System.Text.StringBuilder().Append("catch( ").Append(Type).Append(" ").Append(ID).Append(" )").Append(Wrap).Append(BlockLeft).Append(Wrap)).to_str();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());

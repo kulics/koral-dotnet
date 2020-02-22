@@ -5,12 +5,12 @@ Compiler . {
     System.Text
 }
 
-_ReadPath str
-_PathLine str
+_ReadPath! str
+_PathLine! str
 
 Main : (args [.]str->) {
     # 检查系统平台，区分路径字符
-    os = Environment.OSVersion.Platform
+    os! = Environment.OSVersion.Platform
     ? os == PlatformID.Unix | os == PlatformID.MacOSX {
         _ReadPath = "./"
         _PathLine = "/"
@@ -26,32 +26,32 @@ Main : (args [.]str->) {
 
 Compiled : (path str->) {
     # 获取相对路径下所有文件
-    Files = Directory.GetFiles(path, "*.k")
-    @ file = Files.. {
+    Files : Directory.GetFiles(path, "*.k")
+    @ file : Files.. {
         # 文件流读文件
-        ! fsRead = FileStream(file, FileMode.Open)
+        ! fsRead : FileStream(file, FileMode.Open)
         ! {
-            FSLength = fsRead.Length int!
-            ByteBlock = [array u8](FSLength)
-            r = fsRead.Read(ByteBlock, 0, ByteBlock.Length)
-            Input = Encoding.UTF8.GetString(ByteBlock)
+            FSLength : fsRead.Length int!
+            ByteBlock : [array u8](FSLength)
+            r : fsRead.Read(ByteBlock, 0, ByteBlock.Length)
+            Input : Encoding.UTF8.GetString(ByteBlock)
 
-            Stream = AntlrInputStream(Input)
-            Lexer = KLexer(Stream)
-            Tokens = CommonTokenStream(Lexer)
-            Parser = KParser(Tokens)
+            Stream : AntlrInputStream(Input)
+            Lexer : KLexer(Stream)
+            Tokens : CommonTokenStream(Lexer)
+            Parser : KParser(Tokens)
             Parser.BuildParseTree = true
             Parser.RemoveErrorListeners()
             Parser.AddErrorListener(ErrorListener{ FileDir = file })
 
-            AST = Parser.program()
+            AST : Parser.program()
 
-            Visitor = KLangVisitor{}
-            Result = Visitor.Visit(AST)
+            Visitor : KLangVisitor{}
+            Result : Visitor.Visit(AST)
 
             # 文件流写文件,使用覆盖模式
-            ByteResult = Encoding.UTF8.GetBytes(Result.to_str())  # 转换为字节
-            ! fsWrite = FileStream("\{_ReadPath; file.sub_str(0, file.Length - 2)}.cs", FileMode.Create)
+            ByteResult : Encoding.UTF8.GetBytes(Result.to_str())  # 转换为字节
+            ! fsWrite : FileStream("\{_ReadPath; file.sub_str(0, file.Length - 2)}.cs", FileMode.Create)
             fsWrite.Write(ByteResult, 0, ByteResult.Length)
         } err Exception {
             print(err)
@@ -59,8 +59,8 @@ Compiled : (path str->) {
         }
     }
 
-    Folders = Directory.GetDirectories(path)
-    @ folder = Folders.. {
+    Folders : Directory.GetDirectories(path)
+    @ folder : Folders.. {
         Compiled(folder)
     }
 }
