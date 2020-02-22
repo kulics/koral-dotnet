@@ -362,7 +362,7 @@ KLangVisitor : $ (me) {
         }
         r : Visit(context.expression()) Result!
         <- Result{
-            text = "(\{r.text})"
+            text = "(${r.text})"
             data = r.data
         }
     }
@@ -410,7 +410,7 @@ KLangVisitor : $ (me) {
             id1 : context.id(0).GetText()
             item.Template = id1
             id2 : context.id(1).GetText()
-            item.Contract = " where \{id1}:\{id2}"
+            item.Contract = " where ${id1}:${id2}"
         }
         <- item
     }

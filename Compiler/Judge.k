@@ -12,7 +12,7 @@ KLangVisitor : $ (me) {
     .VisitJudgeCaseStatement : (context JudgeCaseStatementContext -> v any)  {
         obj! = ""
         expr : Visit(context.expression()) Result!
-        obj += "switch (\{expr.text}) \{BlockLeft; Wrap}"
+        obj += "switch (${expr.text}) ${BlockLeft; Wrap}"
         @ item : context.caseStatement().. {
             r : Visit(item) str!
             obj += r + Wrap
