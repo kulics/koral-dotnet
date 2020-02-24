@@ -251,7 +251,7 @@ var template = (string)(Visit(context.templateCall()));
 return (new Result(){text = id.text+template,data = id.text+template,rootID = id.text});
 }
 var r = (Result)(Visit(context.expression()));
-return (new Result(){text = "(r.text})",data = r.data});
+return (new Result(){text = (new System.Text.StringBuilder().Append("(").Append(r.text).Append(")")).to_str(),data = r.data});
 }
 public  override  object VisitExpressionList( ExpressionListContext context ){
 var r = (new Result());
@@ -295,7 +295,7 @@ else {
 var id1 = context.id(0).GetText();
 item.Template=id1;
 var id2 = context.id(1).GetText();
-item.Contract=" where id1}:id2}";
+item.Contract=(new System.Text.StringBuilder().Append(" where ").Append(id1).Append(":").Append(id2)).to_str();
 }
 return item;
 }
