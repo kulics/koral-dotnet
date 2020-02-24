@@ -13,7 +13,7 @@ public partial class KLangVisitor{
 public  override  object VisitJudgeCaseStatement( JudgeCaseStatementContext context ){
 var obj = "";
 var expr = (Result)(Visit(context.expression()));
-obj+="switch (expr.text}) BlockLeft; Wrap}";
+obj+=(new System.Text.StringBuilder().Append("switch (").Append(expr.text).Append(") ").Append(BlockLeft).Append(Wrap)).to_str();
 foreach (var item in context.caseStatement()){
 var r = (string)(Visit(item));
 obj+=r+Wrap;
