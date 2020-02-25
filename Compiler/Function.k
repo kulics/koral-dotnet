@@ -4,8 +4,8 @@ Compiler . {
     System
     System.Collections.Generic
 
-    _ = Compiler.KParser
-    _ = Compiler.Compiler_static
+    _ : Compiler.KParser
+    _ : Compiler.Compiler_static
 }
 
 
@@ -19,9 +19,9 @@ Parameter : $ {
 
 KLangVisitor : $ (me) {
     ProcessFunctionSupport : (items [.]FunctionSupportStatementContext -> v str) {
-        obj! = ""
-        content! = ""
-        lazy! = []str{}
+        obj! : ""
+        content! : ""
+        lazy! : []str{}
         @ item : items.. {
             content += ? -> item.GetChild(0) UsingStatementContext? {
                 lazy.add("}")
@@ -40,10 +40,10 @@ KLangVisitor : $ (me) {
     }
 
     .VisitFunctionStatement : (context FunctionStatementContext -> v any) {
-        id! = Visit(context.id()) Result!
-        obj! = ""
+        id! : Visit(context.id()) Result!
+        obj! : ""
         # 异步
-        pout! = ""
+        pout! : ""
         ? context.parameterClauseOut() >< nil {
             pout = Visit(context.parameterClauseOut()) str!
         }
@@ -65,7 +65,7 @@ KLangVisitor : $ (me) {
             obj += "${pout} ${id.text}"
         }
         # 泛型
-        templateContract! = ""
+        templateContract! : ""
         ? context.templateDefine() >< nil {
             template : Visit(context.templateDefine()) TemplateItem!
             obj += template.Template
@@ -105,7 +105,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitTuple : (context TupleContext -> v any) {
-        obj! = "("
+        obj! : "("
         @ i : 0 ~ context.expression().Length-1.. {
             r : Visit(context.expression(i)) Result!
             obj += ? -> i == 0 {
@@ -122,7 +122,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitTupleExpression : (context TupleExpressionContext -> v any) {
-        obj! = ""
+        obj! : ""
         @ i : 0 ~ context.expression().Length-1.. {
             r : Visit(context.expression(i)) Result!
             obj += ? -> i == 0 {
@@ -141,8 +141,8 @@ KLangVisitor : $ (me) {
     }
 
     .VisitParameterClauseIn : (context ParameterClauseInContext -> v any) {
-        obj! = "("
-        temp! = []str{}
+        obj! : "("
+        temp! : []str{}
         @ i : context.parameter().Length-1 ~~ 0.. {
             p : Visit(context.parameter(i)) Parameter!
             temp.add("${p.annotation} ${p.type} ${p.id} ${p.value}")
@@ -161,7 +161,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitParameterClauseOut : (context ParameterClauseOutContext -> v any) {
-        obj! = ""
+        obj! : ""
         ? context.parameter().Length == 0 {
             obj += "void"
         } context.parameter().Length == 1 {
@@ -170,7 +170,7 @@ KLangVisitor : $ (me) {
         }
         ? context.parameter().Length > 1 {
             obj += "( "
-            temp! = []str{}
+            temp! : []str{}
             @ i : context.parameter().Length-1 ~~ 0.. {
                 p : Visit(context.parameter(i)) Parameter!
                 temp.add("${p.annotation} ${p.type} ${p.id} ${p.value}")

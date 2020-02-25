@@ -10,7 +10,7 @@ _PathLine! str
 
 Main : (args [.]str->) {
     # 检查系统平台，区分路径字符
-    os! = Environment.OSVersion.Platform
+    os! : Environment.OSVersion.Platform
     ? os == PlatformID.Unix | os == PlatformID.MacOSX {
         _ReadPath = "./"
         _PathLine = "/"

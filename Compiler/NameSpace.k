@@ -4,8 +4,8 @@ Compiler . {
     System
     System.Collections.Generic
 
-    _ = Compiler.KParser
-    _ = Compiler.Compiler_static
+    _ : Compiler.KParser
+    _ : Compiler.Compiler_static
 }
 
 Namespace : $ {
@@ -15,7 +15,7 @@ Namespace : $ {
 
 KLangVisitor : $ (me) {
     .VisitStatement : (context StatementContext -> v any) {
-        obj! = ""
+        obj! : ""
         ns : Visit(context.exportStatement()) Namespace!
         # import library
         obj += "using Library;${Wrap}using static Library.Lib;${Wrap}"
@@ -25,8 +25,8 @@ KLangVisitor : $ (me) {
         }
         obj += "namespace ${ns.name; Wrap; BlockLeft; Wrap}"
 
-        content! = ""
-        contentStatic! = ""
+        content! : ""
+        contentStatic! : ""
         me.add_current_set()
         # pre process to get type id
         @ item : context.namespaceSupportStatement().. {
@@ -72,7 +72,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitImportStatement : (context ImportStatementContext -> v any) {
-        obj! = ""
+        obj! : ""
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
@@ -89,7 +89,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitNameSpaceItem : (context NameSpaceItemContext -> v any) {
-        obj! = ""
+        obj! : ""
         @ i : 0 ~ context.id().Length-1.. {
             id : Visit(context.id(i)) Result!
             obj += ? -> i == 0 {
@@ -102,7 +102,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitName : (context NameContext -> v any) {
-        obj! = ""
+        obj! : ""
         @ i : 0 ~ context.id().Length-1.. {
             id : Visit(context.id(i)) Result!
             obj += ? -> i == 0 {
@@ -115,11 +115,11 @@ KLangVisitor : $ (me) {
     }
 
     .VisitEnumStatement : (context EnumStatementContext -> v any) {
-        obj! = ""
+        obj! : ""
         id : Visit(context.id()) Result!
-        header! = ""
+        header! : ""
         # typ = Visit(context.typeType()) str!
-        typ! = "int"
+        typ! : "int"
         ? context.annotationSupport() >< nil {
             header += Visit(context.annotationSupport())
         }
@@ -136,7 +136,7 @@ KLangVisitor : $ (me) {
     .VisitEnumSupportStatement : (context EnumSupportStatementContext -> v any) {
         id : Visit(context.id()) Result!
         ? context.integerExpr() >< nil {
-            op! = ""
+            op! : ""
             ? context.add() >< nil {
                 op = Visit(context.add()) str!
             }
@@ -147,12 +147,12 @@ KLangVisitor : $ (me) {
 
     .VisitNamespaceFunctionStatement : (context NamespaceFunctionStatementContext -> v any) {
         id : Visit(context.id()) Result!
-        obj! = ""
+        obj! : ""
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
         # 异步
-        pout! = ""
+        pout! : ""
         ? context.parameterClauseOut() >< nil {
             pout = Visit(context.parameterClauseOut()) str!
         }
@@ -178,7 +178,7 @@ KLangVisitor : $ (me) {
         }
 
         # 泛型
-        templateContract! = ""
+        templateContract! : ""
         ? context.templateDefine() >< nil {
             template : Visit(context.templateDefine()) TemplateItem!
             obj += template.Template
@@ -195,13 +195,13 @@ KLangVisitor : $ (me) {
     .VisitNamespaceConstantStatement : (context NamespaceConstantStatementContext -> v any) {
         id : Visit(context.id()) Result!
         expr : Visit(context.expression()) Result!
-        typ! = ? -> context.typeType() >< nil {
+        typ! : ? -> context.typeType() >< nil {
             Visit(context.typeType()) str!
         } _ {
             expr.data str!
         }
 
-        obj! = ""
+        obj! : ""
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
@@ -213,9 +213,9 @@ KLangVisitor : $ (me) {
     .VisitNamespaceVariableStatement : (context NamespaceVariableStatementContext -> v any) {
         r1 : Visit(context.id()) Result!
         me.add_id(r1.text)
-        isMutable! = r1.isVirtual
-        typ! = ""
-        r2! Result = nil
+        isMutable! : r1.isVirtual
+        typ! : ""
+        r2! Result : nil
         ? context.expression() >< nil {
             r2 = Visit(context.expression()) Result!
             typ = r2.data str!
@@ -223,13 +223,13 @@ KLangVisitor : $ (me) {
         ? context.typeType() >< nil {
             typ = Visit(context.typeType()) str!
         }
-        obj! = ""
+        obj! : ""
         ? context.annotationSupport() >< nil {
             me.selfPropertyID = r1.text
             obj += Visit(context.annotationSupport())
         }
         ? me.selfPropertyContent.len > 0 {
-            pri! = ""
+            pri! : ""
             ? me.selfPropertyVariable {
                 pri = "private static ${typ} _${r1.text}" 
                 ? r2 >< nil {

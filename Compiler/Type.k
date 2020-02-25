@@ -4,63 +4,63 @@ Compiler . {
     System
     System.Collections.Generic
 
-    _ = Compiler.KParser
-    _ = Compiler.Compiler_static
+    _ : Compiler.KParser
+    _ : Compiler.Compiler_static
 }
 
 
 KLangVisitor : $ (me) {
     .VisitTypeType : (context TypeTypeContext -> v any) {
-        obj! = ""
+        obj! : ""
         obj = Visit(context.GetChild(0)) str!
         <- obj
     }
 
     .VisitTypeNullable : (context TypeNullableContext -> v any) {
-        obj! = ""
+        obj! : ""
         obj = Visit(context.typeNotNull()) str!
         obj += "?"
         <- obj
     }
 
     .VisitTypeArray : (context TypeArrayContext -> v any) {
-        obj! = ""
+        obj! : ""
         obj += "${Visit(context.typeType())}[]"
         <- obj
     }
 
     .VisitTypeList : (context TypeListContext -> v any) {
-        obj! = ""
+        obj! : ""
         obj += "${Lst}<${Visit(context.typeType())}>"
         <- obj
     }
 
     .VisitTypeSet : (context TypeSetContext -> v any) {
-        obj! = ""
+        obj! : ""
         obj += "${Set}<${Visit(context.typeType())}>"
         <- obj
     }
 
     .VisitTypeDictionary : (context TypeDictionaryContext -> v any) {
-        obj! = ""
+        obj! : ""
         obj += "${Dic}<${Visit(context.typeType(0))}, ${Visit(context.typeType(1))}>"
         <- obj
     }
 
     .VisitTypeStack : (context TypeStackContext -> v any) {
-        obj! = ""
+        obj! : ""
         obj += "${Stk}<${Visit(context.typeType())}>"
         <- obj
     }
 
     .VisitTypeQueue : (context TypeQueueContext -> v any) {
-        obj! = ""
+        obj! : ""
         obj += "${Que}<${Visit(context.typeType())}>"
         <- obj
     }
 
     .VisitTypePackage : (context TypePackageContext -> v any) {
-        obj! = ""
+        obj! : ""
         obj += Visit(context.nameSpaceItem())
         ? context.templateCall() >< nil {
             obj += Visit(context.templateCall())
@@ -69,9 +69,9 @@ KLangVisitor : $ (me) {
     }
 
     .VisitTypeFunction : (context TypeFunctionContext -> v any) {
-        obj! = ""
-        in! = Visit(context.typeFunctionParameterClause(0)) str!
-        out! = Visit(context.typeFunctionParameterClause(1)) str!
+        obj! : ""
+        in! : Visit(context.typeFunctionParameterClause(0)) str!
+        out! : Visit(context.typeFunctionParameterClause(1)) str!
         ? context.t.Type == Right_Arrow {
             ? out.Length == 0 {
                 obj = ? -> in.Length == 0 {
@@ -118,7 +118,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitTypeFunctionParameterClause : (context TypeFunctionParameterClauseContext -> v any) {
-        obj! = ""
+        obj! : ""
         @ i : 0 ~ context.typeType().Length-1.. {
             p : Visit(context.typeType(i)) str!
             obj += ? -> i == 0 {

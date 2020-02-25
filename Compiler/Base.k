@@ -4,8 +4,8 @@ Compiler . {
     System
     System.Collections.Generic
 
-    _ = Compiler.KParser
-    _ = Compiler.Compiler_static
+    _ : Compiler.KParser
+    _ : Compiler.Compiler_static
 }
 
 Terminate : ";"
@@ -51,21 +51,21 @@ Result : $ {
     permission! str
     isVirtual! bool
     isDefine! bool
-    rootID! str = ""
+    rootID! str : ""
 }
 
 KLangVisitor : [KParserBaseVisitor any] & $(me) {
-    selfID! = ""
-    superID! = ""
-    setID! = ""
-    getID! = ""
-    selfPropertyID! = ""
-    selfPropertyContent! = []str{}
-    selfPropertyVariable! = false
+    selfID! : ""
+    superID! : ""
+    setID! : ""
+    getID! : ""
+    selfPropertyID! : ""
+    selfPropertyContent! : []str{}
+    selfPropertyVariable! : false
 
-    AllIDSet! = [str]_{}
-    CurrentIDSet! = [>][str]_{}
-    TypeIdSet! = [str]_{}
+    AllIDSet! : [str]_{}
+    CurrentIDSet! : [>][str]_{}
+    TypeIdSet! : [str]_{}
 
     has_id : (id str -> v bool) {
         <- me.AllIDSet.contains(id) | me.CurrentIDSet.peek().contains(id)
@@ -96,7 +96,7 @@ KLangVisitor : [KParserBaseVisitor any] & $(me) {
 KLangVisitor : $ (me) {
     .VisitProgram : (context ProgramContext -> v any) {
         StatementList : context.statement()
-        Result! = ""
+        Result! : ""
         @ item : StatementList.. {
             Result += VisitStatement(item)
         }
@@ -236,8 +236,8 @@ KLangVisitor : $ (me) {
     }
 
     .VisitAnnotation : (context AnnotationContext -> v any) {
-        obj! = ""
-        id! = ""
+        obj! : ""
+        id! : ""
         ? context.id() >< nil {
             id = "${(Visit(context.id()) Result!).text}:"
         }
@@ -250,7 +250,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitAnnotationList : (context AnnotationListContext -> v any) {
-        obj! = ""
+        obj! : ""
         @ [i]v : context.annotationItem().. {
             txt : me.Visit(v) str!
             ? txt >< "" {
@@ -265,7 +265,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitAnnotationItem : (context AnnotationItemContext -> v any) {
-        obj! = ""
+        obj! : ""
         obj += (me.Visit(context.id()) Result!).text
         ? obj.. "get" {
             ? context.lambda() == nil {
@@ -318,7 +318,7 @@ KLangVisitor : $ (me) {
 
     VisitPropertyLambda : (context LambdaContext, is_get bool -> v str) {
         me.add_current_set()
-        obj! = ""
+        obj! : ""
         ? context.lambdaIn() >< nil {
             me.VisitPropertyLambdaIn(context.lambdaIn(), is_get)
         }

@@ -4,8 +4,8 @@ Compiler . {
     System
     System.Collections.Generic
 
-    _ = Compiler.KParser
-    _ = Compiler.Compiler_static
+    _ : Compiler.KParser
+    _ : Compiler.Compiler_static
 }
 
 
@@ -13,7 +13,7 @@ Iterator : $ {
     begin!  Result
     end!    Result
     step!   Result
-    order!  str = T
+    order!  str : T
 }
 
 KLangVisitor : $ (me) {
@@ -38,7 +38,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitLoopStatement : (context LoopStatementContext -> v any) {
-        obj! = ""
+        obj! : ""
         id : (Visit(context.id()) Result!).text
         
         it : Visit(context.iteratorStatement()) Iterator!
@@ -59,10 +59,10 @@ KLangVisitor : $ (me) {
     }
 
     .VisitLoopEachStatement : (context LoopEachStatementContext -> v any) {
-        obj! = ""
+        obj! : ""
         arr : Visit(context.expression()) Result!
-        target! = arr.text
-        id! = "ea"
+        target! : arr.text
+        id! : "ea"
         ? context.id().Length == 2 {
             target = "range(${target})"
             id = "(${(Visit(context.id(0)) Result!).text}, ${(Visit(context.id(1)) Result!).text})"
@@ -84,7 +84,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitLoopCaseStatement : (context LoopCaseStatementContext -> v any) {
-        obj! = ""
+        obj! : ""
         expr : Visit(context.expression()) Result!
         obj += "for ( ;${expr.text} ;)"
         obj += BlockLeft+Wrap
@@ -100,7 +100,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitLoopElseStatement : (context LoopElseStatementContext -> v any) {
-        obj! = BlockLeft+Wrap
+        obj! : BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
@@ -117,7 +117,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitLoopExpression : (context LoopExpressionContext -> v any) {
-        obj! = ""
+        obj! : ""
         id : (Visit(context.id()) Result!).text
         
         it : Visit(context.iteratorStatement()) Iterator!
@@ -143,10 +143,10 @@ KLangVisitor : $ (me) {
     }
 
     .VisitLoopEachExpression : (context LoopEachExpressionContext -> v any) {
-        obj! = ""
+        obj! : ""
         arr : Visit(context.expression()) Result!
-        target! = arr.text
-        id! = "ea"
+        target! : arr.text
+        id! : "ea"
         ? context.id().Length == 2 {
             target = "range(${target})"
             id = "(${(Visit(context.id(0)) Result!).text}, ${(Visit(context.id(1)) Result!).text})"
@@ -173,7 +173,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitLoopElseExpression : (context LoopElseExpressionContext -> v any) {
-        obj! = BlockLeft+Wrap
+        obj! : BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += "return ${(Visit(context.tupleExpression()) Result!).text};"

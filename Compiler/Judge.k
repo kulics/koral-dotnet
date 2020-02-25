@@ -4,13 +4,13 @@ Compiler . {
     System
     System.Collections.Generic
 
-    _ = Compiler.KParser
-    _ = Compiler.Compiler_static
+    _ : Compiler.KParser
+    _ : Compiler.Compiler_static
 }
 
 KLangVisitor : $ (me) {
     .VisitJudgeCaseStatement : (context JudgeCaseStatementContext -> v any)  {
-        obj! = ""
+        obj! : ""
         expr : Visit(context.expression()) Result!
         obj += "switch (${expr.text}) ${BlockLeft; Wrap}"
         @ item : context.caseStatement().. {
@@ -26,7 +26,7 @@ KLangVisitor : $ (me) {
             expr : Visit(context.expression()) Result!
             "case ${expr.text} :${Wrap}"
         } context.typeType() >< nil {
-            id! = "it"
+            id! : "it"
             ? context.id() >< nil {
                 id = (Visit(context.id()) Result!).text
             }
@@ -39,11 +39,11 @@ KLangVisitor : $ (me) {
     }
 
     .VisitCaseStatement : (context CaseStatementContext -> v any) {
-        obj! = ""
+        obj! : ""
         @ item : context.caseExprStatement().. {
             r : Visit(item) str!
             me.add_current_set()
-            process! = "${BlockLeft} ${ProcessFunctionSupport(context.functionSupportStatement()); BlockRight} break;"
+            process! : "${BlockLeft} ${ProcessFunctionSupport(context.functionSupportStatement()); BlockRight} break;"
             me.delete_current_set()
             obj += r + process
         }
@@ -51,7 +51,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitJudgeStatement : (context JudgeStatementContext -> v any) {
-        obj! = ""
+        obj! : ""
         obj += Visit(context.judgeIfStatement())
         @ it : context.judgeElseIfStatement().. {
             obj += Visit(it)
@@ -64,7 +64,7 @@ KLangVisitor : $ (me) {
 
     .VisitJudgeIfStatement : (context JudgeIfStatementContext -> v any) {
         b : Visit(context.expression()) Result!
-        obj! = "if ( ${b.text} ) ${BlockLeft; Wrap}"
+        obj! : "if ( ${b.text} ) ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
@@ -74,7 +74,7 @@ KLangVisitor : $ (me) {
 
     .VisitJudgeElseIfStatement : (context JudgeElseIfStatementContext -> v any) {
         b : Visit(context.expression()) Result!
-        obj! = "else if ( ${b.text} ) ${BlockLeft; Wrap}"
+        obj! : "else if ( ${b.text} ) ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
@@ -83,7 +83,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitJudgeElseStatement : (context JudgeElseStatementContext -> v any) {
-        obj! = "else ${BlockLeft; Wrap}"
+        obj! : "else ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
@@ -108,7 +108,7 @@ KLangVisitor : $ (me) {
 
     .VisitJudgeExpressionIfStatement : (context JudgeExpressionIfStatementContext -> v any) {
         b : Visit(context.expression()) Result!
-        obj! = "if ( ${b.text} ) ${BlockLeft; Wrap}"
+        obj! : "if ( ${b.text} ) ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += "return ${ (Visit(context.tupleExpression()) Result!).text };"
@@ -119,7 +119,7 @@ KLangVisitor : $ (me) {
 
     .VisitJudgeExpressionElseIfStatement : (context JudgeExpressionElseIfStatementContext -> v any) {
         b : Visit(context.expression()) Result!
-        obj! = "else if ( ${b.text} ) ${BlockLeft; Wrap}"
+        obj! : "else if ( ${b.text} ) ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += "return ${ (Visit(context.tupleExpression()) Result!).text };"
@@ -129,7 +129,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitJudgeExpressionElseStatement : (context JudgeExpressionElseStatementContext -> v any) {
-        obj! = "else ${BlockLeft; Wrap}"
+        obj! : "else ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += "return ${ (Visit(context.tupleExpression()) Result!).text };"
@@ -152,11 +152,11 @@ KLangVisitor : $ (me) {
     }
 
     .VisitCaseExpressionStatement : (context CaseExpressionStatementContext -> v any) {
-        obj! = ""
+        obj! : ""
         @ item : context.caseExprStatement().. {
             r : Visit(item) str!
             me.add_current_set()
-            process! = BlockLeft + ProcessFunctionSupport(context.functionSupportStatement())
+            process! : BlockLeft + ProcessFunctionSupport(context.functionSupportStatement())
             process += "return ${ (Visit(context.tupleExpression()) Result!).text };"
             process += "${ BlockRight }break;"
             me.delete_current_set()

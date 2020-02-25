@@ -4,12 +4,12 @@ Compiler . {
     System
     System.Collections.Generic
 
-    _ = Compiler.KParser
-    _ = Compiler.Compiler_static
+    _ : Compiler.KParser
+    _ : Compiler.Compiler_static
 }
 
 
-keywords! = {
+keywords! : {
     "abstract"
     "as"
     "base"
@@ -118,7 +118,7 @@ KLangVisitor : $ (me) {
     # }
 
     .VisitVarStatement : (context VarStatementContext -> v any) {
-        obj! = ""
+        obj! : ""
         @ [i]v : context.varId().. {
             ? i >< 0 {
                 obj += "," + Visit(v)
@@ -135,7 +135,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitBindStatement : (context BindStatementContext -> v any) {
-        obj! = ""
+        obj! : ""
         @ [i]v : context.constId().. {
             ? i >< 0 {
                 obj += "," + Visit(v)
@@ -152,7 +152,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitVariableDeclaredStatement : (context VariableDeclaredStatementContext -> v any) {
-        obj! = ""
+        obj! : ""
         Type : Visit(context.typeType()) str!
         r : Visit(context.id()) Result!
         obj = "${Type} ${r.text; Terminate; Wrap}"
@@ -160,7 +160,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitConstantDeclaredStatement : (context ConstantDeclaredStatementContext -> v any) {
-        obj! = ""
+        obj! : ""
         Type : Visit(context.typeType()) str!
         r : Visit(context.id()) Result!
         obj = "${Type} ${r.text; Terminate; Wrap}"
@@ -170,7 +170,7 @@ KLangVisitor : $ (me) {
     .VisitAssignStatement : (context AssignStatementContext -> v any) {
         r1 : Visit(context.tupleExpression(0)) Result!
         r2 : Visit(context.tupleExpression(1)) Result!
-        obj! = r1.text + Visit(context.assign()) + r2.text + Terminate + Wrap
+        obj! : r1.text + Visit(context.assign()) + r2.text + Terminate + Wrap
         <- obj
     }
 
@@ -185,11 +185,11 @@ KLangVisitor : $ (me) {
 
     .VisitExpression : (context ExpressionContext -> v any) {
         count : context.ChildCount
-        r! = Result{}
+        r! : Result{}
         ? count.. 3 {
-            e1! = Visit(context.GetChild(0)) Result!
-            e2! = Visit(context.GetChild(2))
-            op! = Visit(context.GetChild(1))
+            e1! : Visit(context.GetChild(0)) Result!
+            e2! : Visit(context.GetChild(2))
+            op! : Visit(context.GetChild(1))
 
             ? context.GetChild(1).. _ CompareCombineContext {
                 r.data = I32
@@ -369,7 +369,7 @@ KLangVisitor : $ (me) {
 
     .VisitExpressionList : (context ExpressionListContext -> v any) {
         r : Result{}
-        obj! = ""
+        obj! : ""
         @ i : 0 ~ context.expression().Length-1.. {
             temp : Visit(context.expression(i)) Result!
             obj += ? -> i == 0 {
@@ -384,7 +384,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitTemplateDefine : (context TemplateDefineContext -> v any) {
-        item! = TemplateItem{}
+        item! : TemplateItem{}
         item.Template += "<"
         @ i : 0 ~ context.templateDefineItem().Length-1.. {
             ? i > 0 {
@@ -402,7 +402,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitTemplateDefineItem : (context TemplateDefineItemContext -> v any) {
-        item! = TemplateItem{}
+        item! : TemplateItem{}
         ? context.id().len() == 1 {
             id1 : context.id(0).GetText()
             item.Template = id1
@@ -416,7 +416,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitTemplateCall : (context TemplateCallContext -> v any) {
-        obj! = ""
+        obj! : ""
         obj += "<"
         @ i : 0 ~ context.typeType().Length-1.. {
             ? i > 0 {
@@ -430,7 +430,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitDataStatement : (context DataStatementContext -> v any) {
-        r! = Result{}
+        r! : Result{}
         ? context.nilExpr() >< nil {
             r.data = Any
             r.text = "null"
@@ -460,7 +460,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitStringExpr : (context StringExprContext -> v any) {
-        text! = ""
+        text! : ""
         ? context.stringTemplate().Length == 0 {
             @ v : context.stringContent().. {
                 text += Visit(v)
@@ -491,7 +491,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitStringTemplate : (context StringTemplateContext -> v any) {
-        text! = ""
+        text! : ""
         @ v : context.expression().. {
             r : Visit(v) Result!
             text += ".Append(${r.text})"
@@ -500,7 +500,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitRawStringExpr : (context RawStringExprContext -> v any) {
-        text! = ""
+        text! : ""
         ? context.rawStringTemplate().Length == 0 {
             # 去除前后一个元素
             @ i : 1 ~ context.ChildCount-2.. {
@@ -540,7 +540,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitRawStringTemplate : (context RawStringTemplateContext -> v any) {
-        text! = ""
+        text! : ""
         @ v : context.expression().. {
             r : Visit(v) Result!
             text += ".Append(${r.text})"
@@ -549,17 +549,17 @@ KLangVisitor : $ (me) {
     }
 
     .VisitFloatExpr : (context FloatExprContext -> v any) {
-        number! = context.FloatLiteral().GetText()
+        number! : context.FloatLiteral().GetText()
         <- number
     }
 
     .VisitIntegerExpr : (context IntegerExprContext -> v any) {
-        number! = context.GetChild(0).GetText()
+        number! : context.GetChild(0).GetText()
         <- number
     }
 
     .VisitPlusMinus : (context PlusMinusContext -> v any) {
-        r! = Result{}
+        r! : Result{}
         expr : Visit(context.expression()) Result!
         op : Visit(context.add())
         r.data = expr.data
@@ -568,7 +568,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitNegate : (context NegateContext -> v any) {
-        r! = Result{}
+        r! : Result{}
         expr : Visit(context.expression()) Result!
         r.data = expr.data
         r.text = "!" + expr.text
@@ -576,7 +576,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitBitwiseNotExpression : (context BitwiseNotExpressionContext -> v any) {
-        r! = Result{}
+        r! : Result{}
         expr : Visit(context.expression()) Result!
         r.data = expr.data
         r.text = "~" + expr.text
@@ -584,7 +584,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitLinq : (context LinqContext -> v any) {
-        r! = Result{data = "var"}
+        r! : Result{data = "var"}
         r.text += Visit(context.linqHeadItem()) str!
         @ item : context.linqItem().. {
             r.text += "${Visit(item)} "
@@ -597,7 +597,7 @@ KLangVisitor : $ (me) {
         ? context.linqHeadItem() >< nil {
             <- Visit(context.linqHeadItem()) str!
         }
-        obj! = (Visit(context.id()) Result!).text
+        obj! : (Visit(context.id()) Result!).text
         ? context.expression() >< nil {
             obj += " ${(Visit(context.expression()) Result!).text}"
         }
@@ -605,7 +605,7 @@ KLangVisitor : $ (me) {
     }
 
     .VisitLinqHeadItem : (context LinqHeadItemContext -> v any) {
-        obj! = ""
+        obj! : ""
         id : Visit(context.id()) Result!
         obj += "from ${id.text} in ${(Visit(context.expression()) Result!).text} "
         <- obj

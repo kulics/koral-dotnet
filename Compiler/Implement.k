@@ -4,8 +4,8 @@ Compiler . {
     System
     System.Collections.Generic
 
-    _ = Compiler.KParser
-    _ = Compiler.Compiler_static
+    _ : Compiler.KParser
+    _ : Compiler.Compiler_static
 }
 
 
@@ -13,8 +13,8 @@ KLangVisitor : $ (me) {
     .VisitImplementStatement : (context ImplementStatementContext -> v any) {
         id : Visit(context.id()) Result!
         
-        obj! = ""
-        extend! = []str{}
+        obj! : ""
+        extend! : []str{}
         @ item : context.includeStatement().. {
             r : Visit(item) str!
             extend += r
@@ -33,11 +33,11 @@ KLangVisitor : $ (me) {
             obj += "public ${id.text} ${r}"
         }
         obj += BlockRight + Wrap
-        header! = ""
+        header! : ""
         header += "${id.permission} partial class ${id.text}"
         # 泛型
-        template! = ""
-        templateContract! = ""
+        template! : ""
+        templateContract! : ""
         ? context.templateDefine() >< nil {
             item : Visit(context.templateDefine()) TemplateItem!
             template += item.Template
@@ -62,13 +62,13 @@ KLangVisitor : $ (me) {
 
     .VisitImplementVariableStatement : (context ImplementVariableStatementContext -> v any) {
         r1 : Visit(context.id()) Result!
-        isMutable! = r1.isVirtual
-        isVirtual! = ""
+        isMutable! : r1.isVirtual
+        isVirtual! : ""
         ? r1.isVirtual {
             isVirtual = " virtual "
         }
-        typ! = ""
-        r2! Result = nil
+        typ! : ""
+        r2! Result : nil
         ? context.expression() >< nil {
             r2 = Visit(context.expression()) Result!
             typ = r2.data str!
@@ -76,13 +76,13 @@ KLangVisitor : $ (me) {
         ? context.typeType() >< nil {
             typ = Visit(context.typeType()) str!
         }
-        obj! = ""
+        obj! : ""
         ? context.annotationSupport() >< nil {
             me.selfPropertyID = r1.text
             obj += Visit(context.annotationSupport())
         }
         ? me.selfPropertyContent.len > 0 {
-            pri! = ""
+            pri! : ""
             ? me.selfPropertyVariable {
                 pri = "private ${typ} _${r1.text}" 
                 ? r2 >< nil {
@@ -112,14 +112,14 @@ KLangVisitor : $ (me) {
 
     .VisitImplementFunctionStatement : (context ImplementFunctionStatementContext -> v any) {
         id : Visit(context.id()) Result!
-        isVirtual! = ""
+        isVirtual! : ""
         ? id.isVirtual {
             isVirtual = " virtual "
         }
-        obj! = ""
+        obj! : ""
         # 异步
         obj += "${id.permission} "
-        pout! = ""
+        pout! : ""
         ? context.parameterClauseOut() >< nil {
             pout = Visit(context.parameterClauseOut()) str!
         }
@@ -144,7 +144,7 @@ KLangVisitor : $ (me) {
             obj += "${isVirtual} ${pout} ${id.text}"
         }
         # 泛型
-        templateContract! = ""
+        templateContract! : ""
         ? context.templateDefine() >< nil {
             template : Visit(context.templateDefine()) TemplateItem!
             obj += template.Template
@@ -160,10 +160,10 @@ KLangVisitor : $ (me) {
 
     .VisitOverrideVariableStatement : (context OverrideVariableStatementContext -> v any) {
         r1 : Visit(context.id()) Result!
-        isMutable! = r1.isVirtual
-        isVirtual! = " override "
-        typ! = ""
-        r2! Result = nil
+        isMutable! : r1.isVirtual
+        isVirtual! : " override "
+        typ! : ""
+        r2! Result : nil
         ? context.expression() >< nil {
             r2 = Visit(context.expression()) Result!
             typ = r2.data str!
@@ -171,13 +171,13 @@ KLangVisitor : $ (me) {
         ? context.typeType() >< nil {
             typ = Visit(context.typeType()) str!
         }
-        obj! = ""
+        obj! : ""
         ? context.annotationSupport() >< nil {
             me.selfPropertyID = r1.text
             obj += Visit(context.annotationSupport())
         }
         ? me.selfPropertyContent.len > 0 {
-            pri! = ""
+            pri! : ""
             ? me.selfPropertyVariable {
                 pri = "private ${typ} _${r1.text}" 
                 ? r2 >< nil {
@@ -207,15 +207,15 @@ KLangVisitor : $ (me) {
 
     .VisitOverrideFunctionStatement : (context OverrideFunctionStatementContext -> v any) {
         id : Visit(context.id()) Result!
-        isVirtual! = " override "
-        obj! = ""
+        isVirtual! : " override "
+        obj! : ""
         # 异步
         obj += ? -> context.n >< nil {
             "protected "
         } _ {
             "${id.permission} "
         }
-        pout! = ""
+        pout! : ""
         ? context.parameterClauseOut() >< nil {
             pout = Visit(context.parameterClauseOut()) str!
         }
@@ -240,7 +240,7 @@ KLangVisitor : $ (me) {
             obj += "${isVirtual} ${pout} ${id.text}"
         }
         # 泛型
-        templateContract! = ""
+        templateContract! : ""
         ? context.templateDefine() >< nil {
             template : Visit(context.templateDefine()) TemplateItem!
             obj += template.Template
