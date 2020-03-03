@@ -110,6 +110,56 @@ KLangVisitor : $ (me) {
         <- obj
     }
 
+    .VisitImplementConstantStatement : (context ImplementConstantStatementContext -> v any) {
+        r1 : Visit(context.id()) Result!
+        isMutable! : r1.isVirtual
+        isVirtual! : ""
+        ? r1.isVirtual {
+            isVirtual = " virtual "
+        }
+        typ! : ""
+        r2! Result : nil
+        ? context.expression() >< nil {
+            r2 = Visit(context.expression()) Result!
+            typ = r2.data str!
+        }
+        ? context.typeType() >< nil {
+            typ = Visit(context.typeType()) str!
+        }
+        obj! : ""
+        ? context.annotationSupport() >< nil {
+            me.selfPropertyID = r1.text
+            obj += Visit(context.annotationSupport())
+        }
+        ? me.selfPropertyContent.len > 0 {
+            pri! : ""
+            ? me.selfPropertyVariable {
+                pri = "private ${typ} _${r1.text}" 
+                ? r2 >< nil {
+                    pri += " = " + r2.text
+                }
+                pri += Terminate + Wrap
+            }
+            obj = pri + obj
+            obj += "${r1.permission} ${isVirtual} ${typ} ${r1.text; BlockLeft}"
+            @ v : me.selfPropertyContent.. {
+                obj += v
+            }
+            obj += BlockRight+Wrap
+            me.selfPropertyContent.clear()
+            me.selfPropertyID = ""
+            me.selfPropertyVariable = false
+        } _ {
+            obj += "${r1.permission} ${typ} ${r1.text}"
+            obj += ? -> r2 >< nil {
+                " = ${r2.text; Terminate; Wrap}"
+            } _ {
+                Terminate + Wrap
+            }
+        }
+        <- obj
+    }
+
     .VisitImplementFunctionStatement : (context ImplementFunctionStatementContext -> v any) {
         id : Visit(context.id()) Result!
         isVirtual! : ""

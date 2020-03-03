@@ -38,9 +38,9 @@ enumStatement: (annotationSupport)? id Bang? Colon New_Line* Dot_Dot
 
 enumSupportStatement: id (Colon (add)? integerExpr)? end;
 // 命名空间变量
-namespaceVariableStatement: (annotationSupport)? id Bang (Colon expression| typeType (Colon expression)?) end;
+namespaceVariableStatement: (annotationSupport)? id Bang (Colon expression | typeType (Colon expression)?) end;
 // 命名空间常量
-namespaceConstantStatement: (annotationSupport)? id (typeType)? Colon expression end;
+namespaceConstantStatement: (annotationSupport)? id (Colon expression | typeType (Colon expression)?) end;
 // 命名空间函数
 namespaceFunctionStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Colon
  left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
@@ -55,10 +55,13 @@ packageStaticStatement: left_brace (packageStaticSupportStatement)* right_brace;
 // 包静态语句
 packageStaticSupportStatement:
 packageStaticFunctionStatement |
-packageStaticVariableStatement;
+packageStaticVariableStatement |
+packageStaticConstantStatement;
 
 // 定义变量
 packageStaticVariableStatement: (annotationSupport)? id Bang (Colon expression | typeType (Colon expression)?) end;
+// 定义常量
+packageStaticConstantStatement: (annotationSupport)? id (Colon expression | typeType (Colon expression)?) end;
 // 函数
 packageStaticFunctionStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Colon
  left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
@@ -70,9 +73,11 @@ packageFieldStatement: Coin (left_paren p=Question? id (more id)? right_paren)? 
 packageSupportStatement:
 packageFunctionStatement |
 packageVariableStatement |
+packageConstantStatement |
 packageEventStatement |
 overrideFunctionStatement |
 overrideVariableStatement |
+overrideConstantStatement |
 New_Line;
 
 // 包含
@@ -82,6 +87,8 @@ packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arr
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
 // 定义变量
 packageVariableStatement: (annotationSupport)? id Bang (Colon expression| typeType (Colon expression)?) end;
+// 定义常量
+packageConstantStatement: (annotationSupport)? id (Colon expression| typeType (Colon expression)?) end;
 // 函数
 packageFunctionStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Colon
  left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
@@ -102,12 +109,16 @@ implementStatement: (id| left_brack id templateDefine right_brack) Add_Equal
 implementSupportStatement: 
 implementFunctionStatement |
 implementVariableStatement |
+implementConstantStatement |
 overrideFunctionStatement |
 overrideVariableStatement |
+overrideConstantStatement |
 New_Line;
 
 // 定义变量
 implementVariableStatement: (annotationSupport)? id Bang (Colon expression | typeType (Colon expression)?) end;
+// 定义常量
+implementConstantStatement: (annotationSupport)? id (Colon expression | typeType (Colon expression)?) end;
 // 函数
 implementFunctionStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Colon
 left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
@@ -115,6 +126,8 @@ left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
 
 // 定义变量
 overrideVariableStatement: (annotationSupport)? Dot (n='_')? id Bang (Colon expression | typeType (Colon expression)?) end;
+// 定义常量
+overrideConstantStatement: (annotationSupport)? Dot (n='_')? id (Colon expression | typeType (Colon expression)?) end;
 // 函数
 overrideFunctionStatement: (annotationSupport)? Dot (n='_')? (id | left_brack id templateDefine right_brack) Colon
  left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
@@ -302,7 +315,7 @@ annotationSupport: annotation (New_Line)?;
 
 annotation: Less (id Right_Arrow)? annotationList Greater; // 注解
 
-annotationList: annotationItem (more annotationItem)*;
+annotationList: (annotationItem end)* annotationItem;
 
 annotationItem: id (tuple|lambda)?;
 
