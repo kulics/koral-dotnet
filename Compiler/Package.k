@@ -450,8 +450,7 @@ KLangVisitor : $ (me) {
     .VisitProtocolSubStatement : (context ProtocolSubStatementContext -> v any) {
         obj! : ""
         @ item : context.protocolSupportStatement().. {
-            r : Visit(item) Result!
-            obj += r.text
+            obj += Visit(item)
         }
         <- obj
     }
@@ -459,26 +458,24 @@ KLangVisitor : $ (me) {
     .VisitProtocolVariableStatement : (context ProtocolVariableStatementContext -> v any) {
         id : Visit(context.id()) Result!
         isMutable! : id.isVirtual
-        r! : Result{}
+        obj! : ""
         ? context.annotationSupport() >< nil {
-            r.text += Visit(context.annotationSupport())
+            obj += Visit(context.annotationSupport())
         }
-        r.permission = "public"
         type : Visit(context.typeType()) str!
-        r.text += type + " " + id.text
-        r.text += BlockLeft
-        r.text += "get;set;"
-        r.text += BlockRight + Wrap
-        <- r
+        obj += type + " " + id.text
+        obj += BlockLeft
+        obj += "get;set;"
+        obj += BlockRight + Wrap
+        <- obj
     }
 
     .VisitProtocolFunctionStatement : (context ProtocolFunctionStatementContext -> v any) {
         id : Visit(context.id()) Result!
-        r! : Result{}
+        obj! : ""
         ? context.annotationSupport() >< nil {
-            r.text += Visit(context.annotationSupport())
+            obj += Visit(context.annotationSupport())
         }
-        r.permission = "public"
         # 异步
         pout! : Visit(context.parameterClauseOut()) str!
         ? context.t.Type == Right_Flow {
@@ -490,24 +487,24 @@ KLangVisitor : $ (me) {
             } _ {
                 pout = Task
             }
-            r.text += pout + " " + id.text
+            obj += pout + " " + id.text
         } _ {
             ? context.y >< nil {
                 ? pout >< "void" {
                     pout = "${IEnum}<${pout}>"
                 }
             }
-            r.text += pout + " " + id.text
+            obj += pout + " " + id.text
         }
         # 泛型
         templateContract! : ""
         ? context.templateDefine() >< nil {
             template : Visit(context.templateDefine()) TemplateItem!
-            r.text += template.Template
+            obj += template.Template
             templateContract = template.Contract
         }
-        r.text += Visit(context.parameterClauseIn()) + templateContract + Terminate + Wrap
-        <- r
+        obj += Visit(context.parameterClauseIn()) + templateContract + Terminate + Wrap
+        <- obj
     }
 
     .VisitPackageImplementStatement : (context PackageImplementStatementContext -> v any) {

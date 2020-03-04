@@ -32,20 +32,20 @@ KLangVisitor : $ (me) {
         @ item : context.namespaceSupportStatement().. {
             child : item.GetChild(0)
             type : child.GetType()
-            ? type == [typeof PackageStatementContext]() {
+            ? type == typeof(PackageStatementContext) {
                 childContext : child PackageStatementContext!
                 id : Visit(childContext.id()) Result!
                 me.add_type(id.text)
-            } type == [typeof TypeTagStatementContext]() {
+            } type == typeof(TypeTagStatementContext) {
                 childContext : child TypeTagStatementContext!
                 me.add_type(childContext.Comment_Tag().GetText().sub_str(2))
             }
         }
         @ item : context.namespaceSupportStatement().. {
             type : item.GetChild(0).GetType()
-            ? type == [typeof NamespaceVariableStatementContext]() |
-                type == [typeof NamespaceFunctionStatementContext]() |
-                type == [typeof NamespaceConstantStatementContext]() {
+            ? type == typeof(NamespaceVariableStatementContext) |
+                type == typeof(NamespaceFunctionStatementContext) |
+                type == typeof(NamespaceConstantStatementContext) {
                 contentStatic += Visit(item)
             } _ {
                 content += Visit(item)

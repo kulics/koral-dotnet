@@ -437,33 +437,30 @@ return obj;
 public  override  object VisitProtocolSubStatement( ProtocolSubStatementContext context ){
 var obj = "";
 foreach (var item in context.protocolSupportStatement()){
-var r = (Result)(Visit(item));
-obj+=r.text;
+obj+=Visit(item);
 }
 return obj;
 }
 public  override  object VisitProtocolVariableStatement( ProtocolVariableStatementContext context ){
 var id = (Result)(Visit(context.id()));
 var isMutable = id.isVirtual;
-var r = (new Result());
+var obj = "";
 if ( context.annotationSupport()!=null ) {
-r.text+=Visit(context.annotationSupport());
+obj+=Visit(context.annotationSupport());
 }
-r.permission="public";
 var type = (string)(Visit(context.typeType()));
-r.text+=type+" "+id.text;
-r.text+=BlockLeft;
-r.text+="get;set;";
-r.text+=BlockRight+Wrap;
-return r;
+obj+=type+" "+id.text;
+obj+=BlockLeft;
+obj+="get;set;";
+obj+=BlockRight+Wrap;
+return obj;
 }
 public  override  object VisitProtocolFunctionStatement( ProtocolFunctionStatementContext context ){
 var id = (Result)(Visit(context.id()));
-var r = (new Result());
+var obj = "";
 if ( context.annotationSupport()!=null ) {
-r.text+=Visit(context.annotationSupport());
+obj+=Visit(context.annotationSupport());
 }
-r.permission="public";
 var pout = (string)(Visit(context.parameterClauseOut()));
 if ( context.t.Type==Right_Flow ) {
 if ( pout!="void" ) {
@@ -475,7 +472,7 @@ pout=(new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Appe
 else {
 pout=Task;
 }
-r.text+=pout+" "+id.text;
+obj+=pout+" "+id.text;
 }
 else {
 if ( context.y!=null ) {
@@ -483,16 +480,16 @@ if ( pout!="void" ) {
 pout=(new System.Text.StringBuilder().Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
 }
 }
-r.text+=pout+" "+id.text;
+obj+=pout+" "+id.text;
 }
 var templateContract = "";
 if ( context.templateDefine()!=null ) {
 var template = (TemplateItem)(Visit(context.templateDefine()));
-r.text+=template.Template;
+obj+=template.Template;
 templateContract=template.Contract;
 }
-r.text+=Visit(context.parameterClauseIn())+templateContract+Terminate+Wrap;
-return r;
+obj+=Visit(context.parameterClauseIn())+templateContract+Terminate+Wrap;
+return obj;
 }
 public  override  object VisitPackageImplementStatement( PackageImplementStatementContext context ){
 var obj = "";

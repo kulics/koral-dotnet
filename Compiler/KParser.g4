@@ -56,7 +56,8 @@ packageStaticStatement: left_brace (packageStaticSupportStatement)* right_brace;
 packageStaticSupportStatement:
 packageStaticFunctionStatement |
 packageStaticVariableStatement |
-packageStaticConstantStatement;
+packageStaticConstantStatement |
+New_Line;
 
 // 定义变量
 packageStaticVariableStatement: (annotationSupport)? id Bang (Colon expression | typeType (Colon expression)?) end;
