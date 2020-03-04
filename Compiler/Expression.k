@@ -74,7 +74,6 @@ keywords! : {
     "throw"
     "true"
     "try"
-    "typeof"
     "uint"
     "ulong"
     "unchecked"
