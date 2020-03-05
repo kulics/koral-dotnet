@@ -65,7 +65,7 @@ namespace Library {
 
         public T find_first(Predicate<T> match) => Find(match);
         public T find_last(Predicate<T> match) => FindLast(match);
-        public list<T> find_all(Func<T, bool> match) => this.Where(match) as list<T>;
+        public IEnumerable<T> find_all(Func<T, bool> match) => this.Where(match);
         public int find_first_index(Predicate<T> match) => FindIndex(match);
         public int find_last_index(Predicate<T> match) => FindLastIndex(match);
 
@@ -233,7 +233,7 @@ namespace Library {
 
         public static T find_first<T>(this List<T> it, Predicate<T> match) => it.Find(match);
         public static T find_last<T>(this List<T> it, Predicate<T> match) => it.FindLast(match);
-        public static list<T> find_all<T>(this List<T> it, Func<T, bool> match) => it.Where(match) as list<T>;
+        public static IEnumerable<T> find_all<T>(this List<T> it, Func<T, bool> match) => it.Where(match);
         public static int find_first_index<T>(this List<T> it, Predicate<T> match) => it.FindIndex(match);
         public static int find_last_index<T>(this List<T> it, Predicate<T> match) => it.FindLastIndex(match);
 
