@@ -346,7 +346,8 @@ namespace Library {
         public static string to_lower_hex(this byte[] it) => it.to_hex().ToLower();
         public static string to_upper_hex(this byte[] it) => it.to_hex();
 
-        public static string to_str_by_base64(this byte[] it) => Convert.ToBase64String(it, 0, it.Length);
+        public static string to_base64_str(this byte[] it) => Convert.ToBase64String(it, 0, it.Length);
+        public static byte[] from_base64_str(this string it) => Convert.FromBase64String(it);
 
         public static byte[] sub_bytes(this byte[] it, int start, int length) => it.Skip(start).Take(length).ToArray();
     }
