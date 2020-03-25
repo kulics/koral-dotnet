@@ -29,11 +29,6 @@ foreach (var item in context.packageFieldStatement()){
 var r = (Result)(Visit(item));
 obj+=r.text;
 }
-foreach (var item in context.packageImplementStatement()){
-var r = (Result)(Visit(item));
-extend+=(string)(r.data);
-obj+=r.text;
-}
 foreach (var item in context.packageNewStatement()){
 var r = (string)(Visit(item));
 obj+=(new System.Text.StringBuilder().Append("public ").Append(id.text).Append(" ").Append(r)).to_str();
@@ -490,24 +485,6 @@ templateContract=template.Contract;
 }
 obj+=Visit(context.parameterClauseIn())+templateContract+Terminate+Wrap;
 return obj;
-}
-public  override  object VisitPackageImplementStatement( PackageImplementStatementContext context ){
-var obj = "";
-if ( context.id(0)!=null ) {
-var Self = (Result)(Visit(context.id(0)));
-this.selfID=Self.text;
-}
-if ( context.id(1)!=null ) {
-var Super = (Result)(Visit(context.id(1)));
-this.superID=Super.text;
-}
-var extends = (string)(Visit(context.typeType()));
-foreach (var item in context.implementSupportStatement()){
-obj+=Visit(item);
-}
-this.selfID="";
-this.superID="";
-return (new Result(){text = obj,data = extends});
 }
 }
 }

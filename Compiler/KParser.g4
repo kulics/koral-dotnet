@@ -48,8 +48,8 @@ namespaceFunctionStatement: (annotationSupport)? (id | left_brack id templateDef
 
 // 定义包
 packageStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Bang? Colon
- (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement|packageStaticStatement)
- (And (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement|packageStaticStatement))* end;
+ (packageNewStatement|packageFieldStatement|includeStatement|packageStaticStatement)
+ (And (packageNewStatement|packageFieldStatement|includeStatement|packageStaticStatement))* end;
 
 packageStaticStatement: left_brace (packageStaticSupportStatement)* right_brace;
 // 包静态语句
@@ -98,32 +98,11 @@ packageFunctionStatement: (annotationSupport)? (id | left_brack id templateDefin
 packageControlSubStatement: id (left_paren id right_paren)? left_brace (functionSupportStatement)+ right_brace end;
 // 定义包事件
 packageEventStatement: id Bang left_brack Right_Arrow right_brack nameSpaceItem end;
-// 包实现接口
-packageImplementStatement: Coin typeType (left_paren p=Question? id (more id)? right_paren)? left_brace (implementSupportStatement)* right_brace;
 
 // 扩展
 implementStatement: (id| left_brack id templateDefine right_brack) Add_Equal 
-(packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement)
-(And (packageNewStatement|packageFieldStatement|packageImplementStatement|includeStatement))* end;
-
-// 实现支持的语句
-implementSupportStatement: 
-implementFunctionStatement |
-implementVariableStatement |
-implementConstantStatement |
-overrideFunctionStatement |
-overrideVariableStatement |
-overrideConstantStatement |
-New_Line;
-
-// 定义变量
-implementVariableStatement: (annotationSupport)? id Bang (Colon expression | typeType (Colon expression)?) end;
-// 定义常量
-implementConstantStatement: (annotationSupport)? id (Colon expression | typeType (Colon expression)?) end;
-// 函数
-implementFunctionStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Colon
-left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
-(parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
+(packageNewStatement|packageFieldStatement|includeStatement)
+(And (packageNewStatement|packageFieldStatement|includeStatement))* end;
 
 // 定义变量
 overrideVariableStatement: (annotationSupport)? Dot (n='_')? id Bang (Colon expression | typeType (Colon expression)?) end;

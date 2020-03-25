@@ -31,11 +31,6 @@ KLangVisitor : $ (me) {
             r : Visit(item) Result!
             obj += r.text
         }
-        @ item : context.packageImplementStatement().. {
-            r : Visit(item) Result!
-            extend += r.data str!
-            obj += r.text
-        }
         @ item : context.packageNewStatement().. {
             r : Visit(item) str!
             obj += "public ${id.text} ${r}"
@@ -505,24 +500,5 @@ KLangVisitor : $ (me) {
         }
         obj += Visit(context.parameterClauseIn()) + templateContract + Terminate + Wrap
         <- obj
-    }
-
-    .VisitPackageImplementStatement : (context PackageImplementStatementContext -> v any) {
-        obj! : ""
-        ? context.id(0) >< nil {
-            Self : Visit(context.id(0)) Result!
-            me.selfID = Self.text
-        }
-        ? context.id(1) >< nil {
-            Super : Visit(context.id(1)) Result!
-            me.superID = Super.text
-        }
-        extends! : Visit(context.typeType()) str!
-        @ item : context.implementSupportStatement().. {
-            obj += Visit(item)
-        }
-        me.selfID = ""
-        me.superID = ""
-        <- Result{ text = obj; data = extends }
     }
 }
