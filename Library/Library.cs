@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -358,6 +359,29 @@ namespace Library {
                 x = Math.Min(it[i], it[i - 1]);
             }
             return x;
+        }
+
+        //编码
+        public static string encode_base64(string code) {
+            string encode = "";
+            byte[] bytes = Encoding.GetEncoding("utf-8").GetBytes(code);
+            try {
+                encode = Convert.ToBase64String(bytes);
+            } catch {
+                encode = code;
+            }
+            return encode;
+        }
+        //解码
+        public static string decode_base64(string code) {
+            string decode = "";
+            byte[] bytes = Convert.FromBase64String(code);
+            try {
+                decode = Encoding.GetEncoding("utf-8").GetString(bytes);
+            } catch {
+                decode = code;
+            }
+            return decode;
         }
     }
 }
