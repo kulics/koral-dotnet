@@ -16,7 +16,7 @@ Iterator : $ {
     order!  str : T
 }
 
-KLangVisitor : $ (me) {
+KLangVisitor : $ me {
     .VisitIteratorStatement : (context IteratorStatementContext -> v any) {
         it : Iterator{}
         ? context.Tilde() == nil {

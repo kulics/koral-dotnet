@@ -13,7 +13,7 @@ Namespace : $ {
     imports! str
 }
 
-KLangVisitor : $ (me) {
+KLangVisitor : $ me {
     .VisitStatement : (context StatementContext -> v any) {
         obj! : ""
         ns : Visit(context.exportStatement()) Namespace!

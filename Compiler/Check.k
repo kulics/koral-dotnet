@@ -9,7 +9,7 @@ Compiler . {
 }
 
 
-KLangVisitor : $ (me) {
+KLangVisitor : $ me {
     .VisitCheckStatement : (context CheckStatementContext -> v any) {
         obj! : "try ${BlockLeft; Wrap}"
         me.add_current_set()

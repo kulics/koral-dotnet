@@ -54,7 +54,7 @@ Result : $ {
     rootID! str : ""
 }
 
-KLangVisitor : [KParserBaseVisitor any] & $(me) {
+KLangVisitor : [KParserBaseVisitor any] & $me {
     selfID! : ""
     superID! : ""
     setID! : ""
@@ -93,7 +93,7 @@ KLangVisitor : [KParserBaseVisitor any] & $(me) {
     me.CurrentIDSet.push([str]_{})
 }
 
-KLangVisitor : $ (me) {
+KLangVisitor : $ me {
     .VisitProgram : (context ProgramContext -> v any) {
         StatementList : context.statement()
         Result! : ""

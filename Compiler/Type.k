@@ -9,7 +9,7 @@ Compiler . {
 }
 
 
-KLangVisitor : $ (me) {
+KLangVisitor : $ me {
     .VisitTypeType : (context TypeTypeContext -> v any) {
         obj! : ""
         obj = Visit(context.GetChild(0)) str!

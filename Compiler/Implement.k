@@ -9,7 +9,7 @@ Compiler . {
 }
 
 
-KLangVisitor : $ (me) {
+KLangVisitor : $ me {
     .VisitImplementStatement : (context ImplementStatementContext -> v any) {
         id : Visit(context.id()) Result!
         

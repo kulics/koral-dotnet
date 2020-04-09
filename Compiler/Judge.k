@@ -8,7 +8,7 @@ Compiler . {
     _ : Compiler.Compiler_static
 }
 
-KLangVisitor : $ (me) {
+KLangVisitor : $ me {
     .VisitJudgeCaseStatement : (context JudgeCaseStatementContext -> v any)  {
         obj! : ""
         expr : Visit(context.expression()) Result!

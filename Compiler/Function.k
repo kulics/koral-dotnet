@@ -17,7 +17,7 @@ Parameter : $ {
     permission! str
 }
 
-KLangVisitor : $ (me) {
+KLangVisitor : $ me {
     ProcessFunctionSupport : (items [.]FunctionSupportStatementContext -> v str) {
         obj! : ""
         content! : ""

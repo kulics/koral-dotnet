@@ -9,7 +9,7 @@ Compiler . {
 }
 
 
-KLangVisitor : $ (me) {
+KLangVisitor : $ me {
     .VisitIncludeStatement : (context IncludeStatementContext -> v any) {
         <- Visit(context.typeType())
     }

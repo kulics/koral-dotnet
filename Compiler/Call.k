@@ -8,7 +8,7 @@ Compiler . {
     _ : Compiler.Compiler_static
 }
 
-KLangVisitor : $ (me) {
+KLangVisitor : $ me {
     .VisitCallExpression : (context CallExpressionContext -> v any) {
         r : Visit(context.id()) Result!
         r.text = "." + r.text

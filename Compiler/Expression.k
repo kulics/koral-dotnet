@@ -97,7 +97,7 @@ DicEle : $ {
     text! str
 }
 
-KLangVisitor : $ (me) {
+KLangVisitor : $ me {
     # .VisitVariableStatement : (context VariableStatementContext -> v any) {
     #     obj = ""
     #     r1 = Visit(context.idExpression()) Result!
