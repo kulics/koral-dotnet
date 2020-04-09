@@ -68,7 +68,7 @@ packageStaticFunctionStatement: (annotationSupport)? (id | left_brack id templat
  left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
 (parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
 
-packageFieldStatement: Coin (left_paren p=Question? id (more id)? right_paren)? left_brace (packageSupportStatement)* right_brace;
+packageFieldStatement: Coin (p=Question? id (more id)?)? left_brace (packageSupportStatement)* right_brace;
 
 // 包支持的语句
 packageSupportStatement:
@@ -119,7 +119,7 @@ protocolStatement: (annotationSupport)? (id | left_brack id templateDefine right
 includeStatement (And (protocolSubStatement|includeStatement))* And protocolSubStatement
  (And (protocolSubStatement|includeStatement))* ) end;
 
-protocolSubStatement: Coin Coin (left_paren p=Question? id (more id)? right_paren)? left_brace (protocolSupportStatement)* right_brace;
+protocolSubStatement: Coin Coin (p=Question? id (more id)?)? left_brace (protocolSupportStatement)* right_brace;
 // 协议支持的语句
 protocolSupportStatement:
 protocolFunctionStatement |
