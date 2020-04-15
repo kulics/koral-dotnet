@@ -336,7 +336,7 @@ setElement: left_brack expression right_brack Discard; // 无序集合元素
 
 dictionary: left_brace (dictionaryElement end)* dictionaryElement right_brace; // 字典
 
-dictionaryElement: left_brack expression right_brack expression; // 字典元素
+dictionaryElement: left_brack expression right_brack Equal expression; // 字典元素
 
 slice: sliceStart | sliceEnd | sliceFull;
 
