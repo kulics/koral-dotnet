@@ -87,8 +87,6 @@ KLangVisitor : $ me {
             r.text += Visit(context.pkgAssign())
         } context.listAssign() >< nil {
             r.text += Visit(context.listAssign())
-        } context.setAssign() >< nil {
-            r.text += Visit(context.setAssign())
         } context.dictionaryAssign() >< nil {
             r.text += Visit(context.dictionaryAssign())
         }
@@ -126,21 +124,6 @@ KLangVisitor : $ me {
         obj += "{"
         @ i : 0 ~ context.expression().Length-1.. {
             r : Visit(context.expression(i)) Result!
-            obj += ? -> i == 0 {
-                r.text
-            } _ {
-                "," + r.text
-            }
-        }
-        obj += "}"
-        <- obj
-    }
-
-    .VisitSetAssign : (context SetAssignContext -> v any) {
-        obj! : ""
-        obj += "{"
-        @ i : 0 ~ context.setElement().Length-1.. {
-            r : Visit(context.setElement(i)) Result!
             obj += ? -> i == 0 {
                 r.text
             } _ {
@@ -224,35 +207,6 @@ KLangVisitor : $ me {
         }
         result.data = "${Lst}<${type}>"
         result.text = "(new ${result.data}(){ ${result.text} })"
-        <- result
-    }
-
-    .VisitSet : (context SetContext -> v any) {
-        type! : Any
-        result : Result{}
-        @ i : 0 ~ context.setElement().Length-1.. {
-            r : Visit(context.setElement(i)) Result!
-            result.text += ? -> i == 0 {
-                type = r.data str!
-                r.text
-            } _ {
-                ? type >< r.data str! {
-                    type = Any
-                }
-                "," + r.text
-            }
-        }
-        result.data = "${Set}<${type}>"
-        result.text = "(new ${result.data}(){ ${result.text} })"
-        <- result
-    }
-
-    .VisitSetElement : (context SetElementContext -> v any) {
-        r : Visit(context.expression()) Result!
-        result : Result{
-            data = r.data str!
-            text = "{${r.text}}"
-        }
         <- result
     }
 

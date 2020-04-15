@@ -254,7 +254,6 @@ callPkg | // 新建包
 callAwait | // 异步等待调用
 callAsync | // 创建异步调用
 list | // 列表
-set | // 集合
 dictionary | // 字典
 lambda | // lambda表达式
 functionExpression | // 函数
@@ -305,7 +304,7 @@ callChannel: left_brack Dot right_brack; // 通道调用
 
 callElement: left_brack (slice | expression) right_brack; // 元素调用
 
-callPkg: typeType left_brace (pkgAssign|listAssign|setAssign|dictionaryAssign)? right_brace; // 新建包
+callPkg: typeType left_brace (pkgAssign|listAssign|dictionaryAssign)? right_brace; // 新建包
 
 callNew: typeType left_paren New_Line? expressionList? New_Line? right_paren; // 构造类对象
 
@@ -321,18 +320,12 @@ pkgAssignElement: name Equal expression; // 简化赋值元素
 
 listAssign: (expression end)* expression;
 
-setAssign: (setElement end)* setElement;
-
 dictionaryAssign: (dictionaryElement end)* dictionaryElement;
 
 callAwait: Less_Less expression; // 异步等待调用
 callAsync: Greater_Greater expression; // 创建异步调用
 
 list: left_brace (expression end)* expression right_brace; // 列表
-
-set: left_brace (setElement end)* setElement right_brace; // 无序集合
-
-setElement: left_brack expression right_brack Discard; // 无序集合元素
 
 dictionary: left_brace (dictionaryElement end)* dictionaryElement right_brace; // 字典
 

@@ -84,9 +84,6 @@ r.text+=Visit(context.pkgAssign());
 else if ( context.listAssign()!=null ) {
 r.text+=Visit(context.listAssign());
 }
-else if ( context.setAssign()!=null ) {
-r.text+=Visit(context.setAssign());
-}
 else if ( context.dictionaryAssign()!=null ) {
 r.text+=Visit(context.dictionaryAssign());
 }
@@ -121,20 +118,6 @@ var obj = "";
 obj+="{";
 foreach (var i in range(0, context.expression().Length-1, 1, true)){
 var r = (Result)(Visit(context.expression(i)));
-obj+=run(()=>{if ( i==0 ) {
-return r.text;}
-else {
-return ","+r.text;}
-});
-}
-obj+="}";
-return obj;
-}
-public  override  object VisitSetAssign( SetAssignContext context ){
-var obj = "";
-obj+="{";
-foreach (var i in range(0, context.setElement().Length-1, 1, true)){
-var r = (Result)(Visit(context.setElement(i)));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
 else {
@@ -208,30 +191,6 @@ return ","+r.text;}
 }
 result.data=(new System.Text.StringBuilder().Append(Lst).Append("<").Append(type).Append(">")).to_str();
 result.text=(new System.Text.StringBuilder().Append("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
-return result;
-}
-public  override  object VisitSet( SetContext context ){
-var type = Any;
-var result = (new Result());
-foreach (var i in range(0, context.setElement().Length-1, 1, true)){
-var r = (Result)(Visit(context.setElement(i)));
-result.text+=run(()=>{if ( i==0 ) {
-type=(string)(r.data);
-return r.text;}
-else {
-if ( type!=(string)(r.data) ) {
-type=Any;
-}
-return ","+r.text;}
-});
-}
-result.data=(new System.Text.StringBuilder().Append(Set).Append("<").Append(type).Append(">")).to_str();
-result.text=(new System.Text.StringBuilder().Append("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
-return result;
-}
-public  override  object VisitSetElement( SetElementContext context ){
-var r = (Result)(Visit(context.expression()));
-var result = (new Result(){data = (string)(r.data),text = (new System.Text.StringBuilder().Append("{").Append(r.text).Append("}")).to_str()});
 return result;
 }
 public  override  object VisitDictionary( DictionaryContext context ){
