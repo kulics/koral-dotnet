@@ -29,7 +29,7 @@ KLangVisitor : $ me {
         contentStatic! : ""
         me.add_current_set()
         # pre process to get type id
-        @ item : context.namespaceSupportStatement().. {
+        @ item : context.namespaceSupportStatement() {
             child : item.GetChild(0)
             type : child.GetType()
             ? type == typeof(PackageStatementContext) {
@@ -41,7 +41,7 @@ KLangVisitor : $ me {
                 me.add_type(childContext.Comment_Tag().GetText().sub_str(2))
             }
         }
-        @ item : context.namespaceSupportStatement().. {
+        @ item : context.namespaceSupportStatement() {
             type : item.GetChild(0).GetType()
             ? type == typeof(NamespaceVariableStatementContext) |
                 type == typeof(NamespaceFunctionStatementContext) |
@@ -65,7 +65,7 @@ KLangVisitor : $ me {
         obj : Namespace{
             name = name
         }
-        @ item : context.importStatement().. {
+        @ item : context.importStatement() {
             obj.imports += Visit(item) str!
         }
         <- obj
@@ -90,7 +90,7 @@ KLangVisitor : $ me {
 
     .VisitNameSpaceItem : (context NameSpaceItemContext -> v any) {
         obj! : ""
-        @ i : 0 ~ context.id().Length-1.. {
+        @ i : 0 ~ context.id().Length-1 {
             id : Visit(context.id(i)) Result!
             obj += ? -> i == 0 {
                 id.text
@@ -103,7 +103,7 @@ KLangVisitor : $ me {
 
     .VisitName : (context NameContext -> v any) {
         obj! : ""
-        @ i : 0 ~ context.id().Length-1.. {
+        @ i : 0 ~ context.id().Length-1 {
             id : Visit(context.id(i)) Result!
             obj += ? -> i == 0 {
                 id.text
@@ -125,7 +125,7 @@ KLangVisitor : $ me {
         }
         header += "${id.permission} enum ${id.text}:${typ}"
         header += Wrap + BlockLeft + Wrap
-        @ i : 0 ~ context.enumSupportStatement().Length-1.. {
+        @ i : 0 ~ context.enumSupportStatement().Length-1 {
             obj += Visit(context.enumSupportStatement(i))
         }
         obj += BlockRight + Terminate + Wrap
@@ -239,7 +239,7 @@ KLangVisitor : $ me {
             }
             obj = pri + obj
             obj += "${r1.permission} static ${typ} ${r1.text; BlockLeft}"
-            @ v : me.selfPropertyContent.. {
+            @ v : me.selfPropertyContent {
                 obj += v
             }
             obj += BlockRight+Wrap

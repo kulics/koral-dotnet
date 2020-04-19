@@ -19,19 +19,19 @@ KLangVisitor : $ me {
 
         obj! : ""
         extend! : []str{}
-        @ item : context.includeStatement().. {
+        @ item : context.includeStatement() {
             r : Visit(item) str!
             extend += r
         }
-        @ item : context.packageStaticStatement().. {
+        @ item : context.packageStaticStatement() {
             r : Visit(item) Result!
             obj += r.text
         }
-        @ item : context.packageFieldStatement().. {
+        @ item : context.packageFieldStatement() {
             r : Visit(item) Result!
             obj += r.text
         }
-        @ item : context.packageNewStatement().. {
+        @ item : context.packageNewStatement() {
             r : Visit(item) str!
             obj += "public ${id.text} ${r}"
         }
@@ -53,7 +53,7 @@ KLangVisitor : $ me {
 
         ? extend.length > 0 {
             temp! : extend[0]
-            @ i : 1 ~ extend.length-1.. {
+            @ i : 1 ~ extend.length-1 {
                 temp += "," + extend[i]
             }
             header += ":" + temp
@@ -66,7 +66,7 @@ KLangVisitor : $ me {
 
     .VisitPackageStaticStatement : (context PackageStaticStatementContext -> v any) {
         obj! : ""
-        @ item : context.packageStaticSupportStatement().. {
+        @ item : context.packageStaticSupportStatement() {
             obj += Visit(item)
         }
         <- Result{text = obj}
@@ -99,7 +99,7 @@ KLangVisitor : $ me {
             }
             obj = pri + obj
             obj += "${r1.permission} static ${typ} ${r1.text; BlockLeft}"
-            @ v : me.selfPropertyContent.. {
+            @ v : me.selfPropertyContent {
                 obj += v
             }
             obj += BlockRight+Wrap
@@ -144,7 +144,7 @@ KLangVisitor : $ me {
             }
             obj = pri + obj
             obj += "${r1.permission} static ${typ} ${r1.text; BlockLeft}"
-            @ v : me.selfPropertyContent.. {
+            @ v : me.selfPropertyContent {
                 obj += v
             }
             obj += BlockRight+Wrap
@@ -217,7 +217,7 @@ KLangVisitor : $ me {
             Super : Visit(context.id(1)) Result!
             me.superID = Super.text
         }
-        @ item : context.packageSupportStatement().. {
+        @ item : context.packageSupportStatement() {
             obj += Visit(item)
         }
         me.selfID = ""
@@ -257,7 +257,7 @@ KLangVisitor : $ me {
             }
             obj = pri + obj
             obj += "${r1.permission} ${isVirtual} ${typ} ${r1.text; BlockLeft}"
-            @ v : me.selfPropertyContent.. {
+            @ v : me.selfPropertyContent {
                 obj += v
             }
             obj += BlockRight+Wrap
@@ -307,7 +307,7 @@ KLangVisitor : $ me {
             }
             obj = pri + obj
             obj += "${r1.permission} ${isVirtual} ${typ} ${r1.text; BlockLeft}"
-            @ v : me.selfPropertyContent.. {
+            @ v : me.selfPropertyContent {
                 obj += v
             }
             obj += BlockRight+Wrap
@@ -412,19 +412,19 @@ KLangVisitor : $ me {
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
-        @ item : context.protocolSubStatement().. {
+        @ item : context.protocolSubStatement() {
             r : Visit(item) str!
             interfaceProtocol += r
         }
         extend! : []str{}
-        @ item : context.includeStatement().. {
+        @ item : context.includeStatement() {
             r : Visit(item) str!
             extend += r
         }
         obj += "public partial interface ${ptclName}"
         ? extend.length > 0 {
             temp! : extend[0]
-            @ i : 1 ~ extend.length-1.. {
+            @ i : 1 ~ extend.length-1 {
                 temp += "," + extend[i]
             }
             obj += ":" + temp
@@ -444,7 +444,7 @@ KLangVisitor : $ me {
 
     .VisitProtocolSubStatement : (context ProtocolSubStatementContext -> v any) {
         obj! : ""
-        @ item : context.protocolSupportStatement().. {
+        @ item : context.protocolSupportStatement() {
             obj += Visit(item)
         }
         <- obj

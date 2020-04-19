@@ -15,15 +15,15 @@ KLangVisitor : $ me {
         
         obj! : ""
         extend! : []str{}
-        @ item : context.includeStatement().. {
+        @ item : context.includeStatement() {
             r : Visit(item) str!
             extend += r
         }
-        @ item : context.packageFieldStatement().. {
+        @ item : context.packageFieldStatement() {
             r : Visit(item) Result!
             obj += r.text
         }
-        @ item : context.packageNewStatement().. {
+        @ item : context.packageNewStatement() {
             r : Visit(item) str!
             obj += "public ${id.text} ${r}"
         }
@@ -42,7 +42,7 @@ KLangVisitor : $ me {
 
         ? extend.length > 0 {
             temp : extend[0]
-            @ i : 1 ~ extend.length-1.. {
+            @ i : 1 ~ extend.length-1 {
                 temp += "," + extend[i]
             }
             header += ":" + temp
@@ -84,7 +84,7 @@ KLangVisitor : $ me {
             }
             obj = pri + obj
             obj += "${r1.permission} ${isVirtual} ${typ} ${r1.text; BlockLeft}"
-            @ v : me.selfPropertyContent.. {
+            @ v : me.selfPropertyContent {
                 obj += v
             }
             obj += BlockRight+Wrap

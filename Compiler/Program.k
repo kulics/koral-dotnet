@@ -27,7 +27,7 @@ Main : (args [.]str->) {
 Compiled : (path str->) {
     # 获取相对路径下所有文件
     Files : Directory.GetFiles(path, "*.k")
-    @ file : Files.. {
+    @ file : Files {
         # 文件流读文件
         ! fsRead : FileStream(file, FileMode.Open)
         ! {
@@ -60,7 +60,7 @@ Compiled : (path str->) {
     }
 
     Folders : Directory.GetDirectories(path)
-    @ folder : Folders.. {
+    @ folder : Folders {
         Compiled(folder)
     }
 }

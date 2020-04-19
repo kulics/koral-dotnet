@@ -118,7 +118,7 @@ KLangVisitor : $ me {
 
     .VisitVarStatement : (context VarStatementContext -> v any) {
         obj! : ""
-        @ [i]v : context.varId().. {
+        @ [i]v : context.varId() {
             ? i >< 0 {
                 obj += "," + Visit(v)
             } _ {
@@ -135,7 +135,7 @@ KLangVisitor : $ me {
 
     .VisitBindStatement : (context BindStatementContext -> v any) {
         obj! : ""
-        @ [i]v : context.constId().. {
+        @ [i]v : context.constId() {
             ? i >< 0 {
                 obj += "," + Visit(v)
             } _ {
@@ -185,12 +185,12 @@ KLangVisitor : $ me {
     .VisitExpression : (context ExpressionContext -> v any) {
         count : context.ChildCount
         r! : Result{}
-        ? count.. 3 {
+        ? count : 3 {
             e1! : Visit(context.GetChild(0)) Result!
             e2! : Visit(context.GetChild(2))
             op! : Visit(context.GetChild(1))
 
-            ? context.GetChild(1).. _ CompareCombineContext {
+            ? context.GetChild(1) : _ CompareCombineContext {
                 r.data = I32
                 s1 : e1.text
                 s2 : (e2 Result!).text
@@ -369,7 +369,7 @@ KLangVisitor : $ me {
     .VisitExpressionList : (context ExpressionListContext -> v any) {
         r : Result{}
         obj! : ""
-        @ i : 0 ~ context.expression().Length-1.. {
+        @ i : 0 ~ context.expression().Length-1 {
             temp : Visit(context.expression(i)) Result!
             obj += ? -> i == 0 {
                 temp.text
@@ -385,7 +385,7 @@ KLangVisitor : $ me {
     .VisitTemplateDefine : (context TemplateDefineContext -> v any) {
         item! : TemplateItem{}
         item.Template += "<"
-        @ i : 0 ~ context.templateDefineItem().Length-1.. {
+        @ i : 0 ~ context.templateDefineItem().Length-1 {
             ? i > 0 {
                 item.Template += ","
                 ? item.Contract.len() > 0 {
@@ -417,7 +417,7 @@ KLangVisitor : $ me {
     .VisitTemplateCall : (context TemplateCallContext -> v any) {
         obj! : ""
         obj += "<"
-        @ i : 0 ~ context.typeType().Length-1.. {
+        @ i : 0 ~ context.typeType().Length-1 {
             ? i > 0 {
                 obj += ","
             }
@@ -461,14 +461,14 @@ KLangVisitor : $ me {
     .VisitStringExpr : (context StringExprContext -> v any) {
         text! : ""
         ? context.stringTemplate().Length == 0 {
-            @ v : context.stringContent().. {
+            @ v : context.stringContent() {
                 text += Visit(v)
             }
             <- "\"${text}\""
         } _ {
             text = "(new System.Text.StringBuilder()"
             # 去除前后一个元素
-            @ i : 1 ~ context.ChildCount-2.. {
+            @ i : 1 ~ context.ChildCount-2 {
                 v : context.GetChild(i)
                 r : Visit(context.GetChild(i)) str!
                 ? v StringContentContext? {
@@ -491,7 +491,7 @@ KLangVisitor : $ me {
 
     .VisitStringTemplate : (context StringTemplateContext -> v any) {
         text! : ""
-        @ v : context.expression().. {
+        @ v : context.expression() {
             r : Visit(v) Result!
             text += ".Append(${r.text})"
         }
@@ -502,7 +502,7 @@ KLangVisitor : $ me {
         text! : ""
         ? context.rawStringTemplate().Length == 0 {
             # 去除前后一个元素
-            @ i : 1 ~ context.ChildCount-2.. {
+            @ i : 1 ~ context.ChildCount-2 {
                 v : context.GetChild(i)
                 r : Visit(context.GetChild(i)) str!
                 ? v RawStringContentContext? {
@@ -515,7 +515,7 @@ KLangVisitor : $ me {
         } _ {
             text = "(new System.Text.StringBuilder()"
             # 去除前后一个元素
-            @ i : 1 ~ context.ChildCount-2.. {
+            @ i : 1 ~ context.ChildCount-2 {
                 v : context.GetChild(i)
                 r : Visit(context.GetChild(i)) str!
                 ? v RawStringContentContext? {
@@ -540,7 +540,7 @@ KLangVisitor : $ me {
 
     .VisitRawStringTemplate : (context RawStringTemplateContext -> v any) {
         text! : ""
-        @ v : context.expression().. {
+        @ v : context.expression() {
             r : Visit(v) Result!
             text += ".Append(${r.text})"
         }
@@ -585,7 +585,7 @@ KLangVisitor : $ me {
     .VisitLinq : (context LinqContext -> v any) {
         r! : Result{data = "var"}
         r.text += Visit(context.linqHeadItem()) str!
-        @ item : context.linqItem().. {
+        @ item : context.linqItem() {
             r.text += "${Visit(item)} "
         }
         r.text += "${(Visit(context.id()) Result!).text} ${(Visit(context.expression()) Result!).text}"

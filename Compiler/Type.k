@@ -119,7 +119,7 @@ KLangVisitor : $ me {
 
     .VisitTypeFunctionParameterClause : (context TypeFunctionParameterClauseContext -> v any) {
         obj! : ""
-        @ i : 0 ~ context.typeType().Length-1.. {
+        @ i : 0 ~ context.typeType().Length-1 {
             p : Visit(context.typeType(i)) str!
             obj += ? -> i == 0 {
                 p
@@ -131,7 +131,7 @@ KLangVisitor : $ me {
     }
 
     .VisitTypeBasic : (context TypeBasicContext -> v any) {
-        <- ? context.t.Type.. -> TypeI8 {
+        <- ? context.t.Type : -> TypeI8 {
             I8
         } TypeU8 {
             U8

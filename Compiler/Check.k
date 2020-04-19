@@ -16,7 +16,7 @@ KLangVisitor : $ me {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight
-        @ item : context.checkErrorStatement().. {
+        @ item : context.checkErrorStatement() {
             obj += Visit(item) + Wrap
         }
 
@@ -73,7 +73,7 @@ KLangVisitor : $ me {
         obj += "return ${ (Visit(context.tupleExpression()) Result!).text };"
         me.delete_current_set()
         obj += BlockRight + Wrap
-        @ item : context.checkErrorExpression().. {
+        @ item : context.checkErrorExpression() {
             obj += Visit(item) + Wrap
         }
 

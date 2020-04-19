@@ -22,7 +22,7 @@ KLangVisitor : $ me {
         obj! : ""
         content! : ""
         lazy! : []str{}
-        @ item : items.. {
+        @ item : items {
             content += ? -> item.GetChild(0) UsingStatementContext? {
                 lazy.add("}")
                 "using (${Visit(item) str!}) ${BlockLeft; Wrap}"
@@ -31,7 +31,7 @@ KLangVisitor : $ me {
             }
         }
         ? lazy.Count > 0 {
-            @ i : lazy.Count-1 ~~ 0.. {
+            @ i : lazy.Count-1 ~~ 0 {
                 content += BlockRight
             }
         }
@@ -106,7 +106,7 @@ KLangVisitor : $ me {
 
     .VisitTuple : (context TupleContext -> v any) {
         obj! : "("
-        @ i : 0 ~ context.expression().Length-1.. {
+        @ i : 0 ~ context.expression().Length-1 {
             r : Visit(context.expression(i)) Result!
             obj += ? -> i == 0 {
                 r.text
@@ -123,7 +123,7 @@ KLangVisitor : $ me {
 
     .VisitTupleExpression : (context TupleExpressionContext -> v any) {
         obj! : ""
-        @ i : 0 ~ context.expression().Length-1.. {
+        @ i : 0 ~ context.expression().Length-1 {
             r : Visit(context.expression(i)) Result!
             obj += ? -> i == 0 {
                 r.text
@@ -143,12 +143,12 @@ KLangVisitor : $ me {
     .VisitParameterClauseIn : (context ParameterClauseInContext -> v any) {
         obj! : "("
         temp! : []str{}
-        @ i : context.parameter().Length-1 ~~ 0.. {
+        @ i : context.parameter().Length-1 ~~ 0 {
             p : Visit(context.parameter(i)) Parameter!
             temp.add("${p.annotation} ${p.type} ${p.id} ${p.value}")
             me.add_id(p.id)
         }
-        @ i : temp.Count-1 ~~ 0.. {
+        @ i : temp.Count-1 ~~ 0 {
             obj += ? -> i == temp.Count - 1 {
                 temp[i]
             } _ {
@@ -171,11 +171,11 @@ KLangVisitor : $ me {
         ? context.parameter().Length > 1 {
             obj += "( "
             temp! : []str{}
-            @ i : context.parameter().Length-1 ~~ 0.. {
+            @ i : context.parameter().Length-1 ~~ 0 {
                 p : Visit(context.parameter(i)) Parameter!
                 temp.add("${p.annotation} ${p.type} ${p.id} ${p.value}")
             }
-            @ i : temp.Count-1 ~~ 0.. {
+            @ i : temp.Count-1 ~~ 0 {
                 obj += ? -> i == temp.Count - 1 {
                     temp[i]
                 } _ {

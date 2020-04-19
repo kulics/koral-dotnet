@@ -13,7 +13,7 @@ KLangVisitor : $ me {
         obj! : ""
         expr : Visit(context.expression()) Result!
         obj += "switch (${expr.text}) ${BlockLeft; Wrap}"
-        @ item : context.caseStatement().. {
+        @ item : context.caseStatement() {
             r : Visit(item) str!
             obj += r + Wrap
         }
@@ -40,7 +40,7 @@ KLangVisitor : $ me {
 
     .VisitCaseStatement : (context CaseStatementContext -> v any) {
         obj! : ""
-        @ item : context.caseExprStatement().. {
+        @ item : context.caseExprStatement() {
             r : Visit(item) str!
             me.add_current_set()
             process! : "${BlockLeft} ${ProcessFunctionSupport(context.functionSupportStatement()); BlockRight} break;"
@@ -53,7 +53,7 @@ KLangVisitor : $ me {
     .VisitJudgeStatement : (context JudgeStatementContext -> v any) {
         obj! : ""
         obj += Visit(context.judgeIfStatement())
-        @ it : context.judgeElseIfStatement().. {
+        @ it : context.judgeElseIfStatement() {
             obj += Visit(it)
         }
         ? context.judgeElseStatement() >< nil {
@@ -96,7 +96,7 @@ KLangVisitor : $ me {
         r.data = "var"
         r.text = "run(()=>" + BlockLeft
         r.text += Visit(context.judgeExpressionIfStatement())
-        @ it : context.judgeExpressionElseIfStatement().. {
+        @ it : context.judgeExpressionElseIfStatement() {
             r.text += Visit(it)
         }
         ? context.judgeExpressionElseStatement() >< nil {
@@ -143,7 +143,7 @@ KLangVisitor : $ me {
         expr : Visit(context.expression()) Result!
         r.text = "run(()=> { switch (${expr.text}) "
         r.text += BlockLeft+Wrap
-        @ item : context.caseExpressionStatement().. {
+        @ item : context.caseExpressionStatement() {
             temp : Visit(item) str!
             r.text += temp + Wrap
         }
@@ -153,7 +153,7 @@ KLangVisitor : $ me {
 
     .VisitCaseExpressionStatement : (context CaseExpressionStatementContext -> v any) {
         obj! : ""
-        @ item : context.caseExprStatement().. {
+        @ item : context.caseExprStatement() {
             r : Visit(item) str!
             me.add_current_set()
             process! : BlockLeft + ProcessFunctionSupport(context.functionSupportStatement())
