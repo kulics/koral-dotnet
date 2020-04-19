@@ -191,9 +191,9 @@ judgeIfStatement: Question expression left_brace (functionSupportStatement)* rig
 // else if 判断
 judgeElseIfStatement: expression left_brace (functionSupportStatement)* right_brace;
 // 循环
-loopStatement: At id Bang? Colon iteratorStatement Dot_Dot left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
+loopStatement: At id Bang? Colon iteratorStatement left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 集合循环
-loopEachStatement: At (left_brack id right_brack)? id Bang? Colon expression Dot_Dot
+loopEachStatement: At (left_brack id right_brack)? id Bang? Colon expression
  left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 条件循环
 loopCaseStatement: At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
@@ -370,7 +370,7 @@ bitwiseNotExpression: bitwiseNot expression;
 
 linq: linqHeadItem Right_Arrow New_Line?  (linqItem)* id New_Line? expression;
 
-linqHeadItem: At id Bang? Colon expression Dot_Dot;
+linqHeadItem: At id Bang? Colon expression;
 
 linqItem: (linqHeadItem | id (expression)?) Right_Arrow New_Line?;
 
@@ -390,10 +390,10 @@ judgeCaseExpression: Question expression Dot_Dot Right_Arrow (caseExpressionStat
 caseExpressionStatement: caseExprStatement (more caseExprStatement)* 
 left_brace (functionSupportStatement)* tupleExpression right_brace;
 // 循环
-loopExpression: At id Bang? Colon iteratorStatement Dot_Dot Right_Arrow 
+loopExpression: At id Bang? Colon iteratorStatement Right_Arrow 
 left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression?;
 // 集合循环表达式
-loopEachExpression: At (id Colon)? id Bang? Colon expression Dot_Dot Right_Arrow 
+loopEachExpression: At (id Colon)? id Bang? Colon expression Right_Arrow 
 left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression?;
 // else 判断
 loopElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
