@@ -176,7 +176,7 @@ expressionStatement |
 New_Line;
 
 // 条件判断
-judgeCaseStatement: Question expression Dot_Dot (caseStatement)+ end;
+judgeCaseStatement: Question expression Colon (caseStatement)+ end;
 // 判断条件声明
 caseStatement: caseExprStatement (more caseExprStatement)* left_brace (functionSupportStatement)* right_brace;
 caseExprStatement: Discard | expression | (id|Discard) typeType;
@@ -385,7 +385,7 @@ judgeExpressionIfStatement: Question Right_Arrow expression left_brace (function
 judgeExpressionElseIfStatement: expression left_brace (functionSupportStatement)* tupleExpression right_brace;
 
 // 条件判断表达式
-judgeCaseExpression: Question expression Dot_Dot Right_Arrow (caseExpressionStatement)+;
+judgeCaseExpression: Question expression Colon Right_Arrow (caseExpressionStatement)+;
 // 判断条件声明
 caseExpressionStatement: caseExprStatement (more caseExprStatement)* 
 left_brace (functionSupportStatement)* tupleExpression right_brace;
