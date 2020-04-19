@@ -202,7 +202,7 @@ loopElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
 // 跳出循环
 loopJumpStatement: Tilde At end;
 // 跳过当前循环
-loopContinueStatement: Dot_Dot At end;
+loopContinueStatement: Right_Arrow At end;
 // 检查
 checkStatement: 
 Bang left_brace (functionSupportStatement)* right_brace (checkErrorStatement)* checkFinallyStatment end
