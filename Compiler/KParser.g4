@@ -147,7 +147,7 @@ parameterClauseIn: parameter? (more parameter)*;
 // 出参
 parameterClauseOut: parameter? (more parameter)*;
 // 参数结构
-parameter: (annotationSupport)? id Bang? (Dot_Dot|Dot_Dot_Dot)? typeType (Equal expression)?;
+parameter: (annotationSupport)? id Bang? (Dot_Dot|Dot_Dot_Dot)? typeType (Colon expression)?;
 
 // 函数支持的语句
 functionSupportStatement:
