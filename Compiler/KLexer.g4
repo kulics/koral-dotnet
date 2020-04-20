@@ -99,8 +99,8 @@ OctalLiteral: '0' [oO] [0-7_]* [0-7];
 HexLiteral: '0' [xX] [a-fA-F0-9_]* [a-fA-F0-9];
 fragment Digit: [0-9] | [0-9] [0-9_]* [0-9];   // 单个数字
 fragment Exponent: [eE] [+-]? [0-9]+;
-Quote_Quote_Quote_Open: '"""' -> pushMode(RawString); // 多行字符串
-Quote_Open: '"' -> pushMode(String); // 单行字符串
+Quote_Quote_Quote_Open: '"""' -> pushMode(ModeRawString); // 多行字符串
+Quote_Open: '"' -> pushMode(ModeString); // 单行字符串
 CharLiteral: '\'' ('\\\'' | '\\' [btnfr\\] | .)*? '\''; // 单字符
 IDPrivate: '_' IdentifierPartCharacter+; // 私有标识符
 IDPublic: LetterCharacter IdentifierPartCharacter*; // 公有标识符
@@ -838,7 +838,7 @@ fragment UnicodeClassND
 	;
 
 
-mode String;
+mode ModeString;
 
 Quote_Close: '"' -> popMode;
 
@@ -846,7 +846,7 @@ String_Template_Open: '${' -> pushMode(DEFAULT_MODE);
 
 TextLiteral: '\\' [btnfr"\\$] | ~('\\' | '"' | '$' )+ | '$' ; // 文本
 
-mode RawString;
+mode ModeRawString;
 
 Quote_Quote_Quote_Close: '"""' -> popMode;
 

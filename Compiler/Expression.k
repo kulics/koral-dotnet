@@ -98,24 +98,6 @@ DicEle : $ {
 }
 
 KLangVisitor : $ me {
-    # .VisitVariableStatement : (context VariableStatementContext -> v any) {
-    #     obj = ""
-    #     r1 = Visit(context.idExpression()) Result!
-    #     r2 = Visit(context.expression()) Result!
-    #     ? context.typeType() >< nil {
-    #         Type = Visit(context.typeType()) str!
-    #         obj = "\{Type} \{r1.text} = \{r2.text; Terminate; Wrap}"
-    #     } _ {
-    #         # obj = ? -> r1.isDefine | r1.text == me.selfID | r1.text == me.superID | r1.text == setID {
-    #         #     "\{r1.text} = \{r2.text; Terminate; Wrap}"
-    #         # } _ {
-    #         #     "var \{r1.text} = \{r2.text; Terminate; Wrap}"
-    #         # }
-    #         obj = "var \{r1.text} = \{r2.text; Terminate; Wrap}"
-    #     }
-    #     <- obj
-    # }
-
     .VisitVarStatement : (context VarStatementContext -> v any) {
         obj! : ""
         @ [i]v : context.varId() {
