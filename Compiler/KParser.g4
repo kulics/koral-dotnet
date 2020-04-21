@@ -49,7 +49,7 @@ namespaceFunctionStatement: (annotationSupport)? (id | left_brack id templateDef
 // 定义包
 packageStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Bang? Colon
  (packageNewStatement|packageFieldStatement|includeStatement|packageStaticStatement)
- (And (packageNewStatement|packageFieldStatement|includeStatement|packageStaticStatement))* end;
+ (Back_Forward_Slash (packageNewStatement|packageFieldStatement|includeStatement|packageStaticStatement))* end;
 
 packageStaticStatement: left_brace (packageStaticSupportStatement)* right_brace;
 // 包静态语句
@@ -102,7 +102,7 @@ packageEventStatement: id Bang left_brack Right_Arrow right_brack nameSpaceItem 
 // 扩展
 implementStatement: (id| left_brack id templateDefine right_brack) Add_Equal 
 (packageNewStatement|packageFieldStatement|includeStatement)
-(And (packageNewStatement|packageFieldStatement|includeStatement))* end;
+(Back_Forward_Slash (packageNewStatement|packageFieldStatement|includeStatement))* end;
 
 // 定义变量
 overrideVariableStatement: (annotationSupport)? Dot (n='_')? id Bang (Colon expression | typeType (Colon expression)?) end;
@@ -115,9 +115,9 @@ overrideFunctionStatement: (annotationSupport)? Dot (n='_')? (id | left_brack id
 
 // 协议
 protocolStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Bang? Colon
-(protocolSubStatement (And (protocolSubStatement|includeStatement))*|
-includeStatement (And (protocolSubStatement|includeStatement))* And protocolSubStatement
- (And (protocolSubStatement|includeStatement))* ) end;
+(protocolSubStatement (Back_Forward_Slash (protocolSubStatement|includeStatement))*|
+includeStatement (Back_Forward_Slash (protocolSubStatement|includeStatement))* Back_Forward_Slash protocolSubStatement
+ (Back_Forward_Slash (protocolSubStatement|includeStatement))* ) end;
 
 protocolSubStatement: Coin Coin (p=Question? id (more id)?)? left_brace (protocolSupportStatement)* right_brace;
 // 协议支持的语句
