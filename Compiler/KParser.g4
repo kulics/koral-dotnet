@@ -100,7 +100,7 @@ packageControlSubStatement: id (left_paren id right_paren)? left_brace (function
 packageEventStatement: id Bang left_brack Right_Arrow right_brack nameSpaceItem end;
 
 // 扩展
-implementStatement: (id| left_brack id templateDefine right_brack) Add_Equal 
+implementStatement: (id| left_brack id templateDefine right_brack) Colon_Equal 
 (packageNewStatement|packageFieldStatement|includeStatement)
 (Back_Forward_Slash (packageNewStatement|packageFieldStatement|includeStatement))* end;
 
