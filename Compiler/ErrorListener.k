@@ -9,7 +9,7 @@ Compiler . {
 }
 
 
-ErrorListener : BaseErrorListener & $ me, base {
+ErrorListener : BaseErrorListener \/ $ me, base {
     FileDir! str
 
     .SyntaxError : (recognizer IRecognizer, offendingSymbol ?IToken, 

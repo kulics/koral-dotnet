@@ -54,7 +54,7 @@ Result : $ {
     rootID! str : ""
 }
 
-KLangVisitor : [KParserBaseVisitor any] & $me {
+KLangVisitor : [KParserBaseVisitor any] \/ $me {
     selfID! : ""
     superID! : ""
     setID! : ""
@@ -89,7 +89,7 @@ KLangVisitor : [KParserBaseVisitor any] & $me {
     add_type : (id str ->) {
         me.TypeIdSet.add(id)
     }
-} & (->$me) {
+} \/ (->$me) {
     me.CurrentIDSet.push([str]_{})
 }
 
