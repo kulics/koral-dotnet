@@ -341,7 +341,7 @@ nameSpaceItem: (id call New_Line?)* id;
 
 name: id (call New_Line? id)* ;
 
-templateDefine: templateDefineItem (more templateDefineItem)*;
+templateDefine: templateDefineItem*;
 
 templateDefineItem: id | left_paren id id right_paren; 
 
