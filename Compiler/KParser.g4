@@ -165,7 +165,6 @@ checkReportStatement |
 functionStatement |
 variableDeclaredStatement |
 constantDeclaredStatement |
-channelAssignStatement |
 varStatement |
 bindStatement |
 assignStatement |
@@ -220,8 +219,6 @@ iteratorStatement: expression (Tilde|Tilde_Tilde) (left_paren expression right_p
 variableDeclaredStatement: id Bang typeType end;
 // 声明常量
 constantDeclaredStatement: id typeType end;
-// 通道赋值
-channelAssignStatement: expression left_brack Dot right_brack assign expression end;
 // 定义
 varStatement: varId (more varId)* Colon tupleExpression end;
 // 绑定
@@ -249,6 +246,7 @@ linq | // 联合查询
 primaryExpression | 
 callPkg | // 新建包 
 callAwaitFunc | // 异步调用函数
+callChannel | // 通道访问
 list | // 列表
 dictionary | // 字典
 lambda | // lambda表达式
@@ -272,6 +270,7 @@ expression callElement | // 访问元素
 expression callAsync |  // 创建异步调用
 expression callAwait |  // 异步等待调用
 expression callExpression | // 链式调用
+expression transfer expression | // 传递通道值
 expression pow expression | // 幂型表达式
 expression mul expression | // 积型表达式
 expression add expression | // 和型表达式
@@ -282,7 +281,7 @@ expression compareCombine expression | // 组合比较表达式
 expression compare expression | // 比较表达式
 expression logic expression; // 逻辑表达式
 
-callExpression: call New_Line? (id | left_brack id templateCall right_brack) (callFunc|callChannel|callElement)?;
+callExpression: call New_Line? (id | left_brack id templateCall right_brack) (callFunc|callElement)?;
 
 tuple: left_paren (expression (more expression)* )? right_paren; // 元组
 
@@ -302,7 +301,8 @@ callAwaitFunc: Left_Flow expression; // 异步等待调用
 callAwait: Dot_Dot (tuple|lambda); // 异步等待调用
 callAsync: Dot (tuple|lambda); // 创建异步调用
 
-callChannel: left_brack Dot right_brack; // 通道调用
+callChannel: Dot_Dot_Less expression; // 通道访问
+transfer: Dot_Dot_Less; // 传递通道值
 
 callElement: left_brack (slice | expression) right_brack; // 元素调用
 

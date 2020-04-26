@@ -21,9 +21,6 @@ KLangVisitor : $ me {
         } context.callElement() >< nil {
             e2 : Visit(context.callElement()) Result!
             r.text = r.text + e2.text
-        } context.callChannel() >< nil {
-            e2 : Visit(context.callChannel()) Result!
-            r.text = r.text + e2.text
         }
         <- r
     }

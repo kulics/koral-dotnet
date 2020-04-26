@@ -24,10 +24,6 @@ else if ( context.callElement()!=null ) {
 var e2 = (Result)(Visit(context.callElement()));
 r.text=r.text+e2.text;
 }
-else if ( context.callChannel()!=null ) {
-var e2 = (Result)(Visit(context.callChannel()));
-r.text=r.text+e2.text;
-}
 return r;
 }
 public  override  object VisitCallElement( CallElementContext context ){
