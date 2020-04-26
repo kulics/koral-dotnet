@@ -44,7 +44,7 @@ namespaceConstantStatement: (annotationSupport)? id (Colon expression | typeType
 // 命名空间函数
 namespaceFunctionStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Colon
  left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
-(parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
+parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 定义包
 packageStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Bang? Colon
@@ -66,7 +66,7 @@ packageStaticConstantStatement: (annotationSupport)? id (Colon expression | type
 // 函数
 packageStaticFunctionStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Colon
  left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
-(parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
+parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 packageFieldStatement: Coin (p=Question? id (more id)?)? left_brace (packageSupportStatement)* right_brace;
 
@@ -93,7 +93,7 @@ packageConstantStatement: (annotationSupport)? id (Colon expression| typeType (C
 // 函数
 packageFunctionStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Colon
  left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
-(parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
+parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义子方法
 packageControlSubStatement: id (left_paren id right_paren)? left_brace (functionSupportStatement)+ right_brace end;
 // 定义包事件
@@ -111,7 +111,7 @@ overrideConstantStatement: (annotationSupport)? Dot (n='_')? id (Colon expressio
 // 函数
 overrideFunctionStatement: (annotationSupport)? Dot (n='_')? (id | left_brack id templateDefine right_brack) Colon
  left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
-(parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
+parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 协议
 protocolStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Bang? Colon
@@ -134,7 +134,7 @@ t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line* parameterClauseOut right_pare
 // 函数
 functionStatement: (id | left_brack id templateDefine right_brack) Colon left_paren parameterClauseIn
  t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
- (parameterClauseOut|Discard) right_paren left_brace (functionSupportStatement)* right_brace end;
+ parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 返回
 returnStatement: Left_Arrow (tupleExpression)? end;
 // 生成器
