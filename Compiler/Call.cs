@@ -238,7 +238,7 @@ this.add_func_stack();
 r.text+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 r.text+=BlockRight+Wrap;
-if ( get_func_async() ) {
+if ( get_func_async()||context.t.Type==Right_Flow ) {
 r.text=" async "+r.text;
 }
 this.delete_func_stack();

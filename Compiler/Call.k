@@ -264,7 +264,7 @@ KLangVisitor : $ me {
         me.delete_current_set()
         r.text += BlockRight + Wrap
         # 异步
-        ? get_func_async() {
+        ? get_func_async() | context.t.Type == Right_Flow {
             r.text = " async " + r.text
         }
         me.delete_func_stack()

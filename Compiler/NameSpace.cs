@@ -174,7 +174,7 @@ obj+=Visit(context.parameterClauseIn())+templateContract+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
-if ( get_func_async() ) {
+if ( get_func_async()||context.t.Type==Right_Flow ) {
 obj=" async "+obj;
 }
 this.delete_func_stack();

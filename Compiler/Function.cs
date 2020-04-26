@@ -72,7 +72,7 @@ obj+=(new System.Text.StringBuilder().Append(Visit(context.parameterClauseIn()))
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 this.delete_current_set();
-if ( get_func_async() ) {
+if ( get_func_async()||context.t.Type==Right_Flow ) {
 obj=" async "+obj;
 }
 this.delete_func_stack();

@@ -142,7 +142,7 @@ KLangVisitor : $ me {
         me.delete_current_set()
         obj += BlockRight + Wrap
         # 异步
-        ? get_func_async() {
+        ? get_func_async() | context.t.Type == Right_Flow {
             obj = " async " + obj
         }
         me.delete_func_stack()
