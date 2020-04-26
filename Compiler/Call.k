@@ -80,6 +80,25 @@ KLangVisitor : $ me {
         <- r
     }
 
+    .VisitCallAwaitFunc : (context CallAwaitFuncContext -> v any) {
+        r : Result{}
+        expr : Visit(context.expression()) Result!
+        r.data = "var"
+        r.text = "await " + expr.text
+        set_func_async()
+        <- r
+    }
+
+    .VisitCallAwait : (context CallAwaitContext -> v any) {
+        r : Result{data = "var"}
+        r.text += ? -> context.tuple() >< nil {
+            (Visit(context.tuple()) Result!).text
+        } _ {
+            "(${ (Visit(context.lambda()) Result!).text })"
+        }
+        <- r
+    }
+
     .VisitCallPkg : (context CallPkgContext -> v any) {
         r : Result{data = Visit(context.typeType())}
         r.text = "(new ${Visit(context.typeType())}()"
@@ -182,14 +201,6 @@ KLangVisitor : $ me {
         <- obj
     }
 
-    .VisitCallAwait : (context CallAwaitContext -> v any) {
-        r : Result{}
-        expr : Visit(context.expression()) Result!
-        r.data = "var"
-        r.text = "await " + expr.text
-        <- r
-    }
-
     .VisitList : (context ListContext -> v any) {
         type! : Any
         result : Result{}
@@ -249,26 +260,25 @@ KLangVisitor : $ me {
 
     .VisitFunctionExpression : (context FunctionExpressionContext -> v any) {
         r : Result{}
-        # 异步
-        ? context.t.Type == Right_Flow {
-            r.text += " async "
-        }
         r.text += Visit(context.parameterClauseIn()) + " => " + BlockLeft + Wrap
         me.add_current_set()
+        me.add_func_stack()
         r.text += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         r.text += BlockRight + Wrap
+        # 异步
+        ? get_func_async() {
+            r.text = " async " + r.text
+        }
+        me.delete_func_stack()
         r.data = "var"
         <- r
     }
 
     .VisitLambda : (context LambdaContext -> v any) {
         me.add_current_set()
+        me.add_func_stack()
         r : Result{data = "var"}
-        # 异步
-        ? context.t.Type == Right_Flow {
-            r.text += "async "
-        }
         r.text += "("
         ? context.lambdaIn() >< nil {
             r.text += Visit(context.lambdaIn())
@@ -282,6 +292,11 @@ KLangVisitor : $ me {
             r.text += "{${ProcessFunctionSupport(context.functionSupportStatement())}}"
         }
         me.delete_current_set()
+        # 异步
+        ? get_func_async() | context.t.Type == Right_Flow {
+            r.text = " async " + r.text
+        }
+        me.delete_func_stack()
         <- r
     }
 

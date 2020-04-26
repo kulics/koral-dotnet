@@ -101,20 +101,12 @@ public  override  object VisitOverrideFunctionStatement( OverrideFunctionStateme
 var id = (Result)(Visit(context.id()));
 var isVirtual = " override ";
 var obj = "";
-obj+=run(()=>{if ( context.n!=null ) {
-return "protected ";}
-else {
-return (new System.Text.StringBuilder().Append(id.permission).Append(" ")).to_str();}
-});
 var pout = "";
 if ( context.parameterClauseOut()!=null ) {
 pout=(string)(Visit(context.parameterClauseOut()));
 }
 if ( context.t.Type==Right_Flow ) {
-if ( context.Discard()!=null ) {
-pout="void";
-}
-else if ( pout!="void" ) {
+if ( pout!="void" ) {
 if ( context.y!=null ) {
 pout=(new System.Text.StringBuilder().Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
 }
@@ -123,7 +115,7 @@ pout=(new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Appe
 else {
 pout=Task;
 }
-obj+=(new System.Text.StringBuilder().Append(isVirtual).Append(" async ").Append(pout).Append(" ").Append(id.text)).to_str();
+obj+=(new System.Text.StringBuilder().Append(isVirtual).Append(" ").Append(pout).Append(" ").Append(id.text)).to_str();
 }
 else {
 if ( context.y!=null ) {
@@ -140,10 +132,21 @@ obj+=template.Template;
 templateContract=template.Contract;
 }
 this.add_current_set();
+this.add_func_stack();
 obj+=Visit(context.parameterClauseIn())+templateContract+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
+if ( get_func_async() ) {
+obj=" async "+obj;
+}
+this.delete_func_stack();
+if ( context.n!=null ) {
+obj="protected "+obj;
+}
+else {
+obj=(new System.Text.StringBuilder().Append(id.permission).Append(" ")).to_str()+obj;
+}
 return obj;
 }
 }

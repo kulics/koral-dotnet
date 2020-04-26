@@ -45,14 +45,12 @@ if ( context.parameterClauseOut()!=null ) {
 pout=(string)(Visit(context.parameterClauseOut()));
 }
 if ( context.t.Type==Right_Flow ) {
-pout=run(()=>{if ( context.Discard()!=null ) {
-return "void";}
-else if ( pout!="void" ) {
+pout=run(()=>{if ( pout!="void" ) {
 return (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).to_str();}
 else {
 return Task;}
 });
-obj+=(new System.Text.StringBuilder().Append(" async ").Append(pout).Append(" ").Append(id.text)).to_str();
+obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).to_str();
 }
 else {
 if ( context.y!=null ) {
@@ -69,23 +67,21 @@ obj+=template.Template;
 templateContract=template.Contract;
 }
 this.add_current_set();
+this.add_func_stack();
 obj+=(new System.Text.StringBuilder().Append(Visit(context.parameterClauseIn())).Append(" ").Append(templateContract).Append(Wrap).Append(BlockLeft).Append(Wrap).Append(" ")).to_str();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 this.delete_current_set();
+if ( get_func_async() ) {
+obj=" async "+obj;
+}
+this.delete_func_stack();
 return obj;
 }
 public  override  object VisitReturnStatement( ReturnStatementContext context ){
 if ( context.tupleExpression()!=null ) {
 var r = (Result)(Visit(context.tupleExpression()));
 return (new System.Text.StringBuilder().Append("return ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
-}
-return (new System.Text.StringBuilder().Append("return").Append(Terminate).Append(Wrap)).to_str();
-}
-public  override  object VisitReturnAwaitStatement( ReturnAwaitStatementContext context ){
-if ( context.tupleExpression()!=null ) {
-var r = (Result)(Visit(context.tupleExpression()));
-return (new System.Text.StringBuilder().Append("return await ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
 }
 return (new System.Text.StringBuilder().Append("return").Append(Terminate).Append(Wrap)).to_str();
 }
@@ -181,7 +177,7 @@ if ( context.expression()!=null ) {
 p.value=(new System.Text.StringBuilder().Append("= ").Append(((Result)(Visit(context.expression()))).text)).to_str();
 }
 p.type=(string)(Visit(context.typeType()));
-if ( context.Dot_Dot_Dot()!=null ) {
+if ( context.Comma_Comma_Comma()!=null ) {
 p.type=(new System.Text.StringBuilder().Append("params ").Append(p.type).Append("[]")).to_str();
 }
 if ( context.Bang()!=null ) {

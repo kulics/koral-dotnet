@@ -75,6 +75,23 @@ return (new System.Text.StringBuilder().Append("(").Append(((Result)(Visit(conte
 });
 return r;
 }
+public  override  object VisitCallAwaitFunc( CallAwaitFuncContext context ){
+var r = (new Result());
+var expr = (Result)(Visit(context.expression()));
+r.data="var";
+r.text="await "+expr.text;
+set_func_async();
+return r;
+}
+public  override  object VisitCallAwait( CallAwaitContext context ){
+var r = (new Result(){data = "var"});
+r.text+=run(()=>{if ( context.tuple()!=null ) {
+return ((Result)(Visit(context.tuple()))).text;}
+else {
+return (new System.Text.StringBuilder().Append("(").Append(((Result)(Visit(context.lambda()))).text).Append(")")).to_str();}
+});
+return r;
+}
 public  override  object VisitCallPkg( CallPkgContext context ){
 var r = (new Result(){data = Visit(context.typeType())});
 r.text=(new System.Text.StringBuilder().Append("(new ").Append(Visit(context.typeType())).Append("()")).to_str();
@@ -167,13 +184,6 @@ var obj = "";
 obj+=(new System.Text.StringBuilder().Append(Visit(context.name())).Append(" = ").Append(((Result)(Visit(context.expression()))).text)).to_str();
 return obj;
 }
-public  override  object VisitCallAwait( CallAwaitContext context ){
-var r = (new Result());
-var expr = (Result)(Visit(context.expression()));
-r.data="var";
-r.text="await "+expr.text;
-return r;
-}
 public  override  object VisitList( ListContext context ){
 var type = Any;
 var result = (new Result());
@@ -226,23 +236,23 @@ return result;
 }
 public  override  object VisitFunctionExpression( FunctionExpressionContext context ){
 var r = (new Result());
-if ( context.t.Type==Right_Flow ) {
-r.text+=" async ";
-}
 r.text+=Visit(context.parameterClauseIn())+" => "+BlockLeft+Wrap;
 this.add_current_set();
+this.add_func_stack();
 r.text+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 r.text+=BlockRight+Wrap;
+if ( get_func_async() ) {
+r.text=" async "+r.text;
+}
+this.delete_func_stack();
 r.data="var";
 return r;
 }
 public  override  object VisitLambda( LambdaContext context ){
 this.add_current_set();
+this.add_func_stack();
 var r = (new Result(){data = "var"});
-if ( context.t.Type==Right_Flow ) {
-r.text+="async ";
-}
 r.text+="(";
 if ( context.lambdaIn()!=null ) {
 r.text+=Visit(context.lambdaIn());
@@ -256,6 +266,10 @@ else {
 r.text+=(new System.Text.StringBuilder().Append("{").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append("}")).to_str();
 }
 this.delete_current_set();
+if ( get_func_async()||context.t.Type==Right_Flow ) {
+r.text=" async "+r.text;
+}
+this.delete_func_stack();
 return r;
 }
 public  override  object VisitLambdaIn( LambdaInContext context ){

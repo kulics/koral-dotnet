@@ -209,30 +209,37 @@ KLangVisitor : $ me {
             r.text = e1.text + op + (e2 Result!).text
         } 2 {
             r = Visit(context.GetChild(0)) Result!
-            ? context.GetChild(1) TypeConversionContext? {
-                e2 : Visit(context.GetChild(1)) str!
+            ? context.GetChild(1) : it TypeConversionContext {
+                e2 : Visit(it) str!
                 r.data = e2
                 r.text = "(${e2})(${r.text})"
-            } context.GetChild(1) TypeCheckContext? {
-                e2 : Visit(context.GetChild(1)) str!
+            } it TypeCheckContext {
+                e2 : Visit(it) str!
                 r.data = e2
                 r.text = "${r.text}.@is<${e2}>()"
-            } context.GetChild(1) OrElseContext? {
-                e2 : Visit(context.GetChild(1)) Result!
+            } it OrElseContext {
+                e2 : Visit(it) Result!
                 r.text = "(${r.text}??${e2.text})"
-            } context.GetChild(1) CallExpressionContext? {
-                e2 : Visit(context.GetChild(1)) Result!
+            } it CallExpressionContext {
+                e2 : Visit(it) Result!
                 r.text = r.text + e2.text
-            } context.GetChild(1) CallFuncContext? {
-                e2 : Visit(context.GetChild(1)) Result!
+            } it CallFuncContext {
+                e2 : Visit(it) Result!
                 ? me.is_type(r.rootID) {
                     r.text = "(new ${r.text; e2.text})"
                     r.data = r.rootID
                 } _ {
                     r.text = r.text + e2.text
                 }
-            } context.GetChild(1) CallElementContext? {
-                e2 : Visit(context.GetChild(1)) Result!
+            } it CallAsyncContext {
+                e2 : Visit(it) Result!
+                r.text = r.text + e2.text
+            } it CallAwaitContext {
+                e2 : Visit(it) Result!
+                r.text = "await " + r.text + e2.text
+                set_func_async()
+            } it CallElementContext {
+                e2 : Visit(it) Result!
                 r.text = r.text + e2.text
             } _ {
                 ? context.op.Type == KParser.Bang {

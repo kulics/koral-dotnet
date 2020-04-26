@@ -48,14 +48,12 @@ KLangVisitor : $ me {
             pout = Visit(context.parameterClauseOut()) str!
         }
         ? context.t.Type == Right_Flow {
-            pout = ? -> context.Discard() >< nil {
-                "void"
-            } pout >< "void" {
+            pout = ? -> pout >< "void" {
                 "${Task}<${pout}>"
             } _ {
                 Task
             }
-            obj += " async ${pout} ${id.text}"
+            obj += "${pout} ${id.text}"
         } _ {
             ? context.y >< nil {
                 ? pout >< "void" {
@@ -72,10 +70,16 @@ KLangVisitor : $ me {
             templateContract = template.Contract
         }
         me.add_current_set()
+        me.add_func_stack()
         obj += "${Visit(context.parameterClauseIn())} ${templateContract; Wrap; BlockLeft; Wrap} "
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += BlockRight + Wrap
         me.delete_current_set()
+        # 异步
+        ? get_func_async() {
+            obj = " async " + obj
+        }
+        me.delete_func_stack()
         <- obj
     }
 
@@ -83,14 +87,6 @@ KLangVisitor : $ me {
         ? context.tupleExpression() >< nil {
             r : Visit(context.tupleExpression()) Result!
             <- "return ${r.text; Terminate; Wrap}"
-        }
-        <- "return${Terminate; Wrap}"
-    }
-
-    .VisitReturnAwaitStatement : (context ReturnAwaitStatementContext -> v any) {
-        ? context.tupleExpression() >< nil {
-            r : Visit(context.tupleExpression()) Result!
-            <- "return await ${r.text; Terminate; Wrap}"
         }
         <- "return${Terminate; Wrap}"
     }
@@ -199,7 +195,7 @@ KLangVisitor : $ me {
             p.value = "= ${(Visit(context.expression()) Result!).text}"
         }
         p.type = Visit(context.typeType()) str!
-        ? context.Dot_Dot_Dot() >< nil {
+        ? context.Comma_Comma_Comma() >< nil {
             p.type = "params ${p.type}[]"
         }
         ? context.Bang() >< nil {

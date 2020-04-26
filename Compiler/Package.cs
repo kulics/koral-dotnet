@@ -158,16 +158,12 @@ return obj;
 public  override  object VisitPackageStaticFunctionStatement( PackageStaticFunctionStatementContext context ){
 var id = (Result)(Visit(context.id()));
 var obj = "";
-obj+=(new System.Text.StringBuilder().Append(id.permission).Append(" static ")).to_str();
 var pout = "";
 if ( context.parameterClauseOut()!=null ) {
 pout=(string)(Visit(context.parameterClauseOut()));
 }
 if ( context.t.Type==Right_Flow ) {
-if ( context.Discard()!=null ) {
-pout="void";
-}
-else if ( pout!="void" ) {
+if ( pout!="void" ) {
 if ( context.y!=null ) {
 pout=(new System.Text.StringBuilder().Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
 }
@@ -176,7 +172,7 @@ pout=(new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Appe
 else {
 pout=Task;
 }
-obj+=(new System.Text.StringBuilder().Append("async ").Append(pout).Append(" ").Append(id.text)).to_str();
+obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).to_str();
 }
 else {
 if ( context.y!=null ) {
@@ -193,10 +189,16 @@ obj+=template.Template;
 templateContract=template.Contract;
 }
 this.add_current_set();
+this.add_func_stack();
 obj+=Visit(context.parameterClauseIn())+templateContract+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
+if ( get_func_async() ) {
+obj=" async "+obj;
+}
+this.delete_func_stack();
+obj=(new System.Text.StringBuilder().Append(id.permission).Append(" static ")).to_str()+obj;
 return obj;
 }
 public  override  object VisitPackageFieldStatement( PackageFieldStatementContext context ){
@@ -324,16 +326,12 @@ if ( id.isVirtual ) {
 isVirtual=" virtual ";
 }
 var obj = "";
-obj+=(new System.Text.StringBuilder().Append(id.permission).Append(" ")).to_str();
 var pout = "";
 if ( context.parameterClauseOut()!=null ) {
 pout=(string)(Visit(context.parameterClauseOut()));
 }
 if ( context.t.Type==Right_Flow ) {
-if ( context.Discard()!=null ) {
-pout="void";
-}
-else if ( pout!="void" ) {
+if ( pout!="void" ) {
 if ( context.y!=null ) {
 pout=(new System.Text.StringBuilder().Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
 }
@@ -342,7 +340,7 @@ pout=(new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Appe
 else {
 pout=Task;
 }
-obj+=(new System.Text.StringBuilder().Append(isVirtual).Append(" async ").Append(pout).Append(" ").Append(id.text)).to_str();
+obj+=(new System.Text.StringBuilder().Append(isVirtual).Append(" ").Append(pout).Append(" ").Append(id.text)).to_str();
 }
 else {
 if ( context.y!=null ) {
@@ -359,10 +357,16 @@ obj+=template.Template;
 templateContract=template.Contract;
 }
 this.add_current_set();
+this.add_func_stack();
 obj+=Visit(context.parameterClauseIn())+templateContract+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
+if ( get_func_async() ) {
+obj=" async "+obj;
+}
+this.delete_func_stack();
+obj=(new System.Text.StringBuilder().Append(id.permission).Append(" ")).to_str()+obj;
 return obj;
 }
 public  override  object VisitPackageNewStatement( PackageNewStatementContext context ){

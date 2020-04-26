@@ -28,6 +28,7 @@ public bool selfPropertyVariable = false;
 public hashset<string> AllIDSet = (new hashset<string>());
 public stack<hashset<string>> CurrentIDSet = (new stack<hashset<string>>());
 public hashset<string> TypeIdSet = (new hashset<string>());
+public stack<bool> FuncAsyncStack = (new stack<bool>());
 public  virtual  bool has_id( string id ){
 return this.AllIDSet.contains(id)||this.CurrentIDSet.peek().contains(id);
 }
@@ -50,7 +51,24 @@ return this.TypeIdSet.contains(id);
 public  virtual  void add_type( string id ){
 this.TypeIdSet.add(id);
 }
+public  virtual  void add_func_stack(){
+FuncAsyncStack.push(false);
+}
+public  virtual  void delete_func_stack(){
+FuncAsyncStack.pop();
+}
+public  virtual  bool get_func_async(){
+return FuncAsyncStack.peek();
+}
+public  virtual  void set_func_async(){
+if ( FuncAsyncStack.peek() ) {
+return;
+}
+FuncAsyncStack.pop();
+FuncAsyncStack.push(true);
+}
 public KLangVisitor (){this.CurrentIDSet.push((new hashset<string>()));
+FuncAsyncStack.push(false);
 }
 }
 public partial class KLangVisitor{

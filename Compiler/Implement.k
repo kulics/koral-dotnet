@@ -106,20 +106,12 @@ KLangVisitor : $ me {
         id : Visit(context.id()) Result!
         isVirtual! : " override "
         obj! : ""
-        # 异步
-        obj += ? -> context.n >< nil {
-            "protected "
-        } _ {
-            "${id.permission} "
-        }
         pout! : ""
         ? context.parameterClauseOut() >< nil {
             pout = Visit(context.parameterClauseOut()) str!
         }
         ? context.t.Type == Right_Flow {
-            ? context.Discard() >< nil {
-                pout = "void"
-            } pout >< "void" {
+            ? pout >< "void" {
                 ? context.y >< nil {
                     pout = "${IEnum}<${pout}>"
                 }
@@ -127,7 +119,7 @@ KLangVisitor : $ me {
             } _ {
                 pout = Task
             }
-            obj += "${isVirtual} async ${pout} ${id.text}"
+            obj += "${isVirtual} ${pout} ${id.text}"
         } _ {
             ? context.y >< nil {
                 ? pout >< "void" {
@@ -144,10 +136,21 @@ KLangVisitor : $ me {
             templateContract = template.Contract
         }
         me.add_current_set()
+        me.add_func_stack()
         obj += Visit(context.parameterClauseIn()) + templateContract + BlockLeft + Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight + Wrap
+        # 异步
+        ? get_func_async() {
+            obj = " async " + obj
+        }
+        me.delete_func_stack()
+        ? context.n >< nil {
+            obj = "protected " + obj
+        } _ {
+            obj = "${id.permission} " + obj
+        }
         <- obj
     }
 }

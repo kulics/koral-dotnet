@@ -143,10 +143,7 @@ if ( context.parameterClauseOut()!=null ) {
 pout=(string)(Visit(context.parameterClauseOut()));
 }
 if ( context.t.Type==Right_Flow ) {
-if ( context.Discard()!=null ) {
-pout="void";
-}
-else if ( pout!="void" ) {
+if ( pout!="void" ) {
 if ( context.y!=null ) {
 pout=(new System.Text.StringBuilder().Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
 }
@@ -155,7 +152,7 @@ pout=(new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Appe
 else {
 pout=Task;
 }
-obj+=(new System.Text.StringBuilder().Append(id.permission).Append(" async static ").Append(pout).Append(" ").Append(id.text)).to_str();
+obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).to_str();
 }
 else {
 if ( context.y!=null ) {
@@ -163,7 +160,7 @@ if ( pout!="void" ) {
 pout=(new System.Text.StringBuilder().Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
 }
 }
-obj+=(new System.Text.StringBuilder().Append(id.permission).Append(" static ").Append(pout).Append(" ").Append(id.text)).to_str();
+obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).to_str();
 }
 var templateContract = "";
 if ( context.templateDefine()!=null ) {
@@ -172,10 +169,16 @@ obj+=template.Template;
 templateContract=template.Contract;
 }
 this.add_current_set();
+this.add_func_stack();
 obj+=Visit(context.parameterClauseIn())+templateContract+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
+if ( get_func_async() ) {
+obj=" async "+obj;
+}
+this.delete_func_stack();
+obj=id.permission+" static "+obj;
 return obj;
 }
 public  override  object VisitNamespaceConstantStatement( NamespaceConstantStatementContext context ){

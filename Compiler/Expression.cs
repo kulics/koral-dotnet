@@ -128,26 +128,27 @@ r.text=e1.text+op+((Result)(e2)).text;
 } break;
 case 2 :
 { r=(Result)(Visit(context.GetChild(0)));
-if ( context.GetChild(1).@is<TypeConversionContext>() ) {
-var e2 = (string)(Visit(context.GetChild(1)));
+switch (context.GetChild(1)) {
+case TypeConversionContext it :
+{ var e2 = (string)(Visit(it));
 r.data=e2;
 r.text=(new System.Text.StringBuilder().Append("(").Append(e2).Append(")(").Append(r.text).Append(")")).to_str();
-}
-else if ( context.GetChild(1).@is<TypeCheckContext>() ) {
-var e2 = (string)(Visit(context.GetChild(1)));
+} break;
+case TypeCheckContext it :
+{ var e2 = (string)(Visit(it));
 r.data=e2;
 r.text=(new System.Text.StringBuilder().Append(r.text).Append(".@is<").Append(e2).Append(">()")).to_str();
-}
-else if ( context.GetChild(1).@is<OrElseContext>() ) {
-var e2 = (Result)(Visit(context.GetChild(1)));
+} break;
+case OrElseContext it :
+{ var e2 = (Result)(Visit(it));
 r.text=(new System.Text.StringBuilder().Append("(").Append(r.text).Append("??").Append(e2.text).Append(")")).to_str();
-}
-else if ( context.GetChild(1).@is<CallExpressionContext>() ) {
-var e2 = (Result)(Visit(context.GetChild(1)));
+} break;
+case CallExpressionContext it :
+{ var e2 = (Result)(Visit(it));
 r.text=r.text+e2.text;
-}
-else if ( context.GetChild(1).@is<CallFuncContext>() ) {
-var e2 = (Result)(Visit(context.GetChild(1)));
+} break;
+case CallFuncContext it :
+{ var e2 = (Result)(Visit(it));
 if ( this.is_type(r.rootID) ) {
 r.text=(new System.Text.StringBuilder().Append("(new ").Append(r.text).Append(e2.text).Append(")")).to_str();
 r.data=r.rootID;
@@ -155,18 +156,28 @@ r.data=r.rootID;
 else {
 r.text=r.text+e2.text;
 }
-}
-else if ( context.GetChild(1).@is<CallElementContext>() ) {
-var e2 = (Result)(Visit(context.GetChild(1)));
+} break;
+case CallAsyncContext it :
+{ var e2 = (Result)(Visit(it));
 r.text=r.text+e2.text;
-}
-else {
-if ( context.op.Type==KParser.Bang ) {
+} break;
+case CallAwaitContext it :
+{ var e2 = (Result)(Visit(it));
+r.text="await "+r.text+e2.text;
+set_func_async();
+} break;
+case CallElementContext it :
+{ var e2 = (Result)(Visit(it));
+r.text=r.text+e2.text;
+} break;
+default:
+{ if ( context.op.Type==KParser.Bang ) {
 r.text=(new System.Text.StringBuilder().Append("ref ").Append(r.text)).to_str();
 }
 else if ( context.op.Type==KParser.Question ) {
 r.text+="?";
 }
+} break;
 }
 } break;
 case 1 :

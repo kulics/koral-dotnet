@@ -21,7 +21,9 @@ Dot_Dot_Dot: 	'...';
 Dot_Dot: 		'..';
 Dot: 			'.';
 
-Comma: 	',';
+Comma_Comma_Comma: 	',,,';
+Comma_Comma: 		',,';
+Comma: 				',';
 
 Right_Arrow: 	'->';
 Left_Arrow: 	'<-';

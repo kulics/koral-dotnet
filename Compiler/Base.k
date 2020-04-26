@@ -66,6 +66,7 @@ KLangVisitor : [KParserBaseVisitor any] \/ $me {
     AllIDSet! : [str]_{}
     CurrentIDSet! : [>][str]_{}
     TypeIdSet! : [str]_{}
+    FuncAsyncStack! : [>]bool{}
 
     has_id : (id str -> v bool) {
         <- me.AllIDSet.contains(id) | me.CurrentIDSet.peek().contains(id)
@@ -89,8 +90,25 @@ KLangVisitor : [KParserBaseVisitor any] \/ $me {
     add_type : (id str ->) {
         me.TypeIdSet.add(id)
     }
+    add_func_stack : (->) {
+        FuncAsyncStack.push(false)
+    }
+    delete_func_stack : (->) {
+        FuncAsyncStack.pop()
+    }
+    get_func_async : (->v bool) {
+        <- FuncAsyncStack.peek()
+    }
+    set_func_async : (->) {
+        ? FuncAsyncStack.peek() {
+            <-
+        }
+        FuncAsyncStack.pop()
+        FuncAsyncStack.push(true)
+    }
 } \/ (->$me) {
     me.CurrentIDSet.push([str]_{})
+    FuncAsyncStack.push(false)
 }
 
 KLangVisitor : $ me {
