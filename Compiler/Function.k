@@ -18,7 +18,7 @@ Parameter : $ {
 }
 
 KLangVisitor : $ me {
-    ProcessFunctionSupport : (items [.]FunctionSupportStatementContext -> v str) {
+    ProcessFunctionSupport : (items [,]FunctionSupportStatementContext -> v str) {
         obj! : ""
         content! : ""
         lazy! : []str{}
