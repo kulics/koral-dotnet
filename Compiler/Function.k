@@ -76,7 +76,7 @@ KLangVisitor : $ me {
         obj += BlockRight + Wrap
         me.delete_current_set()
         # 异步
-        ? get_func_async() | context.t.Type == Right_Flow {
+        ? get_func_async() {
             obj = " async " + obj
         }
         me.delete_func_stack()
@@ -89,6 +89,14 @@ KLangVisitor : $ me {
             <- "return ${r.text; Terminate; Wrap}"
         }
         <- "return${Terminate; Wrap}"
+    }
+
+    .VisitReturnAsyncStatement : (context ReturnAsyncStatementContext -> v any) {
+        ? context.tupleExpression() >< nil {
+            r : Visit(context.tupleExpression()) Result!
+            <- "return Task.FromResult(${r.text})${Terminate; Wrap}"
+        }
+        <- "return Task.FromResult(true)${Terminate; Wrap}"
     }
 
     .VisitYieldReturnStatement : (context YieldReturnStatementContext -> v any) {

@@ -18,7 +18,7 @@ public string order = T;
 public partial class KLangVisitor{
 public  override  object VisitIteratorStatement( IteratorStatementContext context ){
 var it = (new Iterator());
-if ( context.Tilde()==null ) {
+if ( context.Dot_Dot()==null ) {
 it.order=F;
 }
 if ( context.expression().Length==2 ) {

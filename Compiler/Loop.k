@@ -19,7 +19,7 @@ Iterator : $ {
 KLangVisitor : $ me {
     .VisitIteratorStatement : (context IteratorStatementContext -> v any) {
         it : Iterator{}
-        ? context.Tilde() == nil {
+        ? context.Dot_Dot() == nil {
             it.order = F
         }
         ? context.expression().Length == 2 {

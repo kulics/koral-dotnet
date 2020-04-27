@@ -26,11 +26,14 @@ Comma_Comma_Comma: 	',,,';
 Comma_Comma: 		',,';
 Comma: 				',';
 
+Right_Flow: 	'->>';
+Left_Flow: 		'<<-';
+
 Right_Arrow: 	'->';
 Left_Arrow: 	'<-';
 
-Right_Flow: 	'->>';
-Left_Flow: 		'<<-';
+Right_Wave:		'~>';
+Left_Wave: 		'<~';
 
 Equal: 	'=';
 

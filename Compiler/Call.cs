@@ -39,7 +39,7 @@ return (string)(Visit(context.GetChild(0)));
 }
 public  override  object VisitSliceFull( SliceFullContext context ){
 var order = "true";
-if ( context.Tilde()==null ) {
+if ( context.Dot_Dot()==null ) {
 order="false";
 }
 var expr1 = (Result)(Visit(context.expression(0)));
@@ -48,7 +48,7 @@ return (new System.Text.StringBuilder().Append(".slice(").Append(expr1.text).App
 }
 public  override  object VisitSliceStart( SliceStartContext context ){
 var order = "true";
-if ( context.Tilde()==null ) {
+if ( context.Dot_Dot()==null ) {
 order="false";
 }
 var expr = (Result)(Visit(context.expression()));
@@ -56,7 +56,7 @@ return (new System.Text.StringBuilder().Append(".slice(").Append(expr.text).Appe
 }
 public  override  object VisitSliceEnd( SliceEndContext context ){
 var order = "true";
-if ( context.Tilde()==null ) {
+if ( context.Dot_Dot()==null ) {
 order="false";
 }
 var expr = (Result)(Visit(context.expression()));
@@ -71,7 +71,7 @@ return (new System.Text.StringBuilder().Append("(").Append(((Result)(Visit(conte
 });
 return r;
 }
-public  override  object VisitCallAwaitFunc( CallAwaitFuncContext context ){
+public  override  object VisitCallAsync( CallAsyncContext context ){
 var r = (new Result());
 var expr = (Result)(Visit(context.expression()));
 r.data="var";
@@ -238,7 +238,7 @@ this.add_func_stack();
 r.text+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 r.text+=BlockRight+Wrap;
-if ( get_func_async()||context.t.Type==Right_Flow ) {
+if ( get_func_async() ) {
 r.text=" async "+r.text;
 }
 this.delete_func_stack();
@@ -262,7 +262,7 @@ else {
 r.text+=(new System.Text.StringBuilder().Append("{").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append("}")).to_str();
 }
 this.delete_current_set();
-if ( get_func_async()||context.t.Type==Right_Flow ) {
+if ( get_func_async()||(context.tupleExpression()!=null&&context.t.Type==Right_Flow) ) {
 r.text=" async "+r.text;
 }
 this.delete_func_stack();

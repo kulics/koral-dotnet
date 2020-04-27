@@ -40,7 +40,7 @@ KLangVisitor : $ me {
 
     .VisitSliceFull : (context SliceFullContext -> v any) {
         order! : "true"
-        ? context.Tilde() == nil {
+        ? context.Dot_Dot() == nil {
             order = "false"
         }
         expr1 : Visit(context.expression(0)) Result!
@@ -50,7 +50,7 @@ KLangVisitor : $ me {
 
     .VisitSliceStart : (context SliceStartContext -> v any) {
         order! : "true"
-        ? context.Tilde() == nil {
+        ? context.Dot_Dot() == nil {
             order = "false"
         }
         expr : Visit(context.expression()) Result!
@@ -59,7 +59,7 @@ KLangVisitor : $ me {
 
     .VisitSliceEnd : (context SliceEndContext -> v any) {
         order! : "true"
-        ? context.Tilde() == nil {
+        ? context.Dot_Dot() == nil {
             order = "false"
         }
         expr : Visit(context.expression()) Result!
@@ -77,7 +77,7 @@ KLangVisitor : $ me {
         <- r
     }
 
-    .VisitCallAwaitFunc : (context CallAwaitFuncContext -> v any) {
+    .VisitCallAsync : (context CallAsyncContext -> v any) {
         r : Result{}
         expr : Visit(context.expression()) Result!
         r.data = "var"
@@ -264,7 +264,7 @@ KLangVisitor : $ me {
         me.delete_current_set()
         r.text += BlockRight + Wrap
         # 异步
-        ? get_func_async() | context.t.Type == Right_Flow {
+        ? get_func_async() {
             r.text = " async " + r.text
         }
         me.delete_func_stack()
@@ -290,7 +290,7 @@ KLangVisitor : $ me {
         }
         me.delete_current_set()
         # 异步
-        ? get_func_async() | context.t.Type == Right_Flow {
+        ? get_func_async() | (context.tupleExpression() >< nil & context.t.Type == Right_Flow) {
             r.text = " async " + r.text
         }
         me.delete_func_stack()

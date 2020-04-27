@@ -201,7 +201,7 @@ KLangVisitor : $ me {
         me.delete_current_set()
         obj += BlockRight + Wrap
         # 异步
-        ? get_func_async() | context.t.Type == Right_Flow {
+        ? get_func_async() {
             obj = " async " + obj
         }
         me.delete_func_stack()
@@ -371,7 +371,7 @@ KLangVisitor : $ me {
         me.delete_current_set()
         obj += BlockRight + Wrap
         # 异步
-        ? get_func_async() | context.t.Type == Right_Flow {
+        ? get_func_async() {
             obj = " async " + obj
         }
         me.delete_func_stack()

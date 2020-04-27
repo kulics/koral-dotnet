@@ -72,7 +72,7 @@ obj+=(new System.Text.StringBuilder().Append(Visit(context.parameterClauseIn()))
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 this.delete_current_set();
-if ( get_func_async()||context.t.Type==Right_Flow ) {
+if ( get_func_async() ) {
 obj=" async "+obj;
 }
 this.delete_func_stack();
@@ -84,6 +84,13 @@ var r = (Result)(Visit(context.tupleExpression()));
 return (new System.Text.StringBuilder().Append("return ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
 }
 return (new System.Text.StringBuilder().Append("return").Append(Terminate).Append(Wrap)).to_str();
+}
+public  override  object VisitReturnAsyncStatement( ReturnAsyncStatementContext context ){
+if ( context.tupleExpression()!=null ) {
+var r = (Result)(Visit(context.tupleExpression()));
+return (new System.Text.StringBuilder().Append("return Task.FromResult(").Append(r.text).Append(")").Append(Terminate).Append(Wrap)).to_str();
+}
+return (new System.Text.StringBuilder().Append("return Task.FromResult(true)").Append(Terminate).Append(Wrap)).to_str();
 }
 public  override  object VisitYieldReturnStatement( YieldReturnStatementContext context ){
 var r = (Result)(Visit(context.tupleExpression()));
