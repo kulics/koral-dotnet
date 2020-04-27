@@ -358,7 +358,7 @@ KLangVisitor : $ me {
     .VisitExpressionList : (context ExpressionListContext -> v any) {
         r : Result{}
         obj! : ""
-        @ i : 0 ~ context.expression().Length-1 {
+        @ i : 0 .. context.expression().Length-1 {
             temp : Visit(context.expression(i)) Result!
             obj += ? -> i == 0 {
                 temp.text
@@ -374,7 +374,7 @@ KLangVisitor : $ me {
     .VisitTemplateDefine : (context TemplateDefineContext -> v any) {
         item! : TemplateItem{}
         item.Template += "<"
-        @ i : 0 ~ context.templateDefineItem().Length-1 {
+        @ i : 0 .. context.templateDefineItem().Length-1 {
             ? i > 0 {
                 item.Template += ","
                 ? item.Contract.len() > 0 {
@@ -406,7 +406,7 @@ KLangVisitor : $ me {
     .VisitTemplateCall : (context TemplateCallContext -> v any) {
         obj! : ""
         obj += "<"
-        @ i : 0 ~ context.typeType().Length-1 {
+        @ i : 0 .. context.typeType().Length-1 {
             ? i > 0 {
                 obj += ","
             }
@@ -457,7 +457,7 @@ KLangVisitor : $ me {
         } _ {
             text = "(new System.Text.StringBuilder()"
             # 去除前后一个元素
-            @ i : 1 ~ context.ChildCount-2 {
+            @ i : 1 .. context.ChildCount-2 {
                 v : context.GetChild(i)
                 r : Visit(context.GetChild(i)) str!
                 ? v StringContentContext? {
@@ -491,7 +491,7 @@ KLangVisitor : $ me {
         text! : ""
         ? context.rawStringTemplate().Length == 0 {
             # 去除前后一个元素
-            @ i : 1 ~ context.ChildCount-2 {
+            @ i : 1 .. context.ChildCount-2 {
                 v : context.GetChild(i)
                 r : Visit(context.GetChild(i)) str!
                 ? v RawStringContentContext? {
@@ -504,7 +504,7 @@ KLangVisitor : $ me {
         } _ {
             text = "(new System.Text.StringBuilder()"
             # 去除前后一个元素
-            @ i : 1 ~ context.ChildCount-2 {
+            @ i : 1 .. context.ChildCount-2 {
                 v : context.GetChild(i)
                 r : Visit(context.GetChild(i)) str!
                 ? v RawStringContentContext? {

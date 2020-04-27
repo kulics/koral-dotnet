@@ -128,7 +128,7 @@ KLangVisitor : $ me {
         r.text = first.text
         r.isVirtual = first.isVirtual
         ? context.ChildCount >= 2 {
-            @ i : 1 ~ context.ChildCount-1 {
+            @ i : 1 .. context.ChildCount-1 {
                 other : Visit(context.GetChild(i)) Result!
                 r.text += "_${other.text}"
             }

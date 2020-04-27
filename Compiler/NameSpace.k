@@ -90,7 +90,7 @@ KLangVisitor : $ me {
 
     .VisitNameSpaceItem : (context NameSpaceItemContext -> v any) {
         obj! : ""
-        @ i : 0 ~ context.id().Length-1 {
+        @ i : 0 .. context.id().Length-1 {
             id : Visit(context.id(i)) Result!
             obj += ? -> i == 0 {
                 id.text
@@ -103,7 +103,7 @@ KLangVisitor : $ me {
 
     .VisitName : (context NameContext -> v any) {
         obj! : ""
-        @ i : 0 ~ context.id().Length-1 {
+        @ i : 0 .. context.id().Length-1 {
             id : Visit(context.id(i)) Result!
             obj += ? -> i == 0 {
                 id.text
@@ -125,7 +125,7 @@ KLangVisitor : $ me {
         }
         header += "${id.permission} enum ${id.text}:${typ}"
         header += Wrap + BlockLeft + Wrap
-        @ i : 0 ~ context.enumSupportStatement().Length-1 {
+        @ i : 0 .. context.enumSupportStatement().Length-1 {
             obj += Visit(context.enumSupportStatement(i))
         }
         obj += BlockRight + Terminate + Wrap
