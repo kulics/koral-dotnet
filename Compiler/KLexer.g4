@@ -17,10 +17,11 @@ Combine_Equal:      '<>';
 Forward_Back_Slash: '/\\';
 Back_Forward_Slash:	'\\/';
 
-Dot_Dot_Dot: 	'...';
-Dot_Dot_Less:	'..<';
-Dot_Dot: 		'..';
-Dot: 			'.';
+Dot_Dot_Dot: 		'...';
+Dot_Dot_Less:		'..<';
+Dot_Dot_Greater:	'..>';
+Dot_Dot: 			'..';
+Dot: 				'.';
 
 Comma_Comma_Comma: 	',,,';
 Comma_Comma: 		',,';

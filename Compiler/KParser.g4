@@ -216,7 +216,7 @@ checkFinallyStatment: Discard left_brace (functionSupportStatement)* right_brace
 checkReportStatement: Bang Left_Arrow expression end;
 
 // 迭代器
-iteratorStatement: expression (Dot_Dot|Dot_Dot_Dot) (left_paren expression right_paren)? expression;
+iteratorStatement: expression (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater) (left_paren expression right_paren)? expression;
 
 // 声明变量
 variableDeclaredStatement: id Bang typeType end;
@@ -335,9 +335,9 @@ dictionaryElement: left_brack expression right_brack Equal expression; // 字典
 
 slice: sliceStart | sliceEnd | sliceFull;
 
-sliceFull: expression (Dot_Dot|Dot_Dot_Dot) expression; 
-sliceStart: expression (Dot_Dot|Dot_Dot_Dot);
-sliceEnd: (Dot_Dot|Dot_Dot_Dot) expression; 
+sliceFull: expression (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater) expression; 
+sliceStart: expression (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater);
+sliceEnd: (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater) expression; 
 
 nameSpaceItem: (id call New_Line?)* id;
 

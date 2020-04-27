@@ -14,12 +14,16 @@ public Result begin;
 public Result end;
 public Result step;
 public string order = T;
+public string close = T;
 }
 public partial class KLangVisitor{
 public  override  object VisitIteratorStatement( IteratorStatementContext context ){
 var it = (new Iterator());
-if ( context.Dot_Dot()==null ) {
+if ( context.Dot_Dot_Dot()!=null||context.Dot_Dot_Greater()!=null ) {
 it.order=F;
+}
+if ( context.Dot_Dot_Less()!=null||context.Dot_Dot_Greater()!=null ) {
+it.close=F;
 }
 if ( context.expression().Length==2 ) {
 it.begin=(Result)(Visit(context.expression(0)));
@@ -37,7 +41,7 @@ public  override  object VisitLoopStatement( LoopStatementContext context ){
 var obj = "";
 var id = ((Result)(Visit(context.id()))).text;
 var it = (Iterator)(Visit(context.iteratorStatement()));
-var target = (new System.Text.StringBuilder().Append("range(").Append(it.begin.text).Append(", ").Append(it.end.text).Append(", ").Append(it.step.text).Append(", ").Append(it.order).Append(")")).to_str();
+var target = (new System.Text.StringBuilder().Append("range(").Append(it.begin.text).Append(", ").Append(it.end.text).Append(", ").Append(it.step.text).Append(", ").Append(it.order).Append(", ").Append(it.close).Append(")")).to_str();
 obj+=(new System.Text.StringBuilder().Append("foreach (var ").Append(id).Append(" in ").Append(target).Append(")")).to_str();
 obj+=BlockLeft+Wrap;
 this.add_current_set();

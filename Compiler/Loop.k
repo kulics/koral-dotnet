@@ -14,13 +14,17 @@ Iterator : $ {
     end!    Result
     step!   Result
     order!  str : T
+    close!  str : T
 }
 
 KLangVisitor : $ me {
     .VisitIteratorStatement : (context IteratorStatementContext -> v any) {
         it : Iterator{}
-        ? context.Dot_Dot() == nil {
+        ? context.Dot_Dot_Dot() >< nil | context.Dot_Dot_Greater() >< nil {
             it.order = F
+        }
+        ? context.Dot_Dot_Less() >< nil | context.Dot_Dot_Greater() >< nil {
+            it.close = F
         }
         ? context.expression().Length == 2 {
             it.begin = Visit(context.expression(0)) Result!
@@ -42,7 +46,7 @@ KLangVisitor : $ me {
         id : (Visit(context.id()) Result!).text
         
         it : Visit(context.iteratorStatement()) Iterator!
-        target : "range(${it.begin.text}, ${it.end.text}, ${it.step.text}, ${it.order})"
+        target : "range(${it.begin.text}, ${it.end.text}, ${it.step.text}, ${it.order}, ${it.close})"
 
         obj += "foreach (var ${id} in ${target})"
 
