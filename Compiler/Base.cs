@@ -276,7 +276,7 @@ else {
 return "";}
 });
 if ( id!="" ) {
-obj=id+":"+obj;
+obj=id+obj;
 }
 obj="["+obj+"]";
 return obj;

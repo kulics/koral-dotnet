@@ -306,7 +306,7 @@ KLangVisitor : $ me {
             ""
         }
         ? id >< "" {
-            obj = id + ":" + obj
+            obj = id + obj
         }
         obj = "[" + obj + "]"
         <- obj

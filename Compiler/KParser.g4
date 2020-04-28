@@ -298,7 +298,7 @@ annotation: annotationList; // 注解
 
 annotationList: ((annotationItem|annotationString) New_Line?)+;
 
-annotationItem: (id Right_Arrow)? Sharp id (tuple|lambda)?;
+annotationItem: Sharp (id Right_Arrow)? id (tuple|lambda)?;
 
 annotationString: Sharp (stringExpr|rawStringExpr);
 
