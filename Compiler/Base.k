@@ -249,20 +249,20 @@ KLangVisitor : $ me {
         <- r
     }
 
+    .VisitAnnotationStatement : (context AnnotationStatementContext -> v any) {
+        <- ""
+    }
+
     .VisitAnnotationSupport : (context AnnotationSupportContext -> v any) {
         <- Visit(context.annotation()) str!
     }
 
     .VisitAnnotation : (context AnnotationContext -> v any) {
         obj! : ""
-        id! : ""
-        ? context.id() >< nil {
-            id = "${(Visit(context.id()) Result!).text}:"
-        }
 
         r : Visit(context.annotationList()) str!
         ? r >< "" {
-            obj += "[${id; r}]"
+            obj += r
         }
         <- obj
     }
@@ -272,11 +272,7 @@ KLangVisitor : $ me {
         @ [i]v : context.annotationItem() {
             txt : me.Visit(v) str!
             ? txt >< "" {
-                obj += ? -> i > 0 {
-                    "," + txt
-                } _ {
-                    txt
-                }
+                obj += txt
             }
         }
         <- obj
@@ -284,7 +280,14 @@ KLangVisitor : $ me {
 
     .VisitAnnotationItem : (context AnnotationItemContext -> v any) {
         obj! : ""
-        obj += (me.Visit(context.id()) Result!).text
+        id! : ""
+        
+        ? context.id().Length == 2 {
+            id = "${(Visit(context.id(0)) Result!).text}:"
+            obj += (me.Visit(context.id(1)) Result!).text
+        } _ {
+            obj += (me.Visit(context.id(0)) Result!).text
+        }
         ? obj : "get" {
             ? context.lambda() == nil {
                 me.selfPropertyVariable = true
@@ -331,6 +334,10 @@ KLangVisitor : $ me {
         } _ {
             ""
         }
+        ? id >< "" {
+            obj = id + ":" + obj
+        }
+        obj = "[" + obj + "]"
         <- obj
     }
 

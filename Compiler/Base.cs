@@ -87,7 +87,7 @@ r.permission=first.permission;
 r.text=first.text;
 r.isVirtual=first.isVirtual;
 if ( context.ChildCount>=2 ) {
-foreach (var i in range(1, context.ChildCount-1, 1, true)){
+foreach (var i in range(1, context.ChildCount-1, 1, true, true)){
 var other = (Result)(Visit(context.GetChild(i)));
 r.text+=(new System.Text.StringBuilder().Append("_").Append(other.text)).to_str();
 }
@@ -184,18 +184,17 @@ r.text=F;
 }
 return r;
 }
+public  override  object VisitAnnotationStatement( AnnotationStatementContext context ){
+return "";
+}
 public  override  object VisitAnnotationSupport( AnnotationSupportContext context ){
 return (string)(Visit(context.annotation()));
 }
 public  override  object VisitAnnotation( AnnotationContext context ){
 var obj = "";
-var id = "";
-if ( context.id()!=null ) {
-id=(new System.Text.StringBuilder().Append(((Result)(Visit(context.id()))).text).Append(":")).to_str();
-}
 var r = (string)(Visit(context.annotationList()));
 if ( r!="" ) {
-obj+=(new System.Text.StringBuilder().Append("[").Append(id).Append(r).Append("]")).to_str();
+obj+=r;
 }
 return obj;
 }
@@ -204,18 +203,21 @@ var obj = "";
 foreach (var (i, v) in range(context.annotationItem())){
 var txt = (string)(this.Visit(v));
 if ( txt!="" ) {
-obj+=run(()=>{if ( i>0 ) {
-return ","+txt;}
-else {
-return txt;}
-});
+obj+=txt;
 }
 }
 return obj;
 }
 public  override  object VisitAnnotationItem( AnnotationItemContext context ){
 var obj = "";
-obj+=((Result)(this.Visit(context.id()))).text;
+var id = "";
+if ( context.id().Length==2 ) {
+id=(new System.Text.StringBuilder().Append(((Result)(Visit(context.id(0)))).text).Append(":")).to_str();
+obj+=((Result)(this.Visit(context.id(1)))).text;
+}
+else {
+obj+=((Result)(this.Visit(context.id(0)))).text;
+}
 switch (obj) {
 case "get" :
 { if ( context.lambda()==null ) {
@@ -273,6 +275,10 @@ return (new System.Text.StringBuilder().Append("(").Append(((Result)(this.Visit(
 else {
 return "";}
 });
+if ( id!="" ) {
+obj=id+":"+obj;
+}
+obj="["+obj+"]";
 return obj;
 }
 public  virtual  string VisitPropertyLambda( LambdaContext context ,  bool is_get ){

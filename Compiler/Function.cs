@@ -30,7 +30,7 @@ return Visit(item);}
 });
 }
 if ( lazy.Count>0 ) {
-foreach (var i in range(lazy.Count-1, 0, 1, false)){
+foreach (var i in range(lazy.Count-1, 0, 1, false, true)){
 content+=BlockRight;
 }
 }
@@ -101,7 +101,7 @@ return (new System.Text.StringBuilder().Append("yield break").Append(Terminate).
 }
 public  override  object VisitTuple( TupleContext context ){
 var obj = "(";
-foreach (var i in range(0, context.expression().Length-1, 1, true)){
+foreach (var i in range(0, context.expression().Length-1, 1, true, true)){
 var r = (Result)(Visit(context.expression(i)));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
@@ -114,7 +114,7 @@ return (new Result(){data = "var",text = obj});
 }
 public  override  object VisitTupleExpression( TupleExpressionContext context ){
 var obj = "";
-foreach (var i in range(0, context.expression().Length-1, 1, true)){
+foreach (var i in range(0, context.expression().Length-1, 1, true, true)){
 var r = (Result)(Visit(context.expression(i)));
 obj+=run(()=>{if ( i==0 ) {
 return r.text;}
@@ -130,12 +130,12 @@ return (new Result(){data = "var",text = obj});
 public  override  object VisitParameterClauseIn( ParameterClauseInContext context ){
 var obj = "(";
 var temp = (new list<string>());
-foreach (var i in range(context.parameter().Length-1, 0, 1, false)){
+foreach (var i in range(context.parameter().Length-1, 0, 1, false, true)){
 var p = (Parameter)(Visit(context.parameter(i)));
 temp.add((new System.Text.StringBuilder().Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value)).to_str());
 this.add_id(p.id);
 }
-foreach (var i in range(temp.Count-1, 0, 1, false)){
+foreach (var i in range(temp.Count-1, 0, 1, false, true)){
 obj+=run(()=>{if ( i==temp.Count-1 ) {
 return temp[i];}
 else {
@@ -157,11 +157,11 @@ obj+=p.type;
 if ( context.parameter().Length>1 ) {
 obj+="( ";
 var temp = (new list<string>());
-foreach (var i in range(context.parameter().Length-1, 0, 1, false)){
+foreach (var i in range(context.parameter().Length-1, 0, 1, false, true)){
 var p = (Parameter)(Visit(context.parameter(i)));
 temp.add((new System.Text.StringBuilder().Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value)).to_str());
 }
-foreach (var i in range(temp.Count-1, 0, 1, false)){
+foreach (var i in range(temp.Count-1, 0, 1, false, true)){
 obj+=run(()=>{if ( i==temp.Count-1 ) {
 return temp[i];}
 else {

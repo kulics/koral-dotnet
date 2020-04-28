@@ -267,7 +267,7 @@ return (new Result(){text = (new System.Text.StringBuilder().Append("(").Append(
 public  override  object VisitExpressionList( ExpressionListContext context ){
 var r = (new Result());
 var obj = "";
-foreach (var i in range(0, context.expression().Length-1, 1, true)){
+foreach (var i in range(0, context.expression().Length-1, 1, true, true)){
 var temp = (Result)(Visit(context.expression(i)));
 obj+=run(()=>{if ( i==0 ) {
 return temp.text;}
@@ -282,7 +282,7 @@ return r;
 public  override  object VisitTemplateDefine( TemplateDefineContext context ){
 var item = (new TemplateItem());
 item.Template+="<";
-foreach (var i in range(0, context.templateDefineItem().Length-1, 1, true)){
+foreach (var i in range(0, context.templateDefineItem().Length-1, 1, true, true)){
 if ( i>0 ) {
 item.Template+=",";
 if ( item.Contract.len()>0 ) {
@@ -313,7 +313,7 @@ return item;
 public  override  object VisitTemplateCall( TemplateCallContext context ){
 var obj = "";
 obj+="<";
-foreach (var i in range(0, context.typeType().Length-1, 1, true)){
+foreach (var i in range(0, context.typeType().Length-1, 1, true, true)){
 if ( i>0 ) {
 obj+=",";
 }
@@ -369,7 +369,7 @@ return (new System.Text.StringBuilder().Append("\"").Append(text).Append("\"")).
 }
 else {
 text="(new System.Text.StringBuilder()";
-foreach (var i in range(1, context.ChildCount-2, 1, true)){
+foreach (var i in range(1, context.ChildCount-2, 1, true, true)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 if ( v.@is<StringContentContext>() ) {
@@ -400,7 +400,7 @@ return text;
 public  override  object VisitRawStringExpr( RawStringExprContext context ){
 var text = "";
 if ( context.rawStringTemplate().Length==0 ) {
-foreach (var i in range(1, context.ChildCount-2, 1, true)){
+foreach (var i in range(1, context.ChildCount-2, 1, true, true)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 if ( v.@is<RawStringContentContext>() ) {
@@ -414,7 +414,7 @@ return (new System.Text.StringBuilder().Append("@").Append("\"").Append(text).Ap
 }
 else {
 text="(new System.Text.StringBuilder()";
-foreach (var i in range(1, context.ChildCount-2, 1, true)){
+foreach (var i in range(1, context.ChildCount-2, 1, true, true)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 if ( v.@is<RawStringContentContext>() ) {

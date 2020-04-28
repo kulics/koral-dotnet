@@ -172,6 +172,7 @@ varStatement |
 bindStatement |
 assignStatement |
 expressionStatement |
+annotationStatement |
 New_Line;
 
 // 条件判断
@@ -231,6 +232,8 @@ assignStatement: tupleExpression assign tupleExpression end;
 // 表达式
 expressionStatement: expression end;
 
+annotationStatement: annotationString end;
+
 varId: id Bang typeType? | Discard;
 constId: id typeType? | Discard;
 
@@ -289,13 +292,15 @@ tuple: left_paren (expression (more expression)* )? right_paren; // 元组
 
 expressionList: expression (more expression)* ; // 表达式列
 
-annotationSupport: annotation (New_Line)?;
+annotationSupport: annotation;
 
-annotation: Less (id Right_Arrow)? annotationList Greater; // 注解
+annotation: annotationList; // 注解
 
-annotationList: (annotationItem end)* annotationItem;
+annotationList: ((annotationItem|annotationString) New_Line?)+;
 
-annotationItem: id (tuple|lambda)?;
+annotationItem: (id Right_Arrow)? Sharp id (tuple|lambda)?;
+
+annotationString: Sharp (stringExpr|rawStringExpr);
 
 callFunc: (tuple|lambda); // 函数调用
 
