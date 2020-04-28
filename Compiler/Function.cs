@@ -88,9 +88,9 @@ return (new System.Text.StringBuilder().Append("return").Append(Terminate).Appen
 public  override  object VisitReturnAsyncStatement( ReturnAsyncStatementContext context ){
 if ( context.tupleExpression()!=null ) {
 var r = (Result)(Visit(context.tupleExpression()));
-return (new System.Text.StringBuilder().Append("return System.Threading.Tasks.Task.FromResult(").Append(r.text).Append(")").Append(Terminate).Append(Wrap)).to_str();
+return (new System.Text.StringBuilder().Append("return ").Append(Task).Append(".FromResult(").Append(r.text).Append(")").Append(Terminate).Append(Wrap)).to_str();
 }
-return (new System.Text.StringBuilder().Append("return System.Threading.Tasks.Task.FromResult(true)").Append(Terminate).Append(Wrap)).to_str();
+return (new System.Text.StringBuilder().Append("return ").Append(Task).Append(".FromResult(true)").Append(Terminate).Append(Wrap)).to_str();
 }
 public  override  object VisitYieldReturnStatement( YieldReturnStatementContext context ){
 var r = (Result)(Visit(context.tupleExpression()));

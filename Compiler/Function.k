@@ -94,9 +94,9 @@ KLangVisitor : $ me {
     .VisitReturnAsyncStatement : (context ReturnAsyncStatementContext -> v any) {
         ? context.tupleExpression() >< nil {
             r : Visit(context.tupleExpression()) Result!
-            <- "return System.Threading.Tasks.Task.FromResult(${r.text})${Terminate; Wrap}"
+            <- "return ${Task}.FromResult(${r.text})${Terminate; Wrap}"
         }
-        <- "return System.Threading.Tasks.Task.FromResult(true)${Terminate; Wrap}"
+        <- "return ${Task}.FromResult(true)${Terminate; Wrap}"
     }
 
     .VisitYieldReturnStatement : (context YieldReturnStatementContext -> v any) {
