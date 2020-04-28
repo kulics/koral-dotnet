@@ -179,13 +179,13 @@ KLangVisitor : $ me {
                 r.text = "${s1} > ${s2} ? 1 : ( ${s1}==${s2} ? 0 : -1 )"
                 <- r
             } _ CompareContext {
-                # todo 如果左右不是bool类型值，报错
+                # "todo 如果左右不是bool类型值，报错"
                 r.data = Bool
             } _ LogicContext {
-                # todo 如果左右不是bool类型值，报错
+                # "todo 如果左右不是bool类型值，报错"
                 r.data = Bool
             } _ AddContext {
-                # todo 如果左右不是number或text类型值，报错
+                # "todo 如果左右不是number或text类型值，报错"
                 r.data = ? -> e1.data str! == Str | (e2 Result!).data str! == Str {
                     Str
                 } e1.data str! == I32 & (e2 Result!).data str! == I32 {
@@ -194,14 +194,14 @@ KLangVisitor : $ me {
                     F64
                 }
             } _ MulContext {
-                # todo 如果左右不是number类型值，报错
+                # "todo 如果左右不是number类型值，报错"
                 r.data = ? -> e1.data str! == I32 & (e2 Result!).data str! == I32 {
                     I32
                 } _ {
                     F64
                 }
             } _ PowContext {
-                # todo 如果左右不是number类型，报错
+                # "todo 如果左右不是number类型，报错"
                 r.data = F64
                 r.text = "${op}(${e1.text}, ${(e2 Result!).text})"
                 <- r
@@ -456,7 +456,7 @@ KLangVisitor : $ me {
             <- "\"${text}\""
         } _ {
             text = "(new System.Text.StringBuilder()"
-            # 去除前后一个元素
+            # "去除前后一个元素"
             @ i : 1 .. context.ChildCount-2 {
                 v : context.GetChild(i)
                 r : Visit(context.GetChild(i)) str!
@@ -490,7 +490,7 @@ KLangVisitor : $ me {
     .VisitRawStringExpr : (context RawStringExprContext -> v any) {
         text! : ""
         ? context.rawStringTemplate().Length == 0 {
-            # 去除前后一个元素
+            # "去除前后一个元素"
             @ i : 1 .. context.ChildCount-2 {
                 v : context.GetChild(i)
                 r : Visit(context.GetChild(i)) str!
@@ -503,7 +503,7 @@ KLangVisitor : $ me {
             <- "@\"${text}\""
         } _ {
             text = "(new System.Text.StringBuilder()"
-            # 去除前后一个元素
+            # "去除前后一个元素"
             @ i : 1 .. context.ChildCount-2 {
                 v : context.GetChild(i)
                 r : Visit(context.GetChild(i)) str!

@@ -17,7 +17,7 @@ KLangVisitor : $ me {
     .VisitStatement : (context StatementContext -> v any) {
         obj! : ""
         ns : Visit(context.exportStatement()) Namespace!
-        # import library
+        # "import library"
         obj += "using Library;${Wrap}using static Library.Lib;${Wrap}"
         obj += ns.imports + Wrap
         ? context.annotationSupport() >< nil {
@@ -28,7 +28,7 @@ KLangVisitor : $ me {
         content! : ""
         contentStatic! : ""
         me.add_current_set()
-        # pre process to get type id
+        # "pre process to get type id"
         @ item : context.namespaceSupportStatement() {
             child : item.GetChild(0)
             type : child.GetType()
@@ -118,7 +118,7 @@ KLangVisitor : $ me {
         obj! : ""
         id : Visit(context.id()) Result!
         header! : ""
-        # typ = Visit(context.typeType()) str!
+        #: typ = Visit(context.typeType()) str!
         typ! : "int"
         ? context.annotationSupport() >< nil {
             header += Visit(context.annotationSupport())
@@ -151,7 +151,7 @@ KLangVisitor : $ me {
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
-        # 异步
+        # "异步"
         pout! : ""
         ? context.parameterClauseOut() >< nil {
             pout = Visit(context.parameterClauseOut()) str!
@@ -175,7 +175,7 @@ KLangVisitor : $ me {
             obj += "${pout} ${id.text}"
         }
 
-        # 泛型
+        # "泛型"
         templateContract! : ""
         ? context.templateDefine() >< nil {
             template : Visit(context.templateDefine()) TemplateItem!
@@ -188,7 +188,7 @@ KLangVisitor : $ me {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight + Wrap
-        # 异步
+        # "异步"
         ? get_func_async() {
             obj = " async " + obj
         }

@@ -42,7 +42,7 @@ KLangVisitor : $ me {
     .VisitFunctionStatement : (context FunctionStatementContext -> v any) {
         id! : Visit(context.id()) Result!
         obj! : ""
-        # 异步
+        # "异步"
         pout! : ""
         ? context.parameterClauseOut() >< nil {
             pout = Visit(context.parameterClauseOut()) str!
@@ -62,7 +62,7 @@ KLangVisitor : $ me {
             }
             obj += "${pout} ${id.text}"
         }
-        # 泛型
+        # "泛型"
         templateContract! : ""
         ? context.templateDefine() >< nil {
             template : Visit(context.templateDefine()) TemplateItem!
@@ -75,7 +75,7 @@ KLangVisitor : $ me {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += BlockRight + Wrap
         me.delete_current_set()
-        # 异步
+        # "异步"
         ? get_func_async() {
             obj = " async " + obj
         }

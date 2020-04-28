@@ -9,7 +9,7 @@ _ReadPath! str
 _PathLine! str
 
 Main : (args [,]str->) {
-    # 检查系统平台，区分路径字符
+    # "检查系统平台，区分路径字符"
     os! : Environment.OSVersion.Platform
     ? os == PlatformID.Unix | os == PlatformID.MacOSX {
         _ReadPath = "./"
@@ -25,10 +25,10 @@ Main : (args [,]str->) {
 }
 
 Compiled : (path str->) {
-    # 获取相对路径下所有文件
+    # "获取相对路径下所有文件"
     Files : Directory.GetFiles(path, "*.k")
     @ file : Files {
-        # 文件流读文件
+        # "文件流读文件"
         ! fsRead : FileStream(file, FileMode.Open)
         ! {
             FSLength : fsRead.Length int!
@@ -49,8 +49,9 @@ Compiled : (path str->) {
             Visitor : KLangVisitor{}
             Result : Visitor.Visit(AST)
 
-            # 文件流写文件,使用覆盖模式
-            ByteResult : Encoding.UTF8.GetBytes(Result.to_str())  # 转换为字节
+            # "文件流写文件,使用覆盖模式"
+            # "转换为字节"
+            ByteResult : Encoding.UTF8.GetBytes(Result.to_str())  
             ! fsWrite : FileStream("${_ReadPath; file.sub_str(0, file.Length - 2)}.cs", FileMode.Create)
             fsWrite.Write(ByteResult, 0, ByteResult.Length)
         } err Exception {
@@ -65,8 +66,8 @@ Compiled : (path str->) {
     }
 }
 
-#:FileStream
-#:AntlrInputStream
-#:KLexer
-#:CommonTokenStream
-#:KParser
+##FileStream
+##AntlrInputStream
+##KLexer
+##CommonTokenStream
+##KParser

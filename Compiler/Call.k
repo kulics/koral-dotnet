@@ -263,7 +263,7 @@ KLangVisitor : $ me {
         r.text += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         r.text += BlockRight + Wrap
-        # 异步
+        # "异步"
         ? get_func_async() {
             r.text = " async " + r.text
         }
@@ -289,7 +289,7 @@ KLangVisitor : $ me {
             r.text += "{${ProcessFunctionSupport(context.functionSupportStatement())}}"
         }
         me.delete_current_set()
-        # 异步
+        # "异步"
         ? get_func_async() | (context.tupleExpression() >< nil & context.t.Type == Right_Flow) {
             r.text = " async " + r.text
         }

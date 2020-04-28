@@ -172,42 +172,13 @@ KLangVisitor : $ me {
         <- r
     }
 
-    # .VisitIdExpression : (context IdExpressionContext -> v any) {
-    #     r = Result{data = "var"}
-    #     ? context.idExprItem().Length > 1 {
-    #         r.text = "("
-    #         @ [i]v = context.idExprItem() {
-    #             subID = (Visit(v) Result!).text
-    #             r.text += ? -> i >< 0 {
-    #                 ", " + subID
-    #             } _ {
-    #                 subID
-    #             }
-    #             ? me.has_id(subID) {
-    #                 r.isDefine = true
-    #             } _ {
-    #                 me.add_id(subID)
-    #             }
-    #         }
-    #         r.text += ")"
-    #     } _ {
-    #         r = Visit(context.idExprItem(0)) Result!
-    #         ? me.has_id(r.text) {
-    #             r.isDefine = true
-    #         } _ {
-    #             me.add_id(r.text)
-    #         }
-    #     }
-    #     <- r
-    # }
-
     .VisitVarId : (context VarIdContext -> v any) {
         ? context.Discard() >< nil {
             <- "_"
         } _ {
             id : (Visit(context.id()) Result!).text
             ? me.has_id(id) {
-                # r.isDefine = true
+                #: r.isDefine = true
             } _ {
                 me.add_id(id)
             }
@@ -225,7 +196,7 @@ KLangVisitor : $ me {
         } _ {
             id : (Visit(context.id()) Result!).text
             ? me.has_id(id) {
-                # r.isDefine = true
+                #: r.isDefine = true
             } _ {
                 me.add_id(id)
             }

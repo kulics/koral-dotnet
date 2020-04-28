@@ -41,7 +41,7 @@ KLangVisitor : $ me {
             header += Visit(context.annotationSupport())
         }
         header += "${id.permission} partial class ${id.text}"
-        # 泛型
+        # "泛型"
         template! : ""
         templateContract! : ""
         ? context.templateDefine() >< nil {
@@ -187,7 +187,7 @@ KLangVisitor : $ me {
             }
             obj += "${pout} ${id.text}"
         }
-        # 泛型
+        # "泛型"
         templateContract! : ""
         ? context.templateDefine() >< nil {
             template : Visit(context.templateDefine()) TemplateItem!
@@ -200,7 +200,7 @@ KLangVisitor : $ me {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight + Wrap
-        # 异步
+        # "异步"
         ? get_func_async() {
             obj = " async " + obj
         }
@@ -357,7 +357,7 @@ KLangVisitor : $ me {
             }
             obj += "${isVirtual} ${pout} ${id.text}"
         }
-        # 泛型
+        # "泛型"
         templateContract! : ""
         ? context.templateDefine() >< nil {
             template : Visit(context.templateDefine()) TemplateItem!
@@ -370,7 +370,7 @@ KLangVisitor : $ me {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight + Wrap
-        # 异步
+        # "异步"
         ? get_func_async() {
             obj = " async " + obj
         }
@@ -389,7 +389,7 @@ KLangVisitor : $ me {
             Super : Visit(context.id(1)) Result!
             me.superID = Super.text
         }
-        # 获取构造数据
+        # "获取构造数据"
         me.add_current_set()
         text += Visit(context.parameterClauseIn()) str!
         ? context.expressionList() >< nil {
@@ -435,7 +435,7 @@ KLangVisitor : $ me {
             }
             obj += ":" + temp
         }
-        # 泛型
+        # "泛型"
         templateContract! : ""
         ? context.templateDefine() >< nil {
             template : Visit(context.templateDefine()) TemplateItem!
@@ -477,7 +477,7 @@ KLangVisitor : $ me {
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
-        # 异步
+        # "异步"
         pout! : Visit(context.parameterClauseOut()) str!
         ? context.t.Type == Right_Flow {
             ? pout >< "void" {
@@ -497,7 +497,7 @@ KLangVisitor : $ me {
             }
             obj += pout + " " + id.text
         }
-        # 泛型
+        # "泛型"
         templateContract! : ""
         ? context.templateDefine() >< nil {
             template : Visit(context.templateDefine()) TemplateItem!

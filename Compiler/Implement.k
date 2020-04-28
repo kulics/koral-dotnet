@@ -30,7 +30,7 @@ KLangVisitor : $ me {
         obj += BlockRight + Wrap
         header! : ""
         header += "${id.permission} partial class ${id.text}"
-        # 泛型
+        # "泛型"
         template! : ""
         templateContract! : ""
         ? context.templateDefine() >< nil {
@@ -128,7 +128,7 @@ KLangVisitor : $ me {
             }
             obj += "${isVirtual} ${pout} ${id.text}"
         }
-        # 泛型
+        # "泛型"
         templateContract! : ""
         ? context.templateDefine() >< nil {
             template : Visit(context.templateDefine()) TemplateItem!
@@ -141,7 +141,7 @@ KLangVisitor : $ me {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight + Wrap
-        # 异步
+        # "异步"
         ? get_func_async() {
             obj = " async " + obj
         }
