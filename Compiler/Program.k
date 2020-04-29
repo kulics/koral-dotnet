@@ -29,34 +29,36 @@ Compiled : (path str->) {
     Files : Directory.GetFiles(path, "*.k")
     @ file : Files {
         # "文件流读文件"
-        ! fsRead : FileStream(file, FileMode.Open)
-        ! {
-            FSLength : fsRead.Length int!
-            ByteBlock : [array u8](FSLength)
-            r : fsRead.Read(ByteBlock, 0, ByteBlock.Length)
-            Input : Encoding.UTF8.GetString(ByteBlock)
+        ! fsRead : FileStream(file, FileMode.Open) {
+            ! {
+                FSLength : fsRead.Length int!
+                ByteBlock : [array u8](FSLength)
+                r : fsRead.Read(ByteBlock, 0, ByteBlock.Length)
+                Input : Encoding.UTF8.GetString(ByteBlock)
 
-            Stream : AntlrInputStream(Input)
-            Lexer : KLexer(Stream)
-            Tokens : CommonTokenStream(Lexer)
-            Parser : KParser(Tokens)
-            Parser.BuildParseTree = true
-            Parser.RemoveErrorListeners()
-            Parser.AddErrorListener(ErrorListener{ FileDir = file })
+                Stream : AntlrInputStream(Input)
+                Lexer : KLexer(Stream)
+                Tokens : CommonTokenStream(Lexer)
+                Parser : KParser(Tokens)
+                Parser.BuildParseTree = true
+                Parser.RemoveErrorListeners()
+                Parser.AddErrorListener(ErrorListener{ FileDir = file })
 
-            AST : Parser.program()
+                AST : Parser.program()
 
-            Visitor : KLangVisitor{}
-            Result : Visitor.Visit(AST)
+                Visitor : KLangVisitor{}
+                Result : Visitor.Visit(AST)
 
-            # "文件流写文件,使用覆盖模式"
-            # "转换为字节"
-            ByteResult : Encoding.UTF8.GetBytes(Result.to_str())  
-            ! fsWrite : FileStream("${_ReadPath; file.sub_str(0, file.Length - 2)}.cs", FileMode.Create)
-            fsWrite.Write(ByteResult, 0, ByteResult.Length)
-        } err Exception {
-            print(err)
-            <-
+                # "文件流写文件,使用覆盖模式"
+                # "转换为字节"
+                ByteResult : Encoding.UTF8.GetBytes(Result.to_str())  
+                ! fsWrite : FileStream("${_ReadPath; file.sub_str(0, file.Length - 2)}.cs", FileMode.Create) {
+                    fsWrite.Write(ByteResult, 0, ByteResult.Length)
+                }
+            } err Exception {
+                print(err)
+                <-
+            }
         }
     }
 
