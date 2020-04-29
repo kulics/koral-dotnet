@@ -19,22 +19,9 @@ public string permission;
 public partial class KLangVisitor{
 public  virtual  string ProcessFunctionSupport( FunctionSupportStatementContext[] items ){
 var obj = "";
-var content = "";
-var lazy = (new list<string>());
 foreach (var item in items){
-content+=run(()=>{if ( item.GetChild(0).@is<UsingStatementContext>() ) {
-lazy.add("}");
-return (new System.Text.StringBuilder().Append("using (").Append((string)(Visit(item))).Append(") ").Append(BlockLeft).Append(Wrap)).to_str();}
-else {
-return Visit(item);}
-});
+obj+=Visit(item);
 }
-if ( lazy.Count>0 ) {
-foreach (var i in range(lazy.Count-1, 0, 1, false, true)){
-content+=BlockRight;
-}
-}
-obj+=content;
 return obj;
 }
 public  override  object VisitFunctionStatement( FunctionStatementContext context ){

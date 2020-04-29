@@ -208,7 +208,8 @@ checkStatement:
 Bang left_brace (functionSupportStatement)* right_brace (checkErrorStatement)* checkFinallyStatment end
 |Bang left_brace (functionSupportStatement)* right_brace (checkErrorStatement)+ end;
 // 定义检查变量
-usingStatement: Bang expression Bang? (typeType)? Colon expression end;
+usingStatement: Bang constId (more constId)* Bang? Colon 
+tupleExpression left_brace (functionSupportStatement)* right_brace end;
 // 错误处理
 checkErrorStatement: (id|id typeType) left_brace (functionSupportStatement)* right_brace;
 // 最终执行

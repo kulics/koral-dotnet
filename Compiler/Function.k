@@ -20,7 +20,7 @@ Parameter : $ {
 KLangVisitor : $ me {
     ProcessFunctionSupport : (items [,]FunctionSupportStatementContext -> v str) {
         obj! : ""
-        content! : ""
+        #= content! : ""
         lazy! : []str{}
         @ item : items {
             content += ? -> item.GetChild(0) UsingStatementContext? {
@@ -35,7 +35,10 @@ KLangVisitor : $ me {
                 content += BlockRight
             }
         }
-        obj += content
+        obj += content =#
+        @ item : items {
+            obj += Visit(item)
+        }
         <- obj
     }
 

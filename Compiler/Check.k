@@ -55,14 +55,23 @@ KLangVisitor : $ me {
 
     .VisitUsingStatement : (context UsingStatementContext -> v any) {
         obj! : ""
-        r1 : Visit(context.expression(0)) Result!
-        r2 : Visit(context.expression(1)) Result!
-        obj = ? -> context.typeType() >< nil {
-            Type! : Visit(context.typeType()) str!
-            "${Type} ${r1.text} = ${r2.text}"
-        } _ {
-            "var ${r1.text} = ${r2.text}"
+        @ [i]v : context.constId() {
+            ? i >< 0 {
+                obj += "," + Visit(v)
+            } _ {
+                obj += Visit(v)
+            }
         }
+        ? context.constId().Length > 1 {
+            obj = "(" + obj + ")"
+        }
+        r2 : Visit(context.tupleExpression()) Result!
+        obj += " = ${r2.text}"
+        obj = "using (${obj}) ${BlockLeft; Wrap}"
+        me.add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
+        obj += BlockRight
         <- obj
     }
 

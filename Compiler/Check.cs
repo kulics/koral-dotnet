@@ -49,14 +49,24 @@ return obj;
 }
 public  override  object VisitUsingStatement( UsingStatementContext context ){
 var obj = "";
-var r1 = (Result)(Visit(context.expression(0)));
-var r2 = (Result)(Visit(context.expression(1)));
-obj=run(()=>{if ( context.typeType()!=null ) {
-var Type = (string)(Visit(context.typeType()));
-return (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r1.text).Append(" = ").Append(r2.text)).to_str();}
+foreach (var (i, v) in range(context.constId())){
+if ( i!=0 ) {
+obj+=","+Visit(v);
+}
 else {
-return (new System.Text.StringBuilder().Append("var ").Append(r1.text).Append(" = ").Append(r2.text)).to_str();}
-});
+obj+=Visit(v);
+}
+}
+if ( context.constId().Length>1 ) {
+obj="("+obj+")";
+}
+var r2 = (Result)(Visit(context.tupleExpression()));
+obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text)).to_str();
+obj=(new System.Text.StringBuilder().Append("using (").Append(obj).Append(") ").Append(BlockLeft).Append(Wrap)).to_str();
+this.add_current_set();
+obj+=ProcessFunctionSupport(context.functionSupportStatement());
+this.delete_current_set();
+obj+=BlockRight;
 return obj;
 }
 public  override  object VisitCheckExpression( CheckExpressionContext context ){
