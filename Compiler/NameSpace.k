@@ -16,10 +16,8 @@ Namespace : $ {
 KLangVisitor : $ me {
     .VisitStatement : (context StatementContext -> v any) {
         obj! : ""
+        imports! : ""
         ns : Visit(context.exportStatement()) Namespace!
-        # "import library"
-        obj += "using Library;${Wrap}using static Library.Lib;${Wrap}"
-        obj += ns.imports + Wrap
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
@@ -47,6 +45,8 @@ KLangVisitor : $ me {
                 type == typeof(NamespaceFunctionStatementContext) |
                 type == typeof(NamespaceConstantStatementContext) {
                 contentStatic += Visit(item)
+            } type == typeof(ImportStatementContext) {
+                imports += Visit(item)
             } _ {
                 content += Visit(item)
             }
@@ -57,6 +57,8 @@ KLangVisitor : $ me {
         }
         me.delete_current_set()
         obj += BlockRight + Wrap
+        # "import library"
+        obj = "using Library;${Wrap}using static Library.Lib;${Wrap; imports; Wrap}" + obj
         <- obj
     }
 
@@ -65,13 +67,18 @@ KLangVisitor : $ me {
         obj : Namespace{
             name = name
         }
-        @ item : context.importStatement() {
-            obj.imports += Visit(item) str!
-        }
         <- obj
     }
 
     .VisitImportStatement : (context ImportStatementContext -> v any) {
+        obj! : ""
+        @ item : context.importSubStatement() {
+            obj += Visit(item) str!
+        }
+        <- obj
+    }
+
+    .VisitImportSubStatement : (context ImportSubStatementContext -> v any) {
         obj! : ""
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())

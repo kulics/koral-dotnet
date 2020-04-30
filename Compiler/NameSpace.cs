@@ -16,9 +16,8 @@ public string imports;
 public partial class KLangVisitor{
 public  override  object VisitStatement( StatementContext context ){
 var obj = "";
+var imports = "";
 var ns = (Namespace)(Visit(context.exportStatement()));
-obj+=(new System.Text.StringBuilder().Append("using Library;").Append(Wrap).Append("using static Library.Lib;").Append(Wrap)).to_str();
-obj+=ns.imports+Wrap;
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
@@ -44,6 +43,9 @@ var type = item.GetChild(0).GetType();
 if ( type==typeof(NamespaceVariableStatementContext)||type==typeof(NamespaceFunctionStatementContext)||type==typeof(NamespaceConstantStatementContext) ) {
 contentStatic+=Visit(item);
 }
+else if ( type==typeof(ImportStatementContext) ) {
+imports+=Visit(item);
+}
 else {
 content+=Visit(item);
 }
@@ -54,17 +56,22 @@ obj+=(new System.Text.StringBuilder().Append("public partial class ").Append(ns.
 }
 this.delete_current_set();
 obj+=BlockRight+Wrap;
+obj=(new System.Text.StringBuilder().Append("using Library;").Append(Wrap).Append("using static Library.Lib;").Append(Wrap).Append(imports).Append(Wrap)).to_str()+obj;
 return obj;
 }
 public  override  object VisitExportStatement( ExportStatementContext context ){
 var name = (string)(Visit(context.nameSpaceItem()));
 var obj = (new Namespace(){name = name});
-foreach (var item in context.importStatement()){
-obj.imports+=(string)(Visit(item));
-}
 return obj;
 }
 public  override  object VisitImportStatement( ImportStatementContext context ){
+var obj = "";
+foreach (var item in context.importSubStatement()){
+obj+=(string)(Visit(item));
+}
+return obj;
+}
+public  override  object VisitImportSubStatement( ImportSubStatementContext context ){
 var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());

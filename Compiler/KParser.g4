@@ -8,12 +8,10 @@ statement: (New_Line)* (annotationSupport)?
 exportStatement (New_Line)* namespaceSupportStatement*;
 
 // 导出命名空间
-exportStatement: nameSpaceItem call left_brace (importStatement|typeAliasStatement|New_Line)* right_brace end;
-
-// 导入命名空间
-importStatement: (annotationSupport)? ((id Bang?|Discard) Colon)? nameSpaceItem stringExpr? end;
+exportStatement: Left_Arrow nameSpaceItem end;
 
 namespaceSupportStatement:
+importStatement |
 namespaceFunctionStatement |
 namespaceVariableStatement |
 namespaceConstantStatement |
@@ -24,6 +22,11 @@ enumStatement |
 typeRedefineStatement |
 typeTagStatement |
 New_Line ;
+
+// 导入命名空间
+importStatement: Right_Arrow left_brace (importSubStatement|typeAliasStatement|New_Line)* right_brace end;
+
+importSubStatement: (annotationSupport)? ((id Bang?|Discard) Colon)? nameSpaceItem stringExpr? end;
 
 // 类型别名
 typeAliasStatement: id Bang? Colon typeType end;
