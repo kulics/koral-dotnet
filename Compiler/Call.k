@@ -1,4 +1,6 @@
-Compiler . {
+<- Compiler
+
+-> {
     Antlr4.Runtime
     Antlr4.Runtime.Misc
     System
@@ -290,7 +292,7 @@ KLangVisitor : $ me {
         }
         me.delete_current_set()
         # "异步"
-        ? get_func_async() | (context.tupleExpression() >< nil & context.t.Type == Right_Flow) {
+        ? get_func_async() | context.t.Type == Right_Flow {
             r.text = " async " + r.text
         }
         me.delete_func_stack()

@@ -262,7 +262,7 @@ else {
 r.text+=(new System.Text.StringBuilder().Append("{").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append("}")).to_str();
 }
 this.delete_current_set();
-if ( get_func_async()||(context.tupleExpression()!=null&&context.t.Type==Right_Flow) ) {
+if ( get_func_async()||context.t.Type==Right_Flow ) {
 r.text=" async "+r.text;
 }
 this.delete_func_stack();

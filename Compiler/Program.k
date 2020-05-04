@@ -1,4 +1,6 @@
-Compiler . {
+<- Compiler
+
+-> {
     Antlr4.Runtime
     System
     System.IO

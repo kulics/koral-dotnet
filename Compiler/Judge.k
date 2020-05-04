@@ -1,4 +1,6 @@
-Compiler . {
+<- Compiler
+
+-> {
     Antlr4.Runtime
     Antlr4.Runtime.Misc
     System
