@@ -6,7 +6,7 @@
     System
     System.Collections.Generic
 
-    _ : Compiler.KParser
+    _ : Compiler.FeelParser
     _ : Compiler.Compiler_static
 }
 
@@ -244,9 +244,9 @@ KLangVisitor : $ me {
                 e2 : Visit(it) Result!
                 r.text = r.text + e2.text
             } _ {
-                ? context.op.Type == KParser.Bang {
+                ? context.op.Type == FeelParser.Bang {
                     r.text = "ref ${r.text}"
-                } context.op.Type == KParser.Question {
+                } context.op.Type == FeelParser.Question {
                     r.text += "?"
                 }
             }
@@ -436,13 +436,13 @@ KLangVisitor : $ me {
         } context.stringExpr() >< nil {
             r.data = Str
             r.text = Visit(context.stringExpr()) str!
-        } context.t.Type == KParser.CharLiteral {
+        } context.t.Type == FeelParser.CharLiteral {
             r.data = Chr
             r.text = context.CharLiteral().GetText()
-        } context.t.Type == KParser.TrueLiteral {
+        } context.t.Type == FeelParser.TrueLiteral {
             r.data = Bool
             r.text = T
-        } context.t.Type == KParser.FalseLiteral {
+        } context.t.Type == FeelParser.FalseLiteral {
             r.data = Bool
             r.text = F
         } 

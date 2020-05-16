@@ -6,7 +6,7 @@
     System
     System.Collections.Generic
 
-    _ : Compiler.KParser
+    _ : Compiler.FeelParser
     _ : Compiler.Compiler_static
 }
 

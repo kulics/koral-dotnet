@@ -12,11 +12,6 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <Antlr4 Include="KParser.g4">
-      <CopyToOutputDirectory></CopyToOutputDirectory>
-    </Antlr4>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Antlr4" Version="4.6.6">
@@ -29,5 +24,20 @@
     <Reference Include="Library">
       <HintPath>..\Library\bin\Release\netstandard2.1\Library.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Antlr4 Include="FeelLexer.g4">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Antlr4>
+    <Antlr4 Include="FeelParser.g4">
+      <Generator></Generator>
+      <Encoding></Encoding>
+      <TargetLanguage></TargetLanguage>
+      <Listener></Listener>
+      <Visitor></Visitor>
+      <Abstract></Abstract>
+      <ForceAtn></ForceAtn>
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Antlr4>
   </ItemGroup>
 </Project>

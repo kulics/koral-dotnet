@@ -4,7 +4,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;
 using System.Collections.Generic;
-using static Compiler.KParser;
+using static Compiler.FeelParser;
 using static Compiler.Compiler_static;
 
 namespace Compiler
@@ -171,10 +171,10 @@ case CallElementContext it :
 r.text=r.text+e2.text;
 } break;
 default:
-{ if ( context.op.Type==KParser.Bang ) {
+{ if ( context.op.Type==FeelParser.Bang ) {
 r.text=(new System.Text.StringBuilder().Append("ref ").Append(r.text)).to_str();
 }
-else if ( context.op.Type==KParser.Question ) {
+else if ( context.op.Type==FeelParser.Question ) {
 r.text+="?";
 }
 } break;
@@ -345,15 +345,15 @@ else if ( context.stringExpr()!=null ) {
 r.data=Str;
 r.text=(string)(Visit(context.stringExpr()));
 }
-else if ( context.t.Type==KParser.CharLiteral ) {
+else if ( context.t.Type==FeelParser.CharLiteral ) {
 r.data=Chr;
 r.text=context.CharLiteral().GetText();
 }
-else if ( context.t.Type==KParser.TrueLiteral ) {
+else if ( context.t.Type==FeelParser.TrueLiteral ) {
 r.data=Bool;
 r.text=T;
 }
-else if ( context.t.Type==KParser.FalseLiteral ) {
+else if ( context.t.Type==FeelParser.FalseLiteral ) {
 r.data=Bool;
 r.text=F;
 }

@@ -4,7 +4,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;
 using System.Collections.Generic;
-using static Compiler.KParser;
+using static Compiler.FeelParser;
 using static Compiler.Compiler_static;
 
 namespace Compiler

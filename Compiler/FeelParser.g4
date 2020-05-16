@@ -1,6 +1,6 @@
-parser grammar KParser;
+parser grammar FeelParser;
 
-options { tokenVocab=KLexer; }
+options { tokenVocab=FeelLexer; }
 
 program: statement+;
 

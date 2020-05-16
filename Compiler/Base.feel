@@ -6,7 +6,7 @@
     System
     System.Collections.Generic
 
-    _ : Compiler.KParser
+    _ : Compiler.FeelParser
     _ : Compiler.Compiler_static
 }
 
@@ -56,7 +56,7 @@ Result : $ {
     rootID! str : ""
 }
 
-KLangVisitor : [KParserBaseVisitor any] \/ $me {
+KLangVisitor : [FeelParserBaseVisitor any] \/ $me {
     selfID! : ""
     superID! : ""
     setID! : ""

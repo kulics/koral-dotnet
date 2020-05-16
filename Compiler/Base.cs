@@ -4,7 +4,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;
 using System.Collections.Generic;
-using static Compiler.KParser;
+using static Compiler.FeelParser;
 using static Compiler.Compiler_static;
 
 namespace Compiler
@@ -17,7 +17,7 @@ public bool isVirtual;
 public bool isDefine;
 public string rootID = "";
 }
-public partial class KLangVisitor:KParserBaseVisitor<object>{
+public partial class KLangVisitor:FeelParserBaseVisitor<object>{
 public string selfID = "";
 public string superID = "";
 public string setID = "";

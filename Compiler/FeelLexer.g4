@@ -1,4 +1,4 @@
-lexer grammar KLexer;
+lexer grammar FeelLexer;
 
 Add_Equal:         	'+=';
 Sub_Equal:         	'-=';
