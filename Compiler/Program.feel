@@ -54,7 +54,7 @@ Compiled : (path str->) {
                 # "文件流写文件,使用覆盖模式"
                 # "转换为字节"
                 ByteResult : Encoding.UTF8.GetBytes(Result.to_str())  
-                ! fsWrite : FileStream("${_ReadPath; file.sub_str(0, file.Length - 5)}.cs", FileMode.Create) {
+                ! fsWrite : FileStream("${_ReadPath; file.replace(".feel", ".cs")}", FileMode.Create) {
                     fsWrite.Write(ByteResult, 0, ByteResult.Length)
                 }
             } err Exception {
