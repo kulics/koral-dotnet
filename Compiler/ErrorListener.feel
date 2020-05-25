@@ -10,8 +10,8 @@
     _ : Compiler.Compiler_static
 }
 
-
-ErrorListener : BaseErrorListener \/ $ me, base {
+ErrorListener : $ me, base {
+    BaseErrorListener
     FileDir! str
 
     .SyntaxError : (recognizer IRecognizer, offendingSymbol ?IToken, 

@@ -56,7 +56,8 @@ Result : $ {
     rootID! str : ""
 }
 
-KLangVisitor : [FeelParserBaseVisitor any] \/ $me {
+KLangVisitor : $ me {
+    [FeelParserBaseVisitor any]
     selfID! : ""
     superID! : ""
     setID! : ""
@@ -108,7 +109,8 @@ KLangVisitor : [FeelParserBaseVisitor any] \/ $me {
         FuncAsyncStack.pop()
         FuncAsyncStack.push(true)
     }
-} \/ (->$me) {
+}
+KLangVisitor : (->$me) {
     me.CurrentIDSet.push([str]_{})
     FuncAsyncStack.push(false)
 }

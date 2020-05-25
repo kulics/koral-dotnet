@@ -67,6 +67,8 @@ return;
 FuncAsyncStack.pop();
 FuncAsyncStack.push(true);
 }
+}
+public partial class KLangVisitor{
 public KLangVisitor (){this.CurrentIDSet.push((new hashset<string>()));
 FuncAsyncStack.push(false);
 }
