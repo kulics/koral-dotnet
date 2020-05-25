@@ -17,15 +17,13 @@ KLangVisitor : $ me {
         
         obj! : ""
         extend! : []str{}
-        @ item : context.includeStatement() {
-            r : Visit(item) str!
-            extend += r
-        }
-        @ item : context.packageFieldStatement() {
+        ? context.packageFieldStatement() >< nil {
+            item : context.packageFieldStatement()
             r : Visit(item) Result!
             obj += r.text
         }
-        @ item : context.packageNewStatement() {
+        ? context.packageNewStatement() >< nil {
+            item : context.packageNewStatement()
             r : Visit(item) str!
             obj += "public ${id.text} ${r}"
         }

@@ -14,15 +14,13 @@ public  override  object VisitImplementStatement( ImplementStatementContext cont
 var id = (Result)(Visit(context.id()));
 var obj = "";
 var extend = (new list<string>());
-foreach (var item in context.includeStatement()){
-var r = (string)(Visit(item));
-extend+=r;
-}
-foreach (var item in context.packageFieldStatement()){
+if ( context.packageFieldStatement()!=null ) {
+var item = context.packageFieldStatement();
 var r = (Result)(Visit(item));
 obj+=r.text;
 }
-foreach (var item in context.packageNewStatement()){
+if ( context.packageNewStatement()!=null ) {
+var item = context.packageNewStatement();
 var r = (string)(Visit(item));
 obj+=(new System.Text.StringBuilder().Append("public ").Append(id.text).Append(" ").Append(r)).to_str();
 }

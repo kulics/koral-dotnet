@@ -12,12 +12,12 @@ exportStatement: Left_Arrow nameSpaceItem end;
 
 namespaceSupportStatement:
 importStatement |
-namespaceFunctionStatement |
-namespaceVariableStatement |
-namespaceConstantStatement |
 packageStatement |
 protocolStatement |
 implementStatement |
+namespaceFunctionStatement |
+namespaceVariableStatement |
+namespaceConstantStatement |
 enumStatement |
 typeRedefineStatement |
 typeTagStatement |
@@ -26,7 +26,8 @@ New_Line ;
 // 导入命名空间
 importStatement: Right_Arrow left_brace (importSubStatement|typeAliasStatement|New_Line)* right_brace end;
 
-importSubStatement: (annotationSupport)? ((id Bang?|Discard) Colon)? nameSpaceItem stringExpr? end;
+importSubStatement: (annotationSupport)? ((id Bang?|Discard) Colon)?
+ (nameSpaceItem stringExpr? | nameSpaceItem? stringExpr) end;
 
 // 类型别名
 typeAliasStatement: id Bang? Colon typeType end;
@@ -51,8 +52,7 @@ parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brac
 
 // 定义包
 packageStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Bang? Colon
- (packageNewStatement|packageFieldStatement|includeStatement|packageStaticStatement)
- (Back_Forward_Slash (packageNewStatement|packageFieldStatement|includeStatement|packageStaticStatement))* end;
+ (packageFieldStatement|packageStaticStatement|packageNewStatement) end;
 
 packageStaticStatement: left_brace (packageStaticSupportStatement)* right_brace;
 // 包静态语句
@@ -75,6 +75,7 @@ packageFieldStatement: Coin (p=Question? id (more id)?)? left_brace (packageSupp
 
 // 包支持的语句
 packageSupportStatement:
+includeStatement |
 packageFunctionStatement |
 packageVariableStatement |
 packageConstantStatement |
@@ -85,7 +86,7 @@ overrideConstantStatement |
 New_Line;
 
 // 包含
-includeStatement: typeType;
+includeStatement: typeType end;
 // 包构造方法
 packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arrow Coin p=Question? (id (more id)?)? right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
@@ -104,8 +105,7 @@ packageEventStatement: id Bang left_brack Right_Arrow right_brack nameSpaceItem 
 
 // 扩展
 implementStatement: (id| left_brack id templateDefine right_brack) Colon_Equal 
-(packageNewStatement|packageFieldStatement|includeStatement)
-(Back_Forward_Slash (packageNewStatement|packageFieldStatement|includeStatement))* end;
+(packageNewStatement|packageFieldStatement) end;
 
 // 定义变量
 overrideVariableStatement: (annotationSupport)? Dot (n='_')? id Bang (Colon expression | typeType (Colon expression)?) end;
@@ -117,14 +117,12 @@ overrideFunctionStatement: (annotationSupport)? Dot (n='_')? (id | left_brack id
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 协议
-protocolStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Bang? Colon
-(protocolSubStatement (Back_Forward_Slash (protocolSubStatement|includeStatement))*|
-includeStatement (Back_Forward_Slash (protocolSubStatement|includeStatement))* Back_Forward_Slash protocolSubStatement
- (Back_Forward_Slash (protocolSubStatement|includeStatement))* ) end;
+protocolStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Bang? Colon protocolSubStatement end;
 
 protocolSubStatement: Coin Coin (p=Question? id (more id)?)? left_brace (protocolSupportStatement)* right_brace;
 // 协议支持的语句
 protocolSupportStatement:
+includeStatement |
 protocolFunctionStatement |
 protocolVariableStatement |
 New_Line ;

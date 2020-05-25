@@ -14,9 +14,6 @@ Greater_Equal:      '>=';
 Not_Equal:          '><';
 Combine_Equal:      '<>';
 
-Forward_Back_Slash: '/\\';
-Back_Forward_Slash:	'\\/';
-
 Dot_Dot_Dot: 		'...';
 Dot_Dot_Less:		'..<';
 Dot_Dot_Greater:	'..>';

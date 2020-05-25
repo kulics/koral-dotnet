@@ -21,19 +21,19 @@ KLangVisitor : $ me {
 
         obj! : ""
         extend! : []str{}
-        @ item : context.includeStatement() {
-            r : Visit(item) str!
-            extend += r
-        }
-        @ item : context.packageStaticStatement() {
+        ? context.packageStaticStatement() >< nil {
+            item : context.packageStaticStatement()
             r : Visit(item) Result!
             obj += r.text
         }
-        @ item : context.packageFieldStatement() {
+        ? context.packageFieldStatement() >< nil  {
+            item : context.packageFieldStatement()
             r : Visit(item) Result!
             obj += r.text
+            extend += r.data []str!
         }
-        @ item : context.packageNewStatement() {
+        ? context.packageNewStatement() >< nil {
+            item : context.packageNewStatement()
             r : Visit(item) str!
             obj += "public ${id.text} ${r}"
         }
@@ -213,7 +213,7 @@ KLangVisitor : $ me {
 
     .VisitPackageFieldStatement : (context PackageFieldStatementContext -> v any) {
         obj! : ""
-        extend! : ""
+        extend! : []str{}
         ? context.id(0) >< nil {
             Self : Visit(context.id(0)) Result!
             me.selfID = Self.text
@@ -223,7 +223,12 @@ KLangVisitor : $ me {
             me.superID = Super.text
         }
         @ item : context.packageSupportStatement() {
-            obj += Visit(item)
+            ? item.GetChild(0).GetType() == typeof(IncludeStatementContext) {
+                r : Visit(item) str!
+                extend += r
+            } _ {
+                obj += Visit(item)
+            }
         }
         me.selfID = ""
         me.superID = ""
@@ -415,20 +420,19 @@ KLangVisitor : $ me {
     .VisitProtocolStatement : (context ProtocolStatementContext -> v any) {
         id : Visit(context.id()) Result!
         obj! : ""
+        extend! : []str{}
         interfaceProtocol! : ""
         ptclName! : id.text
         ? context.annotationSupport() >< nil {
             obj += Visit(context.annotationSupport())
         }
-        @ item : context.protocolSubStatement() {
-            r : Visit(item) str!
-            interfaceProtocol += r
+        ? context.protocolSubStatement() >< nil {
+            item : context.protocolSubStatement()
+            r : Visit(item) Result!
+            interfaceProtocol += r.text
+            extend += r.data []str!
         }
-        extend! : []str{}
-        @ item : context.includeStatement() {
-            r : Visit(item) str!
-            extend += r
-        }
+
         obj += "public partial interface ${ptclName}"
         ? extend.length > 0 {
             temp! : extend[0]
@@ -452,10 +456,16 @@ KLangVisitor : $ me {
 
     .VisitProtocolSubStatement : (context ProtocolSubStatementContext -> v any) {
         obj! : ""
+        extend! : []str{}
         @ item : context.protocolSupportStatement() {
-            obj += Visit(item)
+            ? item.GetChild(0).GetType() == typeof(IncludeStatementContext) {
+                r : Visit(item) str!
+                extend += r
+            } _ {
+                obj += Visit(item)
+            }
         }
-        <- obj
+        <- Result{text = obj; data = extend}
     }
 
     .VisitProtocolVariableStatement : (context ProtocolVariableStatementContext -> v any) {

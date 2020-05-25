@@ -17,19 +17,19 @@ public  override  object VisitPackageStatement( PackageStatementContext context 
 var id = (Result)(Visit(context.id()));
 var obj = "";
 var extend = (new list<string>());
-foreach (var item in context.includeStatement()){
-var r = (string)(Visit(item));
-extend+=r;
-}
-foreach (var item in context.packageStaticStatement()){
+if ( context.packageStaticStatement()!=null ) {
+var item = context.packageStaticStatement();
 var r = (Result)(Visit(item));
 obj+=r.text;
 }
-foreach (var item in context.packageFieldStatement()){
+if ( context.packageFieldStatement()!=null ) {
+var item = context.packageFieldStatement();
 var r = (Result)(Visit(item));
 obj+=r.text;
+extend+=(list<string>)(r.data);
 }
-foreach (var item in context.packageNewStatement()){
+if ( context.packageNewStatement()!=null ) {
+var item = context.packageNewStatement();
 var r = (string)(Visit(item));
 obj+=(new System.Text.StringBuilder().Append("public ").Append(id.text).Append(" ").Append(r)).to_str();
 }
@@ -203,7 +203,7 @@ return obj;
 }
 public  override  object VisitPackageFieldStatement( PackageFieldStatementContext context ){
 var obj = "";
-var extend = "";
+var extend = (new list<string>());
 if ( context.id(0)!=null ) {
 var Self = (Result)(Visit(context.id(0)));
 this.selfID=Self.text;
@@ -213,7 +213,13 @@ var Super = (Result)(Visit(context.id(1)));
 this.superID=Super.text;
 }
 foreach (var item in context.packageSupportStatement()){
+if ( item.GetChild(0).GetType()==typeof(IncludeStatementContext) ) {
+var r = (string)(Visit(item));
+extend+=r;
+}
+else {
 obj+=Visit(item);
+}
 }
 this.selfID="";
 this.superID="";
@@ -400,19 +406,17 @@ return obj;
 public  override  object VisitProtocolStatement( ProtocolStatementContext context ){
 var id = (Result)(Visit(context.id()));
 var obj = "";
+var extend = (new list<string>());
 var interfaceProtocol = "";
 var ptclName = id.text;
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-foreach (var item in context.protocolSubStatement()){
-var r = (string)(Visit(item));
-interfaceProtocol+=r;
-}
-var extend = (new list<string>());
-foreach (var item in context.includeStatement()){
-var r = (string)(Visit(item));
-extend+=r;
+if ( context.protocolSubStatement()!=null ) {
+var item = context.protocolSubStatement();
+var r = (Result)(Visit(item));
+interfaceProtocol+=r.text;
+extend+=(list<string>)(r.data);
 }
 obj+=(new System.Text.StringBuilder().Append("public partial interface ").Append(ptclName)).to_str();
 if ( extend.length>0 ) {
@@ -435,10 +439,17 @@ return obj;
 }
 public  override  object VisitProtocolSubStatement( ProtocolSubStatementContext context ){
 var obj = "";
+var extend = (new list<string>());
 foreach (var item in context.protocolSupportStatement()){
+if ( item.GetChild(0).GetType()==typeof(IncludeStatementContext) ) {
+var r = (string)(Visit(item));
+extend+=r;
+}
+else {
 obj+=Visit(item);
 }
-return obj;
+}
+return (new Result(){text = obj,data = extend});
 }
 public  override  object VisitProtocolVariableStatement( ProtocolVariableStatementContext context ){
 var id = (Result)(Visit(context.id()));
