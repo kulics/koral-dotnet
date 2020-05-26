@@ -258,7 +258,7 @@ return (new Result(){text = "_",data = "var"});
 }
 else if ( context.ChildCount==4 ) {
 var id = (Result)(Visit(context.id()));
-var template = (string)(Visit(context.templateCall()));
+var template = (string)("<"+Visit(context.templateCall()))+">";
 return (new Result(){text = id.text+template,data = id.text+template,rootID = id.text});
 }
 var r = (Result)(Visit(context.expression()));
@@ -312,7 +312,6 @@ return item;
 }
 public  override  object VisitTemplateCall( TemplateCallContext context ){
 var obj = "";
-obj+="<";
 foreach (var i in range(0, context.typeType().Length-1, 1, true, true)){
 if ( i>0 ) {
 obj+=",";
@@ -320,7 +319,6 @@ obj+=",";
 var r = Visit(context.typeType(i));
 obj+=r;
 }
-obj+=">";
 return obj;
 }
 public  override  object VisitDataStatement( DataStatementContext context ){

@@ -37,7 +37,7 @@ Chr : "char"
 Str : "string"
 Lst : "list"
 Set : "hashset"
-Dic : "dictionary"
+Dic : "dict"
 Stk : "stack"
 Que : "queue"
 

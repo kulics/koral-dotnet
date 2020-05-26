@@ -439,13 +439,6 @@ integerExpr: DecimalLiteral | BinaryLiteral | OctalLiteral | HexLiteral;
 // 类型
 typeNotNull:
 typeAny | 
-typeArray | 
-typeList | 
-typeSet | 
-typeDictionary | 
-typeStack | 
-typeQueue | 
-typeChannel | 
 typeBasic | 
 typePackage | 
 typeFunction;
@@ -454,13 +447,6 @@ typeType: typeNotNull | typeNullable;
 
 typeNullable: Question typeNotNull;
 
-typeArray: left_brack Comma right_brack typeType;
-typeList: left_brack right_brack typeType;
-typeSet: left_brack typeType right_brack Discard;
-typeDictionary: left_brack typeType right_brack typeType;
-typeStack: left_brack Greater right_brack typeType;
-typeQueue: left_brack Less right_brack typeType;
-typeChannel: left_brack Tilde right_brack typeType;
 typePackage: nameSpaceItem | left_brack nameSpaceItem templateCall right_brack;
 typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line* typeFunctionParameterClause right_paren;
 typeAny: TypeAny;

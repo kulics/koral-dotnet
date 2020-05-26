@@ -343,7 +343,7 @@ KLangVisitor : $ me {
             }
         } context.ChildCount == 4 {
             id : Visit(context.id()) Result!
-            template : Visit(context.templateCall()) str!
+            template : "<" + Visit(context.templateCall()) str! + ">"
             <- Result{
                 text = id.text + template
                 data = id.text + template
@@ -407,7 +407,6 @@ KLangVisitor : $ me {
 
     .VisitTemplateCall : (context TemplateCallContext -> v any) {
         obj! : ""
-        obj += "<"
         @ i : 0 .. context.typeType().Length-1 {
             ? i > 0 {
                 obj += ","
@@ -415,7 +414,6 @@ KLangVisitor : $ me {
             r : Visit(context.typeType(i))
             obj += r
         }
-        obj += ">"
         <- obj
     }
 

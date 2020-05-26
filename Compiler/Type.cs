@@ -21,41 +21,16 @@ obj=(string)(Visit(context.typeNotNull()));
 obj+="?";
 return obj;
 }
-public  override  object VisitTypeArray( TypeArrayContext context ){
-var obj = "";
-obj+=(new System.Text.StringBuilder().Append(Visit(context.typeType())).Append("[]")).to_str();
-return obj;
-}
-public  override  object VisitTypeList( TypeListContext context ){
-var obj = "";
-obj+=(new System.Text.StringBuilder().Append(Lst).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
-return obj;
-}
-public  override  object VisitTypeSet( TypeSetContext context ){
-var obj = "";
-obj+=(new System.Text.StringBuilder().Append(Set).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
-return obj;
-}
-public  override  object VisitTypeDictionary( TypeDictionaryContext context ){
-var obj = "";
-obj+=(new System.Text.StringBuilder().Append(Dic).Append("<").Append(Visit(context.typeType(0))).Append(", ").Append(Visit(context.typeType(1))).Append(">")).to_str();
-return obj;
-}
-public  override  object VisitTypeStack( TypeStackContext context ){
-var obj = "";
-obj+=(new System.Text.StringBuilder().Append(Stk).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
-return obj;
-}
-public  override  object VisitTypeQueue( TypeQueueContext context ){
-var obj = "";
-obj+=(new System.Text.StringBuilder().Append(Que).Append("<").Append(Visit(context.typeType())).Append(">")).to_str();
-return obj;
-}
 public  override  object VisitTypePackage( TypePackageContext context ){
 var obj = "";
 obj+=Visit(context.nameSpaceItem());
 if ( context.templateCall()!=null ) {
-obj+=Visit(context.templateCall());
+if ( obj=="array" ) {
+obj=(new System.Text.StringBuilder().Append(Visit(context.templateCall())).Append("[]")).to_str();
+}
+else {
+obj+="<"+Visit(context.templateCall())+">";
+}
 }
 return obj;
 }

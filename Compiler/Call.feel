@@ -15,7 +15,7 @@ KLangVisitor : $ me {
         r : Visit(context.id()) Result!
         r.text = "." + r.text
         ? context.templateCall() >< nil {
-            r.text += Visit(context.templateCall()) str!
+            r.text += "<" + Visit(context.templateCall()) str! + ">"
         }
         ? context.callFunc() >< nil {
             e2 : Visit(context.callFunc()) Result!

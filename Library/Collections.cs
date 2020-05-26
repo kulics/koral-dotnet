@@ -90,24 +90,24 @@ namespace Library {
         public void sort(Comparison<T> comparison) => Sort(comparison);
     }
 
-    public class dictionary<TKey, TValue> : Dictionary<TKey, TValue> {
-        public dictionary() : base() { }
-        public dictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary) { }
-        public dictionary(IEqualityComparer<TKey> comparer) : base(comparer) { }
-        public dictionary(int capacity) : base(capacity) { }
-        public dictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer) : base(dictionary, comparer) { }
-        public dictionary(int capacity, IEqualityComparer<TKey> comparer) : base(capacity, comparer) { }
+    public class dict<TKey, TValue> : Dictionary<TKey, TValue> {
+        public dict() : base() { }
+        public dict(IDictionary<TKey, TValue> dictionary) : base(dictionary) { }
+        public dict(IEqualityComparer<TKey> comparer) : base(comparer) { }
+        public dict(int capacity) : base(capacity) { }
+        public dict(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer) : base(dictionary, comparer) { }
+        public dict(int capacity, IEqualityComparer<TKey> comparer) : base(capacity, comparer) { }
 
-        public static dictionary<TKey, TValue> operator +(dictionary<TKey, TValue> L, dictionary<TKey, TValue> R) {
-            var dic = new dictionary<TKey, TValue>(L);
+        public static dict<TKey, TValue> operator +(dict<TKey, TValue> L, dict<TKey, TValue> R) {
+            var dic = new dict<TKey, TValue>(L);
             foreach (var item in R) {
                 dic.Add(item.Key, item.Value);
             }
             return dic;
         }
 
-        public static dictionary<TKey, TValue> operator -(dictionary<TKey, TValue> L, TKey R) {
-            var dic = new dictionary<TKey, TValue>(L);
+        public static dict<TKey, TValue> operator -(dict<TKey, TValue> L, TKey R) {
+            var dic = new dict<TKey, TValue>(L);
             dic.Remove(R);
             return dic;
         }
