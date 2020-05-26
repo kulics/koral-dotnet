@@ -20,7 +20,7 @@ KLangVisitor : $ me {
             obj += r + Wrap
         }
         ? context.caseElseStatement() >< nil {
-            obj += Visit(context.caseElseStatement()) str!
+            obj += Visit(context.caseElseStatement()) str! + Wrap
         }
         obj += BlockRight+Wrap
         <- obj

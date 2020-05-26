@@ -19,7 +19,7 @@ var r = (string)(Visit(item));
 obj+=r+Wrap;
 }
 if ( context.caseElseStatement()!=null ) {
-obj+=(string)(Visit(context.caseElseStatement()));
+obj+=(string)(Visit(context.caseElseStatement()))+Wrap;
 }
 obj+=BlockRight+Wrap;
 return obj;
