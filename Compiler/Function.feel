@@ -20,7 +20,7 @@ Parameter : $ {
 }
 
 KLangVisitor : $ me {
-    ProcessFunctionSupport : (items [,]FunctionSupportStatementContext -> v str) {
+    ProcessFunctionSupport : (items [array FunctionSupportStatementContext] -> v str) {
         obj! : ""
         #= content! : ""
         lazy! : []str{}
@@ -151,7 +151,7 @@ KLangVisitor : $ me {
 
     .VisitParameterClauseIn : (context ParameterClauseInContext -> v any) {
         obj! : "("
-        temp! : []str{}
+        temp! : [list str]{}
         @ i : context.parameter().Length-1 ... 0 {
             p : Visit(context.parameter(i)) Parameter!
             temp.add("${p.annotation} ${p.type} ${p.id} ${p.value}")
@@ -179,7 +179,7 @@ KLangVisitor : $ me {
         }
         ? context.parameter().Length > 1 {
             obj += "( "
-            temp! : []str{}
+            temp! : [list str]{}
             @ i : context.parameter().Length-1 ... 0 {
                 p : Visit(context.parameter(i)) Parameter!
                 temp.add("${p.annotation} ${p.type} ${p.id} ${p.value}")

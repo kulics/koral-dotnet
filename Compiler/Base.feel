@@ -63,13 +63,13 @@ KLangVisitor : $ me {
     setID! : ""
     getID! : ""
     selfPropertyID! : ""
-    selfPropertyContent! : []str{}
+    selfPropertyContent! : [list str]{}
     selfPropertyVariable! : false
 
-    AllIDSet! : [str]_{}
-    CurrentIDSet! : [>][str]_{}
-    TypeIdSet! : [str]_{}
-    FuncAsyncStack! : [>]bool{}
+    AllIDSet! : [hashset str]{}
+    CurrentIDSet! : [stack [hashset str]]{}
+    TypeIdSet! : [hashset str]{}
+    FuncAsyncStack! : [stack bool]{}
 
     has_id : (id str -> v bool) {
         <- me.AllIDSet.contains(id) | me.CurrentIDSet.peek().contains(id)
@@ -81,7 +81,7 @@ KLangVisitor : $ me {
         @ item : CurrentIDSet.peek() {
             AllIDSet.add(item)
         }
-        me.CurrentIDSet.push([str]_{})
+        me.CurrentIDSet.push([hashset str]{})
     }
     delete_current_set : (->) {
         me.AllIDSet.except_with(me.CurrentIDSet.peek())
@@ -111,7 +111,7 @@ KLangVisitor : $ me {
     }
 }
 KLangVisitor : (->$me) {
-    me.CurrentIDSet.push([str]_{})
+    me.CurrentIDSet.push([hashset str]{})
     FuncAsyncStack.push(false)
 }
 
