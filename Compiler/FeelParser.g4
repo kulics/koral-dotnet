@@ -177,10 +177,13 @@ annotationStatement |
 New_Line;
 
 // 条件判断
-judgeCaseStatement: Question expression Colon (caseStatement)+ end;
+judgeCaseStatement: Question expression Colon (caseStatement)+ caseElseStatement end |
+Question expression Colon (caseStatement)+ end;
 // 判断条件声明
-caseStatement: caseExprStatement (more caseExprStatement)* left_brace (functionSupportStatement)* right_brace;
-caseExprStatement: Discard | expression | (id|Discard) typeType;
+caseElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
+caseStatement: judgeCase (more judgeCase)* left_brace (functionSupportStatement)* right_brace;
+judgeCase: expression | (id|Discard) typeType;
+
 // 判断
 judgeStatement:
 judgeIfStatement (judgeElseIfStatement)* judgeElseStatement end
@@ -263,6 +266,11 @@ pkgAnonymous | // 匿名包
 plusMinus | // 正负处理
 bitwiseNotExpression | // 位运算取反
 negate | // 取反
+judgeExpression | // 判断表达式
+judgeCaseExpression | // 条件判断表达式
+loopExpression | // 循环表达式
+loopEachExpression | // 集合循环表达式
+checkExpression | // 检查表达式
 expression op=Bang | // 取引用
 expression op=Question | // 可空判断
 expression orElse | // 空值替换
@@ -378,6 +386,37 @@ linqHeadItem: At id Bang? Colon expression;
 
 linqItem: (linqHeadItem | id (expression)?) Right_Arrow New_Line?;
 
+// 判断表达式
+judgeExpression: judgeIfExpression (judgeElseIfExpression)* judgeElseExpression;
+
+// else 判断
+judgeElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
+// if 判断
+judgeIfExpression: Question expression left_brace (functionSupportStatement)* tupleExpression right_brace;
+// else if 判断
+judgeElseIfExpression: expression left_brace (functionSupportStatement)* tupleExpression right_brace;
+
+// 条件判断表达式
+judgeCaseExpression: Question expression Colon (caseExpression)* caseElseExpression;
+// 判断条件声明
+caseExpression: judgeCase (more judgeCase)* left_brace (functionSupportStatement)* tupleExpression right_brace;
+
+caseElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
+
+judgeCaseElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
+// 循环
+loopExpression: At id Bang? Colon iteratorStatement 
+left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression;
+// 集合循环表达式
+loopEachExpression: At (id Colon)? id Bang? Colon expression 
+left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression;
+// else 判断
+loopElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
+// 检查
+checkExpression: 
+Bang left_brace (functionSupportStatement)* tupleExpression right_brace (checkErrorExpression)+ checkFinallyStatment? ;
+// 错误处理
+checkErrorExpression: (id|id typeType) left_brace (functionSupportStatement)* tupleExpression right_brace;
 // 基础数据
 dataStatement:
 floatExpr | 
