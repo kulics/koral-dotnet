@@ -105,16 +105,6 @@ r.text+=Visit(context.dictionaryAssign());
 r.text+=")";
 return r;
 }
-public  override  object VisitCallNew( CallNewContext context ){
-var r = (new Result(){data = Visit(context.typeType())});
-var param = "";
-if ( context.expressionList()!=null ) {
-param=((Result)(Visit(context.expressionList()))).text;
-}
-r.text=(new System.Text.StringBuilder().Append("(new ").Append(Visit(context.typeType())).Append("(").Append(param).Append(")")).to_str();
-r.text+=")";
-return r;
-}
 public  override  object VisitPkgAssign( PkgAssignContext context ){
 var obj = "";
 obj+="{";

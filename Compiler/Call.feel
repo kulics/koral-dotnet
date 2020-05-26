@@ -112,17 +112,6 @@ FeelLangVisitor : $ me {
         <- r
     }
 
-    .VisitCallNew : (context CallNewContext -> v any) {
-        r : Result{data = Visit(context.typeType())}
-        param! : ""
-        ? context.expressionList() >< nil {
-            param = (Visit(context.expressionList()) Result!).text
-        }
-        r.text = "(new ${Visit(context.typeType())}(${param})"
-        r.text += ")"
-        <- r
-    }
-
     .VisitPkgAssign : (context PkgAssignContext -> v any) {
         obj! : ""
         obj += "{"

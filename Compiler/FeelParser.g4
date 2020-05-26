@@ -275,7 +275,6 @@ expression op=Bang | // 取引用
 expression op=Question | // 可空判断
 expression orElse | // 空值替换
 expression callFunc | // 函数调用
-callNew | // 构造类对象
 expression callChannel | // 调用通道
 expression callElement | // 访问元素
 expression callAwait |  // 异步等待调用
@@ -320,8 +319,6 @@ transfer: Left_Wave; // 传递通道值
 callElement: left_brack (slice | expression) right_brack; // 元素调用
 
 callPkg: typeType left_brace (pkgAssign|listAssign|dictionaryAssign)? right_brace; // 新建包
-
-callNew: typeType left_paren New_Line? expressionList? New_Line? right_paren; // 构造类对象
 
 orElse: Question Question expression; // 类型转化
 
