@@ -102,61 +102,42 @@ obj+=", "+p;
 return obj;
 }
 public  override  object VisitTypeBasic( TypeBasicContext context ){
-var obj = "";
-switch (context.t.Type) {
+return run(()=> { switch (context.t.Type) {
 case TypeI8 :
-{ obj=I8;
-} break;
+{return I8;}break;
 case TypeU8 :
-{ obj=U8;
-} break;
+{return U8;}break;
 case TypeI16 :
-{ obj=I16;
-} break;
+{return I16;}break;
 case TypeU16 :
-{ obj=U16;
-} break;
+{return U16;}break;
 case TypeI32 :
-{ obj=I32;
-} break;
+{return I32;}break;
 case TypeU32 :
-{ obj=U32;
-} break;
+{return U32;}break;
 case TypeI64 :
-{ obj=I64;
-} break;
+{return I64;}break;
 case TypeU64 :
-{ obj=U64;
-} break;
+{return U64;}break;
 case TypeF32 :
-{ obj=F32;
-} break;
+{return F32;}break;
 case TypeF64 :
-{ obj=F64;
-} break;
+{return F64;}break;
 case TypeChr :
-{ obj=Chr;
-} break;
+{return Chr;}break;
 case TypeStr :
-{ obj=Str;
-} break;
+{return Str;}break;
 case TypeBool :
-{ obj=Bool;
-} break;
+{return Bool;}break;
 case TypeInt :
-{ obj=Int;
-} break;
+{return Int;}break;
 case TypeNum :
-{ obj=Num;
-} break;
+{return Num;}break;
 case TypeByte :
-{ obj=U8;
-} break;
+{return U8;}break;
 default:
-{ obj=Any;
-} break;
-}
-return obj;
+{return Any;}break;}
+});
 }
 }
 }

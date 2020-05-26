@@ -100,42 +100,40 @@ KLangVisitor : $ me {
     }
 
     .VisitTypeBasic : (context TypeBasicContext -> v any) {
-        obj : ""
-        ? context.t.Type : TypeI8 {
-            obj = I8
+        <- ? context.t.Type : TypeI8 {
+            I8
         } TypeU8 {
-            obj = U8
+            U8
         } TypeI16 {
-            obj = I16
+            I16
         } TypeU16 {
-            obj = U16
+            U16
         } TypeI32 {
-            obj = I32
+            I32
         } TypeU32 {
-            obj = U32
+            U32
         } TypeI64 {
-            obj = I64
+            I64
         } TypeU64 {
-            obj = U64
+            U64
         } TypeF32 {
-            obj = F32
+            F32
         } TypeF64 {
-            obj = F64
+            F64
         } TypeChr {
-            obj = Chr
+            Chr
         } TypeStr {
-            obj = Str
+            Str
         } TypeBool {
-            obj = Bool
+            Bool
         } TypeInt {
-            obj = Int
+            Int
         } TypeNum {
-            obj = Num
+            Num
         } TypeByte {
-            obj = U8
+            U8
         } _ {
-            obj = Any
+            Any
         }
-        <- obj
     }
 }
