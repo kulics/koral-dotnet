@@ -10,7 +10,7 @@
     _ : Compiler.Compiler_static
 }
 
-KLangVisitor : $ me {
+FeelLangVisitor : $ me {
     .VisitCallExpression : (context CallExpressionContext -> v any) {
         r : Visit(context.id()) Result!
         r.text = "." + r.text

@@ -19,7 +19,7 @@ Parameter : $ {
     permission! str
 }
 
-KLangVisitor : $ me {
+FeelLangVisitor : $ me {
     ProcessFunctionSupport : (items [array FunctionSupportStatementContext] -> v str) {
         obj! : ""
         #= content! : ""

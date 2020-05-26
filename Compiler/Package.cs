@@ -9,7 +9,7 @@ using static Compiler.Compiler_static;
 
 namespace Compiler
 {
-public partial class KLangVisitor{
+public partial class FeelLangVisitor{
 public  override  object VisitIncludeStatement( IncludeStatementContext context ){
 return Visit(context.typeType());
 }

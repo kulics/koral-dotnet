@@ -56,7 +56,7 @@ Result : $ {
     rootID! str : ""
 }
 
-KLangVisitor : $ me {
+FeelLangVisitor : $ me {
     [FeelParserBaseVisitor any]
     selfID! : ""
     superID! : ""
@@ -110,12 +110,12 @@ KLangVisitor : $ me {
         FuncAsyncStack.push(true)
     }
 }
-KLangVisitor : (->$me) {
+FeelLangVisitor : (->$me) {
     me.CurrentIDSet.push([hashset str]{})
     FuncAsyncStack.push(false)
 }
 
-KLangVisitor : $ me {
+FeelLangVisitor : $ me {
     .VisitProgram : (context ProgramContext -> v any) {
         StatementList : context.statement()
         Result! : ""

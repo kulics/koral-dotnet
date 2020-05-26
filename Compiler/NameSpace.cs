@@ -13,7 +13,7 @@ public partial class Namespace{
 public string name;
 public string imports;
 }
-public partial class KLangVisitor{
+public partial class FeelLangVisitor{
 public  override  object VisitStatement( StatementContext context ){
 var obj = "";
 var imports = "";

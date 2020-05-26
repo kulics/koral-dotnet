@@ -11,7 +11,7 @@
 }
 
 
-KLangVisitor : $ me {
+FeelLangVisitor : $ me {
     .VisitImplementStatement : (context ImplementStatementContext -> v any) {
         id : Visit(context.id()) Result!
         

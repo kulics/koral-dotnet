@@ -99,7 +99,7 @@ DicEle : $ {
     text! str
 }
 
-KLangVisitor : $ me {
+FeelLangVisitor : $ me {
     .VisitVarStatement : (context VarStatementContext -> v any) {
         obj! : ""
         @ [i]v : context.varId() {

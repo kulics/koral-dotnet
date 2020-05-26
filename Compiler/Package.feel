@@ -11,7 +11,7 @@
 }
 
 
-KLangVisitor : $ me {
+FeelLangVisitor : $ me {
     .VisitIncludeStatement : (context IncludeStatementContext -> v any) {
         <- Visit(context.typeType())
     }

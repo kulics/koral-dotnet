@@ -15,7 +15,7 @@ Namespace : $ {
     imports! str
 }
 
-KLangVisitor : $ me {
+FeelLangVisitor : $ me {
     .VisitStatement : (context StatementContext -> v any) {
         obj! : ""
         imports! : ""

@@ -18,7 +18,7 @@ public string key;
 public string value;
 public string text;
 }
-public partial class KLangVisitor{
+public partial class FeelLangVisitor{
 public  override  object VisitVarStatement( VarStatementContext context ){
 var obj = "";
 foreach (var (i, v) in range(context.varId())){

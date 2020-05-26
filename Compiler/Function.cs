@@ -16,7 +16,7 @@ public string value;
 public string annotation;
 public string permission;
 }
-public partial class KLangVisitor{
+public partial class FeelLangVisitor{
 public  virtual  string ProcessFunctionSupport( FunctionSupportStatementContext[] items ){
 var obj = "";
 foreach (var item in items){

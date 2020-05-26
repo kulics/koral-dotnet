@@ -10,7 +10,7 @@
     _ : Compiler.Compiler_static
 }
 
-KLangVisitor : $ me {
+FeelLangVisitor : $ me {
     .VisitJudgeCaseStatement : (context JudgeCaseStatementContext -> v any)  {
         obj! : ""
         expr : Visit(context.expression()) Result!

@@ -16,7 +16,7 @@ public Result step;
 public string order = T;
 public string close = T;
 }
-public partial class KLangVisitor{
+public partial class FeelLangVisitor{
 public  override  object VisitIteratorStatement( IteratorStatementContext context ){
 var it = (new Iterator());
 if ( context.Dot_Dot_Dot()!=null||context.Dot_Dot_Greater()!=null ) {

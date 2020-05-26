@@ -19,7 +19,7 @@ Iterator : $ {
     close!  str : T
 }
 
-KLangVisitor : $ me {
+FeelLangVisitor : $ me {
     .VisitIteratorStatement : (context IteratorStatementContext -> v any) {
         it : Iterator{}
         ? context.Dot_Dot_Dot() >< nil | context.Dot_Dot_Greater() >< nil {

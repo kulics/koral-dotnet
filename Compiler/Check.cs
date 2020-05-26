@@ -9,7 +9,7 @@ using static Compiler.Compiler_static;
 
 namespace Compiler
 {
-public partial class KLangVisitor{
+public partial class FeelLangVisitor{
 public  override  object VisitCheckStatement( CheckStatementContext context ){
 var obj = (new System.Text.StringBuilder().Append("try ").Append(BlockLeft).Append(Wrap)).to_str();
 this.add_current_set();

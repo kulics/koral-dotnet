@@ -17,7 +17,7 @@ public bool isVirtual;
 public bool isDefine;
 public string rootID = "";
 }
-public partial class KLangVisitor:FeelParserBaseVisitor<object>{
+public partial class FeelLangVisitor:FeelParserBaseVisitor<object>{
 public string selfID = "";
 public string superID = "";
 public string setID = "";
@@ -68,12 +68,12 @@ FuncAsyncStack.pop();
 FuncAsyncStack.push(true);
 }
 }
-public partial class KLangVisitor{
-public KLangVisitor (){this.CurrentIDSet.push((new hashset<string>()));
+public partial class FeelLangVisitor{
+public FeelLangVisitor (){this.CurrentIDSet.push((new hashset<string>()));
 FuncAsyncStack.push(false);
 }
 }
-public partial class KLangVisitor{
+public partial class FeelLangVisitor{
 public  override  object VisitProgram( ProgramContext context ){
 var StatementList = context.statement();
 var Result = "";

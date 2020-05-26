@@ -9,7 +9,7 @@ using static Compiler.Compiler_static;
 
 namespace Compiler
 {
-public partial class KLangVisitor{
+public partial class FeelLangVisitor{
 public  override  object VisitTypeType( TypeTypeContext context ){
 var obj = "";
 obj=(string)(Visit(context.GetChild(0)));

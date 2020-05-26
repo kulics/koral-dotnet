@@ -9,7 +9,7 @@ using static Compiler.Compiler_static;
 
 namespace Compiler
 {
-public partial class KLangVisitor{
+public partial class FeelLangVisitor{
 public  override  object VisitJudgeCaseStatement( JudgeCaseStatementContext context ){
 var obj = "";
 var expr = (Result)(Visit(context.expression()));
