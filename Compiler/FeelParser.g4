@@ -263,11 +263,6 @@ pkgAnonymous | // 匿名包
 plusMinus | // 正负处理
 bitwiseNotExpression | // 位运算取反
 negate | // 取反
-judgeExpression | // 判断表达式
-judgeCaseExpression | // 条件判断表达式
-loopExpression | // 循环表达式
-loopEachExpression | // 集合循环表达式
-checkExpression | // 检查表达式
 expression op=Bang | // 取引用
 expression op=Question | // 可空判断
 expression orElse | // 空值替换
@@ -383,35 +378,6 @@ linqHeadItem: At id Bang? Colon expression;
 
 linqItem: (linqHeadItem | id (expression)?) Right_Arrow New_Line?;
 
-// 判断表达式
-judgeExpression: judgeExpressionIfStatement (judgeExpressionElseIfStatement)* judgeExpressionElseStatement;
-
-// else 判断
-judgeExpressionElseStatement: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
-// if 判断
-judgeExpressionIfStatement: Question Right_Arrow expression left_brace (functionSupportStatement)* tupleExpression right_brace;
-// else if 判断
-judgeExpressionElseIfStatement: expression left_brace (functionSupportStatement)* tupleExpression right_brace;
-
-// 条件判断表达式
-judgeCaseExpression: Question expression Colon Right_Arrow (caseExpressionStatement)+;
-// 判断条件声明
-caseExpressionStatement: caseExprStatement (more caseExprStatement)* 
-left_brace (functionSupportStatement)* tupleExpression right_brace;
-// 循环
-loopExpression: At id Bang? Colon iteratorStatement Right_Arrow 
-left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression?;
-// 集合循环表达式
-loopEachExpression: At (id Colon)? id Bang? Colon expression Right_Arrow 
-left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression?;
-// else 判断
-loopElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
-// 检查
-checkExpression: 
-Bang Right_Arrow left_brace (functionSupportStatement)* tupleExpression right_brace (checkErrorExpression)* checkFinallyStatment |
-Bang Right_Arrow left_brace (functionSupportStatement)* tupleExpression right_brace (checkErrorExpression)+ ;
-// 错误处理
-checkErrorExpression: (id|id typeType) left_brace (functionSupportStatement)* tupleExpression right_brace;
 // 基础数据
 dataStatement:
 floatExpr | 
