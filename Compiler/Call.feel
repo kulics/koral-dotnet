@@ -70,10 +70,10 @@ KLangVisitor : $ me {
 
     .VisitCallFunc : (context CallFuncContext -> v any) {
         r : Result{data = "var"}
-        r.text += ? -> context.tuple() >< nil {
-            (Visit(context.tuple()) Result!).text
+        ? context.tuple() >< nil {
+            r.text += (Visit(context.tuple()) Result!).text
         } _ {
-            "(${ (Visit(context.lambda()) Result!).text })"
+            r.text += "(${ (Visit(context.lambda()) Result!).text })"
         }
 
         <- r
@@ -90,10 +90,10 @@ KLangVisitor : $ me {
 
     .VisitCallAwait : (context CallAwaitContext -> v any) {
         r : Result{data = "var"}
-        r.text += ? -> context.tuple() >< nil {
-            (Visit(context.tuple()) Result!).text
+        ? context.tuple() >< nil {
+            r.text += (Visit(context.tuple()) Result!).text
         } _ {
-            "(${ (Visit(context.lambda()) Result!).text })"
+            r.text += "(${ (Visit(context.lambda()) Result!).text })"
         }
         <- r
     }
@@ -127,10 +127,10 @@ KLangVisitor : $ me {
         obj! : ""
         obj += "{"
         @ i : 0 .. context.pkgAssignElement().Length-1 {
-            obj += ? -> i == 0 {
-                Visit(context.pkgAssignElement(i))
+            ? i == 0 {
+                obj += Visit(context.pkgAssignElement(i))
             } _ {
-                "," + Visit(context.pkgAssignElement(i))
+                obj += "," + Visit(context.pkgAssignElement(i))
             }
         }
         obj += "}"
@@ -142,10 +142,10 @@ KLangVisitor : $ me {
         obj += "{"
         @ i : 0 .. context.expression().Length-1 {
             r : Visit(context.expression(i)) Result!
-            obj += ? -> i == 0 {
-                r.text
+            ? i == 0 {
+                obj += r.text
             } _ {
-                "," + r.text
+                obj += "," + r.text
             }
         }
         obj += "}"
@@ -157,10 +157,10 @@ KLangVisitor : $ me {
         obj += "{"
         @ i : 0 .. context.dictionaryElement().Length-1 {
             r : Visit(context.dictionaryElement(i)) DicEle!
-            obj += ? -> i == 0 {
-                r.text
+            ? i == 0 {
+                obj += r.text
             } _ {
-                "," + r.text
+                obj += "," + r.text
             }
         }
         obj += "}"
@@ -184,10 +184,10 @@ KLangVisitor : $ me {
         obj! : ""
         obj += "{"
         @ i : 0 .. context.pkgAnonymousAssignElement().Length-1 {
-            obj += ? -> i == 0 {
-                Visit(context.pkgAnonymousAssignElement(i))
+            ? i == 0 {
+                obj += Visit(context.pkgAnonymousAssignElement(i))
             } _ {
-                "," + Visit(context.pkgAnonymousAssignElement(i))
+                obj += "," + Visit(context.pkgAnonymousAssignElement(i))
             }
         }
         obj += "}"
@@ -205,14 +205,14 @@ KLangVisitor : $ me {
         result : Result{}
         @ i : 0 .. context.expression().Length-1 {
             r : Visit(context.expression(i)) Result!
-            result.text += ? -> i == 0 {
+            ? i == 0 {
                 type = r.data str!
-                r.text
+                result.text += r.text
             } _ {
                 ? type >< (r.data str!) {
                     type = Any
                 }
-                "," + r.text
+                result.text += "," + r.text
             }
         }
         result.data = "${Lst}<${type}>"
@@ -226,10 +226,10 @@ KLangVisitor : $ me {
         result : Result{}
         @ i : 0 .. context.dictionaryElement().Length-1 {
             r : Visit(context.dictionaryElement(i)) DicEle!
-            result.text += ? -> i == 0 {
+            ? i == 0 {
                 key = r.key
                 value = r.value
-                r.text
+                result.text += r.text
             } _ {
                 ? key >< r.key {
                     key = Any
@@ -237,7 +237,7 @@ KLangVisitor : $ me {
                 ? value >< r.value {
                     value = Any
                 }
-                "," + r.text
+                result.text += "," + r.text
             }
         }
         type : "${key}, ${value}"
@@ -303,10 +303,10 @@ KLangVisitor : $ me {
         obj! : ""
         @ i : 0 .. context.id().Length-1 {
             r : Visit(context.id(i)) Result!
-            obj += ? -> i == 0 {
-                r.text
+            ? i == 0 {
+                obj += r.text
             } _ {
-                ", " + r.text
+                obj += ", " + r.text
             }
             me.add_id(r.text)
         }

@@ -43,10 +43,10 @@ KLangVisitor : $ me {
         out! : Visit(context.typeFunctionParameterClause(1)) str!
         ? context.t.Type == Right_Arrow {
             ? out.Length == 0 {
-                obj = ? -> in.Length == 0 {
-                    "Action"
+                ? in.Length == 0 {
+                    obj = "Action"
                 } _ {
-                    "Action<${in}>"
+                    obj = "Action<${in}>"
                 }
             } _ {
                 ? out.first_index_of(",") >= 0 {
@@ -55,27 +55,27 @@ KLangVisitor : $ me {
                 ? context.y >< nil {
                     out = "${IEnum}<${out}>"
                 }
-                obj = ? -> in.Length == 0 {
-                    "Func<${out}>"
+                ? in.Length == 0 {
+                    obj = "Func<${out}>"
                 } _ {
-                    "Func<${in}, ${out}>"
+                    obj = "Func<${in}, ${out}>"
                 }
             }
         } _ {
             ? out.Length == 0 {
-                obj = ? -> in.Length == 0 {
-                    "Func<${Task}>"
+                ? in.Length == 0 {
+                    obj = "Func<${Task}>"
                 } _ {
-                    "Func<${in}, ${Task}>"
+                    obj = "Func<${in}, ${Task}>"
                 }
             } _ {
                 ? context.y >< nil {
                     out = "${IEnum}<(${out})>"
                 }
-                obj = ? -> in.Length == 0 {
-                    "Func<${Task}<${out}>>"
+                ? in.Length == 0 {
+                    obj = "Func<${Task}<${out}>>"
                 } _ {
-                    "Func<${in}, ${Task}<${out}>>"
+                    obj = "Func<${in}, ${Task}<${out}>>"
                 }
             }
         }
@@ -90,50 +90,52 @@ KLangVisitor : $ me {
         obj! : ""
         @ i : 0 .. context.typeType().Length-1 {
             p : Visit(context.typeType(i)) str!
-            obj += ? -> i == 0 {
-                p
+            ? i == 0 {
+                obj += p
             } _ {
-                ", " + p
+                obj += ", " + p
             }
         }
         <- obj
     }
 
     .VisitTypeBasic : (context TypeBasicContext -> v any) {
-        <- ? context.t.Type : -> TypeI8 {
-            I8
+        obj : ""
+        ? context.t.Type : TypeI8 {
+            obj = I8
         } TypeU8 {
-            U8
+            obj = U8
         } TypeI16 {
-            I16
+            obj = I16
         } TypeU16 {
-            U16
+            obj = U16
         } TypeI32 {
-            I32
+            obj = I32
         } TypeU32 {
-            U32
+            obj = U32
         } TypeI64 {
-            I64
+            obj = I64
         } TypeU64 {
-            U64
+            obj = U64
         } TypeF32 {
-            F32
+            obj = F32
         } TypeF64 {
-            F64
+            obj = F64
         } TypeChr {
-            Chr
+            obj = Chr
         } TypeStr {
-            Str
+            obj = Str
         } TypeBool {
-            Bool
+            obj = Bool
         } TypeInt {
-            Int
+            obj = Int
         } TypeNum {
-            Num
+            obj = Num
         } TypeByte {
-            U8
+            obj = U8
         } _ {
-            Any
+            obj = Any
         }
+        <- obj
     }
 }

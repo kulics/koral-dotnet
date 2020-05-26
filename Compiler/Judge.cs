@@ -22,9 +22,11 @@ obj+=BlockRight+Wrap;
 return obj;
 }
 public  override  object VisitCaseExprStatement( CaseExprStatementContext context ){
-return run(()=>{if ( context.expression()!=null ) {
+var obj = "";
+if ( context.expression()!=null ) {
 var expr = (Result)(Visit(context.expression()));
-return (new System.Text.StringBuilder().Append("case ").Append(expr.text).Append(" :").Append(Wrap)).to_str();}
+obj=(new System.Text.StringBuilder().Append("case ").Append(expr.text).Append(" :").Append(Wrap)).to_str();
+}
 else if ( context.typeType()!=null ) {
 var id = "it";
 if ( context.id()!=null ) {
@@ -32,10 +34,12 @@ id=((Result)(Visit(context.id()))).text;
 }
 this.add_id(id);
 var type = (string)(Visit(context.typeType()));
-return (new System.Text.StringBuilder().Append("case ").Append(type).Append(" ").Append(id).Append(" :").Append(Wrap)).to_str();}
+obj=(new System.Text.StringBuilder().Append("case ").Append(type).Append(" ").Append(id).Append(" :").Append(Wrap)).to_str();
+}
 else {
-return (new System.Text.StringBuilder().Append("default:").Append(Wrap)).to_str();}
-});
+obj=(new System.Text.StringBuilder().Append("default:").Append(Wrap)).to_str();
+}
+return obj;
 }
 public  override  object VisitCaseStatement( CaseStatementContext context ){
 var obj = "";

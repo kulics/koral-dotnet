@@ -103,20 +103,23 @@ case LogicContext it :
 { r.data=Bool;
 } break;
 case AddContext it :
-{ r.data=run(()=>{if ( (string)(e1.data)==Str||(string)(((Result)(e2)).data)==Str ) {
-return Str;}
+{ if ( (string)(e1.data)==Str||(string)(((Result)(e2)).data)==Str ) {
+r.data=Str;
+}
 else if ( (string)(e1.data)==I32&&(string)(((Result)(e2)).data)==I32 ) {
-return I32;}
+r.data=I32;
+}
 else {
-return F64;}
-});
+r.data=F64;
+}
 } break;
 case MulContext it :
-{ r.data=run(()=>{if ( (string)(e1.data)==I32&&(string)(((Result)(e2)).data)==I32 ) {
-return I32;}
+{ if ( (string)(e1.data)==I32&&(string)(((Result)(e2)).data)==I32 ) {
+r.data=I32;
+}
 else {
-return F64;}
-});
+r.data=F64;
+}
 } break;
 case PowContext it :
 { r.data=F64;
@@ -269,11 +272,12 @@ var r = (new Result());
 var obj = "";
 foreach (var i in range(0, context.expression().Length-1, 1, true, true)){
 var temp = (Result)(Visit(context.expression(i)));
-obj+=run(()=>{if ( i==0 ) {
-return temp.text;}
+if ( i==0 ) {
+obj+=temp.text;
+}
 else {
-return ", "+temp.text;}
-});
+obj+=", "+temp.text;
+}
 }
 r.text=obj;
 r.data="var";

@@ -40,11 +40,12 @@ var @in = (string)(Visit(context.typeFunctionParameterClause(0)));
 var @out = (string)(Visit(context.typeFunctionParameterClause(1)));
 if ( context.t.Type==Right_Arrow ) {
 if ( @out.Length==0 ) {
-obj=run(()=>{if ( @in.Length==0 ) {
-return "Action";}
+if ( @in.Length==0 ) {
+obj="Action";
+}
 else {
-return (new System.Text.StringBuilder().Append("Action<").Append(@in).Append(">")).to_str();}
-});
+obj=(new System.Text.StringBuilder().Append("Action<").Append(@in).Append(">")).to_str();
+}
 }
 else {
 if ( @out.first_index_of(",")>=0 ) {
@@ -53,30 +54,33 @@ if ( @out.first_index_of(",")>=0 ) {
 if ( context.y!=null ) {
 @out=(new System.Text.StringBuilder().Append(IEnum).Append("<").Append(@out).Append(">")).to_str();
 }
-obj=run(()=>{if ( @in.Length==0 ) {
-return (new System.Text.StringBuilder().Append("Func<").Append(@out).Append(">")).to_str();}
+if ( @in.Length==0 ) {
+obj=(new System.Text.StringBuilder().Append("Func<").Append(@out).Append(">")).to_str();
+}
 else {
-return (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(@out).Append(">")).to_str();}
-});
+obj=(new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(@out).Append(">")).to_str();
+}
 }
 }
 else {
 if ( @out.Length==0 ) {
-obj=run(()=>{if ( @in.Length==0 ) {
-return (new System.Text.StringBuilder().Append("Func<").Append(Task).Append(">")).to_str();}
+if ( @in.Length==0 ) {
+obj=(new System.Text.StringBuilder().Append("Func<").Append(Task).Append(">")).to_str();
+}
 else {
-return (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append(">")).to_str();}
-});
+obj=(new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append(">")).to_str();
+}
 }
 else {
 if ( context.y!=null ) {
 @out=(new System.Text.StringBuilder().Append(IEnum).Append("<(").Append(@out).Append(")>")).to_str();
 }
-obj=run(()=>{if ( @in.Length==0 ) {
-return (new System.Text.StringBuilder().Append("Func<").Append(Task).Append("<").Append(@out).Append(">>")).to_str();}
+if ( @in.Length==0 ) {
+obj=(new System.Text.StringBuilder().Append("Func<").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
+}
 else {
-return (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).to_str();}
-});
+obj=(new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
+}
 }
 }
 return obj;
@@ -88,52 +92,71 @@ public  override  object VisitTypeFunctionParameterClause( TypeFunctionParameter
 var obj = "";
 foreach (var i in range(0, context.typeType().Length-1, 1, true, true)){
 var p = (string)(Visit(context.typeType(i)));
-obj+=run(()=>{if ( i==0 ) {
-return p;}
+if ( i==0 ) {
+obj+=p;
+}
 else {
-return ", "+p;}
-});
+obj+=", "+p;
+}
 }
 return obj;
 }
 public  override  object VisitTypeBasic( TypeBasicContext context ){
-return run(()=> { switch (context.t.Type) {
+var obj = "";
+switch (context.t.Type) {
 case TypeI8 :
-{return I8;}break;
+{ obj=I8;
+} break;
 case TypeU8 :
-{return U8;}break;
+{ obj=U8;
+} break;
 case TypeI16 :
-{return I16;}break;
+{ obj=I16;
+} break;
 case TypeU16 :
-{return U16;}break;
+{ obj=U16;
+} break;
 case TypeI32 :
-{return I32;}break;
+{ obj=I32;
+} break;
 case TypeU32 :
-{return U32;}break;
+{ obj=U32;
+} break;
 case TypeI64 :
-{return I64;}break;
+{ obj=I64;
+} break;
 case TypeU64 :
-{return U64;}break;
+{ obj=U64;
+} break;
 case TypeF32 :
-{return F32;}break;
+{ obj=F32;
+} break;
 case TypeF64 :
-{return F64;}break;
+{ obj=F64;
+} break;
 case TypeChr :
-{return Chr;}break;
+{ obj=Chr;
+} break;
 case TypeStr :
-{return Str;}break;
+{ obj=Str;
+} break;
 case TypeBool :
-{return Bool;}break;
+{ obj=Bool;
+} break;
 case TypeInt :
-{return Int;}break;
+{ obj=Int;
+} break;
 case TypeNum :
-{return Num;}break;
+{ obj=Num;
+} break;
 case TypeByte :
-{return U8;}break;
+{ obj=U8;
+} break;
 default:
-{return Any;}break;
+{ obj=Any;
+} break;
 }
-});
+return obj;
 }
 }
 }

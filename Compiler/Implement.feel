@@ -93,10 +93,10 @@ KLangVisitor : $ me {
             me.selfPropertyVariable = false
         } _ {
             obj += "${r1.permission} ${typ} ${r1.text}"
-            obj += ? -> r2 >< nil {
-                " = ${r2.text; Terminate; Wrap}"
+            ? r2 >< nil {
+                obj += " = ${r2.text; Terminate; Wrap}"
             } _ {
-                Terminate + Wrap
+                obj += Terminate + Wrap
             }
         }
         <- obj

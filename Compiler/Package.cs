@@ -102,11 +102,12 @@ this.selfPropertyVariable=false;
 }
 else {
 obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text)).to_str();
-obj+=run(()=>{if ( r2!=null ) {
-return (new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();}
+if ( r2!=null ) {
+obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+}
 else {
-return Terminate+Wrap;}
-});
+obj+=Terminate+Wrap;
+}
 }
 return obj;
 }
@@ -147,11 +148,12 @@ this.selfPropertyVariable=false;
 }
 else {
 obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text)).to_str();
-obj+=run(()=>{if ( r2!=null ) {
-return (new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();}
+if ( r2!=null ) {
+obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+}
 else {
-return Terminate+Wrap;}
-});
+obj+=Terminate+Wrap;
+}
 }
 return obj;
 }
@@ -267,11 +269,12 @@ this.selfPropertyVariable=false;
 }
 else {
 obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text)).to_str();
-obj+=run(()=>{if ( r2!=null ) {
-return (new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();}
+if ( r2!=null ) {
+obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+}
 else {
-return Terminate+Wrap;}
-});
+obj+=Terminate+Wrap;
+}
 }
 return obj;
 }
@@ -317,11 +320,12 @@ this.selfPropertyVariable=false;
 }
 else {
 obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text)).to_str();
-obj+=run(()=>{if ( r2!=null ) {
-return (new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();}
+if ( r2!=null ) {
+obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+}
 else {
-return Terminate+Wrap;}
-});
+obj+=Terminate+Wrap;
+}
 }
 return obj;
 }

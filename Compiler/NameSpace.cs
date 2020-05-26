@@ -77,13 +77,15 @@ if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
 var ns = (string)(Visit(context.nameSpaceItem()));
-obj+=run(()=>{if ( context.Discard()!=null ) {
-return (new System.Text.StringBuilder().Append("using static ").Append(ns)).to_str();}
+if ( context.Discard()!=null ) {
+obj+=(new System.Text.StringBuilder().Append("using static ").Append(ns)).to_str();
+}
 else if ( context.id()!=null ) {
-return (new System.Text.StringBuilder().Append("using ").Append(ns).Append(".").Append(((Result)(Visit(context.id()))).text)).to_str();}
+obj+=(new System.Text.StringBuilder().Append("using ").Append(ns).Append(".").Append(((Result)(Visit(context.id()))).text)).to_str();
+}
 else {
-return (new System.Text.StringBuilder().Append("using ").Append(ns)).to_str();}
-});
+obj+=(new System.Text.StringBuilder().Append("using ").Append(ns)).to_str();
+}
 obj+=Terminate+Wrap;
 return obj;
 }
@@ -91,11 +93,12 @@ public  override  object VisitNameSpaceItem( NameSpaceItemContext context ){
 var obj = "";
 foreach (var i in range(0, context.id().Length-1, 1, true, true)){
 var id = (Result)(Visit(context.id(i)));
-obj+=run(()=>{if ( i==0 ) {
-return id.text;}
+if ( i==0 ) {
+obj+=id.text;
+}
 else {
-return "."+id.text;}
-});
+obj+="."+id.text;
+}
 }
 return obj;
 }
@@ -103,11 +106,12 @@ public  override  object VisitName( NameContext context ){
 var obj = "";
 foreach (var i in range(0, context.id().Length-1, 1, true, true)){
 var id = (Result)(Visit(context.id(i)));
-obj+=run(()=>{if ( i==0 ) {
-return id.text;}
+if ( i==0 ) {
+obj+=id.text;
+}
 else {
-return "."+id.text;}
-});
+obj+="."+id.text;
+}
 }
 return obj;
 }
@@ -191,11 +195,13 @@ return obj;
 public  override  object VisitNamespaceConstantStatement( NamespaceConstantStatementContext context ){
 var id = (Result)(Visit(context.id()));
 var expr = (Result)(Visit(context.expression()));
-var typ = run(()=>{if ( context.typeType()!=null ) {
-return (string)(Visit(context.typeType()));}
+var typ = "";
+if ( context.typeType()!=null ) {
+typ=(string)(Visit(context.typeType()));
+}
 else {
-return (string)(expr.data);}
-});
+typ=(string)(expr.data);
+}
 var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
@@ -242,11 +248,12 @@ this.selfPropertyVariable=false;
 }
 else {
 obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text)).to_str();
-obj+=run(()=>{if ( r2!=null ) {
-return (new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();}
+if ( r2!=null ) {
+obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+}
 else {
-return Terminate+Wrap;}
-});
+obj+=Terminate+Wrap;
+}
 }
 return obj;
 }

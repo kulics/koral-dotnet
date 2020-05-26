@@ -24,9 +24,10 @@ KLangVisitor : $ me {
     }
 
     .VisitCaseExprStatement : (context CaseExprStatementContext -> v any) {
-        <- ? -> context.expression() >< nil  {
+        obj : ""
+        ? context.expression() >< nil  {
             expr : Visit(context.expression()) Result!
-            "case ${expr.text} :${Wrap}"
+            obj = "case ${expr.text} :${Wrap}"
         } context.typeType() >< nil {
             id! : "it"
             ? context.id() >< nil {
@@ -34,10 +35,11 @@ KLangVisitor : $ me {
             }
             me.add_id(id)
             type : Visit(context.typeType()) str!
-            "case ${type} ${id} :${Wrap}"
+            obj = "case ${type} ${id} :${Wrap}"
         } _ {
-            "default:${Wrap}"
+            obj = "default:${Wrap}"
         }
+        <- obj
     }
 
     .VisitCaseStatement : (context CaseStatementContext -> v any) {

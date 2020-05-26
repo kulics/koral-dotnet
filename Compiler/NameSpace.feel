@@ -86,12 +86,12 @@ KLangVisitor : $ me {
             obj += Visit(context.annotationSupport())
         }
         ns : Visit(context.nameSpaceItem()) str!
-        obj += ? -> context.Discard() >< nil {
-            "using static ${ ns }"
+        ? context.Discard() >< nil {
+            obj += "using static ${ ns }"
         } context.id() >< nil {
-            "using ${ns}.${(Visit(context.id()) Result!).text}"
+            obj += "using ${ns}.${(Visit(context.id()) Result!).text}"
         } _ {
-            "using ${ns}"
+            obj += "using ${ns}"
         }
         obj += Terminate + Wrap
         <- obj
@@ -101,10 +101,10 @@ KLangVisitor : $ me {
         obj! : ""
         @ i : 0 .. context.id().Length-1 {
             id : Visit(context.id(i)) Result!
-            obj += ? -> i == 0 {
-                id.text
+            ? i == 0 {
+                obj += id.text
             } _ {
-                "." + id.text
+                obj += "." + id.text
             }
         }
         <- obj
@@ -114,10 +114,10 @@ KLangVisitor : $ me {
         obj! : ""
         @ i : 0 .. context.id().Length-1 {
             id : Visit(context.id(i)) Result!
-            obj += ? -> i == 0 {
-                id.text
+            ? i == 0 {
+                obj += id.text
             } _ {
-                "." + id.text
+                obj += "." + id.text
             }
         }
         <- obj
@@ -209,10 +209,11 @@ KLangVisitor : $ me {
     .VisitNamespaceConstantStatement : (context NamespaceConstantStatementContext -> v any) {
         id : Visit(context.id()) Result!
         expr : Visit(context.expression()) Result!
-        typ! : ? -> context.typeType() >< nil {
-            Visit(context.typeType()) str!
+        typ! : ""
+        ? context.typeType() >< nil {
+            typ = Visit(context.typeType()) str!
         } _ {
-            expr.data str!
+            typ = expr.data str!
         }
 
         obj! : ""
@@ -262,10 +263,10 @@ KLangVisitor : $ me {
             me.selfPropertyVariable = false
         } _ {
             obj += "${r1.permission} static ${typ} ${r1.text}"
-            obj += ? -> r2 >< nil {
-                " = ${r2.text; Terminate; Wrap}"
+            ? r2 >< nil {
+                obj += " = ${r2.text; Terminate; Wrap}"
             } _ {
-                Terminate + Wrap
+                obj += Terminate + Wrap
             }
         }
         <- obj

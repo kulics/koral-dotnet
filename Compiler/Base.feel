@@ -302,12 +302,12 @@ KLangVisitor : $ me {
             todo("not yet")
             <- ""
         }
-        obj += ? -> context.tuple() >< nil {
-            (me.Visit(context.tuple()) Result!).text
+        ? context.tuple() >< nil {
+            obj += (me.Visit(context.tuple()) Result!).text
         } context.lambda() >< nil {
-            "(${ (me.Visit(context.lambda()) Result!).text })"
+            obj += "(${ (me.Visit(context.lambda()) Result!).text })"
         } _ {
-            ""
+            obj += ""
         }
         ? id >< "" {
             obj = id + obj

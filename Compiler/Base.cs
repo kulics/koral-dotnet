@@ -270,13 +270,15 @@ case "remove" :
 return "";
 } break;
 }
-obj+=run(()=>{if ( context.tuple()!=null ) {
-return ((Result)(this.Visit(context.tuple()))).text;}
+if ( context.tuple()!=null ) {
+obj+=((Result)(this.Visit(context.tuple()))).text;
+}
 else if ( context.lambda()!=null ) {
-return (new System.Text.StringBuilder().Append("(").Append(((Result)(this.Visit(context.lambda()))).text).Append(")")).to_str();}
+obj+=(new System.Text.StringBuilder().Append("(").Append(((Result)(this.Visit(context.lambda()))).text).Append(")")).to_str();
+}
 else {
-return "";}
-});
+obj+="";
+}
 if ( id!="" ) {
 obj=id+obj;
 }

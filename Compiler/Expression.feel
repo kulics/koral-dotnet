@@ -188,19 +188,19 @@ KLangVisitor : $ me {
                 r.data = Bool
             } _ AddContext {
                 # "todo 如果左右不是number或text类型值，报错"
-                r.data = ? -> e1.data str! == Str | (e2 Result!).data str! == Str {
-                    Str
+                ? e1.data str! == Str | (e2 Result!).data str! == Str {
+                    r.data = Str
                 } e1.data str! == I32 & (e2 Result!).data str! == I32 {
-                    I32
+                    r.data = I32
                 } _ {
-                    F64
+                    r.data = F64
                 }
             } _ MulContext {
                 # "todo 如果左右不是number类型值，报错"
-                r.data = ? -> e1.data str! == I32 & (e2 Result!).data str! == I32 {
-                    I32
+                ? e1.data str! == I32 & (e2 Result!).data str! == I32 {
+                    r.data = I32
                 } _ {
-                    F64
+                    r.data = F64
                 }
             } _ PowContext {
                 # "todo 如果左右不是number类型，报错"
@@ -362,10 +362,10 @@ KLangVisitor : $ me {
         obj! : ""
         @ i : 0 .. context.expression().Length-1 {
             temp : Visit(context.expression(i)) Result!
-            obj += ? -> i == 0 {
-                temp.text
+            ? i == 0 {
+                obj += temp.text
             } _ {
-                ", " + temp.text
+                obj += ", " + temp.text
             }
         }
         r.text = obj

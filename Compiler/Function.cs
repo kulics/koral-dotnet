@@ -32,11 +32,12 @@ if ( context.parameterClauseOut()!=null ) {
 pout=(string)(Visit(context.parameterClauseOut()));
 }
 if ( context.t.Type==Right_Flow ) {
-pout=run(()=>{if ( pout!="void" ) {
-return (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).to_str();}
+if ( pout!="void" ) {
+pout=(new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).to_str();
+}
 else {
-return Task;}
-});
+pout=Task;
+}
 obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).to_str();
 }
 else {
@@ -90,11 +91,12 @@ public  override  object VisitTuple( TupleContext context ){
 var obj = "(";
 foreach (var i in range(0, context.expression().Length-1, 1, true, true)){
 var r = (Result)(Visit(context.expression(i)));
-obj+=run(()=>{if ( i==0 ) {
-return r.text;}
+if ( i==0 ) {
+obj+=r.text;
+}
 else {
-return ", "+r.text;}
-});
+obj+=", "+r.text;
+}
 }
 obj+=")";
 return (new Result(){data = "var",text = obj});
@@ -103,11 +105,12 @@ public  override  object VisitTupleExpression( TupleExpressionContext context ){
 var obj = "";
 foreach (var i in range(0, context.expression().Length-1, 1, true, true)){
 var r = (Result)(Visit(context.expression(i)));
-obj+=run(()=>{if ( i==0 ) {
-return r.text;}
+if ( i==0 ) {
+obj+=r.text;
+}
 else {
-return ", "+r.text;}
-});
+obj+=", "+r.text;
+}
 }
 if ( context.expression().Length>1 ) {
 obj=(new System.Text.StringBuilder().Append("(").Append(obj).Append(")")).to_str();
@@ -123,11 +126,12 @@ temp.add((new System.Text.StringBuilder().Append(p.annotation).Append(" ").Appen
 this.add_id(p.id);
 }
 foreach (var i in range(temp.Count-1, 0, 1, false, true)){
-obj+=run(()=>{if ( i==temp.Count-1 ) {
-return temp[i];}
+if ( i==temp.Count-1 ) {
+obj+=temp[i];
+}
 else {
-return ", "+temp[i];}
-});
+obj+=", "+temp[i];
+}
 }
 obj+=")";
 return obj;
@@ -149,11 +153,12 @@ var p = (Parameter)(Visit(context.parameter(i)));
 temp.add((new System.Text.StringBuilder().Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value)).to_str());
 }
 foreach (var i in range(temp.Count-1, 0, 1, false, true)){
-obj+=run(()=>{if ( i==temp.Count-1 ) {
-return temp[i];}
+if ( i==temp.Count-1 ) {
+obj+=temp[i];
+}
 else {
-return ", "+temp[i];}
-});
+obj+=", "+temp[i];
+}
 }
 obj+=" )";
 }

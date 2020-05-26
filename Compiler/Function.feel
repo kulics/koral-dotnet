@@ -53,10 +53,10 @@ KLangVisitor : $ me {
             pout = Visit(context.parameterClauseOut()) str!
         }
         ? context.t.Type == Right_Flow {
-            pout = ? -> pout >< "void" {
-                "${Task}<${pout}>"
+            ? pout >< "void" {
+                pout = "${Task}<${pout}>"
             } _ {
-                Task
+                pout = Task
             }
             obj += "${pout} ${id.text}"
         } _ {
@@ -117,10 +117,10 @@ KLangVisitor : $ me {
         obj! : "("
         @ i : 0 .. context.expression().Length-1 {
             r : Visit(context.expression(i)) Result!
-            obj += ? -> i == 0 {
-                r.text
+            ? i == 0 {
+                obj += r.text
             } _ {
-                ", " + r.text
+                obj += ", " + r.text
             }
         }
         obj += ")"
@@ -134,10 +134,10 @@ KLangVisitor : $ me {
         obj! : ""
         @ i : 0 .. context.expression().Length-1 {
             r : Visit(context.expression(i)) Result!
-            obj += ? -> i == 0 {
-                r.text
+            ? i == 0 {
+                obj += r.text
             } _ {
-                ", " + r.text
+                obj += ", " + r.text
             }
         }
         ? context.expression().Length > 1 {
@@ -158,10 +158,10 @@ KLangVisitor : $ me {
             me.add_id(p.id)
         }
         @ i : temp.Count-1 ... 0 {
-            obj += ? -> i == temp.Count - 1 {
-                temp[i]
+            ? i == temp.Count - 1 {
+                obj += temp[i]
             } _ {
-                ", " + temp[i]
+                obj += ", " + temp[i]
             }
         }
 
@@ -185,10 +185,10 @@ KLangVisitor : $ me {
                 temp.add("${p.annotation} ${p.type} ${p.id} ${p.value}")
             }
             @ i : temp.Count-1 ... 0 {
-                obj += ? -> i == temp.Count - 1 {
-                    temp[i]
+                ? i == temp.Count - 1 {
+                    obj += temp[i]
                 } _ {
-                    ", " + temp[i]
+                    obj += ", " + temp[i]
                 }
             }
             obj += " )"
