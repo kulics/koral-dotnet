@@ -352,7 +352,7 @@ name: id (call New_Line? id)* ;
 
 templateDefine: templateDefineItem*;
 
-templateDefineItem: id | left_paren id id right_paren; 
+templateDefineItem: id | id Colon id; 
 
 templateCall: typeType*;
 
