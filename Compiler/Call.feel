@@ -6,100 +6,100 @@
     System
     System.Collections.Generic
 
-    _ : Compiler.FeelParser
-    _ : Compiler.Compiler_static
+    _ := Compiler.FeelParser
+    _ := Compiler.Compiler_static
 }
 
-FeelLangVisitor : $ me {
-    .VisitCallExpression : (context CallExpressionContext -> v any) {
-        r : Visit(context.id()) Result!
+FeelLangVisitor := $ me {
+    .VisitCallExpression := (context: CallExpressionContext -> v: any) {
+        r := Visit(context.id()): Result!
         r.text = "." + r.text
         ? context.templateCall() >< nil {
-            r.text += "<" + Visit(context.templateCall()) str! + ">"
+            r.text += "<" + (Visit(context.templateCall()): str!) + ">"
         }
         ? context.callFunc() >< nil {
-            e2 : Visit(context.callFunc()) Result!
+            e2 := Visit(context.callFunc()): Result!
             r.text = r.text + e2.text
         } context.callElement() >< nil {
-            e2 : Visit(context.callElement()) Result!
+            e2 := Visit(context.callElement()): Result!
             r.text = r.text + e2.text
         }
         <- r
     }
 
-    .VisitCallElement : (context CallElementContext -> v any) {
+    .VisitCallElement := (context: CallElementContext -> v: any) {
         ? context.expression() == nil {
-            <- (Result{ text = Visit(context.slice()) str! })
+            <- (Result{ text = Visit(context.slice()): str! })
         }
-        r : Visit(context.expression()) Result!
+        r := Visit(context.expression()): Result!
         r.text = "[${ r.text }]"
         <- r
     }
 
-    .VisitSlice : (context SliceContext -> v any) {
-        <- Visit(context.GetChild(0)) str!
+    .VisitSlice := (context: SliceContext -> v: any) {
+        <- Visit(context.GetChild(0)): str!
     }
 
-    .VisitSliceFull : (context SliceFullContext -> v any) {
-        order! : "true"
+    .VisitSliceFull := (context: SliceFullContext -> v: any) {
+        !order := "true"
         ? context.Dot_Dot() == nil {
             order = "false"
         }
-        expr1 : Visit(context.expression(0)) Result!
-        expr2 : Visit(context.expression(1)) Result!
+        expr1 := Visit(context.expression(0)): Result!
+        expr2 := Visit(context.expression(1)): Result!
         <- ".slice(${expr1.text}, ${expr2.text}, ${order})"
     }
 
-    .VisitSliceStart : (context SliceStartContext -> v any) {
-        order! : "true"
+    .VisitSliceStart := (context: SliceStartContext -> v: any) {
+        !order := "true"
         ? context.Dot_Dot() == nil {
             order = "false"
         }
-        expr : Visit(context.expression()) Result!
+        expr := Visit(context.expression()): Result!
         <- ".slice(${expr.text}, null, ${order})"
     }
 
-    .VisitSliceEnd : (context SliceEndContext -> v any) {
-        order! : "true"
+    .VisitSliceEnd := (context: SliceEndContext -> v: any) {
+        !order := "true"
         ? context.Dot_Dot() == nil {
             order = "false"
         }
-        expr : Visit(context.expression()) Result!
+        expr := Visit(context.expression()): Result!
         <- ".slice(null, ${expr.text}, ${order})"
     }
 
-    .VisitCallFunc : (context CallFuncContext -> v any) {
-        r : Result{data = "var"}
+    .VisitCallFunc := (context: CallFuncContext -> v: any) {
+        r := Result{data = "var"}
         ? context.tuple() >< nil {
-            r.text += (Visit(context.tuple()) Result!).text
+            r.text += (Visit(context.tuple()): Result!).text
         } _ {
-            r.text += "(${ (Visit(context.lambda()) Result!).text })"
+            r.text += "(${ (Visit(context.lambda()): Result!).text })"
         }
 
         <- r
     }
 
-    .VisitCallAsync : (context CallAsyncContext -> v any) {
-        r : Result{}
-        expr : Visit(context.expression()) Result!
+    .VisitCallAsync := (context: CallAsyncContext -> v: any) {
+        r := Result{}
+        expr := Visit(context.expression()): Result!
         r.data = "var"
         r.text = "await " + expr.text
         set_func_async()
         <- r
     }
 
-    .VisitCallAwait : (context CallAwaitContext -> v any) {
-        r : Result{data = "var"}
+    .VisitCallAwait := (context: CallAwaitContext -> v: any) {
+        r := Result{data = "var"}
         ? context.tuple() >< nil {
-            r.text += (Visit(context.tuple()) Result!).text
+            r.text += (Visit(context.tuple()): Result!).text
         } _ {
-            r.text += "(${ (Visit(context.lambda()) Result!).text })"
+            r.text += "(${ (Visit(context.lambda()): Result!).text })"
         }
         <- r
     }
 
-    .VisitCallPkg : (context CallPkgContext -> v any) {
-        r : Result{data = Visit(context.typeType())}
+    .VisitCallPkg := (context: CallPkgContext -> v: any) {
+        r := Result{data = Visit(context.typeType())}
         r.text = "(new ${Visit(context.typeType())}()"
         ? context.pkgAssign() >< nil {
             r.text += Visit(context.pkgAssign())
@@ -112,10 +112,10 @@ FeelLangVisitor : $ me {
         <- r
     }
 
-    .VisitPkgAssign : (context PkgAssignContext -> v any) {
-        obj! : ""
+    .VisitPkgAssign := (context: PkgAssignContext -> v: any) {
+        !obj := ""
         obj += "{"
-        @ i : 0 .. context.pkgAssignElement().Length-1 {
+        @ i := 0 .. context.pkgAssignElement().Length-1 {
             ? i == 0 {
                 obj += Visit(context.pkgAssignElement(i))
             } _ {
@@ -126,11 +126,11 @@ FeelLangVisitor : $ me {
         <- obj
     }
 
-    .VisitListAssign : (context ListAssignContext -> v any) {
-        obj! : ""
+    .VisitListAssign := (context: ListAssignContext -> v: any) {
+        !obj := ""
         obj += "{"
-        @ i : 0 .. context.expression().Length-1 {
-            r : Visit(context.expression(i)) Result!
+        @ i := 0 .. context.expression().Length-1 {
+            r := Visit(context.expression(i)): Result!
             ? i == 0 {
                 obj += r.text
             } _ {
@@ -141,11 +141,11 @@ FeelLangVisitor : $ me {
         <- obj
     }
 
-    .VisitDictionaryAssign : (context DictionaryAssignContext -> v any) {
-        obj! : ""
+    .VisitDictionaryAssign := (context: DictionaryAssignContext -> v: any) {
+        !obj := ""
         obj += "{"
-        @ i : 0 .. context.dictionaryElement().Length-1 {
-            r : Visit(context.dictionaryElement(i)) DicEle!
+        @ i := 0 .. context.dictionaryElement().Length-1 {
+            r := Visit(context.dictionaryElement(i)): DicEle!
             ? i == 0 {
                 obj += r.text
             } _ {
@@ -156,23 +156,23 @@ FeelLangVisitor : $ me {
         <- obj
     }
 
-    .VisitPkgAssignElement : (context PkgAssignElementContext -> v any) {
-        obj! : ""
-        obj += "${Visit(context.name())} = ${(Visit(context.expression()) Result!).text}"
+    .VisitPkgAssignElement := (context: PkgAssignElementContext -> v: any) {
+        !obj := ""
+        obj += "${Visit(context.name())} = ${(Visit(context.expression()): Result!).text}"
         <- obj
     }
 
-    .VisitPkgAnonymous : (context PkgAnonymousContext -> v any) {
+    .VisitPkgAnonymous := (context: PkgAnonymousContext -> v: any) {
         <- Result{
             data = "var"
-            text = "new" + Visit(context.pkgAnonymousAssign()) str!
+            text = "new" + Visit(context.pkgAnonymousAssign()): str!
         }
     }
 
-    .VisitPkgAnonymousAssign : (context PkgAnonymousAssignContext -> v any) {
-        obj! : ""
+    .VisitPkgAnonymousAssign := (context: PkgAnonymousAssignContext -> v: any) {
+        !obj := ""
         obj += "{"
-        @ i : 0 .. context.pkgAnonymousAssignElement().Length-1 {
+        @ i := 0 .. context.pkgAnonymousAssignElement().Length-1 {
             ? i == 0 {
                 obj += Visit(context.pkgAnonymousAssignElement(i))
             } _ {
@@ -183,22 +183,22 @@ FeelLangVisitor : $ me {
         <- obj
     }
 
-    .VisitPkgAnonymousAssignElement : (context PkgAnonymousAssignElementContext -> v any) {
-        obj! : ""
-        obj += "${Visit(context.name())} = ${(Visit(context.expression()) Result!).text}"
+    .VisitPkgAnonymousAssignElement := (context: PkgAnonymousAssignElementContext -> v: any) {
+        !obj := ""
+        obj += "${Visit(context.name())} = ${(Visit(context.expression()): Result!).text}"
         <- obj
     }
 
-    .VisitList : (context ListContext -> v any) {
-        type! : Any
-        result : Result{}
-        @ i : 0 .. context.expression().Length-1 {
-            r : Visit(context.expression(i)) Result!
+    .VisitList := (context: ListContext -> v: any) {
+        !type := Any
+        result := Result{}
+        @ i := 0 .. context.expression().Length-1 {
+            r := Visit(context.expression(i)): Result!
             ? i == 0 {
-                type = r.data str!
+                type = r.data: str!
                 result.text += r.text
             } _ {
-                ? type >< (r.data str!) {
+                ? type >< (r.data: str!) {
                     type = Any
                 }
                 result.text += "," + r.text
@@ -209,12 +209,12 @@ FeelLangVisitor : $ me {
         <- result
     }
 
-    .VisitDictionary : (context DictionaryContext -> v any) {
-        key! : Any
-        value! : Any
-        result : Result{}
-        @ i : 0 .. context.dictionaryElement().Length-1 {
-            r : Visit(context.dictionaryElement(i)) DicEle!
+    .VisitDictionary := (context: DictionaryContext -> v: any) {
+        !key := Any
+        !value := Any
+        result := Result{}
+        @ i := 0 .. context.dictionaryElement().Length-1 {
+            r := Visit(context.dictionaryElement(i)): DicEle!
             ? i == 0 {
                 key = r.key
                 value = r.value
@@ -229,25 +229,25 @@ FeelLangVisitor : $ me {
                 result.text += "," + r.text
             }
         }
-        type : "${key}, ${value}"
+        type := "${key}, ${value}"
         result.data = "${Dic}<${type}>"
         result.text = "(new ${result.data}(){ ${result.text} })"
         <- result
     }
 
-    .VisitDictionaryElement : (context DictionaryElementContext -> v any) {
-        r1 : Visit(context.expression(0)) Result!
-        r2 : Visit(context.expression(1)) Result!
-        result : DicEle{
-            key = r1.data str!
-            value = r2.data str!
+    .VisitDictionaryElement := (context: DictionaryElementContext -> v: any) {
+        r1 := Visit(context.expression(0)): Result!
+        r2 := Visit(context.expression(1)): Result!
+        result := DicEle{
+            key = r1.data: str!
+            value = r2.data: str!
             text = "{${r1.text}, ${r2.text}}"
         }
         <- result
     }
 
-    .VisitFunctionExpression : (context FunctionExpressionContext -> v any) {
-        r : Result{}
+    .VisitFunctionExpression := (context: FunctionExpressionContext -> v: any) {
+        r := Result{}
         r.text += Visit(context.parameterClauseIn()) + " => " + BlockLeft + Wrap
         me.add_current_set()
         me.add_func_stack()
@@ -263,10 +263,10 @@ FeelLangVisitor : $ me {
         <- r
     }
 
-    .VisitLambda : (context LambdaContext -> v any) {
+    .VisitLambda := (context: LambdaContext -> v: any) {
         me.add_current_set()
         me.add_func_stack()
-        r : Result{data = "var"}
+        r := Result{data = "var"}
         r.text += "("
         ? context.lambdaIn() >< nil {
             r.text += Visit(context.lambdaIn())
@@ -275,7 +275,7 @@ FeelLangVisitor : $ me {
         r.text += "=>"
 
         ? context.tupleExpression() >< nil {
-            r.text += (Visit(context.tupleExpression()) Result!).text
+            r.text += (Visit(context.tupleExpression()): Result!).text
         } _ {
             r.text += "{${ProcessFunctionSupport(context.functionSupportStatement())}}"
         }
@@ -288,10 +288,10 @@ FeelLangVisitor : $ me {
         <- r
     }
 
-    .VisitLambdaIn : (context LambdaInContext -> v any) {
-        obj! : ""
-        @ i : 0 .. context.id().Length-1 {
-            r : Visit(context.id(i)) Result!
+    .VisitLambdaIn := (context: LambdaInContext -> v: any) {
+        !obj := ""
+        @ i := 0 .. context.id().Length-1 {
+            r := Visit(context.id(i)): Result!
             ? i == 0 {
                 obj += r.text
             } _ {

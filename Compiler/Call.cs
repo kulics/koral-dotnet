@@ -14,7 +14,7 @@ public  override  object VisitCallExpression( CallExpressionContext context ){
 var r = (Result)(Visit(context.id()));
 r.text="."+r.text;
 if ( context.templateCall()!=null ) {
-r.text+=(string)("<"+Visit(context.templateCall()))+">";
+r.text+="<"+((string)(Visit(context.templateCall())))+">";
 }
 if ( context.callFunc()!=null ) {
 var e2 = (Result)(Visit(context.callFunc()));
