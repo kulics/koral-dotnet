@@ -214,8 +214,7 @@ checkStatement:
 Bang left_brace (functionSupportStatement)* right_brace (checkErrorStatement)* checkFinallyStatment end
 |Bang left_brace (functionSupportStatement)* right_brace (checkErrorStatement)+ end;
 // 定义检查变量
-usingStatement: Bang Question Bang? constId (more constId)* Colon_Equal
-tupleExpression left_brace (functionSupportStatement)* right_brace end;
+usingStatement: Bang expression left_brace (functionSupportStatement)* right_brace end;
 // 错误处理
 checkErrorStatement: (id | id Colon typeType) left_brace (functionSupportStatement)* right_brace;
 // 最终执行
@@ -328,9 +327,9 @@ callPkg: typeType left_brace (pkgAssign|listAssign|dictionaryAssign)? right_brac
 
 orElse: Question Question expression; // 类型转化
 
-typeConversion: typeType Bang; // 类型转化
+typeConversion: Colon typeType Bang; // 类型转化
 
-typeCheck: typeType Question; // 类型转化
+typeCheck: Colon typeType Question; // 类型转化
 
 pkgAssign: (pkgAssignElement end)* pkgAssignElement; // 简化赋值
 
