@@ -57,7 +57,18 @@ FeelLangVisitor : $ me {
 
     .VisitUsingStatement : (context UsingStatementContext -> v any) {
         obj! : ""
-        obj = "(" + (Visit(context.expression()) Result!).text + ")"
+        @ [i]v : context.constId() {
+            ? i >< 0 {
+                obj += "," + Visit(v)
+            } _ {
+                obj += Visit(v)
+            }
+        }
+        ? context.constId().Length > 1 {
+            obj = "(" + obj + ")"
+        }
+        r2 : Visit(context.tupleExpression()) Result!
+        obj += " = ${r2.text}"
         obj = "using (${obj}) ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
