@@ -117,6 +117,23 @@ FeelLangVisitor : $ me {
         <- obj
     }
 
+    .VisitVarTypeStatement : (context VarTypeStatementContext -> v any) {
+        obj! : ""
+        @ [i]v : context.varIdType() {
+            ? i >< 0 {
+                obj += "," + Visit(v)
+            } _ {
+                obj += Visit(v)
+            }
+        }
+        ? context.varIdType().Length > 1 {
+            obj = "(" + obj + ")"
+        }
+        r2 : Visit(context.tupleExpression()) Result!
+        obj += " = ${r2.text; Terminate; Wrap}"
+        <- obj
+    }
+
     .VisitBindStatement : (context BindStatementContext -> v any) {
         obj! : ""
         @ [i]v : context.constId() {
@@ -127,6 +144,23 @@ FeelLangVisitor : $ me {
             }
         }
         ? context.constId().Length > 1 {
+            obj = "(" + obj + ")"
+        }
+        r2 : Visit(context.tupleExpression()) Result!
+        obj += " = ${r2.text; Terminate; Wrap}"
+        <- obj
+    }
+
+    .VisitBindTypeStatement : (context BindTypeStatementContext -> v any) {
+        obj! : ""
+        @ [i]v : context.constIdType() {
+            ? i >< 0 {
+                obj += "," + Visit(v)
+            } _ {
+                obj += Visit(v)
+            }
+        }
+        ? context.constIdType().Length > 1 {
             obj = "(" + obj + ")"
         }
         r2 : Visit(context.tupleExpression()) Result!

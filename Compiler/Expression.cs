@@ -36,6 +36,23 @@ var r2 = (Result)(Visit(context.tupleExpression()));
 obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
 return obj;
 }
+public  override  object VisitVarTypeStatement( VarTypeStatementContext context ){
+var obj = "";
+foreach (var (i, v) in range(context.varIdType())){
+if ( i!=0 ) {
+obj+=","+Visit(v);
+}
+else {
+obj+=Visit(v);
+}
+}
+if ( context.varIdType().Length>1 ) {
+obj="("+obj+")";
+}
+var r2 = (Result)(Visit(context.tupleExpression()));
+obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+return obj;
+}
 public  override  object VisitBindStatement( BindStatementContext context ){
 var obj = "";
 foreach (var (i, v) in range(context.constId())){
@@ -47,6 +64,23 @@ obj+=Visit(v);
 }
 }
 if ( context.constId().Length>1 ) {
+obj="("+obj+")";
+}
+var r2 = (Result)(Visit(context.tupleExpression()));
+obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+return obj;
+}
+public  override  object VisitBindTypeStatement( BindTypeStatementContext context ){
+var obj = "";
+foreach (var (i, v) in range(context.constIdType())){
+if ( i!=0 ) {
+obj+=","+Visit(v);
+}
+else {
+obj+=Visit(v);
+}
+}
+if ( context.constIdType().Length>1 ) {
 obj="("+obj+")";
 }
 var r2 = (Result)(Visit(context.tupleExpression()));

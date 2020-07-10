@@ -186,11 +186,21 @@ FeelLangVisitor : $ me {
             } _ {
                 me.add_id(id)
             }
-            ? context.typeType() >< nil {
-                <- Visit(context.typeType()) + " " + id
+            <- "var " + id
+        }
+    }
+
+    .VisitVarIdType : (context VarIdTypeContext -> v any) {
+        ? context.Discard() >< nil {
+            <- "_"
+        } _ {
+            id : (Visit(context.id()) Result!).text
+            ? me.has_id(id) {
+                #: r.isDefine = true
             } _ {
-                <- "var " + id
+                me.add_id(id)
             }
+            <- Visit(context.typeType()) + " " + id
         }
     }
 
@@ -204,11 +214,21 @@ FeelLangVisitor : $ me {
             } _ {
                 me.add_id(id)
             }
-            ? context.typeType() >< nil {
-                <- Visit(context.typeType()) + " " + id
+            <- "var " + id
+        }
+    }
+
+    .VisitConstIdType : (context ConstIdTypeContext -> v any) {
+        ? context.Discard() >< nil {
+            <- "_"
+        } _ {
+            id : (Visit(context.id()) Result!).text
+            ? me.has_id(id) {
+                #: r.isDefine = true
             } _ {
-                <- "var " + id
+                me.add_id(id)
             }
+            <- Visit(context.typeType()) + " " + id
         }
     }
 

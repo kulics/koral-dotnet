@@ -147,12 +147,21 @@ if ( this.has_id(id) ) {
 else {
 this.add_id(id);
 }
-if ( context.typeType()!=null ) {
-return Visit(context.typeType())+" "+id;
-}
-else {
 return "var "+id;
 }
+}
+public  override  object VisitVarIdType( VarIdTypeContext context ){
+if ( context.Discard()!=null ) {
+return "_";
+}
+else {
+var id = ((Result)(Visit(context.id()))).text;
+if ( this.has_id(id) ) {
+}
+else {
+this.add_id(id);
+}
+return Visit(context.typeType())+" "+id;
 }
 }
 public  override  object VisitConstId( ConstIdContext context ){
@@ -166,12 +175,21 @@ if ( this.has_id(id) ) {
 else {
 this.add_id(id);
 }
-if ( context.typeType()!=null ) {
-return Visit(context.typeType())+" "+id;
-}
-else {
 return "var "+id;
 }
+}
+public  override  object VisitConstIdType( ConstIdTypeContext context ){
+if ( context.Discard()!=null ) {
+return "_";
+}
+else {
+var id = ((Result)(Visit(context.id()))).text;
+if ( this.has_id(id) ) {
+}
+else {
+this.add_id(id);
+}
+return Visit(context.typeType())+" "+id;
 }
 }
 public  override  object VisitBoolExpr( BoolExprContext context ){
