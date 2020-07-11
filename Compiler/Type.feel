@@ -6,26 +6,26 @@
     System
     System.Collections.Generic
 
-    _ : Compiler.FeelParser
-    _ : Compiler.Compiler_static
+    _ := Compiler.FeelParser
+    _ := Compiler.Compiler_static
 }
 
-FeelLangVisitor : $ me {
-    .VisitTypeType : (context TypeTypeContext -> v any) {
-        obj! : ""
-        obj = Visit(context.GetChild(0)) str!
+FeelLangVisitor := $ me {
+    .VisitTypeType := (context: TypeTypeContext -> v: any) {
+        !obj := ""
+        obj = Visit(context.GetChild(0)): str!
         <- obj
     }
 
-    .VisitTypeNullable : (context TypeNullableContext -> v any) {
-        obj! : ""
-        obj = Visit(context.typeNotNull()) str!
+    .VisitTypeNullable := (context: TypeNullableContext -> v: any) {
+        !obj := ""
+        obj = Visit(context.typeNotNull()): str!
         obj += "?"
         <- obj
     }
 
-    .VisitTypePackage : (context TypePackageContext -> v any) {
-        obj! : ""
+    .VisitTypePackage := (context: TypePackageContext -> v: any) {
+        !obj := ""
         obj += Visit(context.nameSpaceItem())
         ? context.templateCall() >< nil {
             ? obj == "array" {
@@ -37,10 +37,10 @@ FeelLangVisitor : $ me {
         <- obj
     }
 
-    .VisitTypeFunction : (context TypeFunctionContext -> v any) {
-        obj! : ""
-        in! : Visit(context.typeFunctionParameterClause(0)) str!
-        out! : Visit(context.typeFunctionParameterClause(1)) str!
+    .VisitTypeFunction := (context: TypeFunctionContext -> v: any) {
+        !obj := ""
+        !in := Visit(context.typeFunctionParameterClause(0)): str!
+        !out := Visit(context.typeFunctionParameterClause(1)): str!
         ? context.t.Type == Right_Arrow {
             ? out.Length == 0 {
                 ? in.Length == 0 {
@@ -82,14 +82,14 @@ FeelLangVisitor : $ me {
         <- obj
     }
 
-    .VisitTypeAny : (context TypeAnyContext -> v any) {
+    .VisitTypeAny := (context: TypeAnyContext -> v: any) {
         <- Any
     }
 
-    .VisitTypeFunctionParameterClause : (context TypeFunctionParameterClauseContext -> v any) {
-        obj! : ""
-        @ i : 0 .. context.typeType().Length-1 {
-            p : Visit(context.typeType(i)) str!
+    .VisitTypeFunctionParameterClause := (context: TypeFunctionParameterClauseContext -> v: any) {
+        !obj := ""
+        @ i := 0 .. context.typeType().Length-1 {
+            p := Visit(context.typeType(i)): str!
             ? i == 0 {
                 obj += p
             } _ {
@@ -99,8 +99,8 @@ FeelLangVisitor : $ me {
         <- obj
     }
 
-    .VisitTypeBasic : (context TypeBasicContext -> v any) {
-        <- ? context.t.Type : TypeI8 {
+    .VisitTypeBasic := (context: TypeBasicContext -> v: any) {
+        <- ? [context.t.Type] TypeI8 {
             I8
         } TypeU8 {
             U8

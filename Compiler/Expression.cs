@@ -295,7 +295,7 @@ return (new Result(){text = "_",data = "var"});
 }
 else if ( context.ChildCount==4 ) {
 var id = (Result)(Visit(context.id()));
-var template = (string)("<"+Visit(context.templateCall()))+">";
+var template = "<"+((string)(Visit(context.templateCall())))+">";
 return (new Result(){text = id.text+template,data = id.text+template,rootID = id.text});
 }
 var r = (Result)(Visit(context.expression()));

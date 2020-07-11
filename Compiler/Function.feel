@@ -6,22 +6,22 @@
     System
     System.Collections.Generic
 
-    _ : Compiler.FeelParser
-    _ : Compiler.Compiler_static
+    _ := Compiler.FeelParser
+    _ := Compiler.Compiler_static
 }
 
 
-Parameter : $ {
-    id! str
-    type! str
-    value! str
-    annotation! str
-    permission! str
+Parameter := $ {
+    !id: str
+    !type: str
+    !value: str
+    !annotation: str
+    !permission: str
 }
 
-FeelLangVisitor : $ me {
-    ProcessFunctionSupport : (items [array FunctionSupportStatementContext] -> v str) {
-        obj! : ""
+FeelLangVisitor := $ me {
+    ProcessFunctionSupport := (items: [array FunctionSupportStatementContext] -> v: str) {
+        !obj := ""
         #= content! : ""
         lazy! : []str{}
         @ item : items {
@@ -38,19 +38,19 @@ FeelLangVisitor : $ me {
             }
         }
         obj += content =#
-        @ item : items {
+        @ item := items {
             obj += Visit(item)
         }
         <- obj
     }
 
-    .VisitFunctionStatement : (context FunctionStatementContext -> v any) {
-        id! : Visit(context.id()) Result!
-        obj! : ""
+    .VisitFunctionStatement := (context: FunctionStatementContext -> v: any) {
+        !id := Visit(context.id()): Result!
+        !obj := ""
         # "异步"
-        pout! : ""
+        !pout := ""
         ? context.parameterClauseOut() >< nil {
-            pout = Visit(context.parameterClauseOut()) str!
+            pout = Visit(context.parameterClauseOut()): str!
         }
         ? context.t.Type == Right_Flow {
             ? pout >< "void" {
@@ -68,9 +68,9 @@ FeelLangVisitor : $ me {
             obj += "${pout} ${id.text}"
         }
         # "泛型"
-        templateContract! : ""
+        !templateContract := ""
         ? context.templateDefine() >< nil {
-            template : Visit(context.templateDefine()) TemplateItem!
+            template := Visit(context.templateDefine()): TemplateItem!
             obj += template.Template
             templateContract = template.Contract
         }
@@ -88,35 +88,35 @@ FeelLangVisitor : $ me {
         <- obj
     }
 
-    .VisitReturnStatement : (context ReturnStatementContext -> v any) {
+    .VisitReturnStatement := (context: ReturnStatementContext -> v: any) {
         ? context.tupleExpression() >< nil {
-            r : Visit(context.tupleExpression()) Result!
+            r := Visit(context.tupleExpression()): Result!
             <- "return ${r.text; Terminate; Wrap}"
         }
         <- "return${Terminate; Wrap}"
     }
 
-    .VisitReturnAsyncStatement : (context ReturnAsyncStatementContext -> v any) {
+    .VisitReturnAsyncStatement := (context: ReturnAsyncStatementContext -> v: any) {
         ? context.tupleExpression() >< nil {
-            r : Visit(context.tupleExpression()) Result!
+            r := Visit(context.tupleExpression()): Result!
             <- "return ${Task}.FromResult(${r.text})${Terminate; Wrap}"
         }
         <- "return ${Task}.FromResult(true)${Terminate; Wrap}"
     }
 
-    .VisitYieldReturnStatement : (context YieldReturnStatementContext -> v any) {
-        r : Visit(context.tupleExpression()) Result!
+    .VisitYieldReturnStatement := (context: YieldReturnStatementContext -> v: any) {
+        r := Visit(context.tupleExpression()): Result!
         <- "yield return ${r.text; Terminate; Wrap}"
     }
 
-    .VisitYieldBreakStatement : (context YieldBreakStatementContext -> v any) {
+    .VisitYieldBreakStatement := (context: YieldBreakStatementContext -> v: any) {
         <- "yield break${Terminate; Wrap}"
     }
 
-    .VisitTuple : (context TupleContext -> v any) {
-        obj! : "("
-        @ i : 0 .. context.expression().Length-1 {
-            r : Visit(context.expression(i)) Result!
+    .VisitTuple := (context: TupleContext -> v: any) {
+        !obj := "("
+        @ i := 0 .. context.expression().Length-1 {
+            r := Visit(context.expression(i)): Result!
             ? i == 0 {
                 obj += r.text
             } _ {
@@ -130,10 +130,10 @@ FeelLangVisitor : $ me {
         }
     }
 
-    .VisitTupleExpression : (context TupleExpressionContext -> v any) {
-        obj! : ""
-        @ i : 0 .. context.expression().Length-1 {
-            r : Visit(context.expression(i)) Result!
+    .VisitTupleExpression := (context: TupleExpressionContext -> v: any) {
+        !obj := ""
+        @ i := 0 .. context.expression().Length-1 {
+            r := Visit(context.expression(i)): Result!
             ? i == 0 {
                 obj += r.text
             } _ {
@@ -149,15 +149,15 @@ FeelLangVisitor : $ me {
         }
     }
 
-    .VisitParameterClauseIn : (context ParameterClauseInContext -> v any) {
-        obj! : "("
-        temp! : [list str]{}
-        @ i : context.parameter().Length-1 ... 0 {
-            p : Visit(context.parameter(i)) Parameter!
+    .VisitParameterClauseIn := (context: ParameterClauseInContext -> v: any) {
+        !obj := "("
+        !temp := [list str]{}
+        @ i := context.parameter().Length-1 ... 0 {
+            p := Visit(context.parameter(i)): Parameter!
             temp.add("${p.annotation} ${p.type} ${p.id} ${p.value}")
             me.add_id(p.id)
         }
-        @ i : temp.Count-1 ... 0 {
+        @ i := temp.Count-1 ... 0 {
             ? i == temp.Count - 1 {
                 obj += temp[i]
             } _ {
@@ -169,22 +169,22 @@ FeelLangVisitor : $ me {
         <- obj
     }
 
-    .VisitParameterClauseOut : (context ParameterClauseOutContext -> v any) {
-        obj! : ""
+    .VisitParameterClauseOut := (context: ParameterClauseOutContext -> v: any) {
+        !obj := ""
         ? context.parameter().Length == 0 {
             obj += "void"
         } context.parameter().Length == 1 {
-            p : Visit(context.parameter(0)) Parameter!
+            p := Visit(context.parameter(0)): Parameter!
             obj += p.type
         }
         ? context.parameter().Length > 1 {
             obj += "( "
-            temp! : [list str]{}
-            @ i : context.parameter().Length-1 ... 0 {
-                p : Visit(context.parameter(i)) Parameter!
+            !temp := [list str]{}
+            @ i := context.parameter().Length-1 ... 0 {
+                p := Visit(context.parameter(i)): Parameter!
                 temp.add("${p.annotation} ${p.type} ${p.id} ${p.value}")
             }
-            @ i : temp.Count-1 ... 0 {
+            @ i := temp.Count-1 ... 0 {
                 ? i == temp.Count - 1 {
                     obj += temp[i]
                 } _ {
@@ -196,18 +196,18 @@ FeelLangVisitor : $ me {
         <- obj
     }
 
-    .VisitParameter : (context ParameterContext -> v any) {
-        p : Parameter{}
-        id : Visit(context.id()) Result!
+    .VisitParameter := (context: ParameterContext -> v: any) {
+        p := Parameter{}
+        id := Visit(context.id()): Result!
         p.id = id.text
         p.permission = id.permission
         ? context.annotationSupport() >< nil {
-            p.annotation = Visit(context.annotationSupport()) str!
+            p.annotation = Visit(context.annotationSupport()): str!
         }
         ? context.expression() >< nil {
-            p.value = "= ${(Visit(context.expression()) Result!).text}"
+            p.value = "= ${(Visit(context.expression()): Result!).text}"
         }
-        p.type = Visit(context.typeType()) str!
+        p.type = Visit(context.typeType()): str!
         ? context.Comma_Comma_Comma() >< nil {
             p.type = "params ${p.type}[]"
         }
