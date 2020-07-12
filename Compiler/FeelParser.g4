@@ -308,7 +308,7 @@ annotation: annotationList; // 注解
 
 annotationList: ((annotationItem|annotationString) New_Line?)+;
 
-annotationItem: Sharp (id Colon)? id (tuple|lambda)?;
+annotationItem: Sharp (id left_brace id (tuple|lambda)? right_brace | id (tuple|lambda)?);
 
 annotationString: Sharp (stringExpr|rawStringExpr);
 
