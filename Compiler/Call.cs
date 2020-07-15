@@ -91,8 +91,8 @@ r.text+=(new System.Text.StringBuilder().Append("(").Append(((Result)(Visit(cont
 return r;
 }
 public  override  object VisitCallPkg( CallPkgContext context ){
-var r = (new Result(){data = Visit(context.typeType())});
-r.text=(new System.Text.StringBuilder().Append("(new ").Append(Visit(context.typeType())).Append("()")).to_str();
+var r = (new Result(){data = Visit(context.typeNotNull())});
+r.text=(new System.Text.StringBuilder().Append("(new ").Append(Visit(context.typeNotNull())).Append("()")).to_str();
 if ( context.pkgAssign()!=null ) {
 r.text+=Visit(context.pkgAssign());
 }

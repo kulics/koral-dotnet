@@ -324,7 +324,7 @@ transfer: Left_Wave; // 传递通道值
 
 callElement: left_brack (slice | expression) right_brack; // 元素调用
 
-callPkg: typeType left_brace (pkgAssign|listAssign|dictionaryAssign)? right_brace; // 新建包
+callPkg: typeNotNull left_brace (pkgAssign|listAssign|dictionaryAssign)? right_brace; // 新建包
 
 orElse: Question Question expression; // 类型转化
 
