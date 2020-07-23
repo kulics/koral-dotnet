@@ -119,7 +119,7 @@ parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brac
 // 协议
 protocolStatement: (annotationSupport)? (id | left_brack id templateDefine right_brack) Colon_Equal protocolSubStatement end;
 
-protocolSubStatement: Coin Coin (p=Question? id (more id)?)? left_brace (protocolSupportStatement)* right_brace;
+protocolSubStatement: Left_Brack Coin Right_Brack (p=Question? id (more id)?)? left_brace (protocolSupportStatement)* right_brace;
 // 协议支持的语句
 protocolSupportStatement:
 includeStatement |
