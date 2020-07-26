@@ -179,11 +179,11 @@ annotationStatement |
 New_Line;
 
 // 条件判断
-judgeCaseStatement: Question Left_Brack expression Right_Brack (caseStatement)+ caseElseStatement end |
-Question Left_Brack expression Right_Brack (caseStatement)+ end;
+judgeCaseStatement: Left_Brack expression Right_Brack (caseStatement)+ caseElseStatement end |
+Left_Brack expression Right_Brack (caseStatement)+ end;
 // 判断条件声明
 caseElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
-caseStatement: judgeCase (more judgeCase)* left_brace (functionSupportStatement)* right_brace;
+caseStatement: judgeCase (more judgeCase)* Question left_brace (functionSupportStatement)* right_brace;
 judgeCase: expression | (id | Discard) Colon typeType;
 
 // 判断
@@ -193,16 +193,16 @@ judgeIfStatement (judgeElseIfStatement)* judgeElseStatement end
 // else 判断
 judgeElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
 // if 判断
-judgeIfStatement: Question expression left_brace (functionSupportStatement)* right_brace;
+judgeIfStatement: expression Question left_brace (functionSupportStatement)* right_brace;
 // else if 判断
-judgeElseIfStatement: expression left_brace (functionSupportStatement)* right_brace;
+judgeElseIfStatement: expression Question left_brace (functionSupportStatement)* right_brace;
 // 循环
-loopStatement: At Bang? id Colon_Equal iteratorStatement left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
+loopStatement: iteratorStatement At Bang? id left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 集合循环
-loopEachStatement: At (left_brack id right_brack)? Bang? id Colon_Equal expression
+loopEachStatement: expression At (left_brack id right_brack)? Bang? id
  left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 条件循环
-loopCaseStatement: At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
+loopCaseStatement: expression At left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // else 判断
 loopElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
 // 跳出循环
@@ -328,9 +328,9 @@ callPkg: typeNotNull left_brace (pkgAssign|listAssign|dictionaryAssign)? right_b
 
 orElse: Question Question expression; // 类型转化
 
-typeConversion: Colon typeType Bang; // 类型转化
+typeConversion: Bang Colon typeType; // 类型转化
 
-typeCheck: Colon typeType Question; // 类型转化
+typeCheck: Question Colon typeType; // 类型转化
 
 pkgAssign: (pkgAssignElement end)* pkgAssignElement; // 简化赋值
 
@@ -451,9 +451,9 @@ typeBasic |
 typePackage | 
 typeFunction;
 
-typeType: typeNotNull | typeNullable;
+typeType: typeNullable | typeNotNull;
 
-typeNullable: Question typeNotNull;
+typeNullable: typeNotNull Question;
 
 typePackage: nameSpaceItem | left_brack nameSpaceItem templateCall right_brack;
 typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line* typeFunctionParameterClause right_paren;
