@@ -276,12 +276,12 @@ linq // 联合查询
 | expression callElement // 访问元素
 | expression callAwait  // 异步等待调用
 | expression callExpression // 链式调用
-| expression iterator expression // 迭代器
 | expression transfer expression // 传递通道值
 | expression pow expression // 幂型表达式
 | expression mul expression // 积型表达式
 | expression add expression // 和型表达式
 | expression bitwise expression // 位运算表达式
+| expression iterator expression // 迭代器
 | expression typeConversion // 类型转换
 | expression typeCheck // 类型判断
 | expression compareCombine expression // 组合比较表达式

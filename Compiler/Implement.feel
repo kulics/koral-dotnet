@@ -13,18 +13,18 @@
 
 FeelLangVisitor := $ me {
     .VisitImplementStatement := (context: ImplementStatementContext -> v: any) {
-        id := Visit(context.id()): Result!
+        id := Visit(context.id())!: Result
         
         !obj := ""
         extend := [list str]{}
-        ? context.packageFieldStatement() >< nil {
+        context.packageFieldStatement() >< nil ? {
             item := context.packageFieldStatement()
-            r := Visit(item): Result!
+            r := Visit(item)!: Result
             obj += r.text
         }
-        ? context.packageNewStatement() >< nil {
+        context.packageNewStatement() >< nil ? {
             item := context.packageNewStatement()
-            r := Visit(item): str!
+            r := Visit(item)!: str
             obj += "public ${id.text} ${r}"
         }
         obj += BlockRight + Wrap
@@ -33,16 +33,16 @@ FeelLangVisitor := $ me {
         # "泛型"
         !template := ""
         !templateContract := ""
-        ? context.templateDefine() >< nil {
-            item := Visit(context.templateDefine()): TemplateItem!
+        context.templateDefine() >< nil ? {
+            item := Visit(context.templateDefine())!: TemplateItem
             template += item.Template
             templateContract = item.Contract
             header += template
         }
 
-        ? extend.length > 0 {
+        extend.length > 0 ? {
             temp := extend[0]
-            @ i := 1 .. extend.length-1 {
+            1 .. extend.length-1 @ i {
                 temp += "," + extend[i]
             }
             header += ":" + temp
@@ -56,35 +56,35 @@ FeelLangVisitor := $ me {
     }
 
     .VisitOverrideVariableStatement := (context: OverrideVariableStatementContext -> v: any) {
-        r1 := Visit(context.id()): Result!
+        r1 := Visit(context.id())!: Result
         !isMutable := r1.isVirtual
         !isVirtual := " override "
         !typ := ""
-        !r2: Result = nil
-        ? context.expression() >< nil {
-            r2 = Visit(context.expression()): Result!
-            typ = r2.data: str!
+        !r2: Result? = nil
+        context.expression() >< nil ? {
+            r2 = Visit(context.expression())!: Result
+            typ = r2.data!: str
         }
-        ? context.typeType() >< nil {
-            typ = Visit(context.typeType()): str!
+        context.typeType() >< nil ? {
+            typ = Visit(context.typeType())!: str
         }
         !obj := ""
-        ? context.annotationSupport() >< nil {
+        context.annotationSupport() >< nil ? {
             me.selfPropertyID = r1.text
             obj += Visit(context.annotationSupport())
         }
-        ? me.selfPropertyContent.len > 0 {
+        me.selfPropertyContent.len > 0 ? {
             !pri := ""
-            ? me.selfPropertyVariable {
+            me.selfPropertyVariable ? {
                 pri = "private ${typ} _${r1.text}" 
-                ? r2 >< nil {
+                r2 >< nil ? {
                     pri += " = " + r2.text
                 }
                 pri += Terminate + Wrap
             }
             obj = pri + obj
             obj += "${r1.permission} ${isVirtual} ${typ} ${r1.text; BlockLeft}"
-            @ v := me.selfPropertyContent {
+            me.selfPropertyContent @ v {
                 obj += v
             }
             obj += BlockRight+Wrap
@@ -93,7 +93,7 @@ FeelLangVisitor := $ me {
             me.selfPropertyVariable = false
         } _ {
             obj += "${r1.permission} ${typ} ${r1.text}"
-            ? r2 >< nil {
+            r2 >< nil ? {
                 obj += " = ${r2.text; Terminate; Wrap}"
             } _ {
                 obj += Terminate + Wrap
@@ -103,16 +103,16 @@ FeelLangVisitor := $ me {
     }
 
     .VisitOverrideFunctionStatement := (context: OverrideFunctionStatementContext -> v: any) {
-        id := Visit(context.id()): Result!
+        id := Visit(context.id())!: Result
         !isVirtual := " override "
         !obj := ""
         !pout := ""
-        ? context.parameterClauseOut() >< nil {
-            pout = Visit(context.parameterClauseOut()): str!
+        context.parameterClauseOut() >< nil ? {
+            pout = Visit(context.parameterClauseOut())!: str
         }
-        ? context.t.Type == Right_Flow {
-            ? pout >< "void" {
-                ? context.y >< nil {
+        context.t.Type == Right_Flow ? {
+            pout >< "void" ? {
+                context.y >< nil ? {
                     pout = "${IEnum}<${pout}>"
                 }
                 pout = "${Task}<${pout}>"
@@ -121,8 +121,8 @@ FeelLangVisitor := $ me {
             }
             obj += "${isVirtual} ${pout} ${id.text}"
         } _ {
-            ? context.y >< nil {
-                ? pout >< "void" {
+            context.y >< nil ? {
+                pout >< "void" ? {
                     pout = "${IEnum}<${pout}>"
                 }
             }
@@ -130,8 +130,8 @@ FeelLangVisitor := $ me {
         }
         # "泛型"
         !templateContract := ""
-        ? context.templateDefine() >< nil {
-            template := Visit(context.templateDefine()): TemplateItem!
+        context.templateDefine() >< nil ? {
+            template := Visit(context.templateDefine())!: TemplateItem
             obj += template.Template
             templateContract = template.Contract
         }
@@ -142,11 +142,11 @@ FeelLangVisitor := $ me {
         me.delete_current_set()
         obj += BlockRight + Wrap
         # "异步"
-        ? get_func_async() {
+        get_func_async() ? {
             obj = " async " + obj
         }
         me.delete_func_stack()
-        ? context.n >< nil {
+        context.n >< nil ? {
             obj = "protected " + obj
         } _ {
             obj = "${id.permission} " + obj

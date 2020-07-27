@@ -13,13 +13,13 @@
 FeelLangVisitor := $ me {
     .VisitTypeType := (context: TypeTypeContext -> v: any) {
         !obj := ""
-        obj = Visit(context.GetChild(0)): str!
+        obj = Visit(context.GetChild(0))!: str
         <- obj
     }
 
     .VisitTypeNullable := (context: TypeNullableContext -> v: any) {
         !obj := ""
-        obj = Visit(context.typeNotNull()): str!
+        obj = Visit(context.typeNotNull())!: str
         obj += "?"
         <- obj
     }
@@ -27,8 +27,8 @@ FeelLangVisitor := $ me {
     .VisitTypePackage := (context: TypePackageContext -> v: any) {
         !obj := ""
         obj += Visit(context.nameSpaceItem())
-        ? context.templateCall() >< nil {
-            ? obj == "array" {
+        context.templateCall() >< nil ? {
+            obj == "array" ? {
                 obj = "${Visit(context.templateCall())}[]"
             } _ {
                 obj += "<" + Visit(context.templateCall()) + ">"
@@ -39,40 +39,40 @@ FeelLangVisitor := $ me {
 
     .VisitTypeFunction := (context: TypeFunctionContext -> v: any) {
         !obj := ""
-        !in := Visit(context.typeFunctionParameterClause(0)): str!
-        !out := Visit(context.typeFunctionParameterClause(1)): str!
-        ? context.t.Type == Right_Arrow {
-            ? out.Length == 0 {
-                ? in.Length == 0 {
+        !in := Visit(context.typeFunctionParameterClause(0))!: str
+        !out := Visit(context.typeFunctionParameterClause(1))!: str
+        context.t.Type == Right_Arrow ? {
+            out.Length == 0 ? {
+                in.Length == 0 ? {
                     obj = "Action"
                 } _ {
                     obj = "Action<${in}>"
                 }
             } _ {
-                ? out.first_index_of(",") >= 0 {
+                out.first_index_of(",") >= 0 ? {
                     out = "(${out})"
                 }
-                ? context.y >< nil {
+                context.y >< nil ? {
                     out = "${IEnum}<${out}>"
                 }
-                ? in.Length == 0 {
+                in.Length == 0 ? {
                     obj = "Func<${out}>"
                 } _ {
                     obj = "Func<${in}, ${out}>"
                 }
             }
         } _ {
-            ? out.Length == 0 {
-                ? in.Length == 0 {
+            out.Length == 0 ? {
+                in.Length == 0 ? {
                     obj = "Func<${Task}>"
                 } _ {
                     obj = "Func<${in}, ${Task}>"
                 }
             } _ {
-                ? context.y >< nil {
+                context.y >< nil ? {
                     out = "${IEnum}<(${out})>"
                 }
-                ? in.Length == 0 {
+                in.Length == 0 ? {
                     obj = "Func<${Task}<${out}>>"
                 } _ {
                     obj = "Func<${in}, ${Task}<${out}>>"
@@ -88,9 +88,9 @@ FeelLangVisitor := $ me {
 
     .VisitTypeFunctionParameterClause := (context: TypeFunctionParameterClauseContext -> v: any) {
         !obj := ""
-        @ i := 0 .. context.typeType().Length-1 {
-            p := Visit(context.typeType(i)): str!
-            ? i == 0 {
+        0 .. context.typeType().Length-1 @ i {
+            p := Visit(context.typeType(i))!: str
+            i == 0 ? {
                 obj += p
             } _ {
                 obj += ", " + p
@@ -100,37 +100,37 @@ FeelLangVisitor := $ me {
     }
 
     .VisitTypeBasic := (context: TypeBasicContext -> v: any) {
-        <- ? [context.t.Type] TypeI8 {
+        <- [context.t.Type] TypeI8 ? {
             I8
-        } TypeU8 {
+        } TypeU8 ? {
             U8
-        } TypeI16 {
+        } TypeI16 ? {
             I16
-        } TypeU16 {
+        } TypeU16 ? {
             U16
-        } TypeI32 {
+        } TypeI32 ? {
             I32
-        } TypeU32 {
+        } TypeU32 ? {
             U32
-        } TypeI64 {
+        } TypeI64 ? {
             I64
-        } TypeU64 {
+        } TypeU64 ? {
             U64
-        } TypeF32 {
+        } TypeF32 ? {
             F32
-        } TypeF64 {
+        } TypeF64 ? {
             F64
-        } TypeChr {
+        } TypeChr ? {
             Chr
-        } TypeStr {
+        } TypeStr ? {
             Str
-        } TypeBool {
+        } TypeBool ? {
             Bool
-        } TypeInt {
+        } TypeInt ? {
             Int
-        } TypeNum {
+        } TypeNum ? {
             Num
-        } TypeByte {
+        } TypeByte ? {
             U8
         } _ {
             Any
