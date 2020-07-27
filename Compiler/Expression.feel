@@ -214,6 +214,10 @@ FeelLangVisitor := $ me {
                 s2 := (e2: Result!).text
                 r.text = "${s1} > ${s2} ? 1 : ( ${s1}==${s2} ? 0 : -1 )"
                 <- r
+            } _: IteratorContext {
+                fn := op: (Result, Result->Result)!
+                r = fn(e1, e2: Result!)
+                <- r
             } _: CompareContext {
                 # "todo 如果左右不是bool类型值，报错"
                 r.data = Bool
@@ -277,6 +281,12 @@ FeelLangVisitor := $ me {
             } it: CallElementContext {
                 e2 := Visit(it): Result!
                 r.text = r.text + e2.text
+            } it: JudgeExpressionContext {
+                e2 := Visit(it): (str->Result)!
+                r.text = e2(r.text).text
+            } it: LoopExpressionContext {
+                e2 := Visit(it): (str->Result)!
+                r.text = e2(r.text).text
             } _ {
                 ? context.op.Type == FeelParser.Bang {
                     r.text = "ref ${r.text}"

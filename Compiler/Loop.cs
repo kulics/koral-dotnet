@@ -17,44 +17,32 @@ public string order = T;
 public string close = T;
 }
 public partial class FeelLangVisitor{
-public  override  object VisitIteratorStatement( IteratorStatementContext context ){
-var it = (new Iterator());
+public  override  object VisitIterator( IteratorContext context ){
+Func<Result, Result, Result> fn = (e1, e2)=>{var it = (new Iterator());
 if ( context.Dot_Dot_Dot()!=null||context.Dot_Dot_Greater()!=null ) {
 it.order=F;
 }
 if ( context.Dot_Dot_Less()!=null||context.Dot_Dot_Greater()!=null ) {
 it.close=F;
 }
-if ( context.expression().Length==2 ) {
-it.begin=(Result)(Visit(context.expression(0)));
-it.end=(Result)(Visit(context.expression(1)));
+if ( context.expression()==null ) {
+it.begin=e1;
+it.end=e2;
 it.step=(new Result(){data = I32,text = "1"});
 }
 else {
-it.begin=(Result)(Visit(context.expression(0)));
-it.end=(Result)(Visit(context.expression(2)));
-it.step=(Result)(Visit(context.expression(1)));
+it.begin=e1;
+it.end=e2;
+it.step=(Result)(Visit(context.expression()));
 }
-return it;
+var r = (new Result());
+r.data="IEnumerable<int>";
+r.text=(new System.Text.StringBuilder().Append("range(").Append(it.begin.text).Append(", ").Append(it.end.text).Append(", ").Append(it.step.text).Append(", ").Append(it.order).Append(", ").Append(it.close).Append(")")).to_str();
+return r;
+};
+return fn;
 }
 public  override  object VisitLoopStatement( LoopStatementContext context ){
-var obj = "";
-var id = ((Result)(Visit(context.id()))).text;
-var it = (Iterator)(Visit(context.iteratorStatement()));
-var target = (new System.Text.StringBuilder().Append("range(").Append(it.begin.text).Append(", ").Append(it.end.text).Append(", ").Append(it.step.text).Append(", ").Append(it.order).Append(", ").Append(it.close).Append(")")).to_str();
-obj+=(new System.Text.StringBuilder().Append("foreach (var ").Append(id).Append(" in ").Append(target).Append(")")).to_str();
-obj+=BlockLeft+Wrap;
-this.add_current_set();
-obj+=ProcessFunctionSupport(context.functionSupportStatement());
-this.delete_current_set();
-obj+=BlockRight+Wrap;
-if ( context.loopElseStatement()!=null ) {
-var elseContent = (string)(Visit(context.loopElseStatement()));
-obj=(new System.Text.StringBuilder().Append("if (!can_range(").Append(target).Append(")) ").Append(elseContent).Append(" else ").Append(BlockLeft).Append(Wrap).Append(obj).Append(BlockRight).Append(Wrap)).to_str();
-}
-return obj;
-}
-public  override  object VisitLoopEachStatement( LoopEachStatementContext context ){
 var obj = "";
 var arr = (Result)(Visit(context.expression()));
 var target = arr.text;
@@ -108,25 +96,8 @@ public  override  object VisitLoopContinueStatement( LoopContinueStatementContex
 return (new System.Text.StringBuilder().Append("continue").Append(Terminate).Append(Wrap)).to_str();
 }
 public  override  object VisitLoopExpression( LoopExpressionContext context ){
-var obj = "";
-var id = ((Result)(Visit(context.id()))).text;
-var it = (Iterator)(Visit(context.iteratorStatement()));
-var target = (new System.Text.StringBuilder().Append("range(").Append(it.begin.text).Append(", ").Append(it.end.text).Append(", ").Append(it.step.text).Append(", ").Append(it.order).Append(")")).to_str();
-obj+=(new System.Text.StringBuilder().Append("runloop(").Append(target).Append(", (").Append(id).Append(")=>")).to_str();
-obj+=BlockLeft+Wrap;
-this.add_current_set();
-obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=(new System.Text.StringBuilder().Append("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).to_str();
-this.delete_current_set();
-obj+=BlockRight;
-var elseContent = (string)(Visit(context.loopElseExpression()));
-obj+=(new System.Text.StringBuilder().Append(", ()=> ").Append(elseContent).Append(")")).to_str();
-return (new Result(){data = "var",text = obj});
-}
-public  override  object VisitLoopEachExpression( LoopEachExpressionContext context ){
-var obj = "";
-var arr = (Result)(Visit(context.expression()));
-var target = arr.text;
+Func<string, Result> fn = (expr)=>{var obj = "";
+var target = expr;
 var id = "ea";
 if ( context.id().Length==2 ) {
 target=(new System.Text.StringBuilder().Append("range(").Append(target).Append(")")).to_str();
@@ -145,6 +116,8 @@ obj+=BlockRight;
 var elseContent = (string)(Visit(context.loopElseExpression()));
 obj+=(new System.Text.StringBuilder().Append(", ()=> ").Append(elseContent).Append(")")).to_str();
 return (new Result(){data = "var",text = obj});
+};
+return fn;
 }
 public  override  object VisitLoopElseExpression( LoopElseExpressionContext context ){
 var obj = BlockLeft+Wrap;
