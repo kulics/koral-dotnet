@@ -86,7 +86,7 @@ FeelLangVisitor := $ me {
         !obj := "run(()=> { ${Wrap}try ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return ${ (Visit(context.tupleExpression()): Result!).text };"
+        obj += "return ${ (Visit(context.tupleExpression())!: Result).text };"
         me.delete_current_set()
         obj += BlockRight + Wrap
         context.checkErrorExpression() @ item {

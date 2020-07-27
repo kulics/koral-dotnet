@@ -17,45 +17,45 @@ FeelLangVisitor := $ me {
     }
 
     .VisitPackageStatement := (context: PackageStatementContext -> v: any) {
-        id := Visit(context.id()): Result!
+        id := Visit(context.id())!: Result
 
         !obj := ""
         !extend := [list str]{}
-        ? context.packageStaticStatement() >< nil {
+        context.packageStaticStatement() >< nil ? {
             item := context.packageStaticStatement()
-            r := Visit(item): Result!
+            r := Visit(item)!: Result
             obj += r.text
         }
-        ? context.packageFieldStatement() >< nil  {
+        context.packageFieldStatement() >< nil ? {
             item := context.packageFieldStatement()
-            r := Visit(item): Result!
+            r := Visit(item)!: Result
             obj += r.text
-            extend += r.data: [list str]!
+            extend += r.data!: [list str]
         }
-        ? context.packageNewStatement() >< nil {
+        context.packageNewStatement() >< nil ? {
             item := context.packageNewStatement()
-            r := Visit(item): str!
+            r := Visit(item)!: str
             obj += "public ${id.text} ${r}"
         }
         obj += BlockRight + Wrap
         !header := ""
-        ? context.annotationSupport() >< nil {
+        context.annotationSupport() >< nil ? {
             header += Visit(context.annotationSupport())
         }
         header += "${id.permission} partial class ${id.text}"
         # "泛型"
         !template := ""
         !templateContract := ""
-        ? context.templateDefine() >< nil {
-            item := Visit(context.templateDefine()): TemplateItem!
+        context.templateDefine() >< nil ? {
+            item := Visit(context.templateDefine())!: TemplateItem
             template += item.Template
             templateContract = item.Contract
             header += template
         }
 
-        ? extend.length > 0 {
+        extend.length > 0 ? {
             !temp := extend[0]
-            @ i := 1 .. extend.length-1 {
+            1 .. extend.length-1 @ i {
                 temp += "," + extend[i]
             }
             header += ":" + temp
@@ -68,40 +68,40 @@ FeelLangVisitor := $ me {
 
     .VisitPackageStaticStatement := (context: PackageStaticStatementContext -> v: any) {
         !obj := ""
-        @ item := context.packageStaticSupportStatement() {
+        context.packageStaticSupportStatement() @ item {
             obj += Visit(item)
         }
         <- Result{text = obj}
     }
 
     .VisitPackageStaticVariableStatement := (context: PackageStaticVariableStatementContext -> v: any) {
-        r1 := Visit(context.id()): Result!
+        r1 := Visit(context.id())!: Result
         !typ := ""
         !r2: Result = nil
-        ? context.expression() >< nil {
-            r2 = Visit(context.expression()): Result!
-            typ = r2.data: str!
+        context.expression() >< nil ? {
+            r2 = Visit(context.expression())!: Result
+            typ = r2.data!: str
         }
-        ? context.typeType() >< nil {
-            typ = Visit(context.typeType()): str!
+        context.typeType() >< nil ? {
+            typ = Visit(context.typeType())!: str
         }
         !obj := ""
-        ? context.annotationSupport() >< nil {
+        context.annotationSupport() >< nil ? {
             me.selfPropertyID = r1.text
             obj += Visit(context.annotationSupport())
         }
-        ? me.selfPropertyContent.len > 0 {
+        me.selfPropertyContent.len > 0 ? {
             !pri := ""
-            ? me.selfPropertyVariable {
+            me.selfPropertyVariable ? {
                 pri = "private static ${typ} _${r1.text}" 
-                ? r2 >< nil {
+                r2 >< nil ? {
                     pri += " = " + r2.text
                 }
                 pri += Terminate + Wrap
             }
             obj = pri + obj
             obj += "${r1.permission} static ${typ} ${r1.text; BlockLeft}"
-            @ v := me.selfPropertyContent {
+            me.selfPropertyContent @ v {
                 obj += v
             }
             obj += BlockRight+Wrap
@@ -110,7 +110,7 @@ FeelLangVisitor := $ me {
             me.selfPropertyVariable = false
         } _ {
             obj += "${r1.permission} static ${typ} ${r1.text}"
-            ? r2 >< nil {
+            r2 >< nil ? {
                 obj += " = ${r2.text; Terminate; Wrap}"
             } _ {
                 obj += Terminate + Wrap
@@ -120,33 +120,33 @@ FeelLangVisitor := $ me {
     }
 
     .VisitPackageStaticConstantStatement := (context: PackageStaticConstantStatementContext -> v: any) {
-        r1 := Visit(context.id()): Result!
+        r1 := Visit(context.id())!: Result
         !typ := ""
-        !r2: Result = nil
-        ? context.expression() >< nil {
-            r2 = Visit(context.expression()): Result!
-            typ = r2.data: str!
+        !r2: Result? = nil
+        context.expression() >< nil ? {
+            r2 = Visit(context.expression())!: Result
+            typ = r2.data!: str
         }
-        ? context.typeType() >< nil {
-            typ = Visit(context.typeType()): str!
+        context.typeType() >< nil ? {
+            typ = Visit(context.typeType())!: str
         }
         !obj := ""
-        ? context.annotationSupport() >< nil {
+        context.annotationSupport() >< nil ? {
             me.selfPropertyID = r1.text
             obj += Visit(context.annotationSupport())
         }
-        ? me.selfPropertyContent.len > 0 {
+        me.selfPropertyContent.len > 0 ? {
             !pri := ""
-            ? me.selfPropertyVariable {
+            me.selfPropertyVariable ? {
                 pri = "private static ${typ} _${r1.text}" 
-                ? r2 >< nil {
+                r2 >< nil ? {
                     pri += " = " + r2.text
                 }
                 pri += Terminate + Wrap
             }
             obj = pri + obj
             obj += "${r1.permission} static ${typ} ${r1.text; BlockLeft}"
-            @ v := me.selfPropertyContent {
+            me.selfPropertyContent @ v {
                 obj += v
             }
             obj += BlockRight+Wrap
@@ -155,7 +155,7 @@ FeelLangVisitor := $ me {
             me.selfPropertyVariable = false
         } _ {
             obj += "${r1.permission} static ${typ} ${r1.text}"
-            ? r2 >< nil {
+            r2 >< nil ? {
                 obj += " = ${r2.text; Terminate; Wrap}"
             } _ {
                 obj += Terminate + Wrap
@@ -165,15 +165,15 @@ FeelLangVisitor := $ me {
     }
 
     .VisitPackageStaticFunctionStatement := (context: PackageStaticFunctionStatementContext -> v: any) {
-        id := Visit(context.id()): Result!
+        id := Visit(context.id())!: Result
         !obj := ""
         !pout := ""
-        ? context.parameterClauseOut() >< nil {
-            pout = Visit(context.parameterClauseOut()): str!
+        context.parameterClauseOut() >< nil ? {
+            pout = Visit(context.parameterClauseOut())!: str
         }
-        ? context.t.Type == Right_Flow {
-            ? pout >< "void" {
-                ? context.y >< nil {
+        context.t.Type == Right_Flow ? {
+            pout >< "void" ? {
+                context.y >< nil ? {
                     pout = "${IEnum}<${pout}>"
                 }
                 pout = "${Task}<${pout}>"
@@ -182,8 +182,8 @@ FeelLangVisitor := $ me {
             }
             obj += "${pout} ${id.text}"
         } _ {
-            ? context.y >< nil {
-                ? pout >< "void" {
+            context.y >< nil ? {
+                pout >< "void" ? {
                     pout = "${IEnum}<${pout}>"
                 }
             }
@@ -191,8 +191,8 @@ FeelLangVisitor := $ me {
         }
         # "泛型"
         !templateContract := ""
-        ? context.templateDefine() >< nil {
-            template := Visit(context.templateDefine()): TemplateItem!
+        context.templateDefine() >< nil ? {
+            template := Visit(context.templateDefine())!: TemplateItem
             obj += template.Template
             templateContract = template.Contract
         }
@@ -203,7 +203,7 @@ FeelLangVisitor := $ me {
         me.delete_current_set()
         obj += BlockRight + Wrap
         # "异步"
-        ? get_func_async() {
+        get_func_async() ? {
             obj = " async " + obj
         }
         me.delete_func_stack()
@@ -214,17 +214,17 @@ FeelLangVisitor := $ me {
     .VisitPackageFieldStatement := (context: PackageFieldStatementContext -> v: any) {
         !obj := ""
         !extend := [list str]{}
-        ? context.id(0) >< nil {
-            Self := Visit(context.id(0)): Result!
+        context.id(0) >< nil ? {
+            Self := Visit(context.id(0))!: Result
             me.selfID = Self.text
         }
-        ? context.id(1) >< nil {
-            Super := Visit(context.id(1)): Result!
+        context.id(1) >< nil ? {
+            Super := Visit(context.id(1))!: Result
             me.superID = Super.text
         }
-        @ item := context.packageSupportStatement() {
-            ? item.GetChild(0).GetType() == typeof(IncludeStatementContext) {
-                r := Visit(item): str!
+        context.packageSupportStatement() @ item{
+            item.GetChild(0).GetType() == typeof(IncludeStatementContext) ? {
+                r := Visit(item)!: str
                 extend += r
             } _ {
                 obj += Visit(item)
@@ -236,38 +236,38 @@ FeelLangVisitor := $ me {
     }
 
     .VisitPackageVariableStatement := (context: PackageVariableStatementContext -> v: any) {
-        r1 := Visit(context.id()): Result!
+        r1 := Visit(context.id())!: Result
         !isMutable := r1.isVirtual
         !isVirtual := ""
-        ? r1.isVirtual {
+        r1.isVirtual ? {
             isVirtual = " virtual "
         }
         !typ := ""
-        !r2: Result = nil
-        ? context.expression() >< nil {
-            r2 = Visit(context.expression()): Result!
-            typ = r2.data: str!
+        !r2: Result? = nil
+        context.expression() >< nil ? {
+            r2 = Visit(context.expression())!: Result
+            typ = r2.data!: str
         }
-        ? context.typeType() >< nil {
-            typ = Visit(context.typeType()): str!
+        context.typeType() >< nil ? {
+            typ = Visit(context.typeType())!: str
         }
         !obj := ""
-        ? context.annotationSupport() >< nil {
+        context.annotationSupport() >< nil ? {
             me.selfPropertyID = r1.text
             obj += Visit(context.annotationSupport())
         }
-        ? me.selfPropertyContent.len > 0 {
+        me.selfPropertyContent.len > 0 ? {
             !pri := ""
-            ? me.selfPropertyVariable {
+            me.selfPropertyVariable ? {
                 pri = "private ${typ} _${r1.text}" 
-                ? r2 >< nil {
+                r2 >< nil ? {
                     pri += " = " + r2.text
                 }
                 pri += Terminate + Wrap
             }
             obj = pri + obj
             obj += "${r1.permission} ${isVirtual} ${typ} ${r1.text; BlockLeft}"
-            @ v := me.selfPropertyContent {
+            me.selfPropertyContent @ v {
                 obj += v
             }
             obj += BlockRight+Wrap
@@ -276,7 +276,7 @@ FeelLangVisitor := $ me {
             me.selfPropertyVariable = false
         } _ {
             obj += "${r1.permission} ${typ} ${r1.text}"
-            ? r2 >< nil {
+            r2 >< nil ? {
                 obj += " = ${r2.text; Terminate; Wrap}"
             } _ {
                 obj += Terminate + Wrap
@@ -286,38 +286,38 @@ FeelLangVisitor := $ me {
     }
 
     .VisitPackageConstantStatement := (context: PackageConstantStatementContext -> v: any) {
-        r1 := Visit(context.id()): Result!
+        r1 := Visit(context.id())!: Result
         !isMutable := r1.isVirtual
         !isVirtual := ""
-        ? r1.isVirtual {
+        r1.isVirtual ? {
             isVirtual = " virtual "
         }
         !typ := ""
-        !r2: Result = nil
-        ? context.expression() >< nil {
-            r2 = Visit(context.expression()): Result!
-            typ = r2.data: str!
+        !r2: Result? = nil
+        context.expression() >< nil ? {
+            r2 = Visit(context.expression())!: Result
+            typ = r2.data!: str
         }
-        ? context.typeType() >< nil {
-            typ = Visit(context.typeType()): str!
+        context.typeType() >< nil ? {
+            typ = Visit(context.typeType())!: str
         }
         !obj := ""
-        ? context.annotationSupport() >< nil {
+        context.annotationSupport() >< nil ? {
             me.selfPropertyID = r1.text
             obj += Visit(context.annotationSupport())
         }
-        ? me.selfPropertyContent.len > 0 {
+        me.selfPropertyContent.len > 0 ? {
             !pri := ""
-            ? me.selfPropertyVariable {
+            me.selfPropertyVariable ? {
                 pri = "private ${typ} _${r1.text}" 
-                ? r2 >< nil {
+                r2 >< nil ? {
                     pri += " = " + r2.text
                 }
                 pri += Terminate + Wrap
             }
             obj = pri + obj
             obj += "${r1.permission} ${isVirtual} ${typ} ${r1.text; BlockLeft}"
-            @ v := me.selfPropertyContent {
+            me.selfPropertyContent @ v {
                 obj += v
             }
             obj += BlockRight+Wrap
@@ -326,7 +326,7 @@ FeelLangVisitor := $ me {
             me.selfPropertyVariable = false
         } _ {
             obj += "${r1.permission} ${typ} ${r1.text}"
-            ? r2 >< nil {
+            r2 >< nil ? {
                 obj += " = ${r2.text; Terminate; Wrap}"
             } _ {
                 obj += Terminate + Wrap
@@ -336,19 +336,19 @@ FeelLangVisitor := $ me {
     }
 
     .VisitPackageFunctionStatement := (context: PackageFunctionStatementContext -> v: any) {
-        id := Visit(context.id()): Result!
+        id := Visit(context.id())!: Result
         !isVirtual := ""
-        ? id.isVirtual {
+        id.isVirtual ? {
             isVirtual = " virtual "
         }
         !obj := ""
         !pout := ""
-        ? context.parameterClauseOut() >< nil {
-            pout = Visit(context.parameterClauseOut()): str!
+        context.parameterClauseOut() >< nil ? {
+            pout = Visit(context.parameterClauseOut())!: str
         }
-        ? context.t.Type == Right_Flow {
-            ? pout >< "void" {
-                ? context.y >< nil {
+        context.t.Type == Right_Flow ? {
+            pout >< "void" ? {
+                context.y >< nil ? {
                     pout = "${IEnum}<${pout}>"
                 }
                 pout = "${Task}<${pout}>"
@@ -357,8 +357,8 @@ FeelLangVisitor := $ me {
             }
             obj += "${isVirtual} ${pout} ${id.text}"
         } _ {
-            ? context.y >< nil {
-                ? pout >< "void" {
+            context.y >< nil ? {
+                pout >< "void" ? {
                     pout = "${IEnum}<${pout}>"
                 }
             }
@@ -366,8 +366,8 @@ FeelLangVisitor := $ me {
         }
         # "泛型"
         !templateContract := ""
-        ? context.templateDefine() >< nil {
-            template := Visit(context.templateDefine()): TemplateItem!
+        context.templateDefine() >< nil ? {
+            template := Visit(context.templateDefine())!: TemplateItem
             obj += template.Template
             templateContract = template.Contract
         }
@@ -378,7 +378,7 @@ FeelLangVisitor := $ me {
         me.delete_current_set()
         obj += BlockRight + Wrap
         # "异步"
-        ? get_func_async() {
+        get_func_async() ? {
             obj = " async " + obj
         }
         me.delete_func_stack()
@@ -388,19 +388,19 @@ FeelLangVisitor := $ me {
 
     .VisitPackageNewStatement := (context: PackageNewStatementContext -> v: any) {
         !text := ""
-        ? context.id(0) >< nil {
-            Self := Visit(context.id(0)): Result!
+        context.id(0) >< nil ? {
+            Self := Visit(context.id(0))!: Result
             me.selfID = Self.text
         }
-        ? context.id(1) >< nil {
-            Super := Visit(context.id(1)): Result!
+        context.id(1) >< nil ? {
+            Super := Visit(context.id(1))!: Result
             me.superID = Super.text
         }
         # "获取构造数据"
         me.add_current_set()
-        text += Visit(context.parameterClauseIn()): str!
-        ? context.expressionList() >< nil {
-            text += ":base(${(Visit(context.expressionList()): Result!).text})"
+        text += Visit(context.parameterClauseIn())!: str
+        context.expressionList() >< nil ? {
+            text += ":base(${(Visit(context.expressionList())!: Result).text})"
         }
         text += BlockLeft + ProcessFunctionSupport(context.functionSupportStatement()) + BlockRight + Wrap
         me.delete_current_set()
@@ -411,40 +411,40 @@ FeelLangVisitor := $ me {
 
     .VisitPackageEventStatement := (context: PackageEventStatementContext -> v: any) {
         !obj := ""
-        id := Visit(context.id()): Result!
+        id := Visit(context.id())!: Result
         nameSpace := Visit(context.nameSpaceItem())
         obj += "public event ${nameSpace} ${id.text; Terminate; Wrap}"
         <- obj
     }
 
     .VisitProtocolStatement := (context: ProtocolStatementContext -> v: any) {
-        id := Visit(context.id()): Result!
+        id := Visit(context.id())!: Result
         !obj := ""
         !extend := [list str]{}
         !interfaceProtocol := ""
         !ptclName := id.text
-        ? context.annotationSupport() >< nil {
+        context.annotationSupport() >< nil ? {
             obj += Visit(context.annotationSupport())
         }
-        ? context.protocolSubStatement() >< nil {
+        context.protocolSubStatement() >< nil ? {
             item := context.protocolSubStatement()
-            r := Visit(item): Result!
+            r := Visit(item)!: Result
             interfaceProtocol += r.text
-            extend += r.data: [list str]!
+            extend += r.data!: [list str]
         }
 
         obj += "public partial interface ${ptclName}"
-        ? extend.length > 0 {
+        extend.length > 0 ? {
             !temp := extend[0]
-            @ i := 1 .. extend.length-1 {
+            1 .. extend.length-1 @ i {
                 temp += "," + extend[i]
             }
             obj += ":" + temp
         }
         # "泛型"
         !templateContract := ""
-        ? context.templateDefine() >< nil {
-            template := Visit(context.templateDefine()): TemplateItem!
+        context.templateDefine() >< nil ? {
+            template := Visit(context.templateDefine())!: TemplateItem
             obj += template.Template
             templateContract = template.Contract
         }
@@ -457,9 +457,9 @@ FeelLangVisitor := $ me {
     .VisitProtocolSubStatement := (context: ProtocolSubStatementContext -> v: any) {
         !obj := ""
         !extend := [list str]{}
-        @ item := context.protocolSupportStatement() {
-            ? item.GetChild(0).GetType() == typeof(IncludeStatementContext) {
-                r := Visit(item): str!
+        context.protocolSupportStatement() @ item {
+            item.GetChild(0).GetType() == typeof(IncludeStatementContext) ? {
+                r := Visit(item)!: str
                 extend += r
             } _ {
                 obj += Visit(item)
@@ -469,13 +469,13 @@ FeelLangVisitor := $ me {
     }
 
     .VisitProtocolVariableStatement := (context: ProtocolVariableStatementContext -> v: any) {
-        id := Visit(context.id()): Result!
+        id := Visit(context.id())!: Result
         !isMutable := id.isVirtual
         !obj := ""
-        ? context.annotationSupport() >< nil {
+        context.annotationSupport() >< nil ? {
             obj += Visit(context.annotationSupport())
         }
-        type := Visit(context.typeType()): str!
+        type := Visit(context.typeType())!: str
         obj += type + " " + id.text
         obj += BlockLeft
         obj += "get;set;"
@@ -484,16 +484,16 @@ FeelLangVisitor := $ me {
     }
 
     .VisitProtocolFunctionStatement := (context: ProtocolFunctionStatementContext -> v: any) {
-        id := Visit(context.id()): Result!
+        id := Visit(context.id())!: Result
         !obj := ""
-        ? context.annotationSupport() >< nil {
+        context.annotationSupport() >< nil ? {
             obj += Visit(context.annotationSupport())
         }
         # "异步"
-        !pout := Visit(context.parameterClauseOut()): str!
-        ? context.t.Type == Right_Flow {
-            ? pout >< "void" {
-                ? context.y >< nil {
+        !pout := Visit(context.parameterClauseOut())!: str
+        context.t.Type == Right_Flow ? {
+            pout >< "void" ? {
+                context.y >< nil ? {
                     pout = "${IEnum}<${pout}>"
                 }
                 pout = "${Task}<${pout}>"
@@ -502,8 +502,8 @@ FeelLangVisitor := $ me {
             }
             obj += pout + " " + id.text
         } _ {
-            ? context.y >< nil {
-                ? pout >< "void" {
+            context.y >< nil ? {
+                pout >< "void" ? {
                     pout = "${IEnum}<${pout}>"
                 }
             }
@@ -511,8 +511,8 @@ FeelLangVisitor := $ me {
         }
         # "泛型"
         !templateContract := ""
-        ? context.templateDefine() >< nil {
-            template := Visit(context.templateDefine()): TemplateItem!
+        context.templateDefine() >< nil ? {
+            template := Visit(context.templateDefine())!: TemplateItem
             obj += template.Template
             templateContract = template.Contract
         }

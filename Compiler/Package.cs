@@ -114,7 +114,7 @@ return obj;
 public  override  object VisitPackageStaticConstantStatement( PackageStaticConstantStatementContext context ){
 var r1 = (Result)(Visit(context.id()));
 var typ = "";
-Result r2 = null;
+Result? r2 = null;
 if ( context.expression()!=null ) {
 r2=(Result)(Visit(context.expression()));
 typ=(string)(r2.data);
@@ -235,7 +235,7 @@ if ( r1.isVirtual ) {
 isVirtual=" virtual ";
 }
 var typ = "";
-Result r2 = null;
+Result? r2 = null;
 if ( context.expression()!=null ) {
 r2=(Result)(Visit(context.expression()));
 typ=(string)(r2.data);
@@ -286,7 +286,7 @@ if ( r1.isVirtual ) {
 isVirtual=" virtual ";
 }
 var typ = "";
-Result r2 = null;
+Result? r2 = null;
 if ( context.expression()!=null ) {
 r2=(Result)(Visit(context.expression()));
 typ=(string)(r2.data);
