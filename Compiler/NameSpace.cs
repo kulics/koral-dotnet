@@ -214,7 +214,7 @@ var r1 = (Result)(Visit(context.id()));
 this.add_id(r1.text);
 var isMutable = r1.isVirtual;
 var typ = "";
-Result r2 = null;
+Result? r2 = null;
 if ( context.expression()!=null ) {
 r2=(Result)(Visit(context.expression()));
 typ=(string)(r2.data);

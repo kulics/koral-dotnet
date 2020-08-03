@@ -159,7 +159,6 @@ yieldBreakStatement |
 judgeCaseStatement |
 judgeStatement |
 loopStatement |
-loopEachStatement |
 loopCaseStatement |
 loopJumpStatement |
 loopContinueStatement |
@@ -179,11 +178,11 @@ annotationStatement |
 New_Line;
 
 // 条件判断
-judgeCaseStatement: Question Left_Brack expression Right_Brack (caseStatement)+ caseElseStatement end |
-Question Left_Brack expression Right_Brack (caseStatement)+ end;
+judgeCaseStatement: Left_Brack expression Right_Brack (caseStatement)+ caseElseStatement end |
+Left_Brack expression Right_Brack (caseStatement)+ end;
 // 判断条件声明
 caseElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
-caseStatement: judgeCase (more judgeCase)* left_brace (functionSupportStatement)* right_brace;
+caseStatement: judgeCase (more judgeCase)* Question left_brace (functionSupportStatement)* right_brace;
 judgeCase: expression | (id | Discard) Colon typeType;
 
 // 判断
@@ -193,16 +192,14 @@ judgeIfStatement (judgeElseIfStatement)* judgeElseStatement end
 // else 判断
 judgeElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
 // if 判断
-judgeIfStatement: Question expression left_brace (functionSupportStatement)* right_brace;
+judgeIfStatement: expression Question left_brace (functionSupportStatement)* right_brace;
 // else if 判断
-judgeElseIfStatement: expression left_brace (functionSupportStatement)* right_brace;
+judgeElseIfStatement: expression Question left_brace (functionSupportStatement)* right_brace;
 // 循环
-loopStatement: At Bang? id Colon_Equal iteratorStatement left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
-// 集合循环
-loopEachStatement: At (left_brack id right_brack)? Bang? id Colon_Equal expression
+loopStatement: expression At (left_brack id right_brack)? Bang? id
  left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 条件循环
-loopCaseStatement: At expression left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
+loopCaseStatement: expression At left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // else 判断
 loopElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
 // 跳出循环
@@ -222,9 +219,6 @@ checkErrorStatement: (id | id Colon typeType) left_brace (functionSupportStateme
 checkFinallyStatment: Discard left_brace (functionSupportStatement)* right_brace;
 // 抛出异常
 checkReportStatement: Bang Left_Arrow expression end;
-
-// 迭代器
-iteratorStatement: expression (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater) (left_paren expression right_paren)? expression;
 
 // 声明变量
 variableDeclaredStatement: Bang id Colon typeType end;
@@ -259,42 +253,43 @@ dataStatement;
 
 // 表达式
 expression:
-linq | // 联合查询
-primaryExpression | 
-callPkg | // 新建包 
-callChannel | // 通道访问
-callAsync | // 创建异步调用
-list | // 列表
-dictionary | // 字典
-lambda | // lambda表达式
-functionExpression | // 函数
-pkgAnonymous | // 匿名包
-plusMinus | // 正负处理
-bitwiseNotExpression | // 位运算取反
-negate | // 取反
-judgeExpression | // 判断表达式
-judgeCaseExpression | // 条件判断表达式
-loopExpression | // 循环表达式
-loopEachExpression | // 集合循环表达式
-checkExpression | // 检查表达式
-expression op=Bang | // 取引用
-expression op=Question | // 可空判断
-expression orElse | // 空值替换
-expression callFunc | // 函数调用
-expression callChannel | // 调用通道
-expression callElement | // 访问元素
-expression callAwait |  // 异步等待调用
-expression callExpression | // 链式调用
-expression transfer expression | // 传递通道值
-expression pow expression | // 幂型表达式
-expression mul expression | // 积型表达式
-expression add expression | // 和型表达式
-expression bitwise expression | // 位运算表达式
-expression typeConversion | // 类型转换
-expression typeCheck | // 类型判断
-expression compareCombine expression | // 组合比较表达式
-expression compare expression | // 比较表达式
-expression logic expression; // 逻辑表达式
+linq // 联合查询
+| primaryExpression 
+| callPkg // 新建包 
+| callChannel // 通道访问
+| callAsync // 创建异步调用
+| list // 列表
+| dictionary // 字典
+| lambda // lambda表达式
+| functionExpression // 函数
+| pkgAnonymous // 匿名包
+| plusMinus // 正负处理
+| bitwiseNotExpression // 位运算取反
+| negate // 取反
+| judgeCaseExpression // 条件判断表达式
+| checkExpression // 检查表达式
+| expression op=Bang // 取引用
+| expression op=Question // 可空判断
+| expression orElse // 空值替换
+| expression callFunc // 函数调用
+| expression callChannel // 调用通道
+| expression callElement // 访问元素
+| expression callAwait  // 异步等待调用
+| expression callExpression // 链式调用
+| expression transfer expression // 传递通道值
+| expression pow expression // 幂型表达式
+| expression mul expression // 积型表达式
+| expression add expression // 和型表达式
+| expression bitwise expression // 位运算表达式
+| expression iterator expression // 迭代器
+| expression typeConversion // 类型转换
+| expression typeCheck // 类型判断
+| expression compareCombine expression // 组合比较表达式
+| expression compare expression // 比较表达式
+| expression logic expression // 逻辑表达式
+| expression judgeExpression // 判断表达式
+| expression loopExpression // 集合循环表达式
+; 
 
 callExpression: call New_Line? (id | left_brack id templateCall right_brack) (callFunc|callElement)?;
 
@@ -328,9 +323,9 @@ callPkg: typeNotNull left_brace (pkgAssign|listAssign|dictionaryAssign)? right_b
 
 orElse: Question Question expression; // 类型转化
 
-typeConversion: Colon typeType Bang; // 类型转化
+typeConversion: Bang Colon typeType; // 类型转化
 
-typeCheck: Colon typeType Question; // 类型转化
+typeCheck: Question Colon typeType; // 类型转化
 
 pkgAssign: (pkgAssignElement end)* pkgAssignElement; // 简化赋值
 
@@ -395,23 +390,21 @@ judgeExpression: judgeIfExpression (judgeElseIfExpression)* judgeElseExpression;
 // else 判断
 judgeElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
 // if 判断
-judgeIfExpression: Question expression left_brace (functionSupportStatement)* tupleExpression right_brace;
+judgeIfExpression: Question left_brace (functionSupportStatement)* tupleExpression right_brace;
 // else if 判断
-judgeElseIfExpression: expression left_brace (functionSupportStatement)* tupleExpression right_brace;
+judgeElseIfExpression: expression Question left_brace (functionSupportStatement)* tupleExpression right_brace;
 
 // 条件判断表达式
-judgeCaseExpression: Question Left_Brack expression Right_Brack (caseExpression)* caseElseExpression;
+judgeCaseExpression: Left_Brack expression Right_Brack (caseExpression)* caseElseExpression;
 // 判断条件声明
-caseExpression: judgeCase (more judgeCase)* left_brace (functionSupportStatement)* tupleExpression right_brace;
+caseExpression: judgeCase (more judgeCase)* Question left_brace (functionSupportStatement)* tupleExpression right_brace;
 
 caseElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
 
 judgeCaseElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
-// 循环
-loopExpression: At Bang? id Colon_Equal iteratorStatement 
-left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression;
-// 集合循环表达式
-loopEachExpression: At (left_brack id right_brack)? Bang? id Colon_Equal expression 
+
+// 循环表达式
+loopExpression: At (left_brack id right_brack)? Bang? id 
 left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression;
 // else 判断
 loopElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
@@ -451,9 +444,9 @@ typeBasic |
 typePackage | 
 typeFunction;
 
-typeType: typeNotNull | typeNullable;
+typeType: typeNullable | typeNotNull;
 
-typeNullable: Question typeNotNull;
+typeNullable: typeNotNull Question;
 
 typePackage: nameSpaceItem | left_brack nameSpaceItem templateCall right_brack;
 typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line* typeFunctionParameterClause right_paren;
@@ -486,6 +479,8 @@ nilExpr: NilLiteral;
 // bool值
 boolExpr: t=TrueLiteral|t=FalseLiteral;
 
+// 迭代器
+iterator: (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater) (left_paren expression right_paren)?;
 bitwise: (bitwiseAnd | bitwiseOr | bitwiseXor 
 | bitwiseLeftShift | bitwiseRightShift) (New_Line)?;
 bitwiseAnd: And_And;

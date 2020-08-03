@@ -13,7 +13,7 @@
 Main := (args: [array str]->) {
     # "检查系统平台，区分路径字符"
     !os := Environment.OSVersion.Platform
-    ? os == PlatformID.Unix | os == PlatformID.MacOSX {
+    os == PlatformID.Unix | os == PlatformID.MacOSX ? {
         _ReadPath = "./"
         _PathLine = "/"
     } _ {
@@ -29,11 +29,11 @@ Main := (args: [array str]->) {
 Compiled := (path: str->) {
     # "获取相对路径下所有文件"
     Files := Directory.GetFiles(path, "*.feel")
-    @ file := Files {
+    Files @ file {
         # "文件流读文件"
         -> fsRead := FileStream(file, FileMode.Open) {
             ! {
-                FSLength := fsRead.Length: int!
+                FSLength := fsRead.Length!: int
                 ByteBlock := [array u8](FSLength)
                 r := fsRead.Read(ByteBlock, 0, ByteBlock.Length)
                 Input := Encoding.UTF8.GetString(ByteBlock)
@@ -65,7 +65,7 @@ Compiled := (path: str->) {
     }
 
     Folders := Directory.GetDirectories(path)
-    @ folder := Folders {
+    Folders @ folder {
         Compiled(folder)
     }
 }

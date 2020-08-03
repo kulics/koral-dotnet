@@ -14,9 +14,9 @@ ErrorListener := $ me, base {
     BaseErrorListener
     !FileDir: str
 
-    .SyntaxError := (recognizer: IRecognizer, offendingSymbol: ?IToken, 
+    .SyntaxError := (recognizer: IRecognizer, offendingSymbol: IToken?, 
             line: int, charPositionInLine: int, msg: str, 
-            e: ?RecognitionException->) {
+            e: RecognitionException?->) {
         base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
         print("------Syntax Error------")
         print("File: ${me.FileDir}")

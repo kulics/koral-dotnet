@@ -18,11 +18,11 @@ FeelLangVisitor := $ me {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight
-        @ item := context.checkErrorStatement() {
+        context.checkErrorStatement() @ item {
             obj += Visit(item) + Wrap
         }
 
-        ? context.checkFinallyStatment() >< nil {
+        context.checkFinallyStatment() >< nil ? {
             obj += Visit(context.checkFinallyStatment())
         }
         <- obj
@@ -31,12 +31,12 @@ FeelLangVisitor := $ me {
     .VisitCheckErrorStatement := (context: CheckErrorStatementContext -> v: any) {
         me.add_current_set()
         !obj := ""
-        ID := (Visit(context.id()): Result!).text
+        ID := (Visit(context.id())!: Result).text
         me.add_id(ID)
 
         !Type := "Exception"
-        ? context.typeType() >< nil {
-            Type = Visit(context.typeType()): str!
+        context.typeType() >< nil ? {
+            Type = Visit(context.typeType())!: str
         }
 
         obj += "catch( ${Type} ${ID} )${Wrap; BlockLeft; Wrap}"
@@ -57,17 +57,17 @@ FeelLangVisitor := $ me {
 
     .VisitUsingStatement := (context: UsingStatementContext -> v: any) {
         !obj := ""
-        @ [i]v := context.constId() {
-            ? i >< 0 {
+        context.constId() @ [i]v {
+            i >< 0 ? {
                 obj += "," + Visit(v)
             } _ {
                 obj += Visit(v)
             }
         }
-        ? context.constId().Length > 1 {
+        context.constId().Length > 1 ? {
             obj = "(" + obj + ")"
         }
-        r2 := Visit(context.tupleExpression()): Result!
+        r2 := Visit(context.tupleExpression())!: Result
         obj += " = ${r2.text}"
         obj = "using (${obj}) ${BlockLeft; Wrap}"
         me.add_current_set()
@@ -78,7 +78,7 @@ FeelLangVisitor := $ me {
     }
 
     .VisitCheckReportStatement := (context: CheckReportStatementContext -> v: any) {
-        !obj := "throw ${(Visit(context.expression()): Result!).text; Terminate; Wrap}"
+        !obj := "throw ${(Visit(context.expression())!: Result).text; Terminate; Wrap}"
         <- obj
     }
 
@@ -86,14 +86,14 @@ FeelLangVisitor := $ me {
         !obj := "run(()=> { ${Wrap}try ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return ${ (Visit(context.tupleExpression()): Result!).text };"
+        obj += "return ${ (Visit(context.tupleExpression())!: Result).text };"
         me.delete_current_set()
         obj += BlockRight + Wrap
-        @ item := context.checkErrorExpression() {
+        context.checkErrorExpression() @ item {
             obj += Visit(item) + Wrap
         }
 
-        ? context.checkFinallyStatment() >< nil {
+        context.checkFinallyStatment() >< nil ? {
             obj += Visit(context.checkFinallyStatment())
         }
 
@@ -104,17 +104,17 @@ FeelLangVisitor := $ me {
     .VisitCheckErrorExpression := (context: CheckErrorExpressionContext -> v: any) {
         me.add_current_set()
         !obj := ""
-        ID := (Visit(context.id()): Result!).text
+        ID := (Visit(context.id())!: Result).text
         me.add_id(ID)
 
         !Type := "Exception"
-        ? context.typeType() >< nil {
-            Type = Visit(context.typeType()): str!
+        context.typeType() >< nil ? {
+            Type = Visit(context.typeType())!: str
         }
 
         obj += "catch( ${Type} ${ID} )${Wrap; BlockLeft; Wrap}"
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return ${ (Visit(context.tupleExpression()): Result!).text };"
+        obj += "return ${ (Visit(context.tupleExpression())!: Result).text };"
         me.delete_current_set()
         obj += BlockRight
         <- obj

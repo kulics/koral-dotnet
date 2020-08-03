@@ -19,8 +19,8 @@ FeelLangVisitor := $ me {
     .VisitStatement := (context: StatementContext -> v: any) {
         !obj := ""
         !imports := ""
-        ns := Visit(context.exportStatement()): Namespace!
-        ? context.annotationSupport() >< nil {
+        ns := Visit(context.exportStatement())!: Namespace
+        context.annotationSupport() >< nil ? {
             obj += Visit(context.annotationSupport())
         }
         obj += "namespace ${ns.name; Wrap; BlockLeft; Wrap}"
@@ -29,32 +29,32 @@ FeelLangVisitor := $ me {
         !contentStatic := ""
         me.add_current_set()
         # "pre process to get type id"
-        @ item := context.namespaceSupportStatement() {
+        context.namespaceSupportStatement() @ item {
             child := item.GetChild(0)
             type := child.GetType()
-            ? type == typeof(PackageStatementContext) {
-                childContext := child: PackageStatementContext!
-                id := Visit(childContext.id()): Result!
+            type == typeof(PackageStatementContext) ? {
+                childContext := child!: PackageStatementContext
+                id := Visit(childContext.id())!: Result
                 me.add_type(id.text)
-            } type == typeof(TypeTagStatementContext) {
-                childContext := child: TypeTagStatementContext!
+            } type == typeof(TypeTagStatementContext) ? {
+                childContext := child!: TypeTagStatementContext
                 me.add_type(childContext.Comment_Tag().GetText().sub_str(2))
             }
         }
-        @ item := context.namespaceSupportStatement() {
+        context.namespaceSupportStatement() @ item {
             type := item.GetChild(0).GetType()
-            ? type == typeof(NamespaceVariableStatementContext) |
+            type == typeof(NamespaceVariableStatementContext) |
                 type == typeof(NamespaceFunctionStatementContext) |
-                type == typeof(NamespaceConstantStatementContext) {
+                type == typeof(NamespaceConstantStatementContext) ? {
                 contentStatic += Visit(item)
-            } type == typeof(ImportStatementContext) {
+            } type == typeof(ImportStatementContext) ? {
                 imports += Visit(item)
             } _ {
                 content += Visit(item)
             }
         }
         obj += content
-        ? contentStatic >< "" {
+        contentStatic >< "" ? {
             obj += "public partial class ${ns.name.sub_str(ns.name.last_index_of(".") + 1)}_static ${BlockLeft; Wrap; contentStatic; BlockRight; Wrap}"
         }
         me.delete_current_set()
@@ -65,7 +65,7 @@ FeelLangVisitor := $ me {
     }
 
     .VisitExportStatement := (context: ExportStatementContext -> v: any) {
-        name := Visit(context.nameSpaceItem()): str!
+        name := Visit(context.nameSpaceItem())!: str
         obj := Namespace{
             name = name
         }
@@ -74,22 +74,22 @@ FeelLangVisitor := $ me {
 
     .VisitImportStatement := (context: ImportStatementContext -> v: any) {
         !obj := ""
-        @ item := context.importSubStatement() {
-            obj += Visit(item): str!
+        context.importSubStatement() @ item {
+            obj += Visit(item)!: str
         }
         <- obj
     }
 
     .VisitImportSubStatement := (context: ImportSubStatementContext -> v: any) {
         !obj := ""
-        ? context.annotationSupport() >< nil {
+        context.annotationSupport() >< nil ? {
             obj += Visit(context.annotationSupport())
         }
-        ns := Visit(context.nameSpaceItem()): str!
-        ? context.Discard() >< nil {
+        ns := Visit(context.nameSpaceItem())!: str
+        context.Discard() >< nil ? {
             obj += "using static ${ ns }"
-        } context.id() >< nil {
-            obj += "using ${ns}.${(Visit(context.id()): Result!).text}"
+        } context.id() >< nil ? {
+            obj += "using ${ns}.${(Visit(context.id())!: Result).text}"
         } _ {
             obj += "using ${ns}"
         }
@@ -99,9 +99,9 @@ FeelLangVisitor := $ me {
 
     .VisitNameSpaceItem := (context: NameSpaceItemContext -> v: any) {
         !obj := ""
-        @ i := 0 .. context.id().Length-1 {
-            id := Visit(context.id(i)): Result!
-            ? i == 0 {
+        0 .. context.id().Length-1 @ i {
+            id := Visit(context.id(i))!: Result
+            i == 0 ? {
                 obj += id.text
             } _ {
                 obj += "." + id.text
@@ -112,9 +112,9 @@ FeelLangVisitor := $ me {
 
     .VisitName := (context: NameContext -> v: any) {
         !obj := ""
-        @ i := 0 .. context.id().Length-1 {
-            id := Visit(context.id(i)): Result!
-            ? i == 0 {
+        0 .. context.id().Length-1 @ i {
+            id := Visit(context.id(i))!: Result
+            i == 0 ? {
                 obj += id.text
             } _ {
                 obj += "." + id.text
@@ -125,16 +125,16 @@ FeelLangVisitor := $ me {
 
     .VisitEnumStatement := (context: EnumStatementContext -> v: any) {
         !obj := ""
-        id := Visit(context.id()): Result!
+        id := Visit(context.id())!: Result
         !header := ""
         #: typ = Visit(context.typeType()) str!
         !typ := "int"
-        ? context.annotationSupport() >< nil {
+        context.annotationSupport() >< nil ? {
             header += Visit(context.annotationSupport())
         }
         header += "${id.permission} enum ${id.text}:${typ}"
         header += Wrap + BlockLeft + Wrap
-        @ i := 0 .. context.enumSupportStatement().Length-1 {
+        0 .. context.enumSupportStatement().Length-1 @ i {
             obj += Visit(context.enumSupportStatement(i))
         }
         obj += BlockRight + Terminate + Wrap
@@ -143,11 +143,11 @@ FeelLangVisitor := $ me {
     }
 
     .VisitEnumSupportStatement := (context: EnumSupportStatementContext -> v: any) {
-        id := Visit(context.id()): Result!
-        ? context.integerExpr() >< nil {
+        id := Visit(context.id())!: Result
+        context.integerExpr() >< nil ? {
             !op := ""
-            ? context.add() >< nil {
-                op = Visit(context.add()): str!
+            context.add() >< nil ? {
+                op = Visit(context.add())!: str
             }
             id.text += " = " + op + Visit(context.integerExpr())
         }
@@ -155,19 +155,19 @@ FeelLangVisitor := $ me {
     }
 
     .VisitNamespaceFunctionStatement := (context: NamespaceFunctionStatementContext -> v: any) {
-        id := Visit(context.id()): Result!
+        id := Visit(context.id())!: Result
         !obj := ""
-        ? context.annotationSupport() >< nil {
+        context.annotationSupport() >< nil ? {
             obj += Visit(context.annotationSupport())
         }
         # "异步"
         !pout := ""
-        ? context.parameterClauseOut() >< nil {
-            pout = Visit(context.parameterClauseOut()): str!
+        context.parameterClauseOut() >< nil ? {
+            pout = Visit(context.parameterClauseOut())!: str
         }
-        ? context.t.Type == Right_Flow {
-            ? pout >< "void" {
-                ? context.y >< nil {
+        context.t.Type == Right_Flow ? {
+            pout >< "void" ? {
+                context.y >< nil ? {
                     pout = "${IEnum}<${pout}>"
                 }
                 pout = "${Task}<${pout}>"
@@ -176,8 +176,8 @@ FeelLangVisitor := $ me {
             }
             obj += "${pout} ${id.text}"
         } _ {
-            ? context.y >< nil {
-                ? pout >< "void" {
+            context.y >< nil ? {
+                pout >< "void" ? {
                     pout = "${IEnum}<${pout}>"
                 }
             }
@@ -186,8 +186,8 @@ FeelLangVisitor := $ me {
 
         # "泛型"
         !templateContract := ""
-        ? context.templateDefine() >< nil {
-            template := Visit(context.templateDefine()): TemplateItem!
+        context.templateDefine() >< nil ? {
+            template := Visit(context.templateDefine())!: TemplateItem
             obj += template.Template
             templateContract = template.Contract
         }
@@ -198,7 +198,7 @@ FeelLangVisitor := $ me {
         me.delete_current_set()
         obj += BlockRight + Wrap
         # "异步"
-        ? get_func_async() {
+        get_func_async() ? {
             obj = " async " + obj
         }
         me.delete_func_stack()
@@ -207,17 +207,17 @@ FeelLangVisitor := $ me {
     }
 
     .VisitNamespaceConstantStatement := (context: NamespaceConstantStatementContext -> v: any) {
-        id := Visit(context.id()): Result!
-        expr := Visit(context.expression()): Result!
+        id := Visit(context.id())!: Result
+        expr := Visit(context.expression())!: Result
         !typ := ""
-        ? context.typeType() >< nil {
-            typ = Visit(context.typeType()): str!
+        context.typeType() >< nil ? {
+            typ = Visit(context.typeType())!: str
         } _ {
-            typ = expr.data: str!
+            typ = expr.data!: str
         }
 
         !obj := ""
-        ? context.annotationSupport() >< nil {
+        context.annotationSupport() >< nil ? {
             obj += Visit(context.annotationSupport())
         }
         
@@ -226,35 +226,35 @@ FeelLangVisitor := $ me {
     }
 
     .VisitNamespaceVariableStatement := (context: NamespaceVariableStatementContext -> v: any) {
-        r1 := Visit(context.id()): Result!
+        r1 := Visit(context.id())!: Result
         me.add_id(r1.text)
         !isMutable := r1.isVirtual
         !typ := ""
-        !r2: Result = nil
-        ? context.expression() >< nil {
-            r2 = Visit(context.expression()): Result!
-            typ = r2.data: str!
+        !r2: Result? = nil
+        context.expression() >< nil ? {
+            r2 = Visit(context.expression())!: Result
+            typ = r2.data!: str
         }
-        ? context.typeType() >< nil {
-            typ = Visit(context.typeType()): str!
+        context.typeType() >< nil ? {
+            typ = Visit(context.typeType())!: str
         }
         !obj := ""
-        ? context.annotationSupport() >< nil {
+        context.annotationSupport() >< nil ? {
             me.selfPropertyID = r1.text
             obj += Visit(context.annotationSupport())
         }
-        ? me.selfPropertyContent.len > 0 {
+        me.selfPropertyContent.len > 0 ? {
             !pri := ""
-            ? me.selfPropertyVariable {
+            me.selfPropertyVariable ? {
                 pri = "private static ${typ} _${r1.text}" 
-                ? r2 >< nil {
+                r2 >< nil ? {
                     pri += " = " + r2.text
                 }
                 pri += Terminate + Wrap
             }
             obj = pri + obj
             obj += "${r1.permission} static ${typ} ${r1.text; BlockLeft}"
-            @ v := me.selfPropertyContent {
+            me.selfPropertyContent @ v {
                 obj += v
             }
             obj += BlockRight+Wrap
@@ -263,7 +263,7 @@ FeelLangVisitor := $ me {
             me.selfPropertyVariable = false
         } _ {
             obj += "${r1.permission} static ${typ} ${r1.text}"
-            ? r2 >< nil {
+            r2 >< nil ? {
                 obj += " = ${r2.text; Terminate; Wrap}"
             } _ {
                 obj += Terminate + Wrap

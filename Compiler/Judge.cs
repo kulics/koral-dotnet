@@ -101,9 +101,10 @@ obj+=BlockRight+Wrap;
 return obj;
 }
 public  override  object VisitJudgeExpression( JudgeExpressionContext context ){
-var r = (new Result());
+Func<string, Result> fn = (expr)=>{var r = (new Result());
 r.data="var";
-r.text="run(()=>"+BlockLeft;
+r.text="run(()=> "+BlockLeft+" if (";
+r.text+=expr;
 r.text+=Visit(context.judgeIfExpression());
 foreach (var it in context.judgeElseIfExpression()){
 r.text+=Visit(it);
@@ -111,10 +112,11 @@ r.text+=Visit(it);
 r.text+=Visit(context.judgeElseExpression());
 r.text+=BlockRight+")";
 return r;
+};
+return fn;
 }
 public  override  object VisitJudgeIfExpression( JudgeIfExpressionContext context ){
-var b = (Result)(Visit(context.expression()));
-var obj = (new System.Text.StringBuilder().Append("if ( ").Append(b.text).Append(" ) ").Append(BlockLeft).Append(Wrap)).to_str();
+var obj = (new System.Text.StringBuilder().Append(" ) ").Append(BlockLeft).Append(Wrap)).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=(new System.Text.StringBuilder().Append("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).to_str();

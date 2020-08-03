@@ -130,6 +130,11 @@ var s2 = ((Result)(e2)).text;
 r.text=(new System.Text.StringBuilder().Append(s1).Append(" > ").Append(s2).Append(" ? 1 : ( ").Append(s1).Append("==").Append(s2).Append(" ? 0 : -1 )")).to_str();
 return r;
 } break;
+case IteratorContext it :
+{ var fn = (Func<Result, Result, Result>)(op);
+r=fn(e1, (Result)(e2));
+return r;
+} break;
 case CompareContext it :
 { r.data=Bool;
 } break;
@@ -206,6 +211,14 @@ set_func_async();
 case CallElementContext it :
 { var e2 = (Result)(Visit(it));
 r.text=r.text+e2.text;
+} break;
+case JudgeExpressionContext it :
+{ var e2 = (Func<string, Result>)(Visit(it));
+r.text=e2(r.text).text;
+} break;
+case LoopExpressionContext it :
+{ var e2 = (Func<string, Result>)(Visit(it));
+r.text=e2(r.text).text;
 } break;
 default:
 { if ( context.op.Type==FeelParser.Bang ) {

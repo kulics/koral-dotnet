@@ -12,68 +12,68 @@
 
 FeelLangVisitor := $ me {
     .VisitCallExpression := (context: CallExpressionContext -> v: any) {
-        r := Visit(context.id()): Result!
+        r := Visit(context.id())!: Result
         r.text = "." + r.text
-        ? context.templateCall() >< nil {
-            r.text += "<" + (Visit(context.templateCall()): str!) + ">"
+        context.templateCall() >< nil ? {
+            r.text += "<" + (Visit(context.templateCall())!: str) + ">"
         }
-        ? context.callFunc() >< nil {
-            e2 := Visit(context.callFunc()): Result!
+        context.callFunc() >< nil ? {
+            e2 := Visit(context.callFunc())!: Result
             r.text = r.text + e2.text
-        } context.callElement() >< nil {
-            e2 := Visit(context.callElement()): Result!
+        } context.callElement() >< nil ? {
+            e2 := Visit(context.callElement())!: Result
             r.text = r.text + e2.text
         }
         <- r
     }
 
     .VisitCallElement := (context: CallElementContext -> v: any) {
-        ? context.expression() == nil {
-            <- (Result{ text = Visit(context.slice()): str! })
+        context.expression() == nil ? {
+            <- (Result{ text = Visit(context.slice())!: str })
         }
-        r := Visit(context.expression()): Result!
+        r := Visit(context.expression())!: Result
         r.text = "[${ r.text }]"
         <- r
     }
 
     .VisitSlice := (context: SliceContext -> v: any) {
-        <- Visit(context.GetChild(0)): str!
+        <- Visit(context.GetChild(0))!: str
     }
 
     .VisitSliceFull := (context: SliceFullContext -> v: any) {
         !order := "true"
-        ? context.Dot_Dot() == nil {
+        context.Dot_Dot() == nil ? {
             order = "false"
         }
-        expr1 := Visit(context.expression(0)): Result!
-        expr2 := Visit(context.expression(1)): Result!
+        expr1 := Visit(context.expression(0))!: Result
+        expr2 := Visit(context.expression(1))!: Result
         <- ".slice(${expr1.text}, ${expr2.text}, ${order})"
     }
 
     .VisitSliceStart := (context: SliceStartContext -> v: any) {
         !order := "true"
-        ? context.Dot_Dot() == nil {
+        context.Dot_Dot() == nil ? {
             order = "false"
         }
-        expr := Visit(context.expression()): Result!
+        expr := Visit(context.expression())!: Result
         <- ".slice(${expr.text}, null, ${order})"
     }
 
     .VisitSliceEnd := (context: SliceEndContext -> v: any) {
         !order := "true"
-        ? context.Dot_Dot() == nil {
+        context.Dot_Dot() == nil ? {
             order = "false"
         }
-        expr := Visit(context.expression()): Result!
+        expr := Visit(context.expression())!: Result
         <- ".slice(null, ${expr.text}, ${order})"
     }
 
     .VisitCallFunc := (context: CallFuncContext -> v: any) {
         r := Result{data = "var"}
-        ? context.tuple() >< nil {
-            r.text += (Visit(context.tuple()): Result!).text
+        context.tuple() >< nil ? {
+            r.text += (Visit(context.tuple())!: Result).text
         } _ {
-            r.text += "(${ (Visit(context.lambda()): Result!).text })"
+            r.text += "(${ (Visit(context.lambda())!: Result).text })"
         }
 
         <- r
@@ -81,7 +81,7 @@ FeelLangVisitor := $ me {
 
     .VisitCallAsync := (context: CallAsyncContext -> v: any) {
         r := Result{}
-        expr := Visit(context.expression()): Result!
+        expr := Visit(context.expression())!: Result
         r.data = "var"
         r.text = "await " + expr.text
         set_func_async()
@@ -90,10 +90,10 @@ FeelLangVisitor := $ me {
 
     .VisitCallAwait := (context: CallAwaitContext -> v: any) {
         r := Result{data = "var"}
-        ? context.tuple() >< nil {
-            r.text += (Visit(context.tuple()): Result!).text
+        context.tuple() >< nil ? {
+            r.text += (Visit(context.tuple())!: Result).text
         } _ {
-            r.text += "(${ (Visit(context.lambda()): Result!).text })"
+            r.text += "(${ (Visit(context.lambda())!: Result).text })"
         }
         <- r
     }
@@ -101,11 +101,11 @@ FeelLangVisitor := $ me {
     .VisitCallPkg := (context: CallPkgContext -> v: any) {
         r := Result{data = Visit(context.typeNotNull())}
         r.text = "(new ${Visit(context.typeNotNull())}()"
-        ? context.pkgAssign() >< nil {
+        context.pkgAssign() >< nil ? {
             r.text += Visit(context.pkgAssign())
-        } context.listAssign() >< nil {
+        } context.listAssign() >< nil ? {
             r.text += Visit(context.listAssign())
-        } context.dictionaryAssign() >< nil {
+        } context.dictionaryAssign() >< nil ? {
             r.text += Visit(context.dictionaryAssign())
         }
         r.text += ")"
@@ -115,8 +115,8 @@ FeelLangVisitor := $ me {
     .VisitPkgAssign := (context: PkgAssignContext -> v: any) {
         !obj := ""
         obj += "{"
-        @ i := 0 .. context.pkgAssignElement().Length-1 {
-            ? i == 0 {
+        0 .. context.pkgAssignElement().Length-1 @ i {
+            i == 0 ? {
                 obj += Visit(context.pkgAssignElement(i))
             } _ {
                 obj += "," + Visit(context.pkgAssignElement(i))
@@ -129,9 +129,9 @@ FeelLangVisitor := $ me {
     .VisitListAssign := (context: ListAssignContext -> v: any) {
         !obj := ""
         obj += "{"
-        @ i := 0 .. context.expression().Length-1 {
-            r := Visit(context.expression(i)): Result!
-            ? i == 0 {
+        0 .. context.expression().Length-1 @ i {
+            r := Visit(context.expression(i))!: Result
+            i == 0 ? {
                 obj += r.text
             } _ {
                 obj += "," + r.text
@@ -144,9 +144,9 @@ FeelLangVisitor := $ me {
     .VisitDictionaryAssign := (context: DictionaryAssignContext -> v: any) {
         !obj := ""
         obj += "{"
-        @ i := 0 .. context.dictionaryElement().Length-1 {
-            r := Visit(context.dictionaryElement(i)): DicEle!
-            ? i == 0 {
+        0 .. context.dictionaryElement().Length-1 @ i {
+            r := Visit(context.dictionaryElement(i))!: DicEle
+            i == 0 ? {
                 obj += r.text
             } _ {
                 obj += "," + r.text
@@ -158,22 +158,22 @@ FeelLangVisitor := $ me {
 
     .VisitPkgAssignElement := (context: PkgAssignElementContext -> v: any) {
         !obj := ""
-        obj += "${Visit(context.name())} = ${(Visit(context.expression()): Result!).text}"
+        obj += "${Visit(context.name())} = ${(Visit(context.expression())!: Result).text}"
         <- obj
     }
 
     .VisitPkgAnonymous := (context: PkgAnonymousContext -> v: any) {
         <- Result{
             data = "var"
-            text = "new" + Visit(context.pkgAnonymousAssign()): str!
+            text = "new" + Visit(context.pkgAnonymousAssign())!: str
         }
     }
 
     .VisitPkgAnonymousAssign := (context: PkgAnonymousAssignContext -> v: any) {
         !obj := ""
         obj += "{"
-        @ i := 0 .. context.pkgAnonymousAssignElement().Length-1 {
-            ? i == 0 {
+        0 .. context.pkgAnonymousAssignElement().Length-1 @ i {
+            i == 0 ? {
                 obj += Visit(context.pkgAnonymousAssignElement(i))
             } _ {
                 obj += "," + Visit(context.pkgAnonymousAssignElement(i))
@@ -185,20 +185,20 @@ FeelLangVisitor := $ me {
 
     .VisitPkgAnonymousAssignElement := (context: PkgAnonymousAssignElementContext -> v: any) {
         !obj := ""
-        obj += "${Visit(context.name())} = ${(Visit(context.expression()): Result!).text}"
+        obj += "${Visit(context.name())} = ${(Visit(context.expression())!: Result).text}"
         <- obj
     }
 
     .VisitList := (context: ListContext -> v: any) {
         !type := Any
         result := Result{}
-        @ i := 0 .. context.expression().Length-1 {
-            r := Visit(context.expression(i)): Result!
-            ? i == 0 {
-                type = r.data: str!
+        0 .. context.expression().Length-1 @ i {
+            r := Visit(context.expression(i))!: Result
+            i == 0 ? {
+                type = r.data!: str
                 result.text += r.text
             } _ {
-                ? type >< (r.data: str!) {
+                type >< (r.data!: str) ? {
                     type = Any
                 }
                 result.text += "," + r.text
@@ -213,17 +213,17 @@ FeelLangVisitor := $ me {
         !key := Any
         !value := Any
         result := Result{}
-        @ i := 0 .. context.dictionaryElement().Length-1 {
-            r := Visit(context.dictionaryElement(i)): DicEle!
-            ? i == 0 {
+        0 .. context.dictionaryElement().Length-1 @ i {
+            r := Visit(context.dictionaryElement(i))!: DicEle
+            i == 0 ? {
                 key = r.key
                 value = r.value
                 result.text += r.text
             } _ {
-                ? key >< r.key {
+                key >< r.key ? {
                     key = Any
                 }
-                ? value >< r.value {
+                value >< r.value ? {
                     value = Any
                 }
                 result.text += "," + r.text
@@ -236,11 +236,11 @@ FeelLangVisitor := $ me {
     }
 
     .VisitDictionaryElement := (context: DictionaryElementContext -> v: any) {
-        r1 := Visit(context.expression(0)): Result!
-        r2 := Visit(context.expression(1)): Result!
+        r1 := Visit(context.expression(0))!: Result
+        r2 := Visit(context.expression(1))!: Result
         result := DicEle{
-            key = r1.data: str!
-            value = r2.data: str!
+            key = r1.data!: str
+            value = r2.data!: str
             text = "{${r1.text}, ${r2.text}}"
         }
         <- result
@@ -255,7 +255,7 @@ FeelLangVisitor := $ me {
         me.delete_current_set()
         r.text += BlockRight + Wrap
         # "异步"
-        ? get_func_async() {
+        get_func_async() ? {
             r.text = " async " + r.text
         }
         me.delete_func_stack()
@@ -268,20 +268,20 @@ FeelLangVisitor := $ me {
         me.add_func_stack()
         r := Result{data = "var"}
         r.text += "("
-        ? context.lambdaIn() >< nil {
+        context.lambdaIn() >< nil ? {
             r.text += Visit(context.lambdaIn())
         }
         r.text += ")"
         r.text += "=>"
 
-        ? context.tupleExpression() >< nil {
-            r.text += (Visit(context.tupleExpression()): Result!).text
+        context.tupleExpression() >< nil ? {
+            r.text += (Visit(context.tupleExpression())!: Result).text
         } _ {
             r.text += "{${ProcessFunctionSupport(context.functionSupportStatement())}}"
         }
         me.delete_current_set()
         # "异步"
-        ? get_func_async() | context.t.Type == Right_Flow {
+        get_func_async() | context.t.Type == Right_Flow ? {
             r.text = " async " + r.text
         }
         me.delete_func_stack()
@@ -290,9 +290,9 @@ FeelLangVisitor := $ me {
 
     .VisitLambdaIn := (context: LambdaInContext -> v: any) {
         !obj := ""
-        @ i := 0 .. context.id().Length-1 {
-            r := Visit(context.id(i)): Result!
-            ? i == 0 {
+        0 .. context.id().Length-1 @ i {
+            r := Visit(context.id(i))!: Result
+            i == 0 ? {
                 obj += r.text
             } _ {
                 obj += ", " + r.text
