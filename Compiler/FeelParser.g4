@@ -37,7 +37,7 @@ typeRedefineStatement: Bang? id Colon_Equal New_Line* typeType end;
 typeTagStatement: Comment_Tag; 
 
 // 枚举
-enumStatement: (annotationSupport)? Bang? id Colon_Equal New_Line* left_brack Colon right_brack
+enumStatement: (annotationSupport)? Bang? id Colon_Equal New_Line* left_brack Question right_brack
  left_brace enumSupportStatement* right_brace end;
 
 enumSupportStatement: id (Equal (add)? integerExpr)? end;
