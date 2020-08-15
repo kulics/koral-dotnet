@@ -10,7 +10,7 @@
 !_ReadPath: str
 !_PathLine: str
 
-Main := (args: [array str]->) {
+Main := (args: array str->) {
     # "检查系统平台，区分路径字符"
     !os := Environment.OSVersion.Platform
     os == PlatformID.Unix | os == PlatformID.MacOSX ? {
@@ -34,7 +34,7 @@ Compiled := (path: str->) {
         -> fsRead := FileStream(file, FileMode.Open) {
             ! {
                 FSLength := fsRead.Length!: int
-                ByteBlock := [array u8](FSLength)
+                ByteBlock := array u8(FSLength)
                 r := fsRead.Read(ByteBlock, 0, ByteBlock.Length)
                 Input := Encoding.UTF8.GetString(ByteBlock)
 

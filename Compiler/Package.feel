@@ -20,7 +20,7 @@ FeelLangVisitor := $ me {
         id := Visit(context.id())!: Result
 
         !obj := ""
-        !extend := [list str]{}
+        !extend := list str{}
         context.packageStaticStatement() >< nil ? {
             item := context.packageStaticStatement()
             r := Visit(item)!: Result
@@ -30,7 +30,7 @@ FeelLangVisitor := $ me {
             item := context.packageFieldStatement()
             r := Visit(item)!: Result
             obj += r.text
-            extend += r.data!: [list str]
+            extend += r.data!: list str
         }
         context.packageNewStatement() >< nil ? {
             item := context.packageNewStatement()
@@ -213,7 +213,7 @@ FeelLangVisitor := $ me {
 
     .VisitPackageFieldStatement := (context: PackageFieldStatementContext -> v: any) {
         !obj := ""
-        !extend := [list str]{}
+        !extend := list str{}
         context.id(0) >< nil ? {
             Self := Visit(context.id(0))!: Result
             me.selfID = Self.text
@@ -420,7 +420,7 @@ FeelLangVisitor := $ me {
     .VisitProtocolStatement := (context: ProtocolStatementContext -> v: any) {
         id := Visit(context.id())!: Result
         !obj := ""
-        !extend := [list str]{}
+        !extend := list str{}
         !interfaceProtocol := ""
         !ptclName := id.text
         context.annotationSupport() >< nil ? {
@@ -430,7 +430,7 @@ FeelLangVisitor := $ me {
             item := context.protocolSubStatement()
             r := Visit(item)!: Result
             interfaceProtocol += r.text
-            extend += r.data!: [list str]
+            extend += r.data!: list str
         }
 
         obj += "public partial interface ${ptclName}"
@@ -456,7 +456,7 @@ FeelLangVisitor := $ me {
 
     .VisitProtocolSubStatement := (context: ProtocolSubStatementContext -> v: any) {
         !obj := ""
-        !extend := [list str]{}
+        !extend := list str{}
         context.protocolSupportStatement() @ item {
             item.GetChild(0).GetType() == typeof(IncludeStatementContext) ? {
                 r := Visit(item)!: str

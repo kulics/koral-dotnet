@@ -20,7 +20,7 @@ Parameter := $ {
 }
 
 FeelLangVisitor := $ me {
-    ProcessFunctionSupport := (items: [array FunctionSupportStatementContext] -> v: str) {
+    ProcessFunctionSupport := (items: array FunctionSupportStatementContext -> v: str) {
         !obj := ""
         items @ item {
             obj += Visit(item)
@@ -135,7 +135,7 @@ FeelLangVisitor := $ me {
 
     .VisitParameterClauseIn := (context: ParameterClauseInContext -> v: any) {
         !obj := "("
-        !temp := [list str]{}
+        !temp := list str{}
         context.parameter().Length-1 ... 0 @ i {
             p := Visit(context.parameter(i))!: Parameter
             temp.add("${p.annotation} ${p.type} ${p.id} ${p.value}")
@@ -163,7 +163,7 @@ FeelLangVisitor := $ me {
         }
         context.parameter().Length > 1 ? {
             obj += "( "
-            !temp := [list str]{}
+            !temp := list str{}
             context.parameter().Length-1 ... 0 @ i {
                 p := Visit(context.parameter(i))!: Parameter
                 temp.add("${p.annotation} ${p.type} ${p.id} ${p.value}")

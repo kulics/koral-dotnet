@@ -16,7 +16,7 @@ FeelLangVisitor := $ me {
         id := Visit(context.id())!: Result
         
         !obj := ""
-        extend := [list str]{}
+        extend := list str{}
         context.packageFieldStatement() >< nil ? {
             item := context.packageFieldStatement()
             r := Visit(item)!: Result
