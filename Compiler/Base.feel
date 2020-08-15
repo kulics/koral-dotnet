@@ -57,19 +57,19 @@ Result := $ {
 }
 
 FeelLangVisitor := $ me {
-    [FeelParserBaseVisitor any]
+    FeelParserBaseVisitor any
     !selfID := ""
     !superID := ""
     !setID := ""
     !getID := ""
     !selfPropertyID := ""
-    !selfPropertyContent := [list str]{}
+    !selfPropertyContent := list str{}
     !selfPropertyVariable := false
 
-    !AllIDSet := [hashset str]{}
-    !CurrentIDSet := [stack [hashset str]]{}
-    !TypeIdSet := [hashset str]{}
-    !FuncAsyncStack := [stack bool]{}
+    !AllIDSet := hashset str{}
+    !CurrentIDSet := stack (hashset str){}
+    !TypeIdSet := hashset str{}
+    !FuncAsyncStack := stack bool{}
 
     has_id := (id: str -> v: bool) {
         <- me.AllIDSet.contains(id) | me.CurrentIDSet.peek().contains(id)
@@ -81,7 +81,7 @@ FeelLangVisitor := $ me {
         CurrentIDSet.peek() @ item {
             AllIDSet.add(item)
         }
-        me.CurrentIDSet.push([hashset str]{})
+        me.CurrentIDSet.push(hashset str{})
     }
     delete_current_set := (->) {
         me.AllIDSet.except_with(me.CurrentIDSet.peek())
@@ -111,7 +111,7 @@ FeelLangVisitor := $ me {
     }
 }
 FeelLangVisitor := (->$me) {
-    me.CurrentIDSet.push([hashset str]{})
+    me.CurrentIDSet.push(hashset str{})
     FuncAsyncStack.push(false)
 }
 

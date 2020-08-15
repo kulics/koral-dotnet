@@ -385,7 +385,7 @@ FeelLangVisitor := $ me {
                     data = "var"
                 }
             }
-        } context.ChildCount == 4 ? {
+        } context.ChildCount == 2 ? {
             id := Visit(context.id())!: Result
             template := "<" + (Visit(context.templateCall())!: str) + ">"
             <- Result{

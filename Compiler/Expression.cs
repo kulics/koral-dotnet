@@ -306,7 +306,7 @@ else if ( context.t.Type==Discard ) {
 return (new Result(){text = "_",data = "var"});
 }
 }
-else if ( context.ChildCount==4 ) {
+else if ( context.ChildCount==2 ) {
 var id = (Result)(Visit(context.id()));
 var template = "<"+((string)(Visit(context.templateCall())))+">";
 return (new Result(){text = id.text+template,data = id.text+template,rootID = id.text});
