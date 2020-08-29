@@ -178,8 +178,8 @@ annotationStatement |
 New_Line;
 
 // 条件判断
-judgeCaseStatement: expression Double_Arrow (caseStatement)+ caseElseStatement end |
-Left_Brack expression Right_Brack (caseStatement)+ end;
+judgeCaseStatement: expression Double_Arrow (caseStatement)* caseElseStatement end |
+expression Double_Arrow (caseStatement)+ end;
 // 判断条件声明
 caseElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
 caseStatement: judgeCase (more judgeCase)* Question left_brace (functionSupportStatement)* right_brace;
