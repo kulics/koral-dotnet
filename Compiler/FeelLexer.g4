@@ -24,6 +24,8 @@ Comma_Comma_Comma: 	',,,';
 Comma_Comma: 		',,';
 Comma: 				',';
 
+Double_Arrow:	'=>';
+
 Right_Flow: 	'->>';
 Left_Flow: 		'<<-';
 

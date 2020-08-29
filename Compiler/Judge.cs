@@ -144,9 +144,8 @@ obj+=BlockRight+Wrap;
 return obj;
 }
 public  override  object VisitJudgeCaseExpression( JudgeCaseExpressionContext context ){
-var r = (new Result());
-var expr = (Result)(Visit(context.expression()));
-r.text=(new System.Text.StringBuilder().Append("run(()=> { switch (").Append(expr.text).Append(") ")).to_str();
+Func<string, Result> fn = (expr)=>{var r = (new Result());
+r.text=(new System.Text.StringBuilder().Append("run(()=> { switch (").Append(expr).Append(") ")).to_str();
 r.text+=BlockLeft+Wrap;
 foreach (var item in context.caseExpression()){
 var temp = (string)(Visit(item));
@@ -155,6 +154,8 @@ r.text+=temp+Wrap;
 r.text+=(string)(Visit(context.caseElseExpression()));
 r.text+=BlockRight+Wrap+"})";
 return r;
+};
+return fn;
 }
 public  override  object VisitCaseExpression( CaseExpressionContext context ){
 var obj = "";

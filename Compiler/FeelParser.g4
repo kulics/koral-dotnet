@@ -178,8 +178,8 @@ annotationStatement |
 New_Line;
 
 // 条件判断
-judgeCaseStatement: Left_Brack expression Right_Brack (caseStatement)+ caseElseStatement end |
-Left_Brack expression Right_Brack (caseStatement)+ end;
+judgeCaseStatement: expression Double_Arrow (caseStatement)* caseElseStatement end |
+expression Double_Arrow (caseStatement)+ end;
 // 判断条件声明
 caseElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
 caseStatement: judgeCase (more judgeCase)* Question left_brace (functionSupportStatement)* right_brace;
@@ -266,7 +266,6 @@ linq // 联合查询
 | plusMinus // 正负处理
 | bitwiseNotExpression // 位运算取反
 | negate // 取反
-| judgeCaseExpression // 条件判断表达式
 | checkExpression // 检查表达式
 | expression op=Bang // 取引用
 | expression op=Question // 可空判断
@@ -287,6 +286,7 @@ linq // 联合查询
 | expression compareCombine expression // 组合比较表达式
 | expression compare expression // 比较表达式
 | expression logic expression // 逻辑表达式
+| expression judgeCaseExpression // 条件判断表达式
 | expression judgeExpression // 判断表达式
 | expression loopExpression // 集合循环表达式
 ; 
@@ -395,7 +395,7 @@ judgeIfExpression: Question left_brace (functionSupportStatement)* tupleExpressi
 judgeElseIfExpression: expression Question left_brace (functionSupportStatement)* tupleExpression right_brace;
 
 // 条件判断表达式
-judgeCaseExpression: Left_Brack expression Right_Brack (caseExpression)* caseElseExpression;
+judgeCaseExpression: Double_Arrow (caseExpression)* caseElseExpression;
 // 判断条件声明
 caseExpression: judgeCase (more judgeCase)* Question left_brace (functionSupportStatement)* tupleExpression right_brace;
 

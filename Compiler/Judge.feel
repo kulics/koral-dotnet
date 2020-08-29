@@ -156,17 +156,19 @@ FeelLangVisitor := $ me {
     }
 
     .VisitJudgeCaseExpression := (context: JudgeCaseExpressionContext -> v: any)  {
-        r := Result{}
-        expr := Visit(context.expression())!: Result
-        r.text = "run(()=> { switch (${expr.text}) "
-        r.text += BlockLeft+Wrap
-        context.caseExpression() @ item {
-            temp := Visit(item)!: str
-            r.text += temp + Wrap
+        fn: (str->Result) = { expr ->
+            r := Result{}
+            r.text = "run(()=> { switch (${expr}) "
+            r.text += BlockLeft+Wrap
+            context.caseExpression() @ item {
+                temp := Visit(item)!: str
+                r.text += temp + Wrap
+            }
+            r.text += Visit(context.caseElseExpression())!: str
+            r.text += BlockRight + Wrap + "})"
+            <- r
         }
-        r.text += Visit(context.caseElseExpression())!: str
-        r.text += BlockRight + Wrap + "})"
-        <- r
+        <- fn
     }
 
     .VisitCaseExpression := (context: CaseExpressionContext -> v: any) {

@@ -100,7 +100,7 @@ FeelLangVisitor := $ me {
     }
 
     .VisitTypeBasic := (context: TypeBasicContext -> v: any) {
-        <- [context.t.Type] TypeI8 ? {
+        <- context.t.Type => TypeI8 ? {
             I8
         } TypeU8 ? {
             U8
