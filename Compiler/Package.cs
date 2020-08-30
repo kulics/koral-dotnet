@@ -455,20 +455,6 @@ obj+=Visit(item);
 }
 return (new Result(){text = obj,data = extend});
 }
-public  override  object VisitProtocolVariableStatement( ProtocolVariableStatementContext context ){
-var id = (Result)(Visit(context.id()));
-var isMutable = id.isVirtual;
-var obj = "";
-if ( context.annotationSupport()!=null ) {
-obj+=Visit(context.annotationSupport());
-}
-var type = (string)(Visit(context.typeType()));
-obj+=type+" "+id.text;
-obj+=BlockLeft;
-obj+="get;set;";
-obj+=BlockRight+Wrap;
-return obj;
-}
 public  override  object VisitProtocolFunctionStatement( ProtocolFunctionStatementContext context ){
 var id = (Result)(Visit(context.id()));
 var obj = "";

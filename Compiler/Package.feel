@@ -468,21 +468,6 @@ FeelLangVisitor := $ me {
         <- Result{text = obj; data = extend}
     }
 
-    .VisitProtocolVariableStatement := (context: ProtocolVariableStatementContext -> v: any) {
-        id := Visit(context.id())!: Result
-        !isMutable := id.isVirtual
-        !obj := ""
-        context.annotationSupport() >< nil ? {
-            obj += Visit(context.annotationSupport())
-        }
-        type := Visit(context.typeType())!: str
-        obj += type + " " + id.text
-        obj += BlockLeft
-        obj += "get;set;"
-        obj += BlockRight + Wrap
-        <- obj
-    }
-
     .VisitProtocolFunctionStatement := (context: ProtocolFunctionStatementContext -> v: any) {
         id := Visit(context.id())!: Result
         !obj := ""

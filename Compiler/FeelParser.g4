@@ -12,8 +12,8 @@ exportStatement: Left_Arrow nameSpaceItem end;
 
 namespaceSupportStatement:
 importStatement |
-packageStatement |
 protocolStatement |
+packageStatement |
 implementStatement |
 namespaceFunctionStatement |
 namespaceVariableStatement |
@@ -119,15 +119,13 @@ parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brac
 // 协议
 protocolStatement: (annotationSupport)? id Colon_Equal (left_paren templateDefine right_paren | templateDefine)? protocolSubStatement end;
 
-protocolSubStatement: Left_Brack Coin Right_Brack (p=Question? id (more id)?)? left_brace (protocolSupportStatement)* right_brace;
+protocolSubStatement: Coin (p=Question? id (more id)?)? left_brace (protocolSupportStatement)* right_brace;
 // 协议支持的语句
 protocolSupportStatement:
 includeStatement |
 protocolFunctionStatement |
-protocolVariableStatement |
 New_Line ;
-// 定义控制
-protocolVariableStatement: (annotationSupport)? Bang? id (Colon_Equal expression | Colon typeType (Equal expression)?) end;
+
 // 函数
 protocolFunctionStatement: (annotationSupport)? id Colon (left_paren templateDefine right_paren | templateDefine)? left_paren parameterClauseIn 
 t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line* parameterClauseOut right_paren end;
