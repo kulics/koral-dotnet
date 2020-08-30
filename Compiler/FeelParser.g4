@@ -37,10 +37,10 @@ typeRedefineStatement: Bang? id Colon_Equal New_Line* typeType end;
 typeTagStatement: Comment_Tag; 
 
 // 枚举
-enumStatement: (annotationSupport)? Bang? id Colon_Equal New_Line* left_brack Question right_brack
+enumStatement: (annotationSupport)? Bang? id Colon_Equal New_Line* Coin
  left_brace enumSupportStatement* right_brace end;
 
-enumSupportStatement: id (Equal (add)? integerExpr)? end;
+enumSupportStatement: Or id (Equal (add)? integerExpr)? end;
 // 命名空间变量
 namespaceVariableStatement: (annotationSupport)? Bang id (Colon_Equal expression | Colon typeType (Equal expression)?) end;
 // 命名空间常量
