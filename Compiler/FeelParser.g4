@@ -176,11 +176,12 @@ annotationStatement |
 New_Line;
 
 // 条件判断
-judgeCaseStatement: expression Double_Arrow (caseStatement)* caseElseStatement end |
-expression Double_Arrow (caseStatement)+ end;
+judgeCaseStatement:
+// expression Double_Arrow (caseStatement)+ end |
+expression Double_Arrow (caseStatement)* caseElseStatement end ;
 // 判断条件声明
-caseElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
-caseStatement: judgeCase (more judgeCase)* Question left_brace (functionSupportStatement)* right_brace;
+caseElseStatement: New_Line?  Or Discard left_brace (functionSupportStatement)* right_brace;
+caseStatement: New_Line?  Or judgeCase (more judgeCase)* Question left_brace (functionSupportStatement)* right_brace;
 judgeCase: expression | (id | Discard) Colon typeType;
 
 // 判断
@@ -188,18 +189,18 @@ judgeStatement:
 judgeIfStatement (judgeElseIfStatement)* judgeElseStatement end
 | judgeIfStatement (judgeElseIfStatement)* end;
 // else 判断
-judgeElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
+judgeElseStatement: New_Line? Or Discard left_brace (functionSupportStatement)* right_brace;
 // if 判断
 judgeIfStatement: expression Question left_brace (functionSupportStatement)* right_brace;
 // else if 判断
-judgeElseIfStatement: expression Question left_brace (functionSupportStatement)* right_brace;
+judgeElseIfStatement: New_Line? Or expression Question left_brace (functionSupportStatement)* right_brace;
 // 循环
 loopStatement: expression At (left_brack id right_brack)? Bang? id
  left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // 条件循环
 loopCaseStatement: expression At left_brace (functionSupportStatement)* right_brace loopElseStatement? end;
 // else 判断
-loopElseStatement: Discard left_brace (functionSupportStatement)* right_brace;
+loopElseStatement: New_Line? Or Discard left_brace (functionSupportStatement)* right_brace;
 // 跳出循环
 loopJumpStatement: Tilde At end;
 // 跳过当前循环
@@ -386,26 +387,24 @@ linqItem: (linqHeadItem | id (expression)?) Right_Arrow New_Line?;
 judgeExpression: judgeIfExpression (judgeElseIfExpression)* judgeElseExpression;
 
 // else 判断
-judgeElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
+judgeElseExpression: New_Line? Or Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
 // if 判断
 judgeIfExpression: Question left_brace (functionSupportStatement)* tupleExpression right_brace;
 // else if 判断
-judgeElseIfExpression: expression Question left_brace (functionSupportStatement)* tupleExpression right_brace;
+judgeElseIfExpression: New_Line? Or expression Question left_brace (functionSupportStatement)* tupleExpression right_brace;
 
 // 条件判断表达式
 judgeCaseExpression: Double_Arrow (caseExpression)* caseElseExpression;
 // 判断条件声明
-caseExpression: judgeCase (more judgeCase)* Question left_brace (functionSupportStatement)* tupleExpression right_brace;
+caseExpression: New_Line? Or judgeCase (more judgeCase)* Question left_brace (functionSupportStatement)* tupleExpression right_brace;
 
-caseElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
-
-judgeCaseElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
+caseElseExpression: New_Line? Or Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
 
 // 循环表达式
 loopExpression: At (left_brack id right_brack)? Bang? id 
 left_brace (functionSupportStatement)* tupleExpression right_brace loopElseExpression;
 // else 判断
-loopElseExpression: Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
+loopElseExpression: New_Line? Or Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
 // 检查
 checkExpression: 
 Bang left_brace (functionSupportStatement)* tupleExpression right_brace (checkErrorExpression)+ checkFinallyStatment? ;
