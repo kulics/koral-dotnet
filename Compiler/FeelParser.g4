@@ -351,9 +351,9 @@ name: id (call New_Line? id)* ;
 
 templateDefine: templateDefineItem+;
 
-templateDefineItem: id | id Colon id; 
+templateDefineItem: Back_Quote (id | id Colon id); 
 
-templateCall: typeType+;
+templateCall: (Back_Quote typeType)+;
 
 lambda: left_brace (lambdaIn)? t=(Right_Arrow|Right_Flow) New_Line* tupleExpression right_brace
 | left_brace (lambdaIn)? t=(Right_Arrow|Right_Flow) New_Line* 
