@@ -26,32 +26,32 @@ New_Line ;
 // 导入命名空间
 importStatement: Right_Arrow left_brace (importSubStatement | typeAliasStatement | New_Line)* right_brace end;
 
-importSubStatement: (annotationSupport)? ((Bang? id|Discard) Colon_Equal)?
+importSubStatement: (annotationSupport)? ((Bang? id|Discard) Equal)?
  (nameSpaceItem stringExpr? | nameSpaceItem? stringExpr) end;
 
 // 类型别名
-typeAliasStatement: Bang? id Colon_Equal typeType end;
+typeAliasStatement: Bang? id Equal typeType end;
 // 类型重定义
-typeRedefineStatement: Bang? id Colon_Equal New_Line* typeType end;
+typeRedefineStatement: Bang? id Equal New_Line* typeType end;
 // 特殊类型注释
 typeTagStatement: Comment_Tag; 
 
 // 枚举
-enumStatement: (annotationSupport)? Bang? id Colon_Equal New_Line* Coin
+enumStatement: (annotationSupport)? Bang? id Equal New_Line* Coin
  left_brace enumSupportStatement* right_brace end;
 
 enumSupportStatement: Or id (Equal (add)? integerExpr)? end;
 // 命名空间变量
-namespaceVariableStatement: (annotationSupport)? Bang id (Colon_Equal expression | Colon typeType (Equal expression)?) end;
+namespaceVariableStatement: (annotationSupport)? Bang id (Equal expression | Colon typeType (Equal expression)?) end;
 // 命名空间常量
-namespaceConstantStatement: (annotationSupport)? id (Colon_Equal expression | Colon typeType (Equal expression)?) end;
+namespaceConstantStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?) end;
 // 命名空间函数
-namespaceFunctionStatement: (annotationSupport)? id Colon_Equal (left_paren templateDefine right_paren | templateDefine)?
+namespaceFunctionStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)?
  left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 定义包
-packageStatement: (annotationSupport)? id Colon_Equal (left_paren templateDefine right_paren | templateDefine)?
+packageStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)?
  (packageFieldStatement|packageStaticStatement|packageNewStatement) end;
 
 packageStaticStatement: left_brace (packageStaticSupportStatement)* right_brace;
@@ -63,11 +63,11 @@ packageStaticConstantStatement |
 New_Line;
 
 // 定义变量
-packageStaticVariableStatement: (annotationSupport)? Bang id (Colon_Equal expression | Colon typeType (Equal expression)?) end;
+packageStaticVariableStatement: (annotationSupport)? Bang id (Equal expression | Colon typeType (Equal expression)?) end;
 // 定义常量
-packageStaticConstantStatement: (annotationSupport)? id (Colon_Equal expression | Colon typeType (Equal expression)?) end;
+packageStaticConstantStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?) end;
 // 函数
-packageStaticFunctionStatement: (annotationSupport)? id Colon_Equal (left_paren templateDefine right_paren | templateDefine)?
+packageStaticFunctionStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)?
  left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
@@ -91,11 +91,11 @@ includeStatement: typeType end;
 packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arrow Coin p=Question? (id (more id)?)? right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement)* right_brace;
 // 定义变量
-packageVariableStatement: (annotationSupport)? Bang id (Colon_Equal expression | Colon typeType (Equal expression)?) end;
+packageVariableStatement: (annotationSupport)? Bang id (Equal expression | Colon typeType (Equal expression)?) end;
 // 定义常量
-packageConstantStatement: (annotationSupport)? id (Colon_Equal expression | Colon typeType (Equal expression)?) end;
+packageConstantStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?) end;
 // 函数
-packageFunctionStatement: (annotationSupport)? id Colon_Equal (left_paren templateDefine right_paren | templateDefine)?
+packageFunctionStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)?
  left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 定义子方法
@@ -104,20 +104,20 @@ packageControlSubStatement: id (left_paren id right_paren)? left_brace (function
 packageEventStatement: Bang id left_brack Right_Arrow right_brack nameSpaceItem end;
 
 // 扩展
-implementStatement: id Colon Colon_Equal  (left_paren templateDefine right_paren | templateDefine)?
+implementStatement: id Colon Equal  (left_paren templateDefine right_paren | templateDefine)?
 (packageNewStatement|packageFieldStatement) end;
 
 // 定义变量
-overrideVariableStatement: (annotationSupport)? Dot (n='_')? Bang id (Colon_Equal expression | Colon typeType (Equal expression)?) end;
+overrideVariableStatement: (annotationSupport)? Dot (n='_')? Bang id (Equal expression | Colon typeType (Equal expression)?) end;
 // 定义常量
-overrideConstantStatement: (annotationSupport)? Dot (n='_')? id (Colon_Equal expression | Colon typeType (Equal expression)?) end;
+overrideConstantStatement: (annotationSupport)? Dot (n='_')? id (Equal expression | Colon typeType (Equal expression)?) end;
 // 函数
-overrideFunctionStatement: (annotationSupport)? Dot (n='_')? id Colon_Equal (left_paren templateDefine right_paren | templateDefine)?
+overrideFunctionStatement: (annotationSupport)? Dot (n='_')? id Equal (left_paren templateDefine right_paren | templateDefine)?
  left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 
 // 协议
-protocolStatement: (annotationSupport)? id Colon_Equal (left_paren templateDefine right_paren | templateDefine)? protocolSubStatement end;
+protocolStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)? protocolSubStatement end;
 
 protocolSubStatement: Coin (p=Question? id (more id)?)? left_brace (protocolSupportStatement)* right_brace;
 // 协议支持的语句
