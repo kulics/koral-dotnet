@@ -31,7 +31,7 @@ var ID = ((Result)(Visit(context.id()))).text;
 this.add_id(ID);
 var Type = "Exception";
 if ( context.typeType()!=null ) {
-Type=(string)(Visit(context.typeType()));
+Type = (string)(Visit(context.typeType()));
 }
 obj+=(new System.Text.StringBuilder().Append("catch( ").Append(Type).Append(" ").Append(ID).Append(" )").Append(Wrap).Append(BlockLeft).Append(Wrap)).to_str();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
@@ -58,11 +58,11 @@ obj+=Visit(v);
 }
 }
 if ( context.constId().Length>1 ) {
-obj="("+obj+")";
+obj = "("+obj+")";
 }
 var r2 = (Result)(Visit(context.tupleExpression()));
 obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text)).to_str();
-obj=(new System.Text.StringBuilder().Append("using (").Append(obj).Append(") ").Append(BlockLeft).Append(Wrap)).to_str();
+obj = (new System.Text.StringBuilder().Append("using (").Append(obj).Append(") ").Append(BlockLeft).Append(Wrap)).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
@@ -96,7 +96,7 @@ var ID = ((Result)(Visit(context.id()))).text;
 this.add_id(ID);
 var Type = "Exception";
 if ( context.typeType()!=null ) {
-Type=(string)(Visit(context.typeType()));
+Type = (string)(Visit(context.typeType()));
 }
 obj+=(new System.Text.StringBuilder().Append("catch( ").Append(Type).Append(" ").Append(ID).Append(" )").Append(Wrap).Append(BlockLeft).Append(Wrap)).to_str();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());

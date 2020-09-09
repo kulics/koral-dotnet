@@ -28,19 +28,19 @@ public  override  object VisitJudgeCase( JudgeCaseContext context ){
 var obj = "";
 if ( context.expression()!=null ) {
 var expr = (Result)(Visit(context.expression()));
-obj=(new System.Text.StringBuilder().Append("case ").Append(expr.text).Append(" :").Append(Wrap)).to_str();
+obj = (new System.Text.StringBuilder().Append("case ").Append(expr.text).Append(" :").Append(Wrap)).to_str();
 }
 else if ( context.typeType()!=null ) {
 var id = "it";
 if ( context.id()!=null ) {
-id=((Result)(Visit(context.id()))).text;
+id = ((Result)(Visit(context.id()))).text;
 }
 this.add_id(id);
 var type = (string)(Visit(context.typeType()));
-obj=(new System.Text.StringBuilder().Append("case ").Append(type).Append(" ").Append(id).Append(" :").Append(Wrap)).to_str();
+obj = (new System.Text.StringBuilder().Append("case ").Append(type).Append(" ").Append(id).Append(" :").Append(Wrap)).to_str();
 }
 else {
-obj=(new System.Text.StringBuilder().Append("default:").Append(Wrap)).to_str();
+obj = (new System.Text.StringBuilder().Append("default:").Append(Wrap)).to_str();
 }
 return obj;
 }

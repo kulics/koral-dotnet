@@ -10,13 +10,13 @@
 !_ReadPath: str
 !_PathLine: str
 
-Main := (args: array str->) {
+Main = (args: array`str->) {
     # "检查系统平台，区分路径字符"
-    !os := Environment.OSVersion.Platform
-    os == PlatformID.Unix | os == PlatformID.MacOSX ? {
+    !os = Environment.OSVersion.Platform
+    os == PlatformID.Unix || os == PlatformID.MacOSX ? {
         _ReadPath = "./"
         _PathLine = "/"
-    } _ {
+    } | _ {
         _ReadPath = ".\\"
         _PathLine = "\\"
     }
@@ -26,35 +26,35 @@ Main := (args: array str->) {
     print("Completed")
 }
 
-Compiled := (path: str->) {
+Compiled = (path: str->) {
     # "获取相对路径下所有文件"
-    Files := Directory.GetFiles(path, "*.feel")
+    Files = Directory.GetFiles(path, "*.feel")
     Files @ file {
         # "文件流读文件"
-        -> fsRead := FileStream(file, FileMode.Open) {
+        -> fsRead = FileStream(file, FileMode.Open) {
             ! {
-                FSLength := fsRead.Length!: int
-                ByteBlock := array u8(FSLength)
-                r := fsRead.Read(ByteBlock, 0, ByteBlock.Length)
-                Input := Encoding.UTF8.GetString(ByteBlock)
+                FSLength = fsRead.Length!: int
+                ByteBlock = array`u8(FSLength)
+                r = fsRead.Read(ByteBlock, 0, ByteBlock.Length)
+                Input = Encoding.UTF8.GetString(ByteBlock)
 
-                Stream := AntlrInputStream(Input)
-                Lexer := FeelLexer(Stream)
-                Tokens := CommonTokenStream(Lexer)
-                Parser := FeelParser(Tokens)
+                Stream = AntlrInputStream(Input)
+                Lexer = FeelLexer(Stream)
+                Tokens = CommonTokenStream(Lexer)
+                Parser = FeelParser(Tokens)
                 Parser.BuildParseTree = true
                 Parser.RemoveErrorListeners()
                 Parser.AddErrorListener(ErrorListener{ FileDir = file })
 
-                AST := Parser.program()
+                AST = Parser.program()
 
-                Visitor := FeelLangVisitor{}
-                Result := Visitor.Visit(AST)
+                Visitor = FeelLangVisitor{}
+                Result = Visitor.Visit(AST)
 
                 # "文件流写文件,使用覆盖模式"
                 # "转换为字节"
-                ByteResult := Encoding.UTF8.GetBytes(Result.to_str())  
-                -> fsWrite := FileStream("${_ReadPath; file.replace(".feel", ".cs")}", FileMode.Create) {
+                ByteResult = Encoding.UTF8.GetBytes(Result.to_str())  
+                -> fsWrite = FileStream("${_ReadPath; file.replace(".feel", ".cs")}", FileMode.Create) {
                     fsWrite.Write(ByteResult, 0, ByteResult.Length)
                 }
             } err {
@@ -64,7 +64,7 @@ Compiled := (path: str->) {
         }
     }
 
-    Folders := Directory.GetDirectories(path)
+    Folders = Directory.GetDirectories(path)
     Folders @ folder {
         Compiled(folder)
     }

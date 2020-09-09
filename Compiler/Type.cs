@@ -12,12 +12,12 @@ namespace Compiler
 public partial class FeelLangVisitor{
 public  override  object VisitTypeType( TypeTypeContext context ){
 var obj = "";
-obj=(string)(Visit(context.GetChild(0)));
+obj = (string)(Visit(context.GetChild(0)));
 return obj;
 }
 public  override  object VisitTypeNullable( TypeNullableContext context ){
 var obj = "";
-obj=(string)(Visit(context.typeNotNull()));
+obj = (string)(Visit(context.typeNotNull()));
 obj+="?";
 return obj;
 }
@@ -26,7 +26,7 @@ var obj = "";
 obj+=Visit(context.nameSpaceItem());
 if ( context.templateCall()!=null ) {
 if ( obj=="array" ) {
-obj=(new System.Text.StringBuilder().Append(Visit(context.templateCall())).Append("[]")).to_str();
+obj = (new System.Text.StringBuilder().Append(Visit(context.templateCall())).Append("[]")).to_str();
 }
 else {
 obj+="<"+Visit(context.templateCall())+">";
@@ -41,39 +41,39 @@ var @out = (string)(Visit(context.typeFunctionParameterClause(1)));
 if ( context.t.Type==Right_Arrow ) {
 if ( @out.Length==0 ) {
 if ( @in.Length==0 ) {
-obj="Action";
+obj = "Action";
 }
 else {
-obj=(new System.Text.StringBuilder().Append("Action<").Append(@in).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Action<").Append(@in).Append(">")).to_str();
 }
 }
 else {
 if ( @out.first_index_of(",")>=0 ) {
-@out=(new System.Text.StringBuilder().Append("(").Append(@out).Append(")")).to_str();
+@out = (new System.Text.StringBuilder().Append("(").Append(@out).Append(")")).to_str();
 }
 if ( @in.Length==0 ) {
-obj=(new System.Text.StringBuilder().Append("Func<").Append(@out).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(@out).Append(">")).to_str();
 }
 else {
-obj=(new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(@out).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(@out).Append(">")).to_str();
 }
 }
 }
 else {
 if ( @out.Length==0 ) {
 if ( @in.Length==0 ) {
-obj=(new System.Text.StringBuilder().Append("Func<").Append(Task).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(Task).Append(">")).to_str();
 }
 else {
-obj=(new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append(">")).to_str();
 }
 }
 else {
 if ( @in.Length==0 ) {
-obj=(new System.Text.StringBuilder().Append("Func<").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
 }
 else {
-obj=(new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
 }
 }
 }

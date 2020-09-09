@@ -177,7 +177,7 @@ New_Line;
 
 // 条件判断
 judgeCaseStatement:
-// expression Double_Arrow (caseStatement)+ end |
+expression Double_Arrow (caseStatement)+ end |
 expression Double_Arrow (caseStatement)* caseElseStatement end ;
 // 判断条件声明
 caseElseStatement: New_Line?  Or Discard left_brace (functionSupportStatement)* right_brace;

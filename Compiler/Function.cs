@@ -29,14 +29,14 @@ var id = (Result)(Visit(context.id()));
 var obj = "";
 var pout = "";
 if ( context.parameterClauseOut()!=null ) {
-pout=(string)(Visit(context.parameterClauseOut()));
+pout = (string)(Visit(context.parameterClauseOut()));
 }
 if ( context.t.Type==Right_Flow ) {
 if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).to_str();
+pout = (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).to_str();
 }
 else {
-pout=Task;
+pout = Task;
 }
 }
 obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).to_str();
@@ -44,7 +44,7 @@ var templateContract = "";
 if ( context.templateDefine()!=null ) {
 var template = (TemplateItem)(Visit(context.templateDefine()));
 obj+=template.Template;
-templateContract=template.Contract;
+templateContract = template.Contract;
 }
 this.add_current_set();
 this.add_func_stack();
@@ -53,7 +53,7 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 this.delete_current_set();
 if ( get_func_async() ) {
-obj=" async "+obj;
+obj = " async "+obj;
 }
 this.delete_func_stack();
 return obj;
@@ -105,7 +105,7 @@ obj+=", "+r.text;
 }
 }
 if ( context.expression().Length>1 ) {
-obj=(new System.Text.StringBuilder().Append("(").Append(obj).Append(")")).to_str();
+obj = (new System.Text.StringBuilder().Append("(").Append(obj).Append(")")).to_str();
 }
 return (new Result(){data = "var",text = obj});
 }
