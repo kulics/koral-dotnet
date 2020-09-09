@@ -36,11 +36,15 @@ Left_Wave: 		'<~';
 
 Equal: 	'=';
 
-Less_Less: 			'<<';
-Greater_Greater: 	'>>';
+Less_Less_Less: 			'<<<';
+Greater_Greater_Greater: 	'>>>';
+Caret_Caret_Caret: 			'^^^';
+And_And_And: 				'&&&';
+Or_Or_Or: 					'|||';
+Tilde_Tilde_Tilde: 			'~~~';
+
 And_And: 			'&&';
 Or_Or: 				'||';
-Caret_Caret: 		'^^';
 Tilde_Tilde: 		'~~';
 
 Less: 		'<';
