@@ -112,22 +112,13 @@ FeelLangVisitor := $ me {
         }
         context.t.Type == Right_Flow ? {
             pout >< "void" ? {
-                context.y >< nil ? {
-                    pout = "${IEnum}<${pout}>"
-                }
                 pout = "${Task}<${pout}>"
             } _ {
                 pout = Task
             }
-            obj += "${isVirtual} ${pout} ${id.text}"
-        } _ {
-            context.y >< nil ? {
-                pout >< "void" ? {
-                    pout = "${IEnum}<${pout}>"
-                }
-            }
-            obj += "${isVirtual} ${pout} ${id.text}"
         }
+        obj += "${isVirtual} ${pout} ${id.text}"
+        
         # "泛型"
         !templateContract := ""
         context.templateDefine() >< nil ? {

@@ -38,16 +38,8 @@ pout=(new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Appe
 else {
 pout=Task;
 }
-obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).to_str();
-}
-else {
-if ( context.y!=null ) {
-if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder().Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
-}
 }
 obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).to_str();
-}
 var templateContract = "";
 if ( context.templateDefine()!=null ) {
 var template = (TemplateItem)(Visit(context.templateDefine()));
@@ -171,9 +163,6 @@ p.id=id.text;
 p.permission=id.permission;
 if ( context.annotationSupport()!=null ) {
 p.annotation=(string)(Visit(context.annotationSupport()));
-}
-if ( context.expression()!=null ) {
-p.value=(new System.Text.StringBuilder().Append("= ").Append(((Result)(Visit(context.expression()))).text)).to_str();
 }
 p.type=(string)(Visit(context.typeType()));
 if ( context.Comma_Comma_Comma()!=null ) {

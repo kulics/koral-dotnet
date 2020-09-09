@@ -381,6 +381,5 @@ public const string Que = "queue";
 public const string BlockLeft = "{";
 public const string BlockRight = "}";
 public const string Task = "System.Threading.Tasks.Task";
-public const string IEnum = "System.Collections.Generic.IEnumerable";
 }
 }

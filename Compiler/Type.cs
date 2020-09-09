@@ -51,9 +51,6 @@ else {
 if ( @out.first_index_of(",")>=0 ) {
 @out=(new System.Text.StringBuilder().Append("(").Append(@out).Append(")")).to_str();
 }
-if ( context.y!=null ) {
-@out=(new System.Text.StringBuilder().Append(IEnum).Append("<").Append(@out).Append(">")).to_str();
-}
 if ( @in.Length==0 ) {
 obj=(new System.Text.StringBuilder().Append("Func<").Append(@out).Append(">")).to_str();
 }
@@ -72,9 +69,6 @@ obj=(new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Ap
 }
 }
 else {
-if ( context.y!=null ) {
-@out=(new System.Text.StringBuilder().Append(IEnum).Append("<(").Append(@out).Append(")>")).to_str();
-}
 if ( @in.Length==0 ) {
 obj=(new System.Text.StringBuilder().Append("Func<").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
 }

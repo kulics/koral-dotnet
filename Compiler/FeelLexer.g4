@@ -6,7 +6,6 @@ Mul_Equal:         	'*=';
 Div_Equal:         	'/=';
 Mod_Equal:        	'%=';
 Pow_Equal:			'^=';
-Colon_Equal:		':=';
 
 Equal_Equal:        '==';
 Less_Equal:         '<=';
