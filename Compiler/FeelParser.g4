@@ -26,7 +26,7 @@ New_Line ;
 // 导入命名空间
 importStatement: Right_Arrow left_brace (importSubStatement | typeAliasStatement | New_Line)* right_brace end;
 
-importSubStatement: (annotationSupport)? ((Bang? id|Discard) Equal)?
+importSubStatement: (annotationSupport)? ((Bang? id|Dot) Equal)?
  (nameSpaceItem stringExpr? | nameSpaceItem? stringExpr) end;
 
 // 类型别名

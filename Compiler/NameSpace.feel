@@ -86,7 +86,7 @@ FeelLangVisitor := $ me {
             obj += Visit(context.annotationSupport())
         }
         ns := Visit(context.nameSpaceItem())!: str
-        context.Discard() >< nil ? {
+        context.Dot() >< nil ? {
             obj += "using static ${ ns }"
         } context.id() >< nil ? {
             obj += "using ${ns}.${(Visit(context.id())!: Result).text}"

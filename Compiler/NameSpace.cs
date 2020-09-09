@@ -77,7 +77,7 @@ if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
 var ns = (string)(Visit(context.nameSpaceItem()));
-if ( context.Discard()!=null ) {
+if ( context.Dot()!=null ) {
 obj+=(new System.Text.StringBuilder().Append("using static ").Append(ns)).to_str();
 }
 else if ( context.id()!=null ) {
