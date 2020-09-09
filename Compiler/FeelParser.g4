@@ -131,7 +131,7 @@ protocolFunctionStatement: (annotationSupport)? id Colon (left_paren templateDef
 t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line* parameterClauseOut right_paren end;
 
 // 函数
-functionStatement: id Colon_Equal (left_paren templateDefine right_paren | templateDefine)? left_paren parameterClauseIn
+functionStatement: id Equal (left_paren templateDefine right_paren | templateDefine)? left_paren parameterClauseIn
  t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
  parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace end;
 // 返回
@@ -224,10 +224,10 @@ variableDeclaredStatement: Bang id Colon typeType end;
 // 声明常量
 constantDeclaredStatement: id Colon typeType end;
 // 定义
-varStatement: varId (more varId)* Colon_Equal tupleExpression end;
+varStatement: varId (more varId)* Equal tupleExpression end;
 varTypeStatement: varIdType (more varIdType)* Equal tupleExpression end;
 // 绑定
-bindStatement: constId (more constId)* Colon_Equal tupleExpression end;
+bindStatement: constId (more constId)* Equal tupleExpression end;
 bindTypeStatement: constIdType (more constIdType)* Equal tupleExpression end;
 // 复合赋值
 assignStatement: tupleExpression assign tupleExpression end;
@@ -364,9 +364,10 @@ lambdaIn: id (more id)*;
 
 pkgAnonymous: pkgAnonymousAssign; // 匿名包
 
-pkgAnonymousAssign: left_brace (pkgAnonymousAssignElement end)* pkgAnonymousAssignElement right_brace; // 简化赋值
+pkgAnonymousAssign: Coin left_brace (pkgAnonymousAssignElement end)*
+ pkgAnonymousAssignElement right_brace left_brace right_brace; // 简化赋值
 
-pkgAnonymousAssignElement: Bang? name t=Colon_Equal expression; // 简化赋值元素
+pkgAnonymousAssignElement: Bang? name Equal expression; // 简化赋值元素
 
 functionExpression: left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) b=Bang? y=At? New_Line*
 parameterClauseOut right_paren left_brace (functionSupportStatement)* right_brace;

@@ -211,10 +211,11 @@ FeelLangVisitor := $ me {
             id := (Visit(context.id())!: Result).text
             me.has_id(id) ? {
                 #: r.isDefine = true
+                <- id
             } _ {
                 me.add_id(id)
+                <- "var " + id
             }
-            <- "var " + id
         }
     }
 

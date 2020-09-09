@@ -171,11 +171,12 @@ return "_";
 else {
 var id = ((Result)(Visit(context.id()))).text;
 if ( this.has_id(id) ) {
+return id;
 }
 else {
 this.add_id(id);
-}
 return "var "+id;
+}
 }
 }
 public  override  object VisitConstIdType( ConstIdTypeContext context ){

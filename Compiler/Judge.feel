@@ -48,12 +48,17 @@ FeelLangVisitor := $ me {
     .VisitCaseStatement := (context: CaseStatementContext -> v: any) {
         !obj := ""
         me.add_current_set()
-        !process := "${BlockLeft} ${ProcessFunctionSupport(context.functionSupportStatement()); BlockRight} break;"
-        me.delete_current_set()
+        rList := list str{}
         context.judgeCase() @ item {
             r := Visit(item)!: str
+            rList.add(r)
+        }
+        !process := "${BlockLeft} ${ProcessFunctionSupport(context.functionSupportStatement()); BlockRight} break;"
+        rList @ r {
             obj += r + process
         }
+        me.delete_current_set()
+
         <- obj
     }
 

@@ -172,6 +172,9 @@ FeelLangVisitor := $ me {
         !obj := ""
         Type := Visit(context.typeType())!: str
         r := Visit(context.id())!: Result
+        ~me.has_id(r.text) ? {
+            me.add_id(r.text)
+        }
         obj = "${Type} ${r.text; Terminate; Wrap}"
         <- obj
     }
@@ -180,6 +183,9 @@ FeelLangVisitor := $ me {
         !obj := ""
         Type := Visit(context.typeType())!: str
         r := Visit(context.id())!: Result
+        ~me.has_id(r.text) ? {
+            me.add_id(r.text)
+        }
         obj = "${Type} ${r.text; Terminate; Wrap}"
         <- obj
     }

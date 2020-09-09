@@ -91,6 +91,9 @@ public  override  object VisitVariableDeclaredStatement( VariableDeclaredStateme
 var obj = "";
 var Type = (string)(Visit(context.typeType()));
 var r = (Result)(Visit(context.id()));
+if ( !this.has_id(r.text) ) {
+this.add_id(r.text);
+}
 obj=(new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
 return obj;
 }
@@ -98,6 +101,9 @@ public  override  object VisitConstantDeclaredStatement( ConstantDeclaredStateme
 var obj = "";
 var Type = (string)(Visit(context.typeType()));
 var r = (Result)(Visit(context.id()));
+if ( !this.has_id(r.text) ) {
+this.add_id(r.text);
+}
 obj=(new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
 return obj;
 }
