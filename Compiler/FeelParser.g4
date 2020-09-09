@@ -213,9 +213,9 @@ Bang left_brace (functionSupportStatement)* right_brace (checkErrorStatement)* c
 usingStatement: Right_Arrow Bang? constId (more constId)* Equal
 tupleExpression left_brace (functionSupportStatement)* right_brace end;
 // 错误处理
-checkErrorStatement: (id | id Colon typeType) left_brace (functionSupportStatement)* right_brace;
+checkErrorStatement: And (id | id Colon typeType) left_brace (functionSupportStatement)* right_brace;
 // 最终执行
-checkFinallyStatment: Discard left_brace (functionSupportStatement)* right_brace;
+checkFinallyStatment: And Discard left_brace (functionSupportStatement)* right_brace;
 // 抛出异常
 checkReportStatement: Bang Left_Arrow expression end;
 
@@ -410,7 +410,7 @@ loopElseExpression: New_Line? Or Discard left_brace (functionSupportStatement)* 
 checkExpression: 
 Bang left_brace (functionSupportStatement)* tupleExpression right_brace (checkErrorExpression)+ checkFinallyStatment? ;
 // 错误处理
-checkErrorExpression: (id | id Colon typeType) left_brace (functionSupportStatement)* tupleExpression right_brace;
+checkErrorExpression: And (id | id Colon typeType) left_brace (functionSupportStatement)* tupleExpression right_brace;
 // 基础数据
 dataStatement:
 floatExpr | 
