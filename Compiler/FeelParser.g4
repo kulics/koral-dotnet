@@ -181,7 +181,7 @@ judgeCaseStatement:
 expression Double_Arrow (caseStatement)* caseElseStatement end ;
 // 判断条件声明
 caseElseStatement: New_Line?  Or Discard left_brace (functionSupportStatement)* right_brace;
-caseStatement: New_Line?  Or judgeCase (more judgeCase)* Question left_brace (functionSupportStatement)* right_brace;
+caseStatement: New_Line?  Or judgeCase (Or New_Line? judgeCase)* Question left_brace (functionSupportStatement)* right_brace;
 judgeCase: expression | (id | Discard) Colon typeType;
 
 // 判断
@@ -397,7 +397,7 @@ judgeElseIfExpression: New_Line? Or expression Question left_brace (functionSupp
 // 条件判断表达式
 judgeCaseExpression: Double_Arrow (caseExpression)* caseElseExpression;
 // 判断条件声明
-caseExpression: New_Line? Or judgeCase (more judgeCase)* Question left_brace (functionSupportStatement)* tupleExpression right_brace;
+caseExpression: New_Line? Or judgeCase (Or New_Line? judgeCase)* Question left_brace (functionSupportStatement)* tupleExpression right_brace;
 
 caseElseExpression: New_Line? Or Discard left_brace (functionSupportStatement)* tupleExpression right_brace;
 
