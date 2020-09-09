@@ -40,7 +40,7 @@ return (string)(Visit(context.GetChild(0)));
 public  override  object VisitSliceFull( SliceFullContext context ){
 var order = "true";
 if ( context.Dot_Dot()==null ) {
-order="false";
+order = "false";
 }
 var expr1 = (Result)(Visit(context.expression(0)));
 var expr2 = (Result)(Visit(context.expression(1)));
@@ -49,7 +49,7 @@ return (new System.Text.StringBuilder().Append(".slice(").Append(expr1.text).App
 public  override  object VisitSliceStart( SliceStartContext context ){
 var order = "true";
 if ( context.Dot_Dot()==null ) {
-order="false";
+order = "false";
 }
 var expr = (Result)(Visit(context.expression()));
 return (new System.Text.StringBuilder().Append(".slice(").Append(expr.text).Append(", null, ").Append(order).Append(")")).to_str();
@@ -57,7 +57,7 @@ return (new System.Text.StringBuilder().Append(".slice(").Append(expr.text).Appe
 public  override  object VisitSliceEnd( SliceEndContext context ){
 var order = "true";
 if ( context.Dot_Dot()==null ) {
-order="false";
+order = "false";
 }
 var expr = (Result)(Visit(context.expression()));
 return (new System.Text.StringBuilder().Append(".slice(null, ").Append(expr.text).Append(", ").Append(order).Append(")")).to_str();
@@ -182,12 +182,12 @@ var result = (new Result());
 foreach (var i in range(0, context.expression().Length-1, 1, true, true)){
 var r = (Result)(Visit(context.expression(i)));
 if ( i==0 ) {
-type=(string)(r.data);
+type = (string)(r.data);
 result.text+=r.text;
 }
 else {
 if ( type!=((string)(r.data)) ) {
-type=Any;
+type = Any;
 }
 result.text+=","+r.text;
 }
@@ -203,16 +203,16 @@ var result = (new Result());
 foreach (var i in range(0, context.dictionaryElement().Length-1, 1, true, true)){
 var r = (DicEle)(Visit(context.dictionaryElement(i)));
 if ( i==0 ) {
-key=r.key;
-value=r.value;
+key = r.key;
+value = r.value;
 result.text+=r.text;
 }
 else {
 if ( key!=r.key ) {
-key=Any;
+key = Any;
 }
 if ( value!=r.value ) {
-value=Any;
+value = Any;
 }
 result.text+=","+r.text;
 }

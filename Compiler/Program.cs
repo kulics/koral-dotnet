@@ -13,12 +13,12 @@ protected static string _PathLine;
 public static void Main( string[] args ){
 var os = Environment.OSVersion.Platform;
 if ( os==PlatformID.Unix||os==PlatformID.MacOSX ) {
-_ReadPath="./";
-_PathLine="/";
+_ReadPath = "./";
+_PathLine = "/";
 }
 else {
-_ReadPath=".\\";
-_PathLine="\\";
+_ReadPath = ".\\";
+_PathLine = "\\";
 }
 Compiled(_ReadPath);
 print("Completed");

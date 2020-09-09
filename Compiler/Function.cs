@@ -29,30 +29,22 @@ var id = (Result)(Visit(context.id()));
 var obj = "";
 var pout = "";
 if ( context.parameterClauseOut()!=null ) {
-pout=(string)(Visit(context.parameterClauseOut()));
+pout = (string)(Visit(context.parameterClauseOut()));
 }
 if ( context.t.Type==Right_Flow ) {
 if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).to_str();
+pout = (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).to_str();
 }
 else {
-pout=Task;
-}
-obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).to_str();
-}
-else {
-if ( context.y!=null ) {
-if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder().Append(IEnum).Append("<").Append(pout).Append(">")).to_str();
+pout = Task;
 }
 }
 obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).to_str();
-}
 var templateContract = "";
 if ( context.templateDefine()!=null ) {
 var template = (TemplateItem)(Visit(context.templateDefine()));
 obj+=template.Template;
-templateContract=template.Contract;
+templateContract = template.Contract;
 }
 this.add_current_set();
 this.add_func_stack();
@@ -61,7 +53,7 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 this.delete_current_set();
 if ( get_func_async() ) {
-obj=" async "+obj;
+obj = " async "+obj;
 }
 this.delete_func_stack();
 return obj;
@@ -113,7 +105,7 @@ obj+=", "+r.text;
 }
 }
 if ( context.expression().Length>1 ) {
-obj=(new System.Text.StringBuilder().Append("(").Append(obj).Append(")")).to_str();
+obj = (new System.Text.StringBuilder().Append("(").Append(obj).Append(")")).to_str();
 }
 return (new Result(){data = "var",text = obj});
 }
@@ -171,9 +163,6 @@ p.id=id.text;
 p.permission=id.permission;
 if ( context.annotationSupport()!=null ) {
 p.annotation=(string)(Visit(context.annotationSupport()));
-}
-if ( context.expression()!=null ) {
-p.value=(new System.Text.StringBuilder().Append("= ").Append(((Result)(Visit(context.expression()))).text)).to_str();
 }
 p.type=(string)(Visit(context.typeType()));
 if ( context.Comma_Comma_Comma()!=null ) {

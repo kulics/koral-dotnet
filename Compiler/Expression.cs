@@ -30,7 +30,7 @@ obj+=Visit(v);
 }
 }
 if ( context.varId().Length>1 ) {
-obj="("+obj+")";
+obj = "("+obj+")";
 }
 var r2 = (Result)(Visit(context.tupleExpression()));
 obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
@@ -47,7 +47,7 @@ obj+=Visit(v);
 }
 }
 if ( context.varIdType().Length>1 ) {
-obj="("+obj+")";
+obj = "("+obj+")";
 }
 var r2 = (Result)(Visit(context.tupleExpression()));
 obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
@@ -64,7 +64,7 @@ obj+=Visit(v);
 }
 }
 if ( context.constId().Length>1 ) {
-obj="("+obj+")";
+obj = "("+obj+")";
 }
 var r2 = (Result)(Visit(context.tupleExpression()));
 obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
@@ -81,7 +81,7 @@ obj+=Visit(v);
 }
 }
 if ( context.constIdType().Length>1 ) {
-obj="("+obj+")";
+obj = "("+obj+")";
 }
 var r2 = (Result)(Visit(context.tupleExpression()));
 obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
@@ -91,14 +91,20 @@ public  override  object VisitVariableDeclaredStatement( VariableDeclaredStateme
 var obj = "";
 var Type = (string)(Visit(context.typeType()));
 var r = (Result)(Visit(context.id()));
-obj=(new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
+if ( !this.has_id(r.text) ) {
+this.add_id(r.text);
+}
+obj = (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
 return obj;
 }
 public  override  object VisitConstantDeclaredStatement( ConstantDeclaredStatementContext context ){
 var obj = "";
 var Type = (string)(Visit(context.typeType()));
 var r = (Result)(Visit(context.id()));
-obj=(new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
+if ( !this.has_id(r.text) ) {
+this.add_id(r.text);
+}
+obj = (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
 return obj;
 }
 public  override  object VisitAssignStatement( AssignStatementContext context ){
@@ -132,7 +138,7 @@ return r;
 } break;
 case IteratorContext it :
 { var fn = (Func<Result, Result, Result>)(op);
-r=fn(e1, (Result)(e2));
+r = fn(e1, (Result)(e2));
 return r;
 } break;
 case CompareContext it :
@@ -169,7 +175,7 @@ return r;
 r.text=e1.text+op+((Result)(e2)).text;
 } break;
 case 2 :
-{ r=(Result)(Visit(context.GetChild(0)));
+{ r = (Result)(Visit(context.GetChild(0)));
 switch (context.GetChild(1)) {
 case TypeConversionContext it :
 { var e2 = (string)(Visit(it));
@@ -235,7 +241,7 @@ r.text+="?";
 }
 } break;
 case 1 :
-{ r=(Result)(Visit(context.GetChild(0)));
+{ r = (Result)(Visit(context.GetChild(0)));
 } break;
 }
 return r;
@@ -280,12 +286,6 @@ return "!=";
 return context.op.Text;
 }
 public  override  object VisitLogic( LogicContext context ){
-if ( context.op.Type==And ) {
-return "&&";
-}
-else if ( context.op.Type==Or ) {
-return "||";
-}
 return context.op.Text;
 }
 public  override  object VisitAdd( AddContext context ){
@@ -421,7 +421,7 @@ text+=Visit(v);
 return (new System.Text.StringBuilder().Append("\"").Append(text).Append("\"")).to_str();
 }
 else {
-text="(new System.Text.StringBuilder()";
+text = "(new System.Text.StringBuilder()";
 foreach (var i in range(1, context.ChildCount-2, 1, true, true)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
@@ -466,7 +466,7 @@ text+="\"\"";
 return (new System.Text.StringBuilder().Append("@").Append("\"").Append(text).Append("\"")).to_str();
 }
 else {
-text="(new System.Text.StringBuilder()";
+text = "(new System.Text.StringBuilder()";
 foreach (var i in range(1, context.ChildCount-2, 1, true, true)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));

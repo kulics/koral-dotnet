@@ -142,9 +142,7 @@ return "_";
 }
 else {
 var id = ((Result)(Visit(context.id()))).text;
-if ( this.has_id(id) ) {
-}
-else {
+if ( !this.has_id(id) ) {
 this.add_id(id);
 }
 return "var "+id;
@@ -156,9 +154,7 @@ return "_";
 }
 else {
 var id = ((Result)(Visit(context.id()))).text;
-if ( this.has_id(id) ) {
-}
-else {
+if ( !this.has_id(id) ) {
 this.add_id(id);
 }
 return Visit(context.typeType())+" "+id;
@@ -171,11 +167,12 @@ return "_";
 else {
 var id = ((Result)(Visit(context.id()))).text;
 if ( this.has_id(id) ) {
+return id;
 }
 else {
 this.add_id(id);
-}
 return "var "+id;
+}
 }
 }
 public  override  object VisitConstIdType( ConstIdTypeContext context ){
@@ -184,9 +181,7 @@ return "_";
 }
 else {
 var id = ((Result)(Visit(context.id()))).text;
-if ( this.has_id(id) ) {
-}
-else {
+if ( !this.has_id(id) ) {
 this.add_id(id);
 }
 return Visit(context.typeType())+" "+id;
@@ -232,7 +227,7 @@ public  override  object VisitAnnotationItem( AnnotationItemContext context ){
 var obj = "";
 var id = "";
 if ( context.id().Length==2 ) {
-id=(new System.Text.StringBuilder().Append(((Result)(Visit(context.id(0)))).text).Append(":")).to_str();
+id = (new System.Text.StringBuilder().Append(((Result)(Visit(context.id(0)))).text).Append(":")).to_str();
 obj+=((Result)(this.Visit(context.id(1)))).text;
 }
 else {
@@ -298,9 +293,9 @@ else {
 obj+="";
 }
 if ( id!="" ) {
-obj=id+obj;
+obj = id+obj;
 }
-obj="["+obj+"]";
+obj = "["+obj+"]";
 return obj;
 }
 public  virtual  string VisitPropertyLambda( LambdaContext context ,  bool is_get ){
@@ -312,7 +307,7 @@ this.VisitPropertyLambdaIn(context.lambdaIn(), is_get);
 if ( context.tupleExpression()!=null ) {
 obj+=((Result)(Visit(context.tupleExpression()))).text;
 if ( is_get ) {
-obj="return "+obj;
+obj = "return "+obj;
 }
 obj+=Terminate;
 }
@@ -380,6 +375,5 @@ public const string Que = "queue";
 public const string BlockLeft = "{";
 public const string BlockRight = "}";
 public const string Task = "System.Threading.Tasks.Task";
-public const string IEnum = "System.Collections.Generic.IEnumerable";
 }
 }

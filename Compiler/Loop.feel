@@ -6,12 +6,12 @@
     System
     System.Collections.Generic
 
-    _ := Compiler.FeelParser
-    _ := Compiler.Compiler_static
+    . = Compiler.FeelParser
+    . = Compiler.Compiler_static
 }
 
 
-Iterator := $ {
+Iterator = $ {
     !begin:  Result
     !end:    Result
     !step:   Result
@@ -19,14 +19,14 @@ Iterator := $ {
     !close:  str = T
 }
 
-FeelLangVisitor := $ me {
-    .VisitIterator := (context: IteratorContext -> v: any) {
+FeelLangVisitor = $ me {
+    .VisitIterator = (context: IteratorContext -> v: any) {
         fn: (Result, Result->Result) = { e1, e2 ->
-            it := Iterator{}
-            context.Dot_Dot_Dot() >< nil | context.Dot_Dot_Greater() >< nil ? {
+            it = Iterator{}
+            context.Dot_Dot_Dot() >< nil || context.Dot_Dot_Greater() >< nil ? {
                 it.order = F
             }
-            context.Dot_Dot_Less() >< nil | context.Dot_Dot_Greater() >< nil ? {
+            context.Dot_Dot_Less() >< nil || context.Dot_Dot_Greater() >< nil ? {
                 it.close = F
             }
             context.expression() == nil ? {
@@ -36,12 +36,12 @@ FeelLangVisitor := $ me {
                     data = I32
                     text = "1"
                 }
-            } _ {
+            } | _ {
                 it.begin = e1
                 it.end = e2
                 it.step = Visit(context.expression())!: Result
             }
-            r := Result{}
+            r = Result{}
             r.data = "IEnumerable<int>"
             r.text = "range(${it.begin.text}, ${it.end.text}, ${it.step.text}, ${it.order}, ${it.close})"
             <- r
@@ -49,15 +49,15 @@ FeelLangVisitor := $ me {
         <- fn
     }
 
-    .VisitLoopStatement := (context: LoopStatementContext -> v: any) {
-        !obj := ""
-        arr := Visit(context.expression())!: Result
-        !target := arr.text
-        !id := "ea"
+    .VisitLoopStatement = (context: LoopStatementContext -> v: any) {
+        !obj = ""
+        arr = Visit(context.expression())!: Result
+        !target = arr.text
+        !id = "ea"
         context.id().Length == 2 ? {
             target = "range(${target})"
             id = "(${(Visit(context.id(0))!: Result).text}, ${(Visit(context.id(1))!: Result).text})"
-        } context.id().Length == 1 ? {
+        } | context.id().Length == 1 ? {
             id = (Visit(context.id(0))!: Result).text
         }
 
@@ -68,15 +68,15 @@ FeelLangVisitor := $ me {
         me.delete_current_set()
         obj += BlockRight+Wrap
         context.loopElseStatement() >< nil ? {
-            elseContent := Visit(context.loopElseStatement())!: str
+            elseContent = Visit(context.loopElseStatement())!: str
             obj = "if (!can_range(${ target })) ${elseContent} else ${BlockLeft; Wrap; obj; BlockRight; Wrap}"
         }
         <- obj
     }
 
-    .VisitLoopCaseStatement := (context: LoopCaseStatementContext -> v: any) {
-        !obj := ""
-        expr := Visit(context.expression())!: Result
+    .VisitLoopCaseStatement = (context: LoopCaseStatementContext -> v: any) {
+        !obj = ""
+        expr = Visit(context.expression())!: Result
         obj += "for ( ;${expr.text} ;)"
         obj += BlockLeft+Wrap
         me.add_current_set()
@@ -84,14 +84,14 @@ FeelLangVisitor := $ me {
         me.delete_current_set()
         obj += BlockRight+Wrap
         context.loopElseStatement() >< nil ? {
-            elseContent := Visit(context.loopElseStatement())!: str
+            elseContent = Visit(context.loopElseStatement())!: str
             obj = "if (!(${ expr.text })) ${elseContent} else ${BlockLeft; Wrap; obj; BlockRight; Wrap}"
         }
         <- obj
     }
 
-    .VisitLoopElseStatement := (context: LoopElseStatementContext -> v: any) {
-        !obj := BlockLeft+Wrap
+    .VisitLoopElseStatement = (context: LoopElseStatementContext -> v: any) {
+        !obj = BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
@@ -99,23 +99,23 @@ FeelLangVisitor := $ me {
         <- obj
     }
 
-    .VisitLoopJumpStatement := (context: LoopJumpStatementContext -> v: any) {
+    .VisitLoopJumpStatement = (context: LoopJumpStatementContext -> v: any) {
         <- "break${Terminate; Wrap}"
     }
 
-    .VisitLoopContinueStatement := (context: LoopContinueStatementContext -> v: any) {
+    .VisitLoopContinueStatement = (context: LoopContinueStatementContext -> v: any) {
         <- "continue${Terminate; Wrap}"
     }
 
-    .VisitLoopExpression := (context: LoopExpressionContext -> v: any) {
+    .VisitLoopExpression = (context: LoopExpressionContext -> v: any) {
         fn: (str->Result) = { expr ->
-            !obj := ""
-            !target := expr
-            !id := "ea"
+            !obj = ""
+            !target = expr
+            !id = "ea"
             context.id().Length == 2 ? {
                 target = "range(${target})"
                 id = "(${(Visit(context.id(0))!: Result).text}, ${(Visit(context.id(1))!: Result).text})"
-            } context.id().Length == 1 ? {
+            } | context.id().Length == 1 ? {
                 id = (Visit(context.id(0))!: Result).text
             }
 
@@ -127,7 +127,7 @@ FeelLangVisitor := $ me {
             me.delete_current_set()
             obj += BlockRight
             
-            elseContent := Visit(context.loopElseExpression())!: str
+            elseContent = Visit(context.loopElseExpression())!: str
             obj += ", ()=> ${elseContent})"
             
             <- Result{ data = "var"; text = obj }
@@ -135,8 +135,8 @@ FeelLangVisitor := $ me {
         <- fn
     }
 
-    .VisitLoopElseExpression := (context: LoopElseExpressionContext -> v: any) {
-        !obj := BlockLeft+Wrap
+    .VisitLoopElseExpression = (context: LoopElseExpressionContext -> v: any) {
+        !obj = BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += "return ${(Visit(context.tupleExpression())!: Result).text};"

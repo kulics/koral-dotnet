@@ -28,31 +28,35 @@ public  override  object VisitJudgeCase( JudgeCaseContext context ){
 var obj = "";
 if ( context.expression()!=null ) {
 var expr = (Result)(Visit(context.expression()));
-obj=(new System.Text.StringBuilder().Append("case ").Append(expr.text).Append(" :").Append(Wrap)).to_str();
+obj = (new System.Text.StringBuilder().Append("case ").Append(expr.text).Append(" :").Append(Wrap)).to_str();
 }
 else if ( context.typeType()!=null ) {
 var id = "it";
 if ( context.id()!=null ) {
-id=((Result)(Visit(context.id()))).text;
+id = ((Result)(Visit(context.id()))).text;
 }
 this.add_id(id);
 var type = (string)(Visit(context.typeType()));
-obj=(new System.Text.StringBuilder().Append("case ").Append(type).Append(" ").Append(id).Append(" :").Append(Wrap)).to_str();
+obj = (new System.Text.StringBuilder().Append("case ").Append(type).Append(" ").Append(id).Append(" :").Append(Wrap)).to_str();
 }
 else {
-obj=(new System.Text.StringBuilder().Append("default:").Append(Wrap)).to_str();
+obj = (new System.Text.StringBuilder().Append("default:").Append(Wrap)).to_str();
 }
 return obj;
 }
 public  override  object VisitCaseStatement( CaseStatementContext context ){
 var obj = "";
 this.add_current_set();
-var process = (new System.Text.StringBuilder().Append(BlockLeft).Append(" ").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append(BlockRight).Append(" break;")).to_str();
-this.delete_current_set();
+var rList = (new list<string>());
 foreach (var item in context.judgeCase()){
 var r = (string)(Visit(item));
+rList.add(r);
+}
+var process = (new System.Text.StringBuilder().Append(BlockLeft).Append(" ").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append(BlockRight).Append(" break;")).to_str();
+foreach (var r in rList){
 obj+=r+process;
 }
+this.delete_current_set();
 return obj;
 }
 public  override  object VisitCaseElseStatement( CaseElseStatementContext context ){
