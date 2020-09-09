@@ -495,7 +495,7 @@ add: op=(Add | Sub) (New_Line)?;
 mul: op=(Mul | Div | Mod) (New_Line)?;
 pow: Caret (New_Line)?;
 call: op=Dot (New_Line)?;
-wave: op=Tilde;
+wave: op=Tilde_Tilde;
 
 id: (idItem);
 
