@@ -122,8 +122,8 @@ IDPublic: LetterCharacter IdentifierPartCharacter*; // 公有标识符
 Discard: '_'; // 匿名变量
 
 Comment_Tag: '##' ~[\r\n]* ; // 特殊注释
-Comment_Block: '#=' .*? '=#' -> skip; // 块注释
-Comment_Line: '#:' ~[\r\n]* -> skip; // 行注释
+Comment_Block: '++' .*? '++' -> skip; // 块注释
+Comment_Line: '--' ~[\r\n]* -> skip; // 行注释
 
 New_Line: '\r'? '\n'; 
 //WS: (' ' |'\t' |'\n' |'\r' )+ -> skip ;
