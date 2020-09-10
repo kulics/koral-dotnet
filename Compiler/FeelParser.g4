@@ -296,13 +296,13 @@ tuple: left_paren (expression (more expression)* )? right_paren; // 元组
 
 expressionList: expression (more expression)* ; // 表达式列
 
-annotationSupport: annotation;
+annotationSupport: annotation New_Line?;
 
-annotation: annotationList; // 注解
+annotation: left_brack annotationList right_brack; // 注解
 
-annotationList: ((annotationItem|annotationString) New_Line?)+;
+annotationList: (annotationItem|annotationString) (more annotationItem)* end?;
 
-annotationItem: Sharp (id left_brace id (tuple|lambda)? right_brace | id (tuple|lambda)?);
+annotationItem: (id left_brace id (tuple|lambda)? right_brace | id (tuple|lambda)?);
 
 annotationString: Sharp (stringExpr|rawStringExpr);
 

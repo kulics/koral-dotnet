@@ -57,7 +57,7 @@ Compiled = (path: str->) {
                 -> fsWrite = FileStream("${_ReadPath; file.replace(".feel", ".cs")}", FileMode.Create) {
                     fsWrite.Write(ByteResult, 0, ByteResult.Length)
                 }
-            } err {
+            } & err {
                 print(err)
                 <-
             }

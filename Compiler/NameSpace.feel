@@ -127,7 +127,6 @@ FeelLangVisitor = $ me {
         !obj = ""
         id = Visit(context.id())!: Result
         !header = ""
-        #: typ = Visit(context.typeType()) str!
         !typ = "int"
         context.annotationSupport() >< nil ? {
             header += Visit(context.annotationSupport())
