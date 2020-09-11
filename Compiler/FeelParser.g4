@@ -304,13 +304,13 @@ annotationList: (annotationItem|annotationString) (more annotationItem)* end?;
 
 annotationItem: (id left_brace id (tuple|lambda)? right_brace | id (tuple|lambda)?);
 
-annotationString: Sharp (stringExpr|rawStringExpr);
+annotationString: stringExpr|rawStringExpr;
 
-callFunc: (tuple|lambda); // 函数调用
+callFunc: tuple; // 函数调用
 
 callAsync: Right_Wave expression; // 异步等待调用
 
-callAwait: Right_Wave (tuple|lambda); // 异步等待调用
+callAwait: Right_Wave tuple; // 异步等待调用
 
 callChannel: Left_Wave expression; // 通道访问
 
@@ -356,8 +356,8 @@ templateDefineItem: Back_Quote (id | id Colon id);
 
 templateCall: (Back_Quote typeType)+;
 
-lambda: left_brace (lambdaIn)? t=(Right_Arrow|Right_Flow) New_Line* tupleExpression right_brace
-| left_brace (lambdaIn)? t=(Right_Arrow|Right_Flow) New_Line* 
+lambda: left_paren (lambdaIn)? (t=Greater)? right_paren left_brace tupleExpression right_brace
+| left_paren (lambdaIn)? (t=Greater)? right_paren left_brace
 (functionSupportStatement)* right_brace;
 
 lambdaIn: id (more id)*;

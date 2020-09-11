@@ -63,13 +63,7 @@ var expr = (Result)(Visit(context.expression()));
 return (new System.Text.StringBuilder().Append(".slice(null, ").Append(expr.text).Append(", ").Append(order).Append(")")).to_str();
 }
 public  override  object VisitCallFunc( CallFuncContext context ){
-var r = (new Result(){data = "var"});
-if ( context.tuple()!=null ) {
-r.text+=((Result)(Visit(context.tuple()))).text;
-}
-else {
-r.text+=(new System.Text.StringBuilder().Append("(").Append(((Result)(Visit(context.lambda()))).text).Append(")")).to_str();
-}
+var r = (new Result(){data = "var",text = ((Result)(Visit(context.tuple()))).text});
 return r;
 }
 public  override  object VisitCallAsync( CallAsyncContext context ){
@@ -81,13 +75,7 @@ set_func_async();
 return r;
 }
 public  override  object VisitCallAwait( CallAwaitContext context ){
-var r = (new Result(){data = "var"});
-if ( context.tuple()!=null ) {
-r.text+=((Result)(Visit(context.tuple()))).text;
-}
-else {
-r.text+=(new System.Text.StringBuilder().Append("(").Append(((Result)(Visit(context.lambda()))).text).Append(")")).to_str();
-}
+var r = (new Result(){data = "var",text = ((Result)(Visit(context.tuple()))).text});
 return r;
 }
 public  override  object VisitCallPkg( CallPkgContext context ){
@@ -260,7 +248,7 @@ else {
 r.text+=(new System.Text.StringBuilder().Append("{").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append("}")).to_str();
 }
 this.delete_current_set();
-if ( get_func_async()||context.t.Type==Right_Flow ) {
+if ( get_func_async()||context.t!=null ) {
 r.text=" async "+r.text;
 }
 this.delete_func_stack();
