@@ -69,13 +69,10 @@ FeelLangVisitor = $ me {
     }
 
     .VisitCallFunc = (context: CallFuncContext -> v: any) {
-        r = Result{data = "var"}
-        context.tuple() >< nil ? {
-            r.text += (Visit(context.tuple())!: Result).text
-        } | _ {
-            r.text += "(${ (Visit(context.lambda())!: Result).text })"
+        r = Result{
+            data = "var"
+            text = (Visit(context.tuple())!: Result).text
         }
-
         <- r
     }
 
@@ -89,11 +86,9 @@ FeelLangVisitor = $ me {
     }
 
     .VisitCallAwait = (context: CallAwaitContext -> v: any) {
-        r = Result{data = "var"}
-        context.tuple() >< nil ? {
-            r.text += (Visit(context.tuple())!: Result).text
-        } | _ {
-            r.text += "(${ (Visit(context.lambda())!: Result).text })"
+        r = Result{
+            data = "var"
+            text = (Visit(context.tuple())!: Result).text
         }
         <- r
     }
@@ -281,7 +276,7 @@ FeelLangVisitor = $ me {
         }
         me.delete_current_set()
         # "异步"
-        get_func_async() || context.t.Type == Right_Flow ? {
+        get_func_async() || context.t >< nil ? {
             r.text = " async " + r.text
         }
         me.delete_func_stack()
