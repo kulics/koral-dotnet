@@ -101,15 +101,18 @@ var id = (Result)(Visit(context.id()));
 var isVirtual = " override ";
 var obj = "";
 var pout = "";
-if ( context.parameterClauseOut()!=null ) {
-pout = (string)(Visit(context.parameterClauseOut()));
+if ( context.t==null ) {
+pout = "void";
 }
+else {
+pout = (string)(Visit(context.parameterClauseOut()));
 if ( context.t.Type==Right_Flow ) {
 if ( pout!="void" ) {
 pout = (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).to_str();
 }
 else {
 pout = Task;
+}
 }
 }
 obj+=(new System.Text.StringBuilder().Append(isVirtual).Append(" ").Append(pout).Append(" ").Append(id.text)).to_str();

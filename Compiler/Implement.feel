@@ -107,14 +107,16 @@ FeelLangVisitor = $ me {
         !isVirtual = " override "
         !obj = ""
         !pout = ""
-        context.parameterClauseOut() >< nil ? {
+        context.t == nil ? {
+            pout = "void"
+        } | _ {
             pout = Visit(context.parameterClauseOut())!: str
-        }
-        context.t.Type == Right_Flow ? {
-            pout >< "void" ? {
-                pout = "${Task}<${pout}>"
-            } | _ {
-                pout = Task
+            context.t.Type == Right_Flow ? {
+                pout >< "void" ? {
+                    pout = "${Task}<${pout}>"
+                } | _ {
+                    pout = Task
+                }
             }
         }
         obj += "${isVirtual} ${pout} ${id.text}"

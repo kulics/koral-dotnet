@@ -150,15 +150,18 @@ if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
 var pout = "";
-if ( context.parameterClauseOut()!=null ) {
-pout = (string)(Visit(context.parameterClauseOut()));
+if ( context.t==null ) {
+pout = "void";
 }
+else {
+pout = (string)(Visit(context.parameterClauseOut()));
 if ( context.t.Type==Right_Flow ) {
 if ( pout!="void" ) {
 pout = (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).to_str();
 }
 else {
 pout = Task;
+}
 }
 }
 obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).to_str();

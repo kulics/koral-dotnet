@@ -48,8 +48,8 @@ namespaceVariableStatement: (annotationSupport)? Bang id (Equal expression | Col
 namespaceConstantStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
 // 命名空间函数
 namespaceFunctionStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)?
- left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+ left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 定义包
 packageStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)?
@@ -68,8 +68,8 @@ packageStaticVariableStatement: (annotationSupport)? Bang id (Equal expression |
 packageStaticConstantStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
 // 函数
 packageStaticFunctionStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)?
- left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+ left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 packageFieldStatement: Coin (p=Question? id (more id)?)? left_brace (packageSupportStatement end|New_Line)* packageSupportStatement end? right_brace;
 
@@ -96,8 +96,8 @@ packageVariableStatement: (annotationSupport)? Bang id (Equal expression | Colon
 packageConstantStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
 // 函数
 packageFunctionStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)?
- left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+ left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 定义包事件
 packageEventStatement: Bang id left_brack Right_Arrow right_brack nameSpaceItem;
 
@@ -111,8 +111,8 @@ overrideVariableStatement: (annotationSupport)? Dot (n='_')? Bang id (Equal expr
 overrideConstantStatement: (annotationSupport)? Dot (n='_')? id (Equal expression | Colon typeType (Equal expression)?);
 // 函数
 overrideFunctionStatement: (annotationSupport)? Dot (n='_')? id Equal (left_paren templateDefine right_paren | templateDefine)?
- left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace end;
+ left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace end;
 
 // 协议
 protocolStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)? protocolSubStatement;
@@ -130,8 +130,8 @@ t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut right_paren;
 
 // 函数
 functionStatement: id Equal (left_paren templateDefine right_paren | templateDefine)? left_paren parameterClauseIn
- t=(Right_Arrow|Right_Flow) New_Line*
- parameterClauseOut right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+ (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)?
+  right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 返回
 returnStatement: Left_Arrow (tupleExpression)?;
 // 异步返回
@@ -363,8 +363,8 @@ pkgAnonymousAssign: Coin left_brace (pkgAnonymousAssignElement end)*
 
 pkgAnonymousAssignElement: Bang? name Equal expression; // 简化赋值元素
 
-functionExpression: left_paren parameterClauseIn t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+functionExpression: left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 plusMinus: add expression;
 
