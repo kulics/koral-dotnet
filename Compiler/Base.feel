@@ -149,7 +149,7 @@ FeelLangVisitor = $ me {
             }
         }
 
-        keywords.Exists{t -> t == r.text} ? {
+        keywords.Exists((t) {t == r.text}) ? {
             r.text = "@${r.text}"
         }
         r.text == selfID ? {

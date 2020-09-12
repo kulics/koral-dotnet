@@ -11,7 +11,7 @@
 !_PathLine: str
 
 Main = (args: array`str->) {
-    # "检查系统平台，区分路径字符"
+    -- 检查系统平台，区分路径字符
     !os = Environment.OSVersion.Platform
     os == PlatformID.Unix || os == PlatformID.MacOSX ? {
         _ReadPath = "./"
@@ -27,10 +27,10 @@ Main = (args: array`str->) {
 }
 
 Compiled = (path: str->) {
-    # "获取相对路径下所有文件"
+    -- 获取相对路径下所有文件
     Files = Directory.GetFiles(path, "*.feel")
     Files @ file {
-        # "文件流读文件"
+        -- 文件流读文件
         -> fsRead = FileStream(file, FileMode.Open) {
             ! {
                 FSLength = fsRead.Length!: int
@@ -51,8 +51,8 @@ Compiled = (path: str->) {
                 Visitor = FeelLangVisitor{}
                 Result = Visitor.Visit(AST)
 
-                # "文件流写文件,使用覆盖模式"
-                # "转换为字节"
+                -- 文件流写文件,使用覆盖模式
+                -- 转换为字节
                 ByteResult = Encoding.UTF8.GetBytes(Result.to_str())  
                 -> fsWrite = FileStream("${_ReadPath; file.replace(".feel", ".cs")}", FileMode.Create) {
                     fsWrite.Write(ByteResult, 0, ByteResult.Length)
