@@ -30,7 +30,7 @@ FeelLangVisitor = $ me {
         obj += BlockRight + Wrap
         !header = ""
         header += "${id.permission} partial class ${id.text}"
-        # "泛型"
+
         !template = ""
         !templateContract = ""
         context.templateDefine() >< nil ? {
@@ -107,19 +107,20 @@ FeelLangVisitor = $ me {
         !isVirtual = " override "
         !obj = ""
         !pout = ""
-        context.parameterClauseOut() >< nil ? {
+        context.t == nil ? {
+            pout = "void"
+        } | _ {
             pout = Visit(context.parameterClauseOut())!: str
-        }
-        context.t.Type == Right_Flow ? {
-            pout >< "void" ? {
-                pout = "${Task}<${pout}>"
-            } | _ {
-                pout = Task
+            context.t.Type == Right_Flow ? {
+                pout >< "void" ? {
+                    pout = "${Task}<${pout}>"
+                } | _ {
+                    pout = Task
+                }
             }
         }
         obj += "${isVirtual} ${pout} ${id.text}"
         
-        # "泛型"
         !templateContract = ""
         context.templateDefine() >< nil ? {
             template = Visit(context.templateDefine())!: TemplateItem
@@ -132,7 +133,7 @@ FeelLangVisitor = $ me {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight + Wrap
-        # "异步"
+
         get_func_async() ? {
             obj = " async " + obj
         }

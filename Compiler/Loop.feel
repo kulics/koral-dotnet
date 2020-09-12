@@ -21,7 +21,7 @@ Iterator = $ {
 
 FeelLangVisitor = $ me {
     .VisitIterator = (context: IteratorContext -> v: any) {
-        fn: (Result, Result->Result) = { e1, e2 ->
+        fn: (Result, Result->Result) = (e1, e2) {
             it = Iterator{}
             context.Dot_Dot_Dot() >< nil || context.Dot_Dot_Greater() >< nil ? {
                 it.order = F
@@ -108,7 +108,7 @@ FeelLangVisitor = $ me {
     }
 
     .VisitLoopExpression = (context: LoopExpressionContext -> v: any) {
-        fn: (str->Result) = { expr ->
+        fn: (str->Result) = (expr) {
             !obj = ""
             !target = expr
             !id = "ea"

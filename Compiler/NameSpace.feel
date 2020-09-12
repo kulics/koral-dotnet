@@ -28,7 +28,7 @@ FeelLangVisitor = $ me {
         !content = ""
         !contentStatic = ""
         me.add_current_set()
-        # "pre process to get type id"
+        -- pre process to get type id
         context.namespaceSupportStatement() @ item {
             child = item.GetChild(0)
             type = child.GetType()
@@ -59,7 +59,7 @@ FeelLangVisitor = $ me {
         }
         me.delete_current_set()
         obj += BlockRight + Wrap
-        # "import library"
+        -- import library
         obj = "using Library;${Wrap}using static Library.Lib;${Wrap; imports; Wrap}" + obj
         <- obj
     }
@@ -159,21 +159,22 @@ FeelLangVisitor = $ me {
         context.annotationSupport() >< nil ? {
             obj += Visit(context.annotationSupport())
         }
-        # "异步"
+
         !pout = ""
-        context.parameterClauseOut() >< nil ? {
+        context.t == nil ? {
+            pout = "void"
+        } | _ {
             pout = Visit(context.parameterClauseOut())!: str
-        }
-        context.t.Type == Right_Flow ? {
-            pout >< "void" ? {
-                pout = "${Task}<${pout}>"
-            } | _ {
-                pout = Task
+            context.t.Type == Right_Flow ? {
+                pout >< "void" ? {
+                    pout = "${Task}<${pout}>"
+                } | _ {
+                    pout = Task
+                }
             }
         }
         obj += "${pout} ${id.text}"
 
-        # "泛型"
         !templateContract = ""
         context.templateDefine() >< nil ? {
             template = Visit(context.templateDefine())!: TemplateItem
@@ -186,7 +187,7 @@ FeelLangVisitor = $ me {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight + Wrap
-        # "异步"
+
         get_func_async() ? {
             obj = " async " + obj
         }

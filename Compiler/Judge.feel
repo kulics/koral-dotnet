@@ -113,7 +113,7 @@ FeelLangVisitor = $ me {
     }
 
     .VisitJudgeExpression = (context: JudgeExpressionContext -> v: any) {
-        fn: (str->Result) = { expr ->
+        fn: (str->Result) = (expr) {
             r = Result{}
             r.data = "var"
             r.text = "run(()=> " + BlockLeft + " if ("
@@ -161,7 +161,7 @@ FeelLangVisitor = $ me {
     }
 
     .VisitJudgeCaseExpression = (context: JudgeCaseExpressionContext -> v: any)  {
-        fn: (str->Result) = { expr ->
+        fn: (str->Result) = (expr) {
             r = Result{}
             r.text = "run(()=> { switch (${expr}) "
             r.text += BlockLeft+Wrap
