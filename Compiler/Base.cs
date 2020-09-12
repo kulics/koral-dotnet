@@ -199,9 +199,6 @@ r.text=F;
 }
 return r;
 }
-public  override  object VisitAnnotationStatement( AnnotationStatementContext context ){
-return "";
-}
 public  override  object VisitAnnotationSupport( AnnotationSupportContext context ){
 return (string)(Visit(context.annotation()));
 }

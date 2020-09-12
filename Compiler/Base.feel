@@ -249,10 +249,6 @@ FeelLangVisitor = $ me {
         <- r
     }
 
-    .VisitAnnotationStatement = (context: AnnotationStatementContext -> v: any) {
-        <- ""
-    }
-
     .VisitAnnotationSupport = (context: AnnotationSupportContext -> v: any) {
         <- Visit(context.annotation())!: str
     }
