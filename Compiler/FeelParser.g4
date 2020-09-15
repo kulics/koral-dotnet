@@ -316,9 +316,9 @@ callPkg: typeNotNull left_brace (pkgAssign|listAssign|dictionaryAssign)? right_b
 
 orElse: Question_Question expression; // 可空取值
 
-typeConversion: Bang Colon typeType; // 类型转化
+typeConversion: Bang_Bang typeType; // 类型转化
 
-typeCheck: Question Colon typeType; // 类型转化
+typeCheck: Colon_Colon typeType; // 类型转化
 
 pkgAssign: (pkgAssignElement end)* pkgAssignElement; // 简化赋值
 
