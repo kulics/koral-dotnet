@@ -10,11 +10,11 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class FeelLangVisitor{
-public  override  object VisitJudgeCaseStatement( JudgeCaseStatementContext context ){
+public  override  object VisitJudgeEqualStatement( JudgeEqualStatementContext context ){
 var obj = "";
 var expr = (Result)(Visit(context.expression()));
 obj+=(new System.Text.StringBuilder().Append("switch (").Append(expr.text).Append(") ").Append(BlockLeft).Append(Wrap)).to_str();
-foreach (var item in context.caseStatement()){
+foreach (var item in context.caseEqualStatement()){
 var r = (string)(Visit(item));
 obj+=r+Wrap;
 }
@@ -22,6 +22,37 @@ if ( context.caseElseStatement()!=null ) {
 obj+=(string)(Visit(context.caseElseStatement()))+Wrap;
 }
 obj+=BlockRight+Wrap;
+return obj;
+}
+public  override  object VisitJudgeTypeStatement( JudgeTypeStatementContext context ){
+var obj = "";
+var expr = (Result)(Visit(context.expression()));
+obj+=(new System.Text.StringBuilder().Append("switch (").Append(expr.text).Append(") ").Append(BlockLeft).Append(Wrap)).to_str();
+foreach (var item in context.caseTypeStatement()){
+var r = (string)(Visit(item));
+obj+=r+Wrap;
+}
+if ( context.caseElseStatement()!=null ) {
+obj+=(string)(Visit(context.caseElseStatement()))+Wrap;
+}
+obj+=BlockRight+Wrap;
+return obj;
+}
+public  override  object VisitJudgeEqualCase( JudgeEqualCaseContext context ){
+var obj = "";
+var expr = (Result)(Visit(context.expression()));
+obj = (new System.Text.StringBuilder().Append("case ").Append(expr.text).Append(" :").Append(Wrap)).to_str();
+return obj;
+}
+public  override  object VisitJudgeTypeCase( JudgeTypeCaseContext context ){
+var obj = "";
+var id = "it";
+if ( context.id()!=null ) {
+id = ((Result)(Visit(context.id()))).text;
+}
+this.add_id(id);
+var type = (string)(Visit(context.typeType()));
+obj = (new System.Text.StringBuilder().Append("case ").Append(type).Append(" ").Append(id).Append(" :").Append(Wrap)).to_str();
 return obj;
 }
 public  override  object VisitJudgeCase( JudgeCaseContext context ){
@@ -44,11 +75,26 @@ obj = (new System.Text.StringBuilder().Append("default:").Append(Wrap)).to_str()
 }
 return obj;
 }
-public  override  object VisitCaseStatement( CaseStatementContext context ){
+public  override  object VisitCaseEqualStatement( CaseEqualStatementContext context ){
 var obj = "";
 this.add_current_set();
 var rList = (new list<string>());
-foreach (var item in context.judgeCase()){
+foreach (var item in context.judgeEqualCase()){
+var r = (string)(Visit(item));
+rList.add(r);
+}
+var process = (new System.Text.StringBuilder().Append(BlockLeft).Append(" ").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append(BlockRight).Append(" break;")).to_str();
+foreach (var r in rList){
+obj+=r+process;
+}
+this.delete_current_set();
+return obj;
+}
+public  override  object VisitCaseTypeStatement( CaseTypeStatementContext context ){
+var obj = "";
+this.add_current_set();
+var rList = (new list<string>());
+foreach (var item in context.judgeTypeCase()){
 var r = (string)(Visit(item));
 rList.add(r);
 }

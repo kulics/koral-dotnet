@@ -11,11 +11,11 @@
 }
 
 FeelLangVisitor = $ me {
-    .VisitJudgeCaseStatement = (context: JudgeCaseStatementContext -> v: any)  {
+    .VisitJudgeEqualStatement = (context: JudgeEqualStatementContext -> v: any)  {
         !obj = ""
         expr = Visit(context.expression())!: Result
         obj += "switch (${expr.text}) ${BlockLeft; Wrap}"
-        context.caseStatement() @ item {
+        context.caseEqualStatement() @ item {
             r = Visit(item)!: str
             obj += r + Wrap
         }
@@ -23,6 +23,40 @@ FeelLangVisitor = $ me {
             obj += Visit(context.caseElseStatement())!: str + Wrap
         }
         obj += BlockRight+Wrap
+        <- obj
+    }
+
+    .VisitJudgeTypeStatement = (context: JudgeTypeStatementContext -> v: any)  {
+        !obj = ""
+        expr = Visit(context.expression())!: Result
+        obj += "switch (${expr.text}) ${BlockLeft; Wrap}"
+        context.caseTypeStatement() @ item {
+            r = Visit(item)!: str
+            obj += r + Wrap
+        }
+        context.caseElseStatement() >< nil ? {
+            obj += Visit(context.caseElseStatement())!: str + Wrap
+        }
+        obj += BlockRight+Wrap
+        <- obj
+    }
+
+    .VisitJudgeEqualCase = (context: JudgeEqualCaseContext -> v: any) {
+        !obj = ""
+        expr = Visit(context.expression())!: Result
+        obj = "case ${expr.text} :${Wrap}"
+        <- obj
+    }
+
+    .VisitJudgeTypeCase = (context: JudgeTypeCaseContext -> v: any) {
+        !obj = ""
+        !id = "it"
+        context.id() >< nil ? {
+            id = (Visit(context.id())!: Result).text
+        }
+        me.add_id(id)
+        type = Visit(context.typeType())!: str
+        obj = "case ${type} ${id} :${Wrap}"
         <- obj
     }
 
@@ -45,11 +79,28 @@ FeelLangVisitor = $ me {
         <- obj
     }
 
-    .VisitCaseStatement = (context: CaseStatementContext -> v: any) {
+    .VisitCaseEqualStatement = (context: CaseEqualStatementContext -> v: any) {
         !obj = ""
         me.add_current_set()
         rList = list`str{}
-        context.judgeCase() @ item {
+        context.judgeEqualCase() @ item {
+            r = Visit(item)!: str
+            rList.add(r)
+        }
+        !process = "${BlockLeft} ${ProcessFunctionSupport(context.functionSupportStatement()); BlockRight} break;"
+        rList @ r {
+            obj += r + process
+        }
+        me.delete_current_set()
+
+        <- obj
+    }
+
+    .VisitCaseTypeStatement = (context: CaseTypeStatementContext -> v: any) {
+        !obj = ""
+        me.add_current_set()
+        rList = list`str{}
+        context.judgeTypeCase() @ item {
             r = Visit(item)!: str
             rList.add(r)
         }

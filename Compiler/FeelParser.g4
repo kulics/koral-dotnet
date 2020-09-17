@@ -152,7 +152,8 @@ returnStatement |
 returnAsyncStatement |
 yieldReturnStatement |
 yieldBreakStatement |
-judgeCaseStatement |
+judgeEqualStatement |
+judgeTypeStatement |
 judgeStatement |
 loopStatement |
 loopCaseStatement |
@@ -172,13 +173,22 @@ assignStatement |
 expressionStatement ;
 
 // 条件判断
-judgeCaseStatement:
-expression Double_Arrow (caseStatement)+ |
-expression Double_Arrow (caseStatement)* caseElseStatement ;
+judgeEqualStatement:
+expression Equal_Equal (caseEqualStatement)* caseElseStatement |
+expression Equal_Equal (caseEqualStatement)+ ;
+
+judgeTypeStatement:
+expression Colon_Colon (caseTypeStatement)* caseElseStatement |
+expression Colon_Colon (caseTypeStatement)+ ;
+
 // 判断条件声明
 caseElseStatement: New_Line?  Or Discard left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
-caseStatement: New_Line?  Or judgeCase (Or New_Line? judgeCase)* Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
-judgeCase: expression | (id | Discard) Colon typeType;
+
+caseEqualStatement: New_Line?  Or judgeEqualCase (Or New_Line? judgeEqualCase)* Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+judgeEqualCase: expression;
+
+caseTypeStatement: New_Line?  Or judgeTypeCase (Or New_Line? judgeTypeCase)* Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+judgeTypeCase: typeType (Double_Arrow id)?;
 
 // 判断
 judgeStatement:
@@ -389,10 +399,10 @@ judgeIfExpression: Question left_brace (functionSupportStatement end|New_Line)* 
 judgeElseIfExpression: New_Line? Or expression Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace;
 
 // 条件判断表达式
-judgeCaseExpression: Double_Arrow (caseExpression)* caseElseExpression;
+judgeCaseExpression: (caseExpression)* caseElseExpression;
 // 判断条件声明
 caseExpression: New_Line? Or judgeCase (Or New_Line? judgeCase)* Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace;
-
+judgeCase: expression | (id | Discard) Colon typeType;
 caseElseExpression: New_Line? Or Discard left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace;
 
 // 循环表达式
