@@ -192,14 +192,16 @@ judgeTypeCase: typeType (Double_Arrow id)?;
 
 // 判断
 judgeStatement:
-judgeIfStatement (judgeElseIfStatement)* judgeElseStatement 
-| judgeIfStatement (judgeElseIfStatement)* ;
+judgeIfStatement judgeElseStatement? | 
+Question left_brace (judgeMultiwayIfStatement+ judgeMultiwayElseStatement | judgeMultiwayIfStatement+) right_brace;
 // else 判断
-judgeElseStatement: New_Line? Or Discard left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+judgeElseStatement: New_Line? Discard left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // if 判断
 judgeIfStatement: expression Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
-// else if 判断
-judgeElseIfStatement: New_Line? Or expression Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+// 多分支 if
+judgeMultiwayElseStatement: New_Line? Or Discard Question (functionSupportStatement end|New_Line)* (functionSupportStatement end?)?;
+judgeMultiwayIfStatement: New_Line? Or expression Question (functionSupportStatement end|New_Line)* (functionSupportStatement end?)?;
+
 // 循环
 loopStatement: expression At (left_brack id right_brack)? Bang? id
  left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace loopElseStatement? ;

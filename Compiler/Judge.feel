@@ -124,13 +124,23 @@ FeelLangVisitor = $ me {
 
     .VisitJudgeStatement = (context: JudgeStatementContext -> v: any) {
         !obj = ""
-        obj += Visit(context.judgeIfStatement())
-        context.judgeElseIfStatement() @ it {
-            obj += Visit(it)
+        context.judgeIfStatement() >< nil ? {
+            obj += Visit(context.judgeIfStatement())
+            context.judgeElseStatement() >< nil ? {
+                obj += Visit(context.judgeElseStatement())
+            }
+        } | _ {
+            context.judgeMultiwayIfStatement() @ [i]v {
+                i >< 0 ? {
+                    obj += " else "
+                }
+                obj += Visit(v)
+            }
+            context.judgeMultiwayElseStatement() >< nil ? {
+                obj += Visit(context.judgeMultiwayElseStatement())
+            }
         }
-        context.judgeElseStatement() >< nil ? {
-            obj += Visit(context.judgeElseStatement())
-        }
+
         <- obj
     }
 
@@ -144,9 +154,8 @@ FeelLangVisitor = $ me {
         <- obj
     }
 
-    .VisitJudgeElseIfStatement = (context: JudgeElseIfStatementContext -> v: any) {
-        b = Visit(context.expression())!: Result
-        !obj = "else if ( ${b.text} ) ${BlockLeft; Wrap}"
+    .VisitJudgeElseStatement = (context: JudgeElseStatementContext -> v: any) {
+        !obj = "else ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
@@ -154,7 +163,17 @@ FeelLangVisitor = $ me {
         <- obj
     }
 
-    .VisitJudgeElseStatement = (context: JudgeElseStatementContext -> v: any) {
+    .VisitJudgeMultiwayIfStatement = (context: JudgeMultiwayIfStatementContext -> v: any) {
+        b = Visit(context.expression())!: Result
+        !obj = "if ( ${b.text} ) ${BlockLeft; Wrap}"
+        me.add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        me.delete_current_set()
+        obj += BlockRight+Wrap
+        <- obj
+    }
+
+    .VisitJudgeMultiwayElseStatement = (context: JudgeMultiwayElseStatementContext -> v: any) {
         !obj = "else ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())

@@ -115,12 +115,22 @@ return obj;
 }
 public  override  object VisitJudgeStatement( JudgeStatementContext context ){
 var obj = "";
+if ( context.judgeIfStatement()!=null ) {
 obj+=Visit(context.judgeIfStatement());
-foreach (var it in context.judgeElseIfStatement()){
-obj+=Visit(it);
-}
 if ( context.judgeElseStatement()!=null ) {
 obj+=Visit(context.judgeElseStatement());
+}
+}
+else {
+foreach (var (i, v) in range(context.judgeMultiwayIfStatement())){
+if ( i!=0 ) {
+obj+=" else ";
+}
+obj+=Visit(v);
+}
+if ( context.judgeMultiwayElseStatement()!=null ) {
+obj+=Visit(context.judgeMultiwayElseStatement());
+}
 }
 return obj;
 }
@@ -133,16 +143,24 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitJudgeElseIfStatement( JudgeElseIfStatementContext context ){
-var b = (Result)(Visit(context.expression()));
-var obj = (new System.Text.StringBuilder().Append("else if ( ").Append(b.text).Append(" ) ").Append(BlockLeft).Append(Wrap)).to_str();
+public  override  object VisitJudgeElseStatement( JudgeElseStatementContext context ){
+var obj = (new System.Text.StringBuilder().Append("else ").Append(BlockLeft).Append(Wrap)).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitJudgeElseStatement( JudgeElseStatementContext context ){
+public  override  object VisitJudgeMultiwayIfStatement( JudgeMultiwayIfStatementContext context ){
+var b = (Result)(Visit(context.expression()));
+var obj = (new System.Text.StringBuilder().Append("if ( ").Append(b.text).Append(" ) ").Append(BlockLeft).Append(Wrap)).to_str();
+this.add_current_set();
+obj+=ProcessFunctionSupport(context.functionSupportStatement());
+this.delete_current_set();
+obj+=BlockRight+Wrap;
+return obj;
+}
+public  override  object VisitJudgeMultiwayElseStatement( JudgeMultiwayElseStatementContext context ){
 var obj = (new System.Text.StringBuilder().Append("else ").Append(BlockLeft).Append(Wrap)).to_str();
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
