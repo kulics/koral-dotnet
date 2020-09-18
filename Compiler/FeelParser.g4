@@ -195,7 +195,7 @@ judgeStatement:
 judgeIfStatement judgeElseStatement? | 
 Question left_brace (judgeMultiwayIfStatement+ judgeMultiwayElseStatement | judgeMultiwayIfStatement+) right_brace;
 // else 判断
-judgeElseStatement: New_Line? Discard left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+judgeElseStatement: New_Line? Discard Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // if 判断
 judgeIfStatement: expression Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 多分支 if
