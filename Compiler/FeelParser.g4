@@ -210,26 +210,26 @@ judgeMultiwayIfStatement: New_Line? Or expression Question (functionSupportState
 
 // 循环
 loopStatement: expression At (left_brack id right_brack)? Bang? id
- left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace loopElseStatement? ;
+ left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace ;
 // 条件循环
 loopCaseStatement: expression At left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace loopElseStatement? ;
 // else 判断
-loopElseStatement: New_Line? Or Discard left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+loopElseStatement: New_Line? Discard At left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 跳出循环
 loopJumpStatement: Tilde At ;
 // 跳过当前循环
 loopContinueStatement: At ;
 // 检查
 checkStatement: 
-Bang left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)* checkFinallyStatment 
-| Bang left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)+ ;
+ left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)* checkFinallyStatment 
+| left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)+ ;
 // 定义检查变量
 usingStatement: Right_Arrow Bang? constId (more constId)* Equal
 tupleExpression left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace ;
 // 错误处理
-checkErrorStatement: And (id | id Colon typeType) left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+checkErrorStatement: (id | id Colon typeType) Bang left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 最终执行
-checkFinallyStatment: And Discard left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+checkFinallyStatment: Discard Bang left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 抛出异常
 checkReportStatement: Bang Left_Arrow expression ;
 

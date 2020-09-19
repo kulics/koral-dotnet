@@ -67,35 +67,31 @@ FeelLangVisitor = $ me {
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight+Wrap
-        context.loopElseStatement() >< nil ? {
-            elseContent = Visit(context.loopElseStatement())!: str
-            obj = "if (!can_range(${ target })) ${elseContent} else ${BlockLeft; Wrap; obj; BlockRight; Wrap}"
-        }
         <- obj
     }
 
     .VisitLoopCaseStatement = (context: LoopCaseStatementContext -> v: any) {
         !obj = ""
         expr = Visit(context.expression())!: Result
-        obj += "for ( ;${expr.text} ;)"
+        obj += "while (true) { ${Wrap} if (${expr.text}) "
         obj += BlockLeft+Wrap
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
         obj += BlockRight+Wrap
+        obj += " else { ${Wrap}"
         context.loopElseStatement() >< nil ? {
-            elseContent = Visit(context.loopElseStatement())!: str
-            obj = "if (!(${ expr.text })) ${elseContent} else ${BlockLeft; Wrap; obj; BlockRight; Wrap}"
+            obj += Visit(context.loopElseStatement())
         }
+        obj += " break; ${Wrap} } }"
         <- obj
     }
 
     .VisitLoopElseStatement = (context: LoopElseStatementContext -> v: any) {
-        !obj = BlockLeft+Wrap
+        !obj = ""
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.delete_current_set()
-        obj += BlockRight+Wrap
         <- obj
     }
 

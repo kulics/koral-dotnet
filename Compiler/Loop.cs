@@ -60,33 +60,29 @@ this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
-if ( context.loopElseStatement()!=null ) {
-var elseContent = (string)(Visit(context.loopElseStatement()));
-obj = (new System.Text.StringBuilder().Append("if (!can_range(").Append(target).Append(")) ").Append(elseContent).Append(" else ").Append(BlockLeft).Append(Wrap).Append(obj).Append(BlockRight).Append(Wrap)).to_str();
-}
 return obj;
 }
 public  override  object VisitLoopCaseStatement( LoopCaseStatementContext context ){
 var obj = "";
 var expr = (Result)(Visit(context.expression()));
-obj+=(new System.Text.StringBuilder().Append("for ( ;").Append(expr.text).Append(" ;)")).to_str();
+obj+=(new System.Text.StringBuilder().Append("while (true) { ").Append(Wrap).Append(" if (").Append(expr.text).Append(") ")).to_str();
 obj+=BlockLeft+Wrap;
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
 obj+=BlockRight+Wrap;
+obj+=(new System.Text.StringBuilder().Append(" else { ").Append(Wrap)).to_str();
 if ( context.loopElseStatement()!=null ) {
-var elseContent = (string)(Visit(context.loopElseStatement()));
-obj = (new System.Text.StringBuilder().Append("if (!(").Append(expr.text).Append(")) ").Append(elseContent).Append(" else ").Append(BlockLeft).Append(Wrap).Append(obj).Append(BlockRight).Append(Wrap)).to_str();
+obj+=Visit(context.loopElseStatement());
 }
+obj+=(new System.Text.StringBuilder().Append(" break; ").Append(Wrap).Append(" } }")).to_str();
 return obj;
 }
 public  override  object VisitLoopElseStatement( LoopElseStatementContext context ){
-var obj = BlockLeft+Wrap;
+var obj = "";
 this.add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.delete_current_set();
-obj+=BlockRight+Wrap;
 return obj;
 }
 public  override  object VisitLoopJumpStatement( LoopJumpStatementContext context ){
