@@ -95,38 +95,5 @@ return (new System.Text.StringBuilder().Append("break").Append(Terminate).Append
 public  override  object VisitLoopContinueStatement( LoopContinueStatementContext context ){
 return (new System.Text.StringBuilder().Append("continue").Append(Terminate).Append(Wrap)).to_str();
 }
-public  override  object VisitLoopExpression( LoopExpressionContext context ){
-Func<string, Result> fn = (expr)=>{var obj = "";
-var target = expr;
-var id = "ea";
-if ( context.id().Length==2 ) {
-target = (new System.Text.StringBuilder().Append("range(").Append(target).Append(")")).to_str();
-id = (new System.Text.StringBuilder().Append("(").Append(((Result)(Visit(context.id(0)))).text).Append(", ").Append(((Result)(Visit(context.id(1)))).text).Append(")")).to_str();
-}
-else if ( context.id().Length==1 ) {
-id = ((Result)(Visit(context.id(0)))).text;
-}
-obj+=(new System.Text.StringBuilder().Append("runloop(").Append(target).Append(", (").Append(id).Append(")=>")).to_str();
-obj+=BlockLeft+Wrap;
-this.add_current_set();
-obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=(new System.Text.StringBuilder().Append("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).to_str();
-this.delete_current_set();
-obj+=BlockRight;
-var elseContent = (string)(Visit(context.loopElseExpression()));
-obj+=(new System.Text.StringBuilder().Append(", ()=> ").Append(elseContent).Append(")")).to_str();
-return (new Result(){data = "var",text = obj});
-};
-return fn;
-}
-public  override  object VisitLoopElseExpression( LoopElseExpressionContext context ){
-var obj = BlockLeft+Wrap;
-this.add_current_set();
-obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=(new System.Text.StringBuilder().Append("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).to_str();
-this.delete_current_set();
-obj+=BlockRight;
-return obj;
-}
 }
 }

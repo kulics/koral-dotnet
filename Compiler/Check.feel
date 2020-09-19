@@ -81,42 +81,4 @@ FeelLangVisitor = $ me {
         !obj = "throw ${(Visit(context.expression())!: Result).text; Terminate; Wrap}"
         <- obj
     }
-
-    .VisitCheckExpression = (context: CheckExpressionContext -> v: any) {
-        !obj = "run(()=> { ${Wrap}try ${BlockLeft; Wrap}"
-        me.add_current_set()
-        obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return ${ (Visit(context.tupleExpression())!: Result).text };"
-        me.delete_current_set()
-        obj += BlockRight + Wrap
-        context.checkErrorExpression() @ item {
-            obj += Visit(item) + Wrap
-        }
-
-        context.checkFinallyStatment() >< nil ? {
-            obj += Visit(context.checkFinallyStatment())
-        }
-
-        obj += "})"
-        <- Result{ data="var"; text=obj}
-    }
-
-    .VisitCheckErrorExpression = (context: CheckErrorExpressionContext -> v: any) {
-        me.add_current_set()
-        !obj = ""
-        ID = (Visit(context.id())!: Result).text
-        me.add_id(ID)
-
-        !Type = "Exception"
-        context.typeType() >< nil ? {
-            Type = Visit(context.typeType())!: str
-        }
-
-        obj += "catch( ${Type} ${ID} )${Wrap; BlockLeft; Wrap}"
-        obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return ${ (Visit(context.tupleExpression())!: Result).text };"
-        me.delete_current_set()
-        obj += BlockRight
-        <- obj
-    }
 }

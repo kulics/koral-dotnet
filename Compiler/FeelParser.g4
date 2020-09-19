@@ -277,7 +277,6 @@ linq // 联合查询
 | plusMinus // 正负处理
 | bitwiseNotExpression // 位运算取反
 | negate // 取反
-| checkExpression // 检查表达式
 | expression op=Bang // 取引用
 | expression op=Question // 可空判断
 | expression orElse // 空值替换
@@ -297,9 +296,7 @@ linq // 联合查询
 | expression compareCombine expression // 组合比较表达式
 | expression compare expression // 比较表达式
 | expression logic expression // 逻辑表达式
-| expression judgeCaseExpression // 条件判断表达式
 | expression judgeExpression // 判断表达式
-| expression loopExpression // 集合循环表达式
 ; 
 
 callExpression: call New_Line? (id | left_paren id templateCall right_paren | id templateCall) (callFunc|callElement)?;
@@ -397,32 +394,14 @@ linqHeadItem: At Bang? id Equal expression;
 linqItem: (linqHeadItem | id (expression)?) Right_Arrow New_Line?;
 
 // 判断表达式
-judgeExpression: judgeIfExpression (judgeElseIfExpression)* judgeElseExpression;
+judgeExpression:
+judgeIfExpression judgeElseExpression;
 
 // else 判断
-judgeElseExpression: New_Line? Or Discard left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace;
+judgeElseExpression: New_Line? Discard Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace;
 // if 判断
 judgeIfExpression: Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace;
-// else if 判断
-judgeElseIfExpression: New_Line? Or expression Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace;
 
-// 条件判断表达式
-judgeCaseExpression: (caseExpression)* caseElseExpression;
-// 判断条件声明
-caseExpression: New_Line? Or judgeCase (Or New_Line? judgeCase)* Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace;
-judgeCase: expression | (id | Discard) Colon typeType;
-caseElseExpression: New_Line? Or Discard left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace;
-
-// 循环表达式
-loopExpression: At (left_brack id right_brack)? Bang? id 
-left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace loopElseExpression;
-// else 判断
-loopElseExpression: New_Line? Or Discard left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace;
-// 检查
-checkExpression: 
-Bang left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace (checkErrorExpression)+ checkFinallyStatment? ;
-// 错误处理
-checkErrorExpression: And (id | id Colon typeType) left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace;
 // 基础数据
 dataStatement:
 floatExpr | 

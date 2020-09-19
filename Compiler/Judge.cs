@@ -69,26 +69,6 @@ var type = (string)(Visit(context.typeType()));
 obj = (new System.Text.StringBuilder().Append("case ").Append(type).Append(" ").Append(id).Append(" :").Append(Wrap)).to_str();
 return obj;
 }
-public  override  object VisitJudgeCase( JudgeCaseContext context ){
-var obj = "";
-if ( context.expression()!=null ) {
-var expr = (Result)(Visit(context.expression()));
-obj = (new System.Text.StringBuilder().Append("case ").Append(expr.text).Append(" :").Append(Wrap)).to_str();
-}
-else if ( context.typeType()!=null ) {
-var id = "it";
-if ( context.id()!=null ) {
-id = ((Result)(Visit(context.id()))).text;
-}
-this.add_id(id);
-var type = (string)(Visit(context.typeType()));
-obj = (new System.Text.StringBuilder().Append("case ").Append(type).Append(" ").Append(id).Append(" :").Append(Wrap)).to_str();
-}
-else {
-obj = (new System.Text.StringBuilder().Append("default:").Append(Wrap)).to_str();
-}
-return obj;
-}
 public  override  object VisitCaseEqualStatement( CaseEqualStatementContext context ){
 var obj = "";
 this.add_current_set();
@@ -226,9 +206,6 @@ r.data="var";
 r.text="run(()=> "+BlockLeft+" if (";
 r.text+=expr;
 r.text+=Visit(context.judgeIfExpression());
-foreach (var it in context.judgeElseIfExpression()){
-r.text+=Visit(it);
-}
 r.text+=Visit(context.judgeElseExpression());
 r.text+=BlockRight+")";
 return r;
@@ -244,16 +221,6 @@ this.delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
-public  override  object VisitJudgeElseIfExpression( JudgeElseIfExpressionContext context ){
-var b = (Result)(Visit(context.expression()));
-var obj = (new System.Text.StringBuilder().Append("else if ( ").Append(b.text).Append(" ) ").Append(BlockLeft).Append(Wrap)).to_str();
-this.add_current_set();
-obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=(new System.Text.StringBuilder().Append("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).to_str();
-this.delete_current_set();
-obj+=BlockRight+Wrap;
-return obj;
-}
 public  override  object VisitJudgeElseExpression( JudgeElseExpressionContext context ){
 var obj = (new System.Text.StringBuilder().Append("else ").Append(BlockLeft).Append(Wrap)).to_str();
 this.add_current_set();
@@ -261,43 +228,6 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=(new System.Text.StringBuilder().Append("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).to_str();
 this.delete_current_set();
 obj+=BlockRight+Wrap;
-return obj;
-}
-public  override  object VisitJudgeCaseExpression( JudgeCaseExpressionContext context ){
-Func<string, Result> fn = (expr)=>{var r = (new Result());
-r.text=(new System.Text.StringBuilder().Append("run(()=> { switch (").Append(expr).Append(") ")).to_str();
-r.text+=BlockLeft+Wrap;
-foreach (var item in context.caseExpression()){
-var temp = (string)(Visit(item));
-r.text+=temp+Wrap;
-}
-r.text+=(string)(Visit(context.caseElseExpression()));
-r.text+=BlockRight+Wrap+"})";
-return r;
-};
-return fn;
-}
-public  override  object VisitCaseExpression( CaseExpressionContext context ){
-var obj = "";
-foreach (var item in context.judgeCase()){
-var r = (string)(Visit(item));
-this.add_current_set();
-var process = BlockLeft+ProcessFunctionSupport(context.functionSupportStatement());
-process+=(new System.Text.StringBuilder().Append("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).to_str();
-process+=(new System.Text.StringBuilder().Append(BlockRight).Append("break;")).to_str();
-this.delete_current_set();
-obj+=r+process;
-}
-return obj;
-}
-public  override  object VisitCaseElseExpression( CaseElseExpressionContext context ){
-var obj = "";
-this.add_current_set();
-var process = BlockLeft+ProcessFunctionSupport(context.functionSupportStatement());
-process+=(new System.Text.StringBuilder().Append("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).to_str();
-process+=(new System.Text.StringBuilder().Append(BlockRight).Append("break;")).to_str();
-this.delete_current_set();
-obj+="default:"+Wrap+process;
 return obj;
 }
 }

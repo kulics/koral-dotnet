@@ -300,15 +300,7 @@ FeelLangVisitor = $ me {
                         e2 = Visit(it)!: Result
                         r.text = r.text + e2.text
                     }
-                    | it: JudgeCaseExpressionContext ? {
-                        e2 = Visit(it)!: (str->Result)
-                        r.text = e2(r.text).text
-                    }
                     | it: JudgeExpressionContext ? {
-                        e2 = Visit(it)!: (str->Result)
-                        r.text = e2(r.text).text
-                    }
-                    | it: LoopExpressionContext ? {
                         e2 = Visit(it)!: (str->Result)
                         r.text = e2(r.text).text
                     }
