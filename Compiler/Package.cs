@@ -49,7 +49,7 @@ header+=template;
 }
 if ( extend.length>0 ) {
 var temp = extend[0];
-foreach (var i in range(1, extend.length-1, 1, true, true)){
+foreach (var i in range(1, extend.length, 1, true, false)){
 temp+=","+extend[i];
 }
 header+=":"+temp;
@@ -409,7 +409,7 @@ extend+=(list<string>)(r.data);
 obj+=(new System.Text.StringBuilder().Append("public partial interface ").Append(ptclName)).to_str();
 if ( extend.length>0 ) {
 var temp = extend[0];
-foreach (var i in range(1, extend.length-1, 1, true, true)){
+foreach (var i in range(1, extend.length, 1, true, false)){
 temp+=","+extend[i];
 }
 obj+=":"+temp;

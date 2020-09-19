@@ -13,20 +13,20 @@
 FeelLangVisitor = $ me {
     .VisitJudgeEqualStatement = (context: JudgeEqualStatementContext -> v: any)  {
         !obj = ""
-        expr = Visit(context.expression())!: Result
+        expr = Visit(context.expression()) !! Result
         obj += "switch (${expr.text}) ${BlockLeft; Wrap}"
 
         context.caseEqualStatement() >< nil ? {
-            obj += Visit(context.caseEqualStatement())!: str + Wrap
+            obj += Visit(context.caseEqualStatement()) !! str + Wrap
             context.caseElseStatement() >< nil ? {
-                obj += Visit(context.caseElseStatement())!: str + Wrap
+                obj += Visit(context.caseElseStatement()) !! str + Wrap
             }
-        } | _ {
+        } _ ? {
             context.caseMultiwayEqualStatement() @ [i]v {
-                obj += Visit(v)!: str + Wrap
+                obj += Visit(v) !! str + Wrap
             }
             context.caseMultiwayElseStatement() >< nil ? {
-                obj += Visit(context.caseMultiwayElseStatement())!: str + Wrap
+                obj += Visit(context.caseMultiwayElseStatement()) !! str + Wrap
             }
         }
 
@@ -36,20 +36,20 @@ FeelLangVisitor = $ me {
 
     .VisitJudgeTypeStatement = (context: JudgeTypeStatementContext -> v: any)  {
         !obj = ""
-        expr = Visit(context.expression())!: Result
+        expr = Visit(context.expression()) !! Result
         obj += "switch (${expr.text}) ${BlockLeft; Wrap}"
 
         context.caseTypeStatement() >< nil ? {
-            obj += Visit(context.caseTypeStatement())!: str + Wrap
+            obj += Visit(context.caseTypeStatement()) !! str + Wrap
             context.caseElseStatement() >< nil ? {
-                obj += Visit(context.caseElseStatement())!: str + Wrap
+                obj += Visit(context.caseElseStatement()) !! str + Wrap
             }
-        } | _ {
+        } _ ? {
             context.caseMultiwayTypeStatement() @ [i]v {
-                obj += Visit(v)!: str + Wrap
+                obj += Visit(v) !! str + Wrap
             }
             context.caseMultiwayElseStatement() >< nil ? {
-                obj += Visit(context.caseMultiwayElseStatement())!: str + Wrap
+                obj += Visit(context.caseMultiwayElseStatement()) !! str + Wrap
             }
         }
 
@@ -59,7 +59,7 @@ FeelLangVisitor = $ me {
 
     .VisitJudgeEqualCase = (context: JudgeEqualCaseContext -> v: any) {
         !obj = ""
-        expr = Visit(context.expression())!: Result
+        expr = Visit(context.expression()) !! Result
         obj = "case ${expr.text} :${Wrap}"
         <- obj
     }
@@ -68,10 +68,10 @@ FeelLangVisitor = $ me {
         !obj = ""
         !id = "it"
         context.id() >< nil ? {
-            id = (Visit(context.id())!: Result).text
+            id = (Visit(context.id()) !! Result).text
         }
         me.add_id(id)
-        type = Visit(context.typeType())!: str
+        type = Visit(context.typeType()) !! str
         obj = "case ${type} ${id} :${Wrap}"
         <- obj
     }
@@ -81,7 +81,7 @@ FeelLangVisitor = $ me {
         me.add_current_set()
         rList = list`str{}
         context.judgeEqualCase() @ item {
-            r = Visit(item)!: str
+            r = Visit(item) !! str
             rList.add(r)
         }
         !process = "${BlockLeft} ${ProcessFunctionSupport(context.functionSupportStatement()); BlockRight} break;"
@@ -98,7 +98,7 @@ FeelLangVisitor = $ me {
         me.add_current_set()
         rList = list`str{}
         context.judgeEqualCase() @ item {
-            r = Visit(item)!: str
+            r = Visit(item) !! str
             rList.add(r)
         }
         !process = "${BlockLeft} ${ProcessFunctionSupport(context.functionSupportStatement()); BlockRight} break;"
@@ -115,7 +115,7 @@ FeelLangVisitor = $ me {
         me.add_current_set()
         rList = list`str{}
         context.judgeTypeCase() @ item {
-            r = Visit(item)!: str
+            r = Visit(item) !! str
             rList.add(r)
         }
         !process = "${BlockLeft} ${ProcessFunctionSupport(context.functionSupportStatement()); BlockRight} break;"
@@ -132,7 +132,7 @@ FeelLangVisitor = $ me {
         me.add_current_set()
         rList = list`str{}
         context.judgeTypeCase() @ item {
-            r = Visit(item)!: str
+            r = Visit(item) !! str
             rList.add(r)
         }
         !process = "${BlockLeft} ${ProcessFunctionSupport(context.functionSupportStatement()); BlockRight} break;"
@@ -169,7 +169,7 @@ FeelLangVisitor = $ me {
             context.judgeElseStatement() >< nil ? {
                 obj += Visit(context.judgeElseStatement())
             }
-        } | _ {
+        } _ ? {
             context.judgeMultiwayIfStatement() @ [i]v {
                 i >< 0 ? {
                     obj += " else "
@@ -185,7 +185,7 @@ FeelLangVisitor = $ me {
     }
 
     .VisitJudgeIfStatement = (context: JudgeIfStatementContext -> v: any) {
-        b = Visit(context.expression())!: Result
+        b = Visit(context.expression()) !! Result
         !obj = "if ( ${b.text} ) ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -204,7 +204,7 @@ FeelLangVisitor = $ me {
     }
 
     .VisitJudgeMultiwayIfStatement = (context: JudgeMultiwayIfStatementContext -> v: any) {
-        b = Visit(context.expression())!: Result
+        b = Visit(context.expression()) !! Result
         !obj = "if ( ${b.text} ) ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
@@ -240,7 +240,7 @@ FeelLangVisitor = $ me {
         !obj = " ) ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return ${ (Visit(context.tupleExpression())!: Result).text };"
+        obj += "return ${ (Visit(context.tupleExpression()) !! Result).text };"
         me.delete_current_set()
         obj += BlockRight + Wrap
         <- obj
@@ -250,7 +250,7 @@ FeelLangVisitor = $ me {
         !obj = "else ${BlockLeft; Wrap}"
         me.add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        obj += "return ${ (Visit(context.tupleExpression())!: Result).text };"
+        obj += "return ${ (Visit(context.tupleExpression()) !! Result).text };"
         me.delete_current_set()
         obj += BlockRight + Wrap
         <- obj

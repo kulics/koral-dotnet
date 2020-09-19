@@ -84,7 +84,7 @@ return Any;
 }
 public  override  object VisitTypeFunctionParameterClause( TypeFunctionParameterClauseContext context ){
 var obj = "";
-foreach (var i in range(0, context.typeType().Length-1, 1, true, true)){
+foreach (var i in range(0, context.typeType().Length, 1, true, false)){
 var p = (string)(Visit(context.typeType(i)));
 if ( i==0 ) {
 obj+=p;
@@ -96,42 +96,59 @@ obj+=", "+p;
 return obj;
 }
 public  override  object VisitTypeBasic( TypeBasicContext context ){
-return run(()=> { switch (context.t.Type) {
+switch (context.t.Type) {
 case TypeI8 :
-{return I8;}break;
+{ return I8;
+} break;
 case TypeU8 :
-{return U8;}break;
+{ return U8;
+} break;
 case TypeI16 :
-{return I16;}break;
+{ return I16;
+} break;
 case TypeU16 :
-{return U16;}break;
+{ return U16;
+} break;
 case TypeI32 :
-{return I32;}break;
+{ return I32;
+} break;
 case TypeU32 :
-{return U32;}break;
+{ return U32;
+} break;
 case TypeI64 :
-{return I64;}break;
+{ return I64;
+} break;
 case TypeU64 :
-{return U64;}break;
+{ return U64;
+} break;
 case TypeF32 :
-{return F32;}break;
+{ return F32;
+} break;
 case TypeF64 :
-{return F64;}break;
+{ return F64;
+} break;
 case TypeChr :
-{return Chr;}break;
+{ return Chr;
+} break;
 case TypeStr :
-{return Str;}break;
+{ return Str;
+} break;
 case TypeBool :
-{return Bool;}break;
+{ return Bool;
+} break;
 case TypeInt :
-{return Int;}break;
+{ return Int;
+} break;
 case TypeNum :
-{return Num;}break;
+{ return Num;
+} break;
 case TypeByte :
-{return U8;}break;
+{ return U8;
+} break;
 default:
-{return Any;}break;}
-});
+{ return Any;
+} break;
+}
 }
 }
 }

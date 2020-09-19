@@ -31,12 +31,12 @@ FeelLangVisitor = $ me {
     .VisitCheckErrorStatement = (context: CheckErrorStatementContext -> v: any) {
         me.add_current_set()
         !obj = ""
-        ID = (Visit(context.id())!: Result).text
+        ID = (Visit(context.id()) !! Result).text
         me.add_id(ID)
 
         !Type = "Exception"
         context.typeType() >< nil ? {
-            Type = Visit(context.typeType())!: str
+            Type = Visit(context.typeType()) !! str
         }
 
         obj += "catch( ${Type} ${ID} )${Wrap; BlockLeft; Wrap}"
@@ -60,14 +60,14 @@ FeelLangVisitor = $ me {
         context.constId() @ [i]v {
             i >< 0 ? {
                 obj += "," + Visit(v)
-            } | _ {
+            } _ ? {
                 obj += Visit(v)
             }
         }
         context.constId().Length > 1 ? {
             obj = "(" + obj + ")"
         }
-        r2 = Visit(context.tupleExpression())!: Result
+        r2 = Visit(context.tupleExpression()) !! Result
         obj += " = ${r2.text}"
         obj = "using (${obj}) ${BlockLeft; Wrap}"
         me.add_current_set()
@@ -78,7 +78,7 @@ FeelLangVisitor = $ me {
     }
 
     .VisitCheckReportStatement = (context: CheckReportStatementContext -> v: any) {
-        !obj = "throw ${(Visit(context.expression())!: Result).text; Terminate; Wrap}"
+        !obj = "throw ${(Visit(context.expression()) !! Result).text; Terminate; Wrap}"
         <- obj
     }
 }

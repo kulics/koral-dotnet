@@ -36,10 +36,10 @@ FeelLangVisitor = $ me {
                     data = I32
                     text = "1"
                 }
-            } | _ {
+            } _ ? {
                 it.begin = e1
                 it.end = e2
-                it.step = Visit(context.expression())!: Result
+                it.step = Visit(context.expression()) !! Result
             }
             r = Result{}
             r.data = "IEnumerable<int>"
@@ -51,14 +51,15 @@ FeelLangVisitor = $ me {
 
     .VisitLoopStatement = (context: LoopStatementContext -> v: any) {
         !obj = ""
-        arr = Visit(context.expression())!: Result
+        arr = Visit(context.expression()) !! Result
         !target = arr.text
         !id = "ea"
-        context.id().Length == 2 ? {
-            target = "range(${target})"
-            id = "(${(Visit(context.id(0))!: Result).text}, ${(Visit(context.id(1))!: Result).text})"
-        } | context.id().Length == 1 ? {
-            id = (Visit(context.id(0))!: Result).text
+        ? {
+            | context.id().Length == 2 ?
+                target = "range(${target})"
+                id = "(${(Visit(context.id(0)) !! Result).text}, ${(Visit(context.id(1)) !! Result).text})"
+            | context.id().Length == 1 ?
+                id = (Visit(context.id(0)) !! Result).text
         }
 
         obj += "foreach (var ${id} in ${target})"
@@ -72,7 +73,7 @@ FeelLangVisitor = $ me {
 
     .VisitLoopCaseStatement = (context: LoopCaseStatementContext -> v: any) {
         !obj = ""
-        expr = Visit(context.expression())!: Result
+        expr = Visit(context.expression()) !! Result
         obj += "while (true) { ${Wrap} if (${expr.text}) "
         obj += BlockLeft+Wrap
         me.add_current_set()

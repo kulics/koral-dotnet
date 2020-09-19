@@ -151,7 +151,7 @@ case AddContext it :
 { if ( (string)(e1.data)==Str||(string)(((Result)(e2)).data)==Str ) {
 r.data=Str;
 }
-else if ( (string)(e1.data)==I32&&(string)(((Result)(e2)).data)==I32 ) {
+ else if ( (string)(e1.data)==I32&&(string)(((Result)(e2)).data)==I32 ) {
 r.data=I32;
 }
 else {
@@ -226,7 +226,7 @@ default:
 { if ( context.op.Type==FeelParser.Bang ) {
 r.text=(new System.Text.StringBuilder().Append("ref ").Append(r.text)).to_str();
 }
-else if ( context.op.Type==FeelParser.Question ) {
+ else if ( context.op.Type==FeelParser.Question ) {
 r.text+="?";
 }
 } break;
@@ -290,22 +290,24 @@ public  override  object VisitPow( PowContext context ){
 return "pow";
 }
 public  override  object VisitPrimaryExpression( PrimaryExpressionContext context ){
-if ( context.ChildCount==1 ) {
-var c = context.GetChild(0);
+switch (context.ChildCount) {
+case 1 :
+{ var c = context.GetChild(0);
 if ( c.@is<DataStatementContext>() ) {
 return Visit(context.dataStatement());
 }
-else if ( c.@is<IdContext>() ) {
+ else if ( c.@is<IdContext>() ) {
 return Visit(context.id());
 }
-else if ( context.t.Type==Discard ) {
+ else if ( context.t.Type==Discard ) {
 return (new Result(){text = "_",data = "var"});
 }
-}
-else if ( context.ChildCount==2 ) {
-var id = (Result)(Visit(context.id()));
+} break;
+case 2 :
+{ var id = (Result)(Visit(context.id()));
 var template = "<"+((string)(Visit(context.templateCall())))+">";
 return (new Result(){text = id.text+template,data = id.text+template,rootID = id.text});
+} break;
 }
 var r = (Result)(Visit(context.expression()));
 return (new Result(){text = (new System.Text.StringBuilder().Append("(").Append(r.text).Append(")")).to_str(),data = r.data});
@@ -313,7 +315,7 @@ return (new Result(){text = (new System.Text.StringBuilder().Append("(").Append(
 public  override  object VisitExpressionList( ExpressionListContext context ){
 var r = (new Result());
 var obj = "";
-foreach (var i in range(0, context.expression().Length-1, 1, true, true)){
+foreach (var i in range(0, context.expression().Length, 1, true, false)){
 var temp = (Result)(Visit(context.expression(i)));
 if ( i==0 ) {
 obj+=temp.text;
@@ -329,7 +331,7 @@ return r;
 public  override  object VisitTemplateDefine( TemplateDefineContext context ){
 var item = (new TemplateItem());
 item.Template+="<";
-foreach (var i in range(0, context.templateDefineItem().Length-1, 1, true, true)){
+foreach (var i in range(0, context.templateDefineItem().Length, 1, true, false)){
 if ( i>0 ) {
 item.Template+=",";
 if ( item.Contract.len()>0 ) {
@@ -359,7 +361,7 @@ return item;
 }
 public  override  object VisitTemplateCall( TemplateCallContext context ){
 var obj = "";
-foreach (var i in range(0, context.typeType().Length-1, 1, true, true)){
+foreach (var i in range(0, context.typeType().Length, 1, true, false)){
 if ( i>0 ) {
 obj+=",";
 }
@@ -374,31 +376,31 @@ if ( context.nilExpr()!=null ) {
 r.data=Any;
 r.text="null";
 }
-else if ( context.floatExpr()!=null ) {
+ else if ( context.floatExpr()!=null ) {
 r.data=F64;
 r.text=(string)(Visit(context.floatExpr()));
 }
-else if ( context.integerExpr()!=null ) {
+ else if ( context.integerExpr()!=null ) {
 r.data=I32;
 r.text=(string)(Visit(context.integerExpr()));
 }
-else if ( context.rawStringExpr()!=null ) {
+ else if ( context.rawStringExpr()!=null ) {
 r.data=Str;
 r.text=(string)(Visit(context.rawStringExpr()));
 }
-else if ( context.stringExpr()!=null ) {
+ else if ( context.stringExpr()!=null ) {
 r.data=Str;
 r.text=(string)(Visit(context.stringExpr()));
 }
-else if ( context.t.Type==FeelParser.CharLiteral ) {
+ else if ( context.t.Type==FeelParser.CharLiteral ) {
 r.data=Chr;
 r.text=context.CharLiteral().GetText();
 }
-else if ( context.t.Type==FeelParser.TrueLiteral ) {
+ else if ( context.t.Type==FeelParser.TrueLiteral ) {
 r.data=Bool;
 r.text=T;
 }
-else if ( context.t.Type==FeelParser.FalseLiteral ) {
+ else if ( context.t.Type==FeelParser.FalseLiteral ) {
 r.data=Bool;
 r.text=F;
 }
@@ -414,7 +416,7 @@ return (new System.Text.StringBuilder().Append("\"").Append(text).Append("\"")).
 }
 else {
 text = "(new System.Text.StringBuilder()";
-foreach (var i in range(1, context.ChildCount-2, 1, true, true)){
+foreach (var i in range(1, context.ChildCount-1, 1, true, false)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 if ( v.@is<StringContentContext>() ) {
@@ -445,7 +447,7 @@ return text;
 public  override  object VisitRawStringExpr( RawStringExprContext context ){
 var text = "";
 if ( context.rawStringTemplate().Length==0 ) {
-foreach (var i in range(1, context.ChildCount-2, 1, true, true)){
+foreach (var i in range(1, context.ChildCount-1, 1, true, false)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 if ( v.@is<RawStringContentContext>() ) {
@@ -459,17 +461,19 @@ return (new System.Text.StringBuilder().Append("@").Append("\"").Append(text).Ap
 }
 else {
 text = "(new System.Text.StringBuilder()";
-foreach (var i in range(1, context.ChildCount-2, 1, true, true)){
+foreach (var i in range(1, context.ChildCount-1, 1, true, false)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
-if ( v.@is<RawStringContentContext>() ) {
-text+=(new System.Text.StringBuilder().Append(".Append(@").Append("\"").Append(r).Append("\"").Append(")")).to_str();
-}
-else if ( v.@is<RawStringTemplateContext>() ) {
-text+=r;
-}
-else {
-text+=".Append('\"')";
+switch (v) {
+case RawStringContentContext it :
+{ text+=(new System.Text.StringBuilder().Append(".Append(@").Append("\"").Append(r).Append("\"").Append(")")).to_str();
+} break;
+case RawStringTemplateContext it :
+{ text+=r;
+} break;
+default:
+{ text+=".Append('\"')";
+} break;
 }
 }
 text+=").to_str()";
