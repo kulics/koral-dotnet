@@ -15,13 +15,21 @@ FeelLangVisitor = $ me {
         !obj = ""
         expr = Visit(context.expression())!: Result
         obj += "switch (${expr.text}) ${BlockLeft; Wrap}"
-        context.caseEqualStatement() @ item {
-            r = Visit(item)!: str
-            obj += r + Wrap
+
+        context.caseEqualStatement() >< nil ? {
+            obj += Visit(context.caseEqualStatement())!: str + Wrap
+            context.caseElseStatement() >< nil ? {
+                obj += Visit(context.caseElseStatement())!: str + Wrap
+            }
+        } | _ {
+            context.caseMultiwayEqualStatement() @ [i]v {
+                obj += Visit(v)!: str + Wrap
+            }
+            context.caseMultiwayElseStatement() >< nil ? {
+                obj += Visit(context.caseMultiwayElseStatement())!: str + Wrap
+            }
         }
-        context.caseElseStatement() >< nil ? {
-            obj += Visit(context.caseElseStatement())!: str + Wrap
-        }
+
         obj += BlockRight+Wrap
         <- obj
     }
@@ -30,13 +38,21 @@ FeelLangVisitor = $ me {
         !obj = ""
         expr = Visit(context.expression())!: Result
         obj += "switch (${expr.text}) ${BlockLeft; Wrap}"
-        context.caseTypeStatement() @ item {
-            r = Visit(item)!: str
-            obj += r + Wrap
+
+        context.caseTypeStatement() >< nil ? {
+            obj += Visit(context.caseTypeStatement())!: str + Wrap
+            context.caseElseStatement() >< nil ? {
+                obj += Visit(context.caseElseStatement())!: str + Wrap
+            }
+        } | _ {
+            context.caseMultiwayTypeStatement() @ [i]v {
+                obj += Visit(v)!: str + Wrap
+            }
+            context.caseMultiwayElseStatement() >< nil ? {
+                obj += Visit(context.caseMultiwayElseStatement())!: str + Wrap
+            }
         }
-        context.caseElseStatement() >< nil ? {
-            obj += Visit(context.caseElseStatement())!: str + Wrap
-        }
+
         obj += BlockRight+Wrap
         <- obj
     }
@@ -96,6 +112,23 @@ FeelLangVisitor = $ me {
         <- obj
     }
 
+    .VisitCaseMultiwayEqualStatement = (context: CaseMultiwayEqualStatementContext -> v: any) {
+        !obj = ""
+        me.add_current_set()
+        rList = list`str{}
+        context.judgeEqualCase() @ item {
+            r = Visit(item)!: str
+            rList.add(r)
+        }
+        !process = "${BlockLeft} ${ProcessFunctionSupport(context.functionSupportStatement()); BlockRight} break;"
+        rList @ r {
+            obj += r + process
+        }
+        me.delete_current_set()
+
+        <- obj
+    }
+
     .VisitCaseTypeStatement = (context: CaseTypeStatementContext -> v: any) {
         !obj = ""
         me.add_current_set()
@@ -113,7 +146,33 @@ FeelLangVisitor = $ me {
         <- obj
     }
 
+    .VisitCaseMultiwayTypeStatement = (context: CaseMultiwayTypeStatementContext -> v: any) {
+        !obj = ""
+        me.add_current_set()
+        rList = list`str{}
+        context.judgeTypeCase() @ item {
+            r = Visit(item)!: str
+            rList.add(r)
+        }
+        !process = "${BlockLeft} ${ProcessFunctionSupport(context.functionSupportStatement()); BlockRight} break;"
+        rList @ r {
+            obj += r + process
+        }
+        me.delete_current_set()
+
+        <- obj
+    }
+
     .VisitCaseElseStatement = (context: CaseElseStatementContext -> v: any) {
+        !obj = ""
+        me.add_current_set()
+        !process = "${BlockLeft} ${ProcessFunctionSupport(context.functionSupportStatement()); BlockRight} break;"
+        me.delete_current_set()
+        obj += "default:" + Wrap + process
+        <- obj
+    }
+
+    .VisitCaseMultiwayElseStatement = (context: CaseMultiwayElseStatementContext -> v: any) {
         !obj = ""
         me.add_current_set()
         !process = "${BlockLeft} ${ProcessFunctionSupport(context.functionSupportStatement()); BlockRight} break;"

@@ -174,20 +174,26 @@ expressionStatement ;
 
 // 条件判断
 judgeEqualStatement:
-expression Equal_Equal (caseEqualStatement)* caseElseStatement |
-expression Equal_Equal (caseEqualStatement)+ ;
+expression Equal_Equal caseEqualStatement caseElseStatement? |
+expression Equal_Equal Question left_brace (caseMultiwayEqualStatement+ caseMultiwayElseStatement | caseMultiwayEqualStatement+) right_brace;
 
 judgeTypeStatement:
-expression Colon_Colon (caseTypeStatement)* caseElseStatement |
-expression Colon_Colon (caseTypeStatement)+ ;
+expression Colon_Colon caseTypeStatement caseElseStatement? |
+expression Colon_Colon Question left_brace (caseMultiwayTypeStatement+ caseMultiwayElseStatement | caseMultiwayTypeStatement+) right_brace;
 
 // 判断条件声明
-caseElseStatement: New_Line?  Or Discard left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+caseElseStatement: New_Line? Discard Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+caseEqualStatement: New_Line? judgeEqualCase (Or New_Line? judgeEqualCase)+ Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
-caseEqualStatement: New_Line?  Or judgeEqualCase (Or New_Line? judgeEqualCase)* Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+caseMultiwayElseStatement: New_Line? Or Discard Question (functionSupportStatement end|New_Line)* (functionSupportStatement end?)?;
+caseMultiwayEqualStatement: New_Line? Or judgeEqualCase (Or New_Line? judgeEqualCase)* Question (functionSupportStatement end|New_Line)* (functionSupportStatement end?)?;
+
 judgeEqualCase: expression;
 
-caseTypeStatement: New_Line?  Or judgeTypeCase (Or New_Line? judgeTypeCase)* Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+caseTypeStatement: New_Line? judgeTypeCase (Or New_Line? judgeTypeCase)+ Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+
+caseMultiwayTypeStatement: New_Line? Or judgeTypeCase (Or New_Line? judgeTypeCase)* Question (functionSupportStatement end|New_Line)* (functionSupportStatement end?)?;
+
 judgeTypeCase: typeType (Double_Arrow id)?;
 
 // 判断

@@ -14,12 +14,19 @@ public  override  object VisitJudgeEqualStatement( JudgeEqualStatementContext co
 var obj = "";
 var expr = (Result)(Visit(context.expression()));
 obj+=(new System.Text.StringBuilder().Append("switch (").Append(expr.text).Append(") ").Append(BlockLeft).Append(Wrap)).to_str();
-foreach (var item in context.caseEqualStatement()){
-var r = (string)(Visit(item));
-obj+=r+Wrap;
-}
+if ( context.caseEqualStatement()!=null ) {
+obj+=(string)(Visit(context.caseEqualStatement()))+Wrap;
 if ( context.caseElseStatement()!=null ) {
 obj+=(string)(Visit(context.caseElseStatement()))+Wrap;
+}
+}
+else {
+foreach (var (i, v) in range(context.caseMultiwayEqualStatement())){
+obj+=(string)(Visit(v))+Wrap;
+}
+if ( context.caseMultiwayElseStatement()!=null ) {
+obj+=(string)(Visit(context.caseMultiwayElseStatement()))+Wrap;
+}
 }
 obj+=BlockRight+Wrap;
 return obj;
@@ -28,12 +35,19 @@ public  override  object VisitJudgeTypeStatement( JudgeTypeStatementContext cont
 var obj = "";
 var expr = (Result)(Visit(context.expression()));
 obj+=(new System.Text.StringBuilder().Append("switch (").Append(expr.text).Append(") ").Append(BlockLeft).Append(Wrap)).to_str();
-foreach (var item in context.caseTypeStatement()){
-var r = (string)(Visit(item));
-obj+=r+Wrap;
-}
+if ( context.caseTypeStatement()!=null ) {
+obj+=(string)(Visit(context.caseTypeStatement()))+Wrap;
 if ( context.caseElseStatement()!=null ) {
 obj+=(string)(Visit(context.caseElseStatement()))+Wrap;
+}
+}
+else {
+foreach (var (i, v) in range(context.caseMultiwayTypeStatement())){
+obj+=(string)(Visit(v))+Wrap;
+}
+if ( context.caseMultiwayElseStatement()!=null ) {
+obj+=(string)(Visit(context.caseMultiwayElseStatement()))+Wrap;
+}
 }
 obj+=BlockRight+Wrap;
 return obj;
@@ -90,6 +104,21 @@ obj+=r+process;
 this.delete_current_set();
 return obj;
 }
+public  override  object VisitCaseMultiwayEqualStatement( CaseMultiwayEqualStatementContext context ){
+var obj = "";
+this.add_current_set();
+var rList = (new list<string>());
+foreach (var item in context.judgeEqualCase()){
+var r = (string)(Visit(item));
+rList.add(r);
+}
+var process = (new System.Text.StringBuilder().Append(BlockLeft).Append(" ").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append(BlockRight).Append(" break;")).to_str();
+foreach (var r in rList){
+obj+=r+process;
+}
+this.delete_current_set();
+return obj;
+}
 public  override  object VisitCaseTypeStatement( CaseTypeStatementContext context ){
 var obj = "";
 this.add_current_set();
@@ -105,7 +134,30 @@ obj+=r+process;
 this.delete_current_set();
 return obj;
 }
+public  override  object VisitCaseMultiwayTypeStatement( CaseMultiwayTypeStatementContext context ){
+var obj = "";
+this.add_current_set();
+var rList = (new list<string>());
+foreach (var item in context.judgeTypeCase()){
+var r = (string)(Visit(item));
+rList.add(r);
+}
+var process = (new System.Text.StringBuilder().Append(BlockLeft).Append(" ").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append(BlockRight).Append(" break;")).to_str();
+foreach (var r in rList){
+obj+=r+process;
+}
+this.delete_current_set();
+return obj;
+}
 public  override  object VisitCaseElseStatement( CaseElseStatementContext context ){
+var obj = "";
+this.add_current_set();
+var process = (new System.Text.StringBuilder().Append(BlockLeft).Append(" ").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append(BlockRight).Append(" break;")).to_str();
+this.delete_current_set();
+obj+="default:"+Wrap+process;
+return obj;
+}
+public  override  object VisitCaseMultiwayElseStatement( CaseMultiwayElseStatementContext context ){
 var obj = "";
 this.add_current_set();
 var process = (new System.Text.StringBuilder().Append(BlockLeft).Append(" ").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append(BlockRight).Append(" break;")).to_str();
