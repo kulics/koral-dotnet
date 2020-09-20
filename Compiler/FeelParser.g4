@@ -175,11 +175,11 @@ expressionStatement ;
 // 条件判断
 judgeEqualStatement:
 expression Equal_Equal caseEqualStatement caseElseStatement? |
-expression Equal_Equal Question left_brace (caseMultiwayEqualStatement+ caseMultiwayElseStatement | caseMultiwayEqualStatement+) right_brace;
+expression Equal_Equal left_brace (caseMultiwayEqualStatement+ caseMultiwayElseStatement | caseMultiwayEqualStatement+) right_brace;
 
 judgeTypeStatement:
 expression Colon_Colon caseTypeStatement caseElseStatement? |
-expression Colon_Colon Question left_brace (caseMultiwayTypeStatement+ caseMultiwayElseStatement | caseMultiwayTypeStatement+) right_brace;
+expression Colon_Colon left_brace (caseMultiwayTypeStatement+ caseMultiwayElseStatement | caseMultiwayTypeStatement+) right_brace;
 
 // 判断条件声明
 caseElseStatement: New_Line? Discard Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
