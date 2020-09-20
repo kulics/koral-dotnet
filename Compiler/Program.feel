@@ -16,7 +16,8 @@ Main = (args: array`str->) {
     os == PlatformID.Unix || os == PlatformID.MacOSX ? {
         _ReadPath = "./"
         _PathLine = "/"
-    } | _ {
+    }
+    | ? {
         _ReadPath = ".\\"
         _PathLine = "\\"
     }
@@ -32,8 +33,8 @@ Compiled = (path: str->) {
     Files @ file {
         -- 文件流读文件
         -> fsRead = FileStream(file, FileMode.Open) {
-            ! {
-                FSLength = fsRead.Length!: int
+            {
+                FSLength = fsRead.Length !! int
                 ByteBlock = array`u8(FSLength)
                 r = fsRead.Read(ByteBlock, 0, ByteBlock.Length)
                 Input = Encoding.UTF8.GetString(ByteBlock)
@@ -57,7 +58,8 @@ Compiled = (path: str->) {
                 -> fsWrite = FileStream("${_ReadPath; file.replace(".feel", ".cs")}", FileMode.Create) {
                     fsWrite.Write(ByteResult, 0, ByteResult.Length)
                 }
-            } & err {
+            }
+            & err ! {
                 print(err)
                 <-
             }

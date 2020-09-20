@@ -7,6 +7,7 @@ Div_Equal:         	'/=';
 Mod_Equal:        	'%=';
 Pow_Equal:			'^=';
 
+Colon_Colon:		'::';
 Equal_Equal:        '==';
 Less_Equal:         '<=';
 Greater_Equal:      '>=';
@@ -48,6 +49,7 @@ Or_Or: 				'||';
 Tilde_Tilde: 		'~~';
 
 Question_Question:	'??';
+Bang_Bang:			'!!';
 
 Less: 		'<';
 Greater: 	'>';

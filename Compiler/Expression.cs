@@ -218,15 +218,7 @@ case CallElementContext it :
 { var e2 = (Result)(Visit(it));
 r.text=r.text+e2.text;
 } break;
-case JudgeCaseExpressionContext it :
-{ var e2 = (Func<string, Result>)(Visit(it));
-r.text=e2(r.text).text;
-} break;
 case JudgeExpressionContext it :
-{ var e2 = (Func<string, Result>)(Visit(it));
-r.text=e2(r.text).text;
-} break;
-case LoopExpressionContext it :
 { var e2 = (Func<string, Result>)(Visit(it));
 r.text=e2(r.text).text;
 } break;
@@ -298,8 +290,9 @@ public  override  object VisitPow( PowContext context ){
 return "pow";
 }
 public  override  object VisitPrimaryExpression( PrimaryExpressionContext context ){
-if ( context.ChildCount==1 ) {
-var c = context.GetChild(0);
+switch (context.ChildCount) {
+case 1 :
+{ var c = context.GetChild(0);
 if ( c.@is<DataStatementContext>() ) {
 return Visit(context.dataStatement());
 }
@@ -309,11 +302,12 @@ return Visit(context.id());
 else if ( context.t.Type==Discard ) {
 return (new Result(){text = "_",data = "var"});
 }
-}
-else if ( context.ChildCount==2 ) {
-var id = (Result)(Visit(context.id()));
+} break;
+case 2 :
+{ var id = (Result)(Visit(context.id()));
 var template = "<"+((string)(Visit(context.templateCall())))+">";
 return (new Result(){text = id.text+template,data = id.text+template,rootID = id.text});
+} break;
 }
 var r = (Result)(Visit(context.expression()));
 return (new Result(){text = (new System.Text.StringBuilder().Append("(").Append(r.text).Append(")")).to_str(),data = r.data});
@@ -321,7 +315,7 @@ return (new Result(){text = (new System.Text.StringBuilder().Append("(").Append(
 public  override  object VisitExpressionList( ExpressionListContext context ){
 var r = (new Result());
 var obj = "";
-foreach (var i in range(0, context.expression().Length-1, 1, true, true)){
+foreach (var i in range(0, context.expression().Length, 1, true, false)){
 var temp = (Result)(Visit(context.expression(i)));
 if ( i==0 ) {
 obj+=temp.text;
@@ -337,7 +331,7 @@ return r;
 public  override  object VisitTemplateDefine( TemplateDefineContext context ){
 var item = (new TemplateItem());
 item.Template+="<";
-foreach (var i in range(0, context.templateDefineItem().Length-1, 1, true, true)){
+foreach (var i in range(0, context.templateDefineItem().Length, 1, true, false)){
 if ( i>0 ) {
 item.Template+=",";
 if ( item.Contract.len()>0 ) {
@@ -367,7 +361,7 @@ return item;
 }
 public  override  object VisitTemplateCall( TemplateCallContext context ){
 var obj = "";
-foreach (var i in range(0, context.typeType().Length-1, 1, true, true)){
+foreach (var i in range(0, context.typeType().Length, 1, true, false)){
 if ( i>0 ) {
 obj+=",";
 }
@@ -422,7 +416,7 @@ return (new System.Text.StringBuilder().Append("\"").Append(text).Append("\"")).
 }
 else {
 text = "(new System.Text.StringBuilder()";
-foreach (var i in range(1, context.ChildCount-2, 1, true, true)){
+foreach (var i in range(1, context.ChildCount-1, 1, true, false)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 if ( v.@is<StringContentContext>() ) {
@@ -453,7 +447,7 @@ return text;
 public  override  object VisitRawStringExpr( RawStringExprContext context ){
 var text = "";
 if ( context.rawStringTemplate().Length==0 ) {
-foreach (var i in range(1, context.ChildCount-2, 1, true, true)){
+foreach (var i in range(1, context.ChildCount-1, 1, true, false)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 if ( v.@is<RawStringContentContext>() ) {
@@ -467,17 +461,19 @@ return (new System.Text.StringBuilder().Append("@").Append("\"").Append(text).Ap
 }
 else {
 text = "(new System.Text.StringBuilder()";
-foreach (var i in range(1, context.ChildCount-2, 1, true, true)){
+foreach (var i in range(1, context.ChildCount-1, 1, true, false)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
-if ( v.@is<RawStringContentContext>() ) {
-text+=(new System.Text.StringBuilder().Append(".Append(@").Append("\"").Append(r).Append("\"").Append(")")).to_str();
-}
-else if ( v.@is<RawStringTemplateContext>() ) {
-text+=r;
-}
-else {
-text+=".Append('\"')";
+switch (v) {
+case RawStringContentContext it :
+{ text+=(new System.Text.StringBuilder().Append(".Append(@").Append("\"").Append(r).Append("\"").Append(")")).to_str();
+} break;
+case RawStringTemplateContext it :
+{ text+=r;
+} break;
+default:
+{ text+=".Append('\"')";
+} break;
 }
 }
 text+=").to_str()";

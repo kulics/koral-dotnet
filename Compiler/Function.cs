@@ -84,7 +84,7 @@ return (new System.Text.StringBuilder().Append("yield break").Append(Terminate).
 }
 public  override  object VisitTuple( TupleContext context ){
 var obj = "(";
-foreach (var i in range(0, context.expression().Length-1, 1, true, true)){
+foreach (var i in range(0, context.expression().Length, 1, true, false)){
 var r = (Result)(Visit(context.expression(i)));
 if ( i==0 ) {
 obj+=r.text;
@@ -98,7 +98,7 @@ return (new Result(){data = "var",text = obj});
 }
 public  override  object VisitTupleExpression( TupleExpressionContext context ){
 var obj = "";
-foreach (var i in range(0, context.expression().Length-1, 1, true, true)){
+foreach (var i in range(0, context.expression().Length, 1, true, false)){
 var r = (Result)(Visit(context.expression(i)));
 if ( i==0 ) {
 obj+=r.text;
