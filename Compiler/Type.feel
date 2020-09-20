@@ -30,7 +30,8 @@ FeelLangVisitor = $ me {
         context.templateCall() >< nil ? {
             obj == "array" ? {
                 obj = "${Visit(context.templateCall())}[]"
-            } _ ? {
+            }
+            | ? {
                 obj += "<" + Visit(context.templateCall()) + ">"
             }
         }
@@ -45,30 +46,37 @@ FeelLangVisitor = $ me {
             out.Length == 0 ? {
                 in.Length == 0 ? {
                     obj = "Action"
-                } _ ? {
+                }
+                | ? {
                     obj = "Action<${in}>"
                 }
-            } _ ? {
+            }
+            | ? {
                 out.first_index_of(",") >= 0 ? {
                     out = "(${out})"
                 }
                 in.Length == 0 ? {
                     obj = "Func<${out}>"
-                } _ ? {
+                }
+                | ? {
                     obj = "Func<${in}, ${out}>"
                 }
             }
-        } _ ? {
+        }
+        | ? {
             out.Length == 0 ? {
                 in.Length == 0 ? {
                     obj = "Func<${Task}>"
-                } _ ? {
+                }
+                | ? {
                     obj = "Func<${in}, ${Task}>"
                 }
-            } _ ? {
+            }
+            | ? {
                 in.Length == 0 ? {
                     obj = "Func<${Task}<${out}>>"
-                } _ ? {
+                }
+                | ? {
                     obj = "Func<${in}, ${Task}<${out}>>"
                 }
             }
@@ -86,7 +94,8 @@ FeelLangVisitor = $ me {
             p = Visit(context.typeType(i)) !! str
             i == 0 ? {
                 obj += p
-            } _ ? {
+            }
+            | ? {
                 obj += ", " + p
             }
         }
@@ -94,24 +103,23 @@ FeelLangVisitor = $ me {
     }
 
     .VisitTypeBasic = (context: TypeBasicContext -> v: any) {
-        context.t.Type == {
-            | TypeI8 ? <- I8
-            | TypeU8 ? <- U8
-            | TypeI16 ? <- I16
-            | TypeU16 ? <- U16
-            | TypeI32 ? <- I32 
-            | TypeU32 ? <- U32
-            | TypeI64 ? <- I64
-            | TypeU64 ? <- U64
-            | TypeF32 ? <- F32
-            | TypeF64 ? <- F64
-            | TypeChr ? <- Chr
-            | TypeStr ? <- Str
-            | TypeBool ? <- Bool
-            | TypeInt ? <- Int
-            | TypeNum ? <- Num
-            | TypeByte ? <- U8
-            | _ ? <- Any
-        }
+        context.t.Type == 
+        | TypeI8 ? {<- I8}
+        | TypeU8 ? {<- U8}
+        | TypeI16 ? {<- I16}
+        | TypeU16 ? {<- U16}
+        | TypeI32 ? {<- I32} 
+        | TypeU32 ? {<- U32}
+        | TypeI64 ? {<- I64}
+        | TypeU64 ? {<- U64}
+        | TypeF32 ? {<- F32}
+        | TypeF64 ? {<- F64}
+        | TypeChr ? {<- Chr}
+        | TypeStr ? {<- Str}
+        | TypeBool ? {<- Bool}
+        | TypeInt ? {<- Int}
+        | TypeNum ? {<- Num}
+        | TypeByte ? {<- U8}
+        | ? {<- Any}
     }
 }

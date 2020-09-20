@@ -20,7 +20,7 @@ if ( context.callFunc()!=null ) {
 var e2 = (Result)(Visit(context.callFunc()));
 r.text=r.text+e2.text;
 }
- else if ( context.callElement()!=null ) {
+else if ( context.callElement()!=null ) {
 var e2 = (Result)(Visit(context.callElement()));
 r.text=r.text+e2.text;
 }
@@ -84,10 +84,10 @@ r.text=(new System.Text.StringBuilder().Append("(new ").Append(Visit(context.typ
 if ( context.pkgAssign()!=null ) {
 r.text+=Visit(context.pkgAssign());
 }
- else if ( context.listAssign()!=null ) {
+else if ( context.listAssign()!=null ) {
 r.text+=Visit(context.listAssign());
 }
- else if ( context.dictionaryAssign()!=null ) {
+else if ( context.dictionaryAssign()!=null ) {
 r.text+=Visit(context.dictionaryAssign());
 }
 r.text+=")";

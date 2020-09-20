@@ -33,7 +33,7 @@ var childContext = (PackageStatementContext)(child);
 var id = (Result)(Visit(childContext.id()));
 this.add_type(id.text);
 }
- else if ( type==typeof(TypeTagStatementContext) ) {
+else if ( type==typeof(TypeTagStatementContext) ) {
 var childContext = (TypeTagStatementContext)(child);
 this.add_type(childContext.Comment_Tag().GetText().sub_str(2));
 }
@@ -43,7 +43,7 @@ var type = item.GetChild(0).GetType();
 if ( type==typeof(NamespaceVariableStatementContext)||type==typeof(NamespaceFunctionStatementContext)||type==typeof(NamespaceConstantStatementContext) ) {
 contentStatic+=Visit(item);
 }
- else if ( type==typeof(ImportStatementContext) ) {
+else if ( type==typeof(ImportStatementContext) ) {
 imports+=Visit(item);
 }
 else {
@@ -80,7 +80,7 @@ var ns = (string)(Visit(context.nameSpaceItem()));
 if ( context.Dot()!=null ) {
 obj+=(new System.Text.StringBuilder().Append("using static ").Append(ns)).to_str();
 }
- else if ( context.id()!=null ) {
+else if ( context.id()!=null ) {
 obj+=(new System.Text.StringBuilder().Append("using ").Append(ns).Append(".").Append(((Result)(Visit(context.id()))).text)).to_str();
 }
 else {

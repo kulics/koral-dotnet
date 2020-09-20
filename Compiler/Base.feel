@@ -153,15 +153,17 @@ FeelLangVisitor = $ me {
             r.text = "@${r.text}"
         }
 
-        ? {
-            | r.text == selfID ?
-                r.text = "this"
-            | r.text == superID ?
-                r.text = "base"
-            | r.text == setID ?
-                r.text = "value"
-            | r.text == getID ?
-                r.text = "_" + selfPropertyID
+        r.text == selfID ? {
+            r.text = "this"
+        }
+        | r.text == superID ? {
+            r.text = "base"
+        }
+        | r.text == setID ? {
+            r.text = "value"
+        }
+        | r.text == getID ? {
+            r.text = "_" + selfPropertyID
         }
         r.rootID = r.text
         <- r
@@ -169,24 +171,25 @@ FeelLangVisitor = $ me {
 
     .VisitIdItem = (context: IdItemContext -> v: any) {
         r = Result{data = "var"}
-
-        ? {
-            | context.typeBasic() >< nil ?
-                r.permission = "public"
-                r.text += context.typeBasic().GetText()
-                r.isVirtual = true
-            | context.typeAny() >< nil ?
-                r.permission = "public"
-                r.text += context.typeAny().GetText()
-                r.isVirtual = true
-            | context.op.Type == IDPublic ?
-                r.permission = "public"
-                r.text += context.op.Text
-                r.isVirtual = true
-            | context.op.Type == IDPrivate ?
-                r.permission = "protected"
-                r.text += context.op.Text
-                r.isVirtual = true
+        context.typeBasic() >< nil ? {
+            r.permission = "public"
+            r.text += context.typeBasic().GetText()
+            r.isVirtual = true
+        }
+        | context.typeAny() >< nil ? {
+            r.permission = "public"
+            r.text += context.typeAny().GetText()
+            r.isVirtual = true
+        }
+        | context.op.Type == IDPublic ? {
+            r.permission = "public"
+            r.text += context.op.Text
+            r.isVirtual = true
+        }
+        | context.op.Type == IDPrivate ? {
+            r.permission = "protected"
+            r.text += context.op.Text
+            r.isVirtual = true
         }
         <- r
     }
@@ -194,7 +197,8 @@ FeelLangVisitor = $ me {
     .VisitVarId = (context: VarIdContext -> v: any) {
         context.Discard() >< nil ? {
             <- "_"
-        } _ ? {
+        }
+        | ? {
             id = (Visit(context.id()) !! Result).text
             ~~me.has_id(id) ? {
                 me.add_id(id)
@@ -206,7 +210,8 @@ FeelLangVisitor = $ me {
     .VisitVarIdType = (context: VarIdTypeContext -> v: any) {
         context.Discard() >< nil ? {
             <- "_"
-        } _ ? {
+        }
+        | ? {
             id = (Visit(context.id()) !! Result).text
             ~~me.has_id(id) ? {
                 me.add_id(id)
@@ -218,11 +223,13 @@ FeelLangVisitor = $ me {
     .VisitConstId = (context: ConstIdContext -> v: any) {
         context.Discard() >< nil ? {
             <- "_"
-        } _ ? {
+        }
+        | ? {
             id = (Visit(context.id()) !! Result).text
             me.has_id(id) ? {
                 <- id
-            } _ ? {
+            }
+            | ? {
                 me.add_id(id)
                 <- "var " + id
             }
@@ -232,7 +239,8 @@ FeelLangVisitor = $ me {
     .VisitConstIdType = (context: ConstIdTypeContext -> v: any) {
         context.Discard() >< nil ? {
             <- "_"
-        } _ ? {
+        }
+        | ? {
             id = (Visit(context.id()) !! Result).text
             ~~me.has_id(id) ? {
                 me.add_id(id)
@@ -243,14 +251,13 @@ FeelLangVisitor = $ me {
 
     .VisitBoolExpr = (context: BoolExprContext -> v: any) {
         r = Result{}
-        
-        ? {
-            | context.t.Type == TrueLiteral ?
-                r.data = Bool
-                r.text = T
-            | context.t.Type == FalseLiteral ?
-                r.data = Bool
-                r.text = F
+        context.t.Type == TrueLiteral ? {
+            r.data = Bool
+            r.text = T
+        }
+        | context.t.Type == FalseLiteral ? {
+            r.data = Bool
+            r.text = F
         }
         <- r
     }
@@ -287,57 +294,68 @@ FeelLangVisitor = $ me {
         context.id().Length == 2 ? {
             id = "${(Visit(context.id(0)) !! Result).text}:"
             obj += (me.Visit(context.id(1)) !! Result).text
-        } _ ? {
+        }
+        | ? {
             obj += (me.Visit(context.id(0)) !! Result).text
         }
-        obj == {
-            | "get" ?
-                context.lambda() == nil ? {
-                    me.selfPropertyVariable = true
-                    me.selfPropertyContent += "get{return _${ me.selfPropertyID }; }"
-                } _ ? {
-                    me.selfPropertyContent += "get{${ me.VisitPropertyLambda(context.lambda(), true) }}"
-                }
-                <- ""
-            | "set" ?
-                context.lambda() == nil ? {
-                    me.selfPropertyVariable = true
-                    me.selfPropertyContent += "set{_${ me.selfPropertyID }=value;}"
-                } _ ? {
-                    me.selfPropertyContent += "set{${ me.VisitPropertyLambda(context.lambda(), false) }}"
-                }
-                <- ""
-            | "_get" ?
-                context.lambda() == nil ? {
-                    me.selfPropertyVariable = true
-                    me.selfPropertyContent += "private get{return _${ me.selfPropertyID }; }"
-                } _ ? {
-                    me.selfPropertyContent += "private get{${ me.VisitPropertyLambda(context.lambda(), true) }}"
-                }
-                <- ""
-            | "_set" ?
-                context.lambda() == nil ? {
-                    me.selfPropertyVariable = true
-                    me.selfPropertyContent += "private set{_${ me.selfPropertyID }=value;}"
-                } _ ? {
-                    me.selfPropertyContent += "private set{${ me.VisitPropertyLambda(context.lambda(), false) }}"
-                }
-                <- ""
-            | "add" ?
-                todo("not yet")
-                <- ""
-            | "remove" ?
-                todo("not yet")
-                <- ""
+        obj == 
+        | "get" ? {
+            context.lambda() == nil ? {
+                me.selfPropertyVariable = true
+                me.selfPropertyContent += "get{return _${ me.selfPropertyID }; }"
+            }
+            | ? {
+                me.selfPropertyContent += "get{${ me.VisitPropertyLambda(context.lambda(), true) }}"
+            }
+            <- ""
+        }
+        | "set" ? {
+            context.lambda() == nil ? {
+                me.selfPropertyVariable = true
+                me.selfPropertyContent += "set{_${ me.selfPropertyID }=value;}"
+            }
+            | ? {
+                me.selfPropertyContent += "set{${ me.VisitPropertyLambda(context.lambda(), false) }}"
+            }
+            <- ""
+        }
+        | "_get" ? {
+            context.lambda() == nil ? {
+                me.selfPropertyVariable = true
+                me.selfPropertyContent += "private get{return _${ me.selfPropertyID }; }"
+            }
+            | ? {
+                me.selfPropertyContent += "private get{${ me.VisitPropertyLambda(context.lambda(), true) }}"
+            }
+            <- ""
+        }
+        | "_set" ? {
+            context.lambda() == nil ? {
+                me.selfPropertyVariable = true
+                me.selfPropertyContent += "private set{_${ me.selfPropertyID }=value;}"
+            }
+            | ? {
+                me.selfPropertyContent += "private set{${ me.VisitPropertyLambda(context.lambda(), false) }}"
+            }
+            <- ""
+        }
+        | "add" ? {
+            todo("not yet")
+            <- ""
+        }
+        | "remove" ? {
+            todo("not yet")
+            <- ""
         }
         
-        ? {
-            | context.tuple() >< nil ?
-                obj += (me.Visit(context.tuple()) !! Result).text
-            | context.lambda() >< nil ?
-                obj += "(${ (me.Visit(context.lambda()) !! Result).text })"
-            | _ ?
-                obj += ""
+        context.tuple() >< nil ? {
+            obj += (me.Visit(context.tuple()) !! Result).text
+        }
+        | context.lambda() >< nil ? {
+            obj += "(${ (me.Visit(context.lambda()) !! Result).text })"
+        }
+        | ? {
+            obj += ""
         }
         id >< "" ? {
             obj = id + obj
@@ -359,7 +377,8 @@ FeelLangVisitor = $ me {
                 obj = "return " + obj
             }
             obj += Terminate
-        } _ ? {
+        }
+        | ? {
             obj += ProcessFunctionSupport(context.functionSupportStatement())
         }
         me.getID = ""
@@ -369,26 +388,28 @@ FeelLangVisitor = $ me {
     }
 
     VisitPropertyLambdaIn = (context: LambdaInContext, is_get: bool ->) {
-        context.id().Length == {
-            | 1 ?
-                id0 = me.Visit(context.id(0)) !! Result
-                me.add_id(id0.text)
-                is_get ? {
-                    me.selfPropertyVariable = true
-                    me.add_id("_"+me.selfPropertyID)
-                    me.getID = id0.text
-                } _ ? {
-                    me.setID = id0.text
-                }
-            | 2 ?
+        context.id().Length == 
+        | 1 ? {
+            id0 = me.Visit(context.id(0)) !! Result
+            me.add_id(id0.text)
+            is_get ? {
                 me.selfPropertyVariable = true
                 me.add_id("_"+me.selfPropertyID)
-                id0 = me.Visit(context.id(0)) !! Result
-                id1 = me.Visit(context.id(1)) !! Result
-                me.add_id(id0.text)
-                me.add_id(id1.text)
                 me.getID = id0.text
-                me.setID = id1.text
+            }
+            | ? {
+                me.setID = id0.text
+            }
+        }
+        | 2 ? {
+            me.selfPropertyVariable = true
+            me.add_id("_"+me.selfPropertyID)
+            id0 = me.Visit(context.id(0)) !! Result
+            id1 = me.Visit(context.id(1)) !! Result
+            me.add_id(id0.text)
+            me.add_id(id1.text)
+            me.getID = id0.text
+            me.setID = id1.text
         }
     }
 }

@@ -151,7 +151,7 @@ case AddContext it :
 { if ( (string)(e1.data)==Str||(string)(((Result)(e2)).data)==Str ) {
 r.data=Str;
 }
- else if ( (string)(e1.data)==I32&&(string)(((Result)(e2)).data)==I32 ) {
+else if ( (string)(e1.data)==I32&&(string)(((Result)(e2)).data)==I32 ) {
 r.data=I32;
 }
 else {
@@ -226,7 +226,7 @@ default:
 { if ( context.op.Type==FeelParser.Bang ) {
 r.text=(new System.Text.StringBuilder().Append("ref ").Append(r.text)).to_str();
 }
- else if ( context.op.Type==FeelParser.Question ) {
+else if ( context.op.Type==FeelParser.Question ) {
 r.text+="?";
 }
 } break;
@@ -296,10 +296,10 @@ case 1 :
 if ( c.@is<DataStatementContext>() ) {
 return Visit(context.dataStatement());
 }
- else if ( c.@is<IdContext>() ) {
+else if ( c.@is<IdContext>() ) {
 return Visit(context.id());
 }
- else if ( context.t.Type==Discard ) {
+else if ( context.t.Type==Discard ) {
 return (new Result(){text = "_",data = "var"});
 }
 } break;
@@ -376,31 +376,31 @@ if ( context.nilExpr()!=null ) {
 r.data=Any;
 r.text="null";
 }
- else if ( context.floatExpr()!=null ) {
+else if ( context.floatExpr()!=null ) {
 r.data=F64;
 r.text=(string)(Visit(context.floatExpr()));
 }
- else if ( context.integerExpr()!=null ) {
+else if ( context.integerExpr()!=null ) {
 r.data=I32;
 r.text=(string)(Visit(context.integerExpr()));
 }
- else if ( context.rawStringExpr()!=null ) {
+else if ( context.rawStringExpr()!=null ) {
 r.data=Str;
 r.text=(string)(Visit(context.rawStringExpr()));
 }
- else if ( context.stringExpr()!=null ) {
+else if ( context.stringExpr()!=null ) {
 r.data=Str;
 r.text=(string)(Visit(context.stringExpr()));
 }
- else if ( context.t.Type==FeelParser.CharLiteral ) {
+else if ( context.t.Type==FeelParser.CharLiteral ) {
 r.data=Chr;
 r.text=context.CharLiteral().GetText();
 }
- else if ( context.t.Type==FeelParser.TrueLiteral ) {
+else if ( context.t.Type==FeelParser.TrueLiteral ) {
 r.data=Bool;
 r.text=T;
 }
- else if ( context.t.Type==FeelParser.FalseLiteral ) {
+else if ( context.t.Type==FeelParser.FalseLiteral ) {
 r.data=Bool;
 r.text=F;
 }

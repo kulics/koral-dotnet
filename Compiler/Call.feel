@@ -17,13 +17,13 @@ FeelLangVisitor = $ me {
         context.templateCall() >< nil ? {
             r.text += "<" + (Visit(context.templateCall()) !! str) + ">"
         }
-        ? {
-            | context.callFunc() >< nil ?
-                e2 = Visit(context.callFunc()) !! Result
-                r.text = r.text + e2.text
-            | context.callElement() >< nil ?
-                e2 = Visit(context.callElement()) !! Result
-                r.text = r.text + e2.text
+        context.callFunc() >< nil ? {
+            e2 = Visit(context.callFunc()) !! Result
+            r.text = r.text + e2.text
+        }
+        | context.callElement() >< nil ? {
+            e2 = Visit(context.callElement()) !! Result
+            r.text = r.text + e2.text
         }
         <- r
     }
@@ -97,13 +97,14 @@ FeelLangVisitor = $ me {
     .VisitCallPkg = (context: CallPkgContext -> v: any) {
         r = Result{data = Visit(context.typeNotNull())}
         r.text = "(new ${Visit(context.typeNotNull())}()"
-        ? {
-            | context.pkgAssign() >< nil ?
-                r.text += Visit(context.pkgAssign())
-            | context.listAssign() >< nil ?
-                r.text += Visit(context.listAssign())
-            | context.dictionaryAssign() >< nil ?
-                r.text += Visit(context.dictionaryAssign())
+        context.pkgAssign() >< nil ? {
+            r.text += Visit(context.pkgAssign())
+        }
+        | context.listAssign() >< nil ? {
+            r.text += Visit(context.listAssign())
+        }
+        | context.dictionaryAssign() >< nil ? {
+            r.text += Visit(context.dictionaryAssign())
         }
         r.text += ")"
         <- r
@@ -115,7 +116,8 @@ FeelLangVisitor = $ me {
         0 ..< context.pkgAssignElement().Length @ i {
             i == 0 ? {
                 obj += Visit(context.pkgAssignElement(i))
-            } _ ? {
+            }
+            | ? {
                 obj += "," + Visit(context.pkgAssignElement(i))
             }
         }
@@ -130,7 +132,8 @@ FeelLangVisitor = $ me {
             r = Visit(context.expression(i)) !! Result
             i == 0 ? {
                 obj += r.text
-            } _ ? {
+            }
+            | ? {
                 obj += "," + r.text
             }
         }
@@ -145,7 +148,8 @@ FeelLangVisitor = $ me {
             r = Visit(context.dictionaryElement(i)) !! DicEle
             i == 0 ? {
                 obj += r.text
-            } _ ? {
+            }
+            | ? {
                 obj += "," + r.text
             }
         }
@@ -172,7 +176,8 @@ FeelLangVisitor = $ me {
         0 ..< context.pkgAnonymousAssignElement().Length @ i {
             i == 0 ? {
                 obj += Visit(context.pkgAnonymousAssignElement(i))
-            } _ ? {
+            }
+            | ? {
                 obj += "," + Visit(context.pkgAnonymousAssignElement(i))
             }
         }
@@ -194,7 +199,8 @@ FeelLangVisitor = $ me {
             i == 0 ? {
                 type = r.data !! str
                 result.text += r.text
-            } _ ? {
+            }
+            | ? {
                 type >< (r.data !! str) ? {
                     type = Any
                 }
@@ -216,7 +222,8 @@ FeelLangVisitor = $ me {
                 key = r.key
                 value = r.value
                 result.text += r.text
-            } _ ? {
+            }
+            | ? {
                 key >< r.key ? {
                     key = Any
                 }
@@ -273,7 +280,8 @@ FeelLangVisitor = $ me {
 
         context.tupleExpression() >< nil ? {
             r.text += (Visit(context.tupleExpression()) !! Result).text
-        } _ ? {
+        }
+        | ? {
             r.text += "{${ProcessFunctionSupport(context.functionSupportStatement())}}"
         }
         me.delete_current_set()
@@ -291,7 +299,8 @@ FeelLangVisitor = $ me {
             r = Visit(context.id(i)) !! Result
             i == 0 ? {
                 obj += r.text
-            } _ ? {
+            }
+            | ? {
                 obj += ", " + r.text
             }
             me.add_id(r.text)

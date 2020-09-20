@@ -32,27 +32,28 @@ FeelLangVisitor = $ me {
         context.namespaceSupportStatement() @ item {
             child = item.GetChild(0)
             type = child.GetType()
-            ? {
-                | type == typeof(PackageStatementContext) ?
-                    childContext = child !! PackageStatementContext
-                    id = Visit(childContext.id()) !! Result
-                    me.add_type(id.text)
-                | type == typeof(TypeTagStatementContext) ?
-                    childContext = child !! TypeTagStatementContext
-                    me.add_type(childContext.Comment_Tag().GetText().sub_str(2))
+            type == typeof(PackageStatementContext) ? {
+                childContext = child !! PackageStatementContext
+                id = Visit(childContext.id()) !! Result
+                me.add_type(id.text)
+            }
+            | type == typeof(TypeTagStatementContext) ? {
+                childContext = child !! TypeTagStatementContext
+                me.add_type(childContext.Comment_Tag().GetText().sub_str(2))
             }
         }
         context.namespaceSupportStatement() @ item {
             type = item.GetChild(0).GetType()
-            ? {
-                | type == typeof(NamespaceVariableStatementContext) ||
-                    type == typeof(NamespaceFunctionStatementContext) ||
-                    type == typeof(NamespaceConstantStatementContext) ?
-                    contentStatic += Visit(item)
-                | type == typeof(ImportStatementContext) ?
-                    imports += Visit(item)
-                | _ ?
-                    content += Visit(item)
+            type == typeof(NamespaceVariableStatementContext) ||
+            type == typeof(NamespaceFunctionStatementContext) ||
+            type == typeof(NamespaceConstantStatementContext) ? {
+                contentStatic += Visit(item)
+            }
+            | type == typeof(ImportStatementContext) ? {
+                imports += Visit(item)
+            }
+            | ? {
+                content += Visit(item)
             }
         }
         obj += content
@@ -88,13 +89,14 @@ FeelLangVisitor = $ me {
             obj += Visit(context.annotationSupport())
         }
         ns = Visit(context.nameSpaceItem()) !! str
-        ? {
-            | context.Dot() >< nil ?
-                obj += "using static ${ ns }"
-            | context.id() >< nil ?
-                obj += "using ${ns}.${(Visit(context.id()) !! Result).text}"
-            | _ ?
-                obj += "using ${ns}"
+        context.Dot() >< nil ? {
+            obj += "using static ${ ns }"
+        }
+        | context.id() >< nil ? {
+            obj += "using ${ns}.${(Visit(context.id()) !! Result).text}"
+        }
+        | ? {
+            obj += "using ${ns}"
         }
         obj += Terminate + Wrap
         <- obj
@@ -106,7 +108,8 @@ FeelLangVisitor = $ me {
             id = Visit(context.id(i)) !! Result
             i == 0 ? {
                 obj += id.text
-            } _ ? {
+            }
+            | ? {
                 obj += "." + id.text
             }
         }
@@ -119,7 +122,8 @@ FeelLangVisitor = $ me {
             id = Visit(context.id(i)) !! Result
             i == 0 ? {
                 obj += id.text
-            } _ ? {
+            }
+            | ? {
                 obj += "." + id.text
             }
         }
@@ -166,12 +170,14 @@ FeelLangVisitor = $ me {
         !pout = ""
         context.t == nil ? {
             pout = "void"
-        } _ ? {
+        }
+        | ? {
             pout = Visit(context.parameterClauseOut()) !! str
             context.t.Type == Right_Flow ? {
                 pout >< "void" ? {
                     pout = "${Task}<${pout}>"
-                } _ ? {
+                }
+                | ? {
                     pout = Task
                 }
             }
@@ -205,7 +211,8 @@ FeelLangVisitor = $ me {
         !typ = ""
         context.typeType() >< nil ? {
             typ = Visit(context.typeType()) !! str
-        } _ ? {
+        }
+        | ? {
             typ = expr.data !! str
         }
 
@@ -254,11 +261,13 @@ FeelLangVisitor = $ me {
             me.selfPropertyContent.clear()
             me.selfPropertyID = ""
             me.selfPropertyVariable = false
-        } _ ? {
+        }
+        | ? {
             obj += "${r1.permission} static ${typ} ${r1.text}"
             r2 >< nil ? {
                 obj += " = ${r2.text; Terminate; Wrap}"
-            } _ ? {
+            }
+            | ? {
                 obj += Terminate + Wrap
             }
         }

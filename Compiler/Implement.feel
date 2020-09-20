@@ -91,11 +91,13 @@ FeelLangVisitor = $ me {
             me.selfPropertyContent.clear()
             me.selfPropertyID = ""
             me.selfPropertyVariable = false
-        } _ ? {
+        }
+        | ? {
             obj += "${r1.permission} ${typ} ${r1.text}"
             r2 >< nil ? {
                 obj += " = ${r2.text; Terminate; Wrap}"
-            } _ ? {
+            }
+            | ? {
                 obj += Terminate + Wrap
             }
         }
@@ -109,12 +111,14 @@ FeelLangVisitor = $ me {
         !pout = ""
         context.t == nil ? {
             pout = "void"
-        } _ ? {
+        }
+        | ? {
             pout = Visit(context.parameterClauseOut()) !! str
             context.t.Type == Right_Flow ? {
                 pout >< "void" ? {
                     pout = "${Task}<${pout}>"
-                } _ ? {
+                }
+                | ? {
                     pout = Task
                 }
             }
@@ -140,7 +144,8 @@ FeelLangVisitor = $ me {
         me.delete_func_stack()
         context.n >< nil ? {
             obj = "protected " + obj
-        } _ ? {
+        }
+        | ? {
             obj = "${id.permission} " + obj
         }
         <- obj

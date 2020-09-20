@@ -16,7 +16,8 @@ Main = (args: array`str->) {
     os == PlatformID.Unix || os == PlatformID.MacOSX ? {
         _ReadPath = "./"
         _PathLine = "/"
-    } _ ? {
+    }
+    | ? {
         _ReadPath = ".\\"
         _PathLine = "\\"
     }
@@ -57,7 +58,8 @@ Compiled = (path: str->) {
                 -> fsWrite = FileStream("${_ReadPath; file.replace(".feel", ".cs")}", FileMode.Create) {
                     fsWrite.Write(ByteResult, 0, ByteResult.Length)
                 }
-            } err ! {
+            }
+            & err ! {
                 print(err)
                 <-
             }

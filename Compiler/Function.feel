@@ -35,12 +35,14 @@ FeelLangVisitor = $ me {
         !pout = ""
         context.t == nil ? {
             pout = "void"
-        } _ ? {
+        }
+        | ? {
             pout = Visit(context.parameterClauseOut()) !! str
             context.t.Type == Right_Flow ? {
                 pout >< "void" ? {
                     pout = "${Task}<${pout}>"
-                } _ ? {
+                }
+                | ? {
                     pout = Task
                 }
             }
@@ -98,7 +100,8 @@ FeelLangVisitor = $ me {
             r = Visit(context.expression(i)) !! Result
             i == 0 ? {
                 obj += r.text
-            } _ ? {
+            }
+            | ? {
                 obj += ", " + r.text
             }
         }
@@ -115,7 +118,8 @@ FeelLangVisitor = $ me {
             r = Visit(context.expression(i)) !! Result
             i == 0 ? {
                 obj += r.text
-            } _ ? {
+            }
+            | ? {
                 obj += ", " + r.text
             }
         }
@@ -139,7 +143,8 @@ FeelLangVisitor = $ me {
         temp.Count-1 ... 0 @ i {
             i == temp.Count - 1 ? {
                 obj += temp[i]
-            } _ ? {
+            }
+            | ? {
                 obj += ", " + temp[i]
             }
         }
@@ -150,12 +155,12 @@ FeelLangVisitor = $ me {
 
     .VisitParameterClauseOut = (context: ParameterClauseOutContext -> v: any) {
         !obj = ""
-        ? {
-            | context.parameter().Length == 0 ?
-                obj += "void"
-            | context.parameter().Length == 1 ?
-                p = Visit(context.parameter(0)) !! Parameter
-                obj += p.type
+        context.parameter().Length == 0 ? {
+            obj += "void"
+        }
+        | context.parameter().Length == 1 ? {
+            p = Visit(context.parameter(0)) !! Parameter
+            obj += p.type
         }
         context.parameter().Length > 1 ? {
             obj += "( "
@@ -167,7 +172,8 @@ FeelLangVisitor = $ me {
             temp.Count-1 ... 0 @ i {
                 i == temp.Count - 1 ? {
                     obj += temp[i]
-                } _ ? {
+                }
+                | ? {
                     obj += ", " + temp[i]
                 }
             }

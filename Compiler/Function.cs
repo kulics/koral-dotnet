@@ -136,7 +136,7 @@ var obj = "";
 if ( context.parameter().Length==0 ) {
 obj+="void";
 }
- else if ( context.parameter().Length==1 ) {
+else if ( context.parameter().Length==1 ) {
 var p = (Parameter)(Visit(context.parameter(0)));
 obj+=p.type;
 }

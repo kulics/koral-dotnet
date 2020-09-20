@@ -51,7 +51,7 @@ if ( context.id().Length==2 ) {
 target = (new System.Text.StringBuilder().Append("range(").Append(target).Append(")")).to_str();
 id = (new System.Text.StringBuilder().Append("(").Append(((Result)(Visit(context.id(0)))).text).Append(", ").Append(((Result)(Visit(context.id(1)))).text).Append(")")).to_str();
 }
- else if ( context.id().Length==1 ) {
+else if ( context.id().Length==1 ) {
 id = ((Result)(Visit(context.id(0)))).text;
 }
 obj+=(new System.Text.StringBuilder().Append("foreach (var ").Append(id).Append(" in ").Append(target).Append(")")).to_str();

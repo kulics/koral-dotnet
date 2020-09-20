@@ -100,13 +100,13 @@ r.text=(new System.Text.StringBuilder().Append("@").Append(r.text)).to_str();
 if ( r.text==selfID ) {
 r.text="this";
 }
- else if ( r.text==superID ) {
+else if ( r.text==superID ) {
 r.text="base";
 }
- else if ( r.text==setID ) {
+else if ( r.text==setID ) {
 r.text="value";
 }
- else if ( r.text==getID ) {
+else if ( r.text==getID ) {
 r.text="_"+selfPropertyID;
 }
 r.rootID=r.text;
@@ -119,17 +119,17 @@ r.permission="public";
 r.text+=context.typeBasic().GetText();
 r.isVirtual=true;
 }
- else if ( context.typeAny()!=null ) {
+else if ( context.typeAny()!=null ) {
 r.permission="public";
 r.text+=context.typeAny().GetText();
 r.isVirtual=true;
 }
- else if ( context.op.Type==IDPublic ) {
+else if ( context.op.Type==IDPublic ) {
 r.permission="public";
 r.text+=context.op.Text;
 r.isVirtual=true;
 }
- else if ( context.op.Type==IDPrivate ) {
+else if ( context.op.Type==IDPrivate ) {
 r.permission="protected";
 r.text+=context.op.Text;
 r.isVirtual=true;
@@ -193,7 +193,7 @@ if ( context.t.Type==TrueLiteral ) {
 r.data=Bool;
 r.text=T;
 }
- else if ( context.t.Type==FalseLiteral ) {
+else if ( context.t.Type==FalseLiteral ) {
 r.data=Bool;
 r.text=F;
 }
@@ -283,7 +283,7 @@ return "";
 if ( context.tuple()!=null ) {
 obj+=((Result)(this.Visit(context.tuple()))).text;
 }
- else if ( context.lambda()!=null ) {
+else if ( context.lambda()!=null ) {
 obj+=(new System.Text.StringBuilder().Append("(").Append(((Result)(this.Visit(context.lambda()))).text).Append(")")).to_str();
 }
 else {

@@ -60,7 +60,8 @@ FeelLangVisitor = $ me {
         context.constId() @ [i]v {
             i >< 0 ? {
                 obj += "," + Visit(v)
-            } _ ? {
+            }
+            | ? {
                 obj += Visit(v)
             }
         }
