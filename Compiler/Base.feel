@@ -290,7 +290,7 @@ FeelLangVisitor = $ me {
         } _ ? {
             obj += (me.Visit(context.id(0)) !! Result).text
         }
-        obj == ? {
+        obj == {
             | "get" ?
                 context.lambda() == nil ? {
                     me.selfPropertyVariable = true
@@ -369,7 +369,7 @@ FeelLangVisitor = $ me {
     }
 
     VisitPropertyLambdaIn = (context: LambdaInContext, is_get: bool ->) {
-        context.id().Length == ? {
+        context.id().Length == {
             | 1 ?
                 id0 = me.Visit(context.id(0)) !! Result
                 me.add_id(id0.text)

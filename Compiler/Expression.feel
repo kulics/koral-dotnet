@@ -209,13 +209,13 @@ FeelLangVisitor = $ me {
     .VisitExpression = (context: ExpressionContext -> v: any) {
         count = context.ChildCount
         !r = Result{}
-        count == ? {
+        count == {
             | 3 ?
                 !e1 = Visit(context.GetChild(0)) !! Result
                 !e2 = Visit(context.GetChild(2))
                 !op = Visit(context.GetChild(1))
 
-                context.GetChild(1) :: ? {
+                context.GetChild(1) :: {
                     | CompareCombineContext ?
                         r.data = I32
                         s1 = e1.text
@@ -253,7 +253,7 @@ FeelLangVisitor = $ me {
                 r.text = e1.text + op + (e2 !! Result).text
             | 2 ?
                 r = Visit(context.GetChild(0)) !! Result
-                context.GetChild(1) :: ? {
+                context.GetChild(1) :: {
                     | TypeConversionContext => it ?
                         e2 = Visit(it) !! str
                         r.data = e2
@@ -371,7 +371,7 @@ FeelLangVisitor = $ me {
     }
 
     .VisitPrimaryExpression = (context: PrimaryExpressionContext -> v: any) {
-        context.ChildCount == ? {
+        context.ChildCount == {
             | 1 ? 
                 c = context.GetChild(0)
                 ? {
@@ -552,7 +552,7 @@ FeelLangVisitor = $ me {
             1 ..< context.ChildCount-1 @ i {
                 v = context.GetChild(i)
                 r = Visit(context.GetChild(i)) !! str
-                v :: ? {
+                v :: {
                     | RawStringContentContext ?
                         text += ".Append(@\"${r}\")"
                     | RawStringTemplateContext ?
