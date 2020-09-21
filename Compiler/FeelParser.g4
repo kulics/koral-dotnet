@@ -462,7 +462,7 @@ nilExpr: NilLiteral;
 boolExpr: t=TrueLiteral|t=FalseLiteral;
 
 // 迭代器
-iterator: (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater) (left_paren expression right_paren)?;
+iterator: (Tilde expression)? (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater);
 bitwise: (bitwiseAnd | bitwiseOr | bitwiseXor 
 | bitwiseLeftShift | bitwiseRightShift) (New_Line)?;
 bitwiseAnd: And_And_And;
