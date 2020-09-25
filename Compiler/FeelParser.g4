@@ -47,12 +47,12 @@ namespaceVariableStatement: (annotationSupport)? Bang id (Equal expression | Col
 // 命名空间常量
 namespaceConstantStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
 // 命名空间函数
-namespaceFunctionStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)?
+namespaceFunctionStatement: (annotationSupport)? id templateDefine? Equal
  left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
 parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 定义包
-packageStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)?
+packageStatement: (annotationSupport)? id templateDefine? Equal
  (packageFieldStatement|packageStaticStatement|packageNewStatement);
 
 packageStaticStatement: Coin left_brace (packageStaticSupportStatement end|New_Line)* packageStaticSupportStatement end? right_brace left_brace right_brace;
@@ -67,7 +67,7 @@ packageStaticVariableStatement: (annotationSupport)? Bang id (Equal expression |
 // 定义常量
 packageStaticConstantStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
 // 函数
-packageStaticFunctionStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)?
+packageStaticFunctionStatement: (annotationSupport)? id templateDefine? Equal
  left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
 parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
@@ -95,14 +95,14 @@ packageVariableStatement: (annotationSupport)? Bang id (Equal expression | Colon
 // 定义常量
 packageConstantStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
 // 函数
-packageFunctionStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)?
+packageFunctionStatement: (annotationSupport)? id templateDefine? Equal
  left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
 parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 定义包事件
 packageEventStatement: Bang id left_brack Right_Arrow right_brack nameSpaceItem;
 
 // 扩展
-implementStatement: id Colon Equal (left_paren templateDefine right_paren | templateDefine)?
+implementStatement: id templateDefine? Colon Equal
 (packageNewStatement|packageFieldStatement);
 
 // 定义变量
@@ -110,12 +110,12 @@ overrideVariableStatement: (annotationSupport)? Dot (n='_')? Bang id (Equal expr
 // 定义常量
 overrideConstantStatement: (annotationSupport)? Dot (n='_')? id (Equal expression | Colon typeType (Equal expression)?);
 // 函数
-overrideFunctionStatement: (annotationSupport)? Dot (n='_')? id Equal (left_paren templateDefine right_paren | templateDefine)?
+overrideFunctionStatement: (annotationSupport)? Dot (n='_')? id templateDefine? Equal
  left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
 parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace end;
 
 // 协议
-protocolStatement: (annotationSupport)? id Equal (left_paren templateDefine right_paren | templateDefine)? protocolSubStatement;
+protocolStatement: (annotationSupport)? id templateDefine? Equal protocolSubStatement;
 
 protocolSubStatement: Coin (p=Question? id (more id)?)? left_brace (protocolSupportStatement end|New_Line)* protocolSupportStatement end? right_brace;
 // 协议支持的语句
@@ -125,11 +125,11 @@ protocolFunctionStatement |
 New_Line ;
 
 // 函数
-protocolFunctionStatement: (annotationSupport)? id Colon (left_paren templateDefine right_paren | templateDefine)? left_paren parameterClauseIn 
+protocolFunctionStatement: (annotationSupport)? id templateDefine? Colon left_paren parameterClauseIn 
 t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut right_paren;
 
 // 函数
-functionStatement: id Equal (left_paren templateDefine right_paren | templateDefine)? left_paren parameterClauseIn
+functionStatement: id templateDefine? Equal left_paren parameterClauseIn
  (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)?
   right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 返回
@@ -354,7 +354,7 @@ name: id (call New_Line? id)* ;
 
 templateDefine: templateDefineItem+;
 
-templateDefineItem: Back_Quote (id | id Colon id); 
+templateDefineItem: Back_Quote (id | left_paren id Colon id right_paren); 
 
 templateCall: (Back_Quote typeType)+;
 
