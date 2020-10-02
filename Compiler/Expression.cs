@@ -129,13 +129,6 @@ case 3 :
 var e2 = Visit(context.GetChild(2));
 var op = Visit(context.GetChild(1));
 switch (context.GetChild(1)) {
-case CompareCombineContext it :
-{ r.data=I32;
-var s1 = e1.text;
-var s2 = ((Result)(e2)).text;
-r.text=(new System.Text.StringBuilder().Append(s1).Append(" > ").Append(s2).Append(" ? 1 : ( ").Append(s1).Append("==").Append(s2).Append(" ? 0 : -1 )")).to_str();
-return r;
-} break;
 case IteratorContext it :
 { var fn = (Func<Result, Result, Result>)(op);
 r = fn(e1, (Result)(e2));

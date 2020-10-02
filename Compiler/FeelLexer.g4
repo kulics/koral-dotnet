@@ -11,8 +11,7 @@ Colon_Colon:		'::';
 Equal_Equal:        '==';
 Less_Equal:         '<=';
 Greater_Equal:      '>=';
-Not_Equal:          '><';
-Combine_Equal:      '<>';
+Not_Equal:          '<>';
 
 Dot_Dot_Dot: 		'...';
 Dot_Dot_Less:		'..<';

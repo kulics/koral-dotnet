@@ -220,13 +220,6 @@ FeelLangVisitor = $ me {
             !op = Visit(context.GetChild(1))
 
             context.GetChild(1) :: 
-            | CompareCombineContext ? {
-                r.data = I32
-                s1 = e1.text
-                s2 = (e2 !! Result).text
-                r.text = "${s1} > ${s2} ? 1 : ( ${s1}==${s2} ? 0 : -1 )"
-                <- r
-            }
             | IteratorContext ? {
                 fn = op !! (Result, Result->Result)
                 r = fn(e1, e2 !! Result)

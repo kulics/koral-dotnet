@@ -86,7 +86,7 @@ overrideConstantStatement |
 New_Line;
 
 // 包含
-includeStatement: Dot typeType;
+includeStatement: typeType;
 // 包构造方法
 packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arrow Coin p=Question? (id (more id)?)? right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
@@ -286,7 +286,6 @@ linq // 联合查询
 | expression iterator expression // 迭代器
 | expression typeConversion // 类型转换
 | expression typeCheck // 类型判断
-| expression compareCombine expression // 组合比较表达式
 | expression compare expression // 比较表达式
 | expression logic expression // 逻辑表达式
 | expression judgeExpression // 判断表达式
@@ -471,7 +470,6 @@ bitwiseNot: Tilde_Tilde_Tilde;
 bitwiseXor: Caret_Caret_Caret;
 bitwiseLeftShift: Less_Less_Less;
 bitwiseRightShift: Greater_Greater_Greater;
-compareCombine: Combine_Equal;
 compare: op=(Equal_Equal | Not_Equal | Less_Equal | Greater_Equal | Less | Greater) (New_Line)?;
 logic: op=(And_And | Or_Or) (New_Line)?;
 assign: op=(Equal | Add_Equal | Sub_Equal | Mul_Equal | Div_Equal | Mod_Equal | Pow_Equal) (New_Line)?;
