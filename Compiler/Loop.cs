@@ -18,14 +18,16 @@ public string close = T;
 }
 public partial class FeelLangVisitor{
 public  override  object VisitIterator( IteratorContext context ){
-Func<Result, Result, Result> fn = (e1, e2)=>{var it = (new Iterator());
+Func<Result, Result> fn = (e1)=>{var it = (new Iterator());
 if ( context.Dot_Dot_Dot()!=null||context.Dot_Dot_Greater()!=null ) {
 it.order=F;
 }
 if ( context.Dot_Dot_Less()!=null||context.Dot_Dot_Greater()!=null ) {
 it.close=F;
 }
-if ( context.expression()==null ) {
+var e2 = (Result)(Visit(context.expression(0)));
+var step = context.expression(1);
+if ( step==null ) {
 it.begin=e1;
 it.end=e2;
 it.step=(new Result(){data = I32,text = "1"});
@@ -33,7 +35,7 @@ it.step=(new Result(){data = I32,text = "1"});
 else {
 it.begin=e1;
 it.end=e2;
-it.step=(Result)(Visit(context.expression()));
+it.step=(Result)(Visit(step));
 }
 var r = (new Result());
 r.data="IEnumerable<int>";

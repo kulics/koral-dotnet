@@ -220,11 +220,6 @@ FeelLangVisitor = $ me {
             !op = Visit(context.GetChild(1))
 
             context.GetChild(1) :: 
-            | IteratorContext ? {
-                fn = op !! (Result, Result->Result)
-                r = fn(e1, e2 !! Result)
-                <- r
-            }
             | CompareContext ? {
                 r.data = Bool
             }
@@ -260,6 +255,10 @@ FeelLangVisitor = $ me {
         | 2 ? {
             r = Visit(context.GetChild(0)) !! Result
             context.GetChild(1) :: 
+            | IteratorContext => it ? {
+                fn = Visit(it) !! (Result->Result)
+                <- fn(r)
+            }
             | TypeConversionContext => it ? {
                 e2 = Visit(it) !! str
                 r.data = e2

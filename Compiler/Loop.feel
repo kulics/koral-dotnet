@@ -21,7 +21,7 @@ Iterator = $ {
 
 FeelLangVisitor = $ me {
     .VisitIterator = (context: IteratorContext -> v: any) {
-        fn: (Result, Result->Result) = (e1, e2) {
+        fn: (Result->Result) = (e1) {
             it = Iterator{}
             context.Dot_Dot_Dot() >< nil || context.Dot_Dot_Greater() >< nil ? {
                 it.order = F
@@ -29,7 +29,9 @@ FeelLangVisitor = $ me {
             context.Dot_Dot_Less() >< nil || context.Dot_Dot_Greater() >< nil ? {
                 it.close = F
             }
-            context.expression() == nil ? {
+            e2 = Visit(context.expression(0)) !! Result
+            step = context.expression(1)
+            step == nil ? {
                 it.begin = e1
                 it.end = e2
                 it.step = Result{
@@ -40,7 +42,7 @@ FeelLangVisitor = $ me {
             | ? {
                 it.begin = e1
                 it.end = e2
-                it.step = Visit(context.expression()) !! Result
+                it.step = Visit(step) !! Result
             }
             r = Result{}
             r.data = "IEnumerable<int>"

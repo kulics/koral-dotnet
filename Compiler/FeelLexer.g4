@@ -46,6 +46,7 @@ Tilde_Tilde_Tilde: 			'~~~';
 And_And: 			'&&';
 Or_Or: 				'||';
 Tilde_Tilde: 		'~~';
+Caret_Caret:		'^^';
 
 Question_Question:	'??';
 Bang_Bang:			'!!';

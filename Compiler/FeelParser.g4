@@ -283,7 +283,7 @@ linq // 联合查询
 | expression mul expression // 积型表达式
 | expression add expression // 和型表达式
 | expression bitwise expression // 位运算表达式
-| expression iterator expression // 迭代器
+| expression iterator // 迭代器
 | expression typeConversion // 类型转换
 | expression typeCheck // 类型判断
 | expression compare expression // 比较表达式
@@ -461,7 +461,7 @@ nilExpr: NilLiteral;
 boolExpr: t=TrueLiteral|t=FalseLiteral;
 
 // 迭代器
-iterator: (Tilde expression)? (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater);
+iterator: (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater) expression (Caret_Caret expression)?;
 bitwise: (bitwiseAnd | bitwiseOr | bitwiseXor 
 | bitwiseLeftShift | bitwiseRightShift) (New_Line)?;
 bitwiseAnd: And_And_And;

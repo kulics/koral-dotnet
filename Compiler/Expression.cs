@@ -129,11 +129,6 @@ case 3 :
 var e2 = Visit(context.GetChild(2));
 var op = Visit(context.GetChild(1));
 switch (context.GetChild(1)) {
-case IteratorContext it :
-{ var fn = (Func<Result, Result, Result>)(op);
-r = fn(e1, (Result)(e2));
-return r;
-} break;
 case CompareContext it :
 { r.data=Bool;
 } break;
@@ -170,6 +165,10 @@ r.text=e1.text+op+((Result)(e2)).text;
 case 2 :
 { r = (Result)(Visit(context.GetChild(0)));
 switch (context.GetChild(1)) {
+case IteratorContext it :
+{ var fn = (Func<Result, Result>)(Visit(it));
+return fn(r);
+} break;
 case TypeConversionContext it :
 { var e2 = (string)(Visit(it));
 r.data=e2;
