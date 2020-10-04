@@ -130,7 +130,7 @@ r.text+=context.op.Text;
 r.isVirtual=true;
 }
 else if ( context.op.Type==IDPrivate ) {
-r.permission="protected";
+r.permission="protected internal";
 r.text+=context.op.Text;
 r.isVirtual=true;
 }

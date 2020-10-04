@@ -133,7 +133,7 @@ obj = " async "+obj;
 }
 this.delete_func_stack();
 if ( context.n!=null ) {
-obj = "protected "+obj;
+obj = "protected internal "+obj;
 }
 else {
 obj = (new System.Text.StringBuilder().Append(id.permission).Append(" ")).to_str()+obj;
