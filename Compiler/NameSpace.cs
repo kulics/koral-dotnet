@@ -40,7 +40,7 @@ this.add_type(childContext.Comment_Tag().GetText().sub_str(2));
 }
 foreach (var item in context.namespaceSupportStatement()){
 var type = item.GetChild(0).GetType();
-if ( type==typeof(NamespaceVariableStatementContext)||type==typeof(NamespaceFunctionStatementContext)||type==typeof(NamespaceConstantStatementContext) ) {
+if ( type==typeof(NamespaceVariableStatementContext)||type==typeof(NamespaceFunctionStatementContext) ) {
 contentStatic+=Visit(item);
 }
 else if ( type==typeof(ImportStatementContext) ) {
@@ -184,23 +184,6 @@ this.delete_func_stack();
 obj = id.permission+" static "+obj;
 return obj;
 }
-public  override  object VisitNamespaceConstantStatement( NamespaceConstantStatementContext context ){
-var id = (Result)(Visit(context.id()));
-var expr = (Result)(Visit(context.expression()));
-var typ = "";
-if ( context.typeType()!=null ) {
-typ = (string)(Visit(context.typeType()));
-}
-else {
-typ = (string)(expr.data);
-}
-var obj = "";
-if ( context.annotationSupport()!=null ) {
-obj+=Visit(context.annotationSupport());
-}
-obj+=(new System.Text.StringBuilder().Append(id.permission).Append(" const ").Append(typ).Append(" ").Append(id.text).Append(" = ").Append(expr.text).Append(Terminate).Append(Wrap)).to_str();
-return obj;
-}
 public  override  object VisitNamespaceVariableStatement( NamespaceVariableStatementContext context ){
 var r1 = (Result)(Visit(context.id()));
 this.add_id(r1.text);
@@ -213,6 +196,38 @@ typ = (string)(r2.data);
 }
 if ( context.typeType()!=null ) {
 typ = (string)(Visit(context.typeType()));
+}
+isMutable = true;
+if ( !r1.isMutable ) {
+switch (typ) {
+case "int" :
+{ isMutable = false;
+} break;case "uint" :
+{ isMutable = false;
+} break;case "long" :
+{ isMutable = false;
+} break;case "ulong" :
+{ isMutable = false;
+} break;case "ushort" :
+{ isMutable = false;
+} break;case "short" :
+{ isMutable = false;
+} break;case "byte" :
+{ isMutable = false;
+} break;case "sbyte" :
+{ isMutable = false;
+} break;case "float" :
+{ isMutable = false;
+} break;case "double" :
+{ isMutable = false;
+} break;case "bool" :
+{ isMutable = false;
+} break;case "char" :
+{ isMutable = false;
+} break;case "string" :
+{ isMutable = false;
+} break;
+}
 }
 var obj = "";
 if ( context.annotationSupport()!=null ) {
@@ -238,7 +253,7 @@ this.selfPropertyContent.clear();
 this.selfPropertyID="";
 this.selfPropertyVariable=false;
 }
-else {
+else if ( isMutable||r2==null ) {
 obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text)).to_str();
 if ( r2!=null ) {
 obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
@@ -246,6 +261,9 @@ obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Termi
 else {
 obj+=Terminate+Wrap;
 }
+}
+else {
+obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" const ").Append(typ).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
 }
 return obj;
 }

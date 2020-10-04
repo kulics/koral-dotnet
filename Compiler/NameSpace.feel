@@ -45,8 +45,7 @@ FeelLangVisitor = $ me {
         context.namespaceSupportStatement() @ item {
             type = item.GetChild(0).GetType()
             type == typeof(NamespaceVariableStatementContext) ||
-            type == typeof(NamespaceFunctionStatementContext) ||
-            type == typeof(NamespaceConstantStatementContext) ? {
+            type == typeof(NamespaceFunctionStatementContext) ? {
                 contentStatic += Visit(item)
             }
             | type == typeof(ImportStatementContext) ? {
@@ -205,26 +204,6 @@ FeelLangVisitor = $ me {
         <- obj
     }
 
-    .VisitNamespaceConstantStatement = (context: NamespaceConstantStatementContext -> v: any) {
-        id = Visit(context.id()) !! Result
-        expr = Visit(context.expression()) !! Result
-        !typ = ""
-        context.typeType() >< nil ? {
-            typ = Visit(context.typeType()) !! str
-        }
-        | ? {
-            typ = expr.data !! str
-        }
-
-        !obj = ""
-        context.annotationSupport() >< nil ? {
-            obj += Visit(context.annotationSupport())
-        }
-        
-        obj += "${id.permission} const ${typ} ${id.text} = ${expr.text; Terminate; Wrap}"
-        <- obj
-    }
-
     .VisitNamespaceVariableStatement = (context: NamespaceVariableStatementContext -> v: any) {
         r1 = Visit(context.id()) !! Result
         me.add_id(r1.text)
@@ -237,6 +216,13 @@ FeelLangVisitor = $ me {
         }
         context.typeType() >< nil ? {
             typ = Visit(context.typeType()) !! str
+        }
+        isMutable = true
+        ~~r1.isMutable ? {
+            typ ==
+            | "int" | "uint" | "long" | "ulong" | "ushort" | "short" | "byte" | "sbyte" | "float" | "double" | "bool" | "char" | "string" ? {
+                isMutable = false
+            }
         }
         !obj = ""
         context.annotationSupport() >< nil ? {
@@ -262,7 +248,7 @@ FeelLangVisitor = $ me {
             me.selfPropertyID = ""
             me.selfPropertyVariable = false
         }
-        | ? {
+        | isMutable || r2 == nil ? {
             obj += "${r1.permission} static ${typ} ${r1.text}"
             r2 >< nil ? {
                 obj += " = ${r2.text; Terminate; Wrap}"
@@ -270,6 +256,9 @@ FeelLangVisitor = $ me {
             | ? {
                 obj += Terminate + Wrap
             }
+        }
+        | ? {
+            obj += "${r1.permission} const ${typ} ${r1.text} = ${r2.text; Terminate; Wrap}"
         }
         <- obj
     }

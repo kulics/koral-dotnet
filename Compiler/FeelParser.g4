@@ -17,7 +17,6 @@ packageStatement |
 implementStatement |
 namespaceFunctionStatement |
 namespaceVariableStatement |
-namespaceConstantStatement |
 enumStatement |
 typeRedefineStatement |
 typeTagStatement |
@@ -27,25 +26,23 @@ New_Line ;
 importStatement: Right_Arrow left_brace ((importSubStatement | typeAliasStatement) end|New_Line)*
 ((importSubStatement | typeAliasStatement) end?)? right_brace;
 
-importSubStatement: (annotationSupport)? ((Bang? id|Dot) Equal)?
+importSubStatement: (annotationSupport)? ((id|Dot) Equal)?
  (nameSpaceItem stringExpr? | nameSpaceItem? stringExpr);
 
 // 类型别名
-typeAliasStatement: Bang? id Equal typeType;
+typeAliasStatement: id Equal typeType;
 // 类型重定义
-typeRedefineStatement: Bang? id Equal New_Line* typeType;
+typeRedefineStatement: id Equal New_Line* typeType;
 // 特殊类型注释
 typeTagStatement: Comment_Tag; 
 
 // 枚举
-enumStatement: (annotationSupport)? Bang? id Equal New_Line* Coin
+enumStatement: (annotationSupport)? id Equal New_Line* Coin
  left_brace (enumSupportStatement end|New_Line)* enumSupportStatement end? right_brace;
 
 enumSupportStatement: Or id (Equal (add)? integerExpr)?;
 // 命名空间变量
-namespaceVariableStatement: (annotationSupport)? Bang id (Equal expression | Colon typeType (Equal expression)?);
-// 命名空间常量
-namespaceConstantStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
+namespaceVariableStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
 // 命名空间函数
 namespaceFunctionStatement: (annotationSupport)? id templateDefine? Equal
  left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
@@ -59,13 +56,10 @@ packageStaticStatement: Coin left_brace (packageStaticSupportStatement end|New_L
 // 包静态语句
 packageStaticSupportStatement:
 packageStaticFunctionStatement |
-packageStaticVariableStatement |
-packageStaticConstantStatement ;
+packageStaticVariableStatement ;
 
 // 定义变量
-packageStaticVariableStatement: (annotationSupport)? Bang id (Equal expression | Colon typeType (Equal expression)?);
-// 定义常量
-packageStaticConstantStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
+packageStaticVariableStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
 // 函数
 packageStaticFunctionStatement: (annotationSupport)? id templateDefine? Equal
  left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
@@ -78,11 +72,9 @@ packageSupportStatement:
 includeStatement |
 packageFunctionStatement |
 packageVariableStatement |
-packageConstantStatement |
 packageEventStatement |
 overrideFunctionStatement |
 overrideVariableStatement |
-overrideConstantStatement |
 New_Line;
 
 // 包含
@@ -91,24 +83,20 @@ includeStatement: typeType;
 packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arrow Coin p=Question? (id (more id)?)? right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 定义变量
-packageVariableStatement: (annotationSupport)? Bang id (Equal expression | Colon typeType (Equal expression)?);
-// 定义常量
-packageConstantStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
+packageVariableStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
 // 函数
 packageFunctionStatement: (annotationSupport)? id templateDefine? Equal
  left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
 parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 定义包事件
-packageEventStatement: Bang id left_brack Right_Arrow right_brack nameSpaceItem;
+packageEventStatement: id left_brack Right_Arrow right_brack nameSpaceItem;
 
 // 扩展
 implementStatement: id templateDefine? Colon Equal
 (packageNewStatement|packageFieldStatement);
 
 // 定义变量
-overrideVariableStatement: (annotationSupport)? Dot (n='_')? Bang id (Equal expression | Colon typeType (Equal expression)?);
-// 定义常量
-overrideConstantStatement: (annotationSupport)? Dot (n='_')? id (Equal expression | Colon typeType (Equal expression)?);
+overrideVariableStatement: (annotationSupport)? Dot id (Equal expression | Colon typeType (Equal expression)?);
 // 函数
 overrideFunctionStatement: (annotationSupport)? Dot (n='_')? id templateDefine? Equal
  left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
@@ -164,9 +152,6 @@ checkStatement |
 checkReportStatement |
 functionStatement |
 variableDeclaredStatement |
-constantDeclaredStatement |
-varStatement |
-varTypeStatement |
 bindStatement |
 bindTypeStatement |
 assignStatement |
@@ -217,7 +202,7 @@ checkStatement:
  left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)* checkFinallyStatment 
 | left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)+ ;
 // 定义检查变量
-usingStatement: Right_Arrow Bang? constId (more constId)* Equal
+usingStatement: Right_Arrow Bang? varId (more varId)* Equal
 tupleExpression left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace ;
 // 错误处理
 checkErrorStatement: New_Line? And (id | id Colon typeType) Bang left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
@@ -227,24 +212,17 @@ checkFinallyStatment: New_Line? And Bang left_brace (functionSupportStatement en
 checkReportStatement: Bang Left_Arrow expression ;
 
 // 声明变量
-variableDeclaredStatement: Bang id Colon typeType ;
-// 声明常量
-constantDeclaredStatement: id Colon typeType ;
-// 定义
-varStatement: varId (more varId)* Equal tupleExpression ;
-varTypeStatement: varIdType (more varIdType)* Equal tupleExpression ;
+variableDeclaredStatement: id Colon typeType ;
 // 绑定
-bindStatement: constId (more constId)* Equal tupleExpression ;
-bindTypeStatement: constIdType (more constIdType)* Equal tupleExpression ;
+bindStatement: varId (more varId)* Equal tupleExpression ;
+bindTypeStatement: varIdType (more varIdType)* Equal tupleExpression ;
 // 复合赋值
 assignStatement: tupleExpression assign tupleExpression ;
 // 表达式
 expressionStatement: expression ;
 
-varId: Bang id | Discard;
-varIdType: Bang id Colon typeType | Discard;
-constId: id | Discard;
-constIdType: id Colon typeType | Discard;
+varId: id | Discard;
+varIdType: id Colon typeType | Discard;
 
 tupleExpression: expression (more expression)* ; // 元组
 // 基础表达式
@@ -481,7 +459,7 @@ wave: op=Tilde_Tilde;
 
 id: (idItem);
 
-idItem: op=(IDPublic|IDPrivate) |
+idItem: Identifier |
 typeBasic |
 typeAny ;
 

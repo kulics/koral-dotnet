@@ -49,7 +49,7 @@ return obj;
 }
 public  override  object VisitUsingStatement( UsingStatementContext context ){
 var obj = "";
-foreach (var (i, v) in range(context.constId())){
+foreach (var (i, v) in range(context.varId())){
 if ( i!=0 ) {
 obj+=","+Visit(v);
 }
@@ -57,7 +57,7 @@ else {
 obj+=Visit(v);
 }
 }
-if ( context.constId().Length>1 ) {
+if ( context.varId().Length>1 ) {
 obj = "("+obj+")";
 }
 var r2 = (Result)(Visit(context.tupleExpression()));

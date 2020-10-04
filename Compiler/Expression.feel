@@ -100,7 +100,7 @@ DicEle = $ {
 }
 
 FeelLangVisitor = $ me {
-    .VisitVarStatement = (context: VarStatementContext -> v: any) {
+    .VisitBindStatement = (context: BindStatementContext -> v: any) {
         !obj = ""
         context.varId() @ [i]v {
             i >< 0 ? {
@@ -118,7 +118,7 @@ FeelLangVisitor = $ me {
         <- obj
     }
 
-    .VisitVarTypeStatement = (context: VarTypeStatementContext -> v: any) {
+    .VisitBindTypeStatement = (context: BindTypeStatementContext -> v: any) {
         !obj = ""
         context.varIdType() @ [i]v {
             i >< 0 ? {
@@ -136,54 +136,7 @@ FeelLangVisitor = $ me {
         <- obj
     }
 
-    .VisitBindStatement = (context: BindStatementContext -> v: any) {
-        !obj = ""
-        context.constId() @ [i]v {
-            i >< 0 ? {
-                obj += "," + Visit(v)
-            }
-            | ? {
-                obj += Visit(v)
-            }
-        }
-        context.constId().Length > 1 ? {
-            obj = "(" + obj + ")"
-        }
-        r2 = Visit(context.tupleExpression()) !! Result
-        obj += " = ${r2.text; Terminate; Wrap}"
-        <- obj
-    }
-
-    .VisitBindTypeStatement = (context: BindTypeStatementContext -> v: any) {
-        !obj = ""
-        context.constIdType() @ [i]v {
-            i >< 0 ? {
-                obj += "," + Visit(v)
-            }
-            | ? {
-                obj += Visit(v)
-            }
-        }
-        context.constIdType().Length > 1 ? {
-            obj = "(" + obj + ")"
-        }
-        r2 = Visit(context.tupleExpression()) !! Result
-        obj += " = ${r2.text; Terminate; Wrap}"
-        <- obj
-    }
-
     .VisitVariableDeclaredStatement = (context: VariableDeclaredStatementContext -> v: any) {
-        !obj = ""
-        Type = Visit(context.typeType()) !! str
-        r = Visit(context.id()) !! Result
-        ~~me.has_id(r.text) ? {
-            me.add_id(r.text)
-        }
-        obj = "${Type} ${r.text; Terminate; Wrap}"
-        <- obj
-    }
-
-    .VisitConstantDeclaredStatement = (context: ConstantDeclaredStatementContext -> v: any) {
         !obj = ""
         Type = Visit(context.typeType()) !! str
         r = Visit(context.id()) !! Result

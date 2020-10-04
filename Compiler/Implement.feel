@@ -143,7 +143,7 @@ FeelLangVisitor = $ me {
         }
         me.delete_func_stack()
         context.n >< nil ? {
-            obj = "protected internal " + obj
+            obj = "protected " + obj
         }
         | ? {
             obj = "${id.permission} " + obj

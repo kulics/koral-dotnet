@@ -49,9 +49,10 @@ Task = "System.Threading.Tasks.Task"
 Result = $ {
     !data: any
     !text: str
-    !permission: str
+    !permission: str = "public"
     !isVirtual: bool
     !isDefine: bool
+    !isMutable: bool
     !rootID: str = ""
 }
 
@@ -172,55 +173,31 @@ FeelLangVisitor = $ me {
     .VisitIdItem = (context: IdItemContext -> v: any) {
         r = Result{data = "var"}
         context.typeBasic() >< nil ? {
-            r.permission = "public"
             r.text += context.typeBasic().GetText()
             r.isVirtual = true
+            <- r
         }
-        | context.typeAny() >< nil ? {
-            r.permission = "public"
+        context.typeAny() >< nil ? {
             r.text += context.typeAny().GetText()
             r.isVirtual = true
+            <- r
         }
-        | context.op.Type == IDPublic ? {
-            r.permission = "public"
-            r.text += context.op.Text
-            r.isVirtual = true
-        }
-        | context.op.Type == IDPrivate ? {
+        id = context.Identifier().GetText()
+        r.text += id
+        r.isVirtual = true
+        id[0] == '_' ? {
             r.permission = "protected internal"
-            r.text += context.op.Text
-            r.isVirtual = true
+            id[1].is_lower() ? {
+                r.isMutable = true
+            }
+        }
+        | id[0].is_lower() ? {
+            r.isMutable = true
         }
         <- r
     }
 
     .VisitVarId = (context: VarIdContext -> v: any) {
-        context.Discard() >< nil ? {
-            <- "_"
-        }
-        | ? {
-            id = (Visit(context.id()) !! Result).text
-            ~~me.has_id(id) ? {
-                me.add_id(id)
-            }
-            <- "var " + id
-        }
-    }
-
-    .VisitVarIdType = (context: VarIdTypeContext -> v: any) {
-        context.Discard() >< nil ? {
-            <- "_"
-        }
-        | ? {
-            id = (Visit(context.id()) !! Result).text
-            ~~me.has_id(id) ? {
-                me.add_id(id)
-            }
-            <- Visit(context.typeType()) + " " + id
-        }
-    }
-
-    .VisitConstId = (context: ConstIdContext -> v: any) {
         context.Discard() >< nil ? {
             <- "_"
         }
@@ -236,7 +213,7 @@ FeelLangVisitor = $ me {
         }
     }
 
-    .VisitConstIdType = (context: ConstIdTypeContext -> v: any) {
+    .VisitVarIdType = (context: VarIdTypeContext -> v: any) {
         context.Discard() >< nil ? {
             <- "_"
         }
@@ -319,7 +296,7 @@ FeelLangVisitor = $ me {
             }
             <- ""
         }
-        | "_get" ? {
+        | "get_" ? {
             context.lambda() == nil ? {
                 me.selfPropertyVariable = true
                 me.selfPropertyContent += "private get{return _${ me.selfPropertyID }; }"
@@ -329,7 +306,7 @@ FeelLangVisitor = $ me {
             }
             <- ""
         }
-        | "_set" ? {
+        | "set_" ? {
             context.lambda() == nil ? {
                 me.selfPropertyVariable = true
                 me.selfPropertyContent += "private set{_${ me.selfPropertyID }=value;}"

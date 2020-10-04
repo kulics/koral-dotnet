@@ -12,9 +12,10 @@ namespace Compiler
 public partial class Result{
 public object data;
 public string text;
-public string permission;
+public string permission = "public";
 public bool isVirtual;
 public bool isDefine;
+public bool isMutable;
 public string rootID = "";
 }
 public partial class FeelLangVisitor:FeelParserBaseVisitor<object>{
@@ -115,52 +116,30 @@ return r;
 public  override  object VisitIdItem( IdItemContext context ){
 var r = (new Result(){data = "var"});
 if ( context.typeBasic()!=null ) {
-r.permission="public";
 r.text+=context.typeBasic().GetText();
 r.isVirtual=true;
+return r;
 }
-else if ( context.typeAny()!=null ) {
-r.permission="public";
+if ( context.typeAny()!=null ) {
 r.text+=context.typeAny().GetText();
 r.isVirtual=true;
+return r;
 }
-else if ( context.op.Type==IDPublic ) {
-r.permission="public";
-r.text+=context.op.Text;
+var id = context.Identifier().GetText();
+r.text+=id;
 r.isVirtual=true;
-}
-else if ( context.op.Type==IDPrivate ) {
+if ( id[0]=='_' ) {
 r.permission="protected internal";
-r.text+=context.op.Text;
-r.isVirtual=true;
+if ( id[1].is_lower() ) {
+r.isMutable=true;
+}
+}
+else if ( id[0].is_lower() ) {
+r.isMutable=true;
 }
 return r;
 }
 public  override  object VisitVarId( VarIdContext context ){
-if ( context.Discard()!=null ) {
-return "_";
-}
-else {
-var id = ((Result)(Visit(context.id()))).text;
-if ( !this.has_id(id) ) {
-this.add_id(id);
-}
-return "var "+id;
-}
-}
-public  override  object VisitVarIdType( VarIdTypeContext context ){
-if ( context.Discard()!=null ) {
-return "_";
-}
-else {
-var id = ((Result)(Visit(context.id()))).text;
-if ( !this.has_id(id) ) {
-this.add_id(id);
-}
-return Visit(context.typeType())+" "+id;
-}
-}
-public  override  object VisitConstId( ConstIdContext context ){
 if ( context.Discard()!=null ) {
 return "_";
 }
@@ -175,7 +154,7 @@ return "var "+id;
 }
 }
 }
-public  override  object VisitConstIdType( ConstIdTypeContext context ){
+public  override  object VisitVarIdType( VarIdTypeContext context ){
 if ( context.Discard()!=null ) {
 return "_";
 }
@@ -251,7 +230,7 @@ this.selfPropertyContent+=(new System.Text.StringBuilder().Append("set{").Append
 }
 return "";
 } break;
-case "_get" :
+case "get_" :
 { if ( context.lambda()==null ) {
 this.selfPropertyVariable=true;
 this.selfPropertyContent+=(new System.Text.StringBuilder().Append("private get{return _").Append(this.selfPropertyID).Append("; }")).to_str();
@@ -261,7 +240,7 @@ this.selfPropertyContent+=(new System.Text.StringBuilder().Append("private get{"
 }
 return "";
 } break;
-case "_set" :
+case "set_" :
 { if ( context.lambda()==null ) {
 this.selfPropertyVariable=true;
 this.selfPropertyContent+=(new System.Text.StringBuilder().Append("private set{_").Append(this.selfPropertyID).Append("=value;}")).to_str();

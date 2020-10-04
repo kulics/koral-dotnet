@@ -121,8 +121,7 @@ fragment Exponent: [eE] [+-]? [0-9]+;
 Quote_Quote_Quote_Open: '"""' -> pushMode(ModeRawString); // 多行字符串
 Quote_Open: '"' -> pushMode(ModeString); // 单行字符串
 CharLiteral: '\'' ('\\\'' | '\\' [btnfr\\] | .)*? '\''; // 单字符
-IDPrivate: '_' IdentifierPartCharacter+; // 私有标识符
-IDPublic: LetterCharacter IdentifierPartCharacter*; // 公有标识符
+Identifier: '_'? LetterCharacter IdentifierPartCharacter*; // 公有标识符
 Discard: '_'; // 匿名变量
 
 Comment_Tag: '##' ~[\r\n]* ; // 特殊注释

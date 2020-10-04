@@ -57,7 +57,7 @@ FeelLangVisitor = $ me {
 
     .VisitUsingStatement = (context: UsingStatementContext -> v: any) {
         !obj = ""
-        context.constId() @ [i]v {
+        context.varId() @ [i]v {
             i >< 0 ? {
                 obj += "," + Visit(v)
             }
@@ -65,7 +65,7 @@ FeelLangVisitor = $ me {
                 obj += Visit(v)
             }
         }
-        context.constId().Length > 1 ? {
+        context.varId().Length > 1 ? {
             obj = "(" + obj + ")"
         }
         r2 = Visit(context.tupleExpression()) !! Result
