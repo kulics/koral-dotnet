@@ -31,7 +31,7 @@ if ( context.expression()==null ) {
 return ((new Result(){text = (string)(Visit(context.slice()))}));
 }
 var r = (Result)(Visit(context.expression()));
-r.text=(new System.Text.StringBuilder().Append("[").Append(r.text).Append("]")).to_str();
+r.text=(new System.Text.StringBuilder().Append("[").Append(r.text).Append("]")).To_Str();
 return r;
 }
 public  override  object VisitSlice( SliceContext context ){
@@ -44,7 +44,7 @@ order = "false";
 }
 var expr1 = (Result)(Visit(context.expression(0)));
 var expr2 = (Result)(Visit(context.expression(1)));
-return (new System.Text.StringBuilder().Append(".slice(").Append(expr1.text).Append(", ").Append(expr2.text).Append(", ").Append(order).Append(")")).to_str();
+return (new System.Text.StringBuilder().Append(".Slice(").Append(expr1.text).Append(", ").Append(expr2.text).Append(", ").Append(order).Append(")")).To_Str();
 }
 public  override  object VisitSliceStart( SliceStartContext context ){
 var order = "true";
@@ -52,7 +52,7 @@ if ( context.Dot_Dot()==null ) {
 order = "false";
 }
 var expr = (Result)(Visit(context.expression()));
-return (new System.Text.StringBuilder().Append(".slice(").Append(expr.text).Append(", null, ").Append(order).Append(")")).to_str();
+return (new System.Text.StringBuilder().Append(".Slice(").Append(expr.text).Append(", null, ").Append(order).Append(")")).To_Str();
 }
 public  override  object VisitSliceEnd( SliceEndContext context ){
 var order = "true";
@@ -60,7 +60,7 @@ if ( context.Dot_Dot()==null ) {
 order = "false";
 }
 var expr = (Result)(Visit(context.expression()));
-return (new System.Text.StringBuilder().Append(".slice(null, ").Append(expr.text).Append(", ").Append(order).Append(")")).to_str();
+return (new System.Text.StringBuilder().Append(".Slice(null, ").Append(expr.text).Append(", ").Append(order).Append(")")).To_Str();
 }
 public  override  object VisitCallFunc( CallFuncContext context ){
 var r = (new Result(){data = "var",text = ((Result)(Visit(context.tuple()))).text});
@@ -71,7 +71,7 @@ var r = (new Result());
 var expr = (Result)(Visit(context.expression()));
 r.data="var";
 r.text="await "+expr.text;
-set_func_async();
+Set_func_async();
 return r;
 }
 public  override  object VisitCallAwait( CallAwaitContext context ){
@@ -80,7 +80,7 @@ return r;
 }
 public  override  object VisitCallPkg( CallPkgContext context ){
 var r = (new Result(){data = Visit(context.typeNotNull())});
-r.text=(new System.Text.StringBuilder().Append("(new ").Append(Visit(context.typeNotNull())).Append("()")).to_str();
+r.text=(new System.Text.StringBuilder().Append("(new ").Append(Visit(context.typeNotNull())).Append("()")).To_Str();
 if ( context.pkgAssign()!=null ) {
 r.text+=Visit(context.pkgAssign());
 }
@@ -139,7 +139,7 @@ return obj;
 }
 public  override  object VisitPkgAssignElement( PkgAssignElementContext context ){
 var obj = "";
-obj+=(new System.Text.StringBuilder().Append(Visit(context.name())).Append(" = ").Append(((Result)(Visit(context.expression()))).text)).to_str();
+obj+=(new System.Text.StringBuilder().Append(Visit(context.name())).Append(" = ").Append(((Result)(Visit(context.expression()))).text)).To_Str();
 return obj;
 }
 public  override  object VisitPkgAnonymous( PkgAnonymousContext context ){
@@ -161,11 +161,11 @@ return obj;
 }
 public  override  object VisitPkgAnonymousAssignElement( PkgAnonymousAssignElementContext context ){
 var obj = "";
-obj+=(new System.Text.StringBuilder().Append(Visit(context.name())).Append(" = ").Append(((Result)(Visit(context.expression()))).text)).to_str();
+obj+=(new System.Text.StringBuilder().Append(Visit(context.name())).Append(" = ").Append(((Result)(Visit(context.expression()))).text)).To_Str();
 return obj;
 }
 public  override  object VisitList( ListContext context ){
-var type = Any;
+var type = TargetTypeAny;
 var result = (new Result());
 foreach (var i in range(0, context.expression().Length, 1, true, false)){
 var r = (Result)(Visit(context.expression(i)));
@@ -175,18 +175,18 @@ result.text+=r.text;
 }
 else {
 if ( type!=((string)(r.data)) ) {
-type = Any;
+type = TargetTypeAny;
 }
 result.text+=","+r.text;
 }
 }
-result.data=(new System.Text.StringBuilder().Append(Lst).Append("<").Append(type).Append(">")).to_str();
-result.text=(new System.Text.StringBuilder().Append("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
+result.data=(new System.Text.StringBuilder().Append(TargetTypeLst).Append("<").Append(type).Append(">")).To_Str();
+result.text=(new System.Text.StringBuilder().Append("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).To_Str();
 return result;
 }
 public  override  object VisitDictionary( DictionaryContext context ){
-var key = Any;
-var value = Any;
+var key = TargetTypeAny;
+var value = TargetTypeAny;
 var result = (new Result());
 foreach (var i in range(0, context.dictionaryElement().Length, 1, true, false)){
 var r = (DicEle)(Visit(context.dictionaryElement(i)));
@@ -197,43 +197,43 @@ result.text+=r.text;
 }
 else {
 if ( key!=r.key ) {
-key = Any;
+key = TargetTypeAny;
 }
 if ( value!=r.value ) {
-value = Any;
+value = TargetTypeAny;
 }
 result.text+=","+r.text;
 }
 }
-var type = (new System.Text.StringBuilder().Append(key).Append(", ").Append(value)).to_str();
-result.data=(new System.Text.StringBuilder().Append(Dic).Append("<").Append(type).Append(">")).to_str();
-result.text=(new System.Text.StringBuilder().Append("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).to_str();
+var type = (new System.Text.StringBuilder().Append(key).Append(", ").Append(value)).To_Str();
+result.data=(new System.Text.StringBuilder().Append(TargetTypeDic).Append("<").Append(type).Append(">")).To_Str();
+result.text=(new System.Text.StringBuilder().Append("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).To_Str();
 return result;
 }
 public  override  object VisitDictionaryElement( DictionaryElementContext context ){
 var r1 = (Result)(Visit(context.expression(0)));
 var r2 = (Result)(Visit(context.expression(1)));
-var result = (new DicEle(){key = (string)(r1.data),value = (string)(r2.data),text = (new System.Text.StringBuilder().Append("{").Append(r1.text).Append(", ").Append(r2.text).Append("}")).to_str()});
+var result = (new DicEle(){key = (string)(r1.data),value = (string)(r2.data),text = (new System.Text.StringBuilder().Append("{").Append(r1.text).Append(", ").Append(r2.text).Append("}")).To_Str()});
 return result;
 }
 public  override  object VisitFunctionExpression( FunctionExpressionContext context ){
 var r = (new Result());
 r.text+=Visit(context.parameterClauseIn())+" => "+BlockLeft+Wrap;
-this.add_current_set();
-this.add_func_stack();
+this.Add_current_set();
+this.Add_func_stack();
 r.text+=ProcessFunctionSupport(context.functionSupportStatement());
-this.delete_current_set();
+this.Delete_current_set();
 r.text+=BlockRight+Wrap;
-if ( get_func_async() ) {
+if ( Get_func_async() ) {
 r.text=" async "+r.text;
 }
-this.delete_func_stack();
+this.Delete_func_stack();
 r.data="var";
 return r;
 }
 public  override  object VisitLambda( LambdaContext context ){
-this.add_current_set();
-this.add_func_stack();
+this.Add_current_set();
+this.Add_func_stack();
 var r = (new Result(){data = "var"});
 r.text+="(";
 if ( context.lambdaIn()!=null ) {
@@ -245,13 +245,13 @@ if ( context.tupleExpression()!=null ) {
 r.text+=((Result)(Visit(context.tupleExpression()))).text;
 }
 else {
-r.text+=(new System.Text.StringBuilder().Append("{").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append("}")).to_str();
+r.text+=(new System.Text.StringBuilder().Append("{").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append("}")).To_Str();
 }
-this.delete_current_set();
-if ( get_func_async()||context.t!=null ) {
+this.Delete_current_set();
+if ( Get_func_async()||context.t!=null ) {
 r.text=" async "+r.text;
 }
-this.delete_func_stack();
+this.Delete_func_stack();
 return r;
 }
 public  override  object VisitLambdaIn( LambdaInContext context ){
@@ -264,7 +264,7 @@ obj+=r.text;
 else {
 obj+=", "+r.text;
 }
-this.add_id(r.text);
+this.Add_ID(r.text);
 }
 return obj;
 }

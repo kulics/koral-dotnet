@@ -25,12 +25,63 @@ public  override  object VisitTypePackage( TypePackageContext context ){
 var obj = "";
 obj+=Visit(context.nameSpaceItem());
 if ( context.templateCall()!=null ) {
-if ( obj=="array" ) {
-obj = (new System.Text.StringBuilder().Append(Visit(context.templateCall())).Append("[]")).to_str();
+if ( obj=="Array" ) {
+obj = (new System.Text.StringBuilder().Append(Visit(context.templateCall())).Append("[]")).To_Str();
 }
 else {
 obj+="<"+Visit(context.templateCall())+">";
 }
+return obj;
+}
+switch (obj) {
+case "I8" :
+{ return TargetTypeI8;
+} break;
+case "U8" :
+{ return TargetTypeU8;
+} break;
+case "I16" :
+{ return TargetTypeI16;
+} break;
+case "U16" :
+{ return TargetTypeU16;
+} break;
+case "I32" :
+{ return TargetTypeI32;
+} break;
+case "U32" :
+{ return TargetTypeU32;
+} break;
+case "I64" :
+{ return TargetTypeI64;
+} break;
+case "U64" :
+{ return TargetTypeU64;
+} break;
+case "F32" :
+{ return TargetTypeF32;
+} break;
+case "F64" :
+{ return TargetTypeF64;
+} break;
+case "Chr" :
+{ return TargetTypeChr;
+} break;
+case "Str" :
+{ return TargetTypeStr;
+} break;
+case "Bool" :
+{ return TargetTypeBool;
+} break;
+case "Int" :
+{ return TargetTypeInt;
+} break;
+case "Num" :
+{ return TargetTypeNum;
+} break;
+case "Byte" :
+{ return TargetTypeU8;
+} break;
 }
 return obj;
 }
@@ -44,43 +95,43 @@ if ( @in.Length==0 ) {
 obj = "Action";
 }
 else {
-obj = (new System.Text.StringBuilder().Append("Action<").Append(@in).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Action<").Append(@in).Append(">")).To_Str();
 }
 }
 else {
-if ( @out.first_index_of(",")>=0 ) {
-@out = (new System.Text.StringBuilder().Append("(").Append(@out).Append(")")).to_str();
+if ( @out.First_index_of(",")>=0 ) {
+@out = (new System.Text.StringBuilder().Append("(").Append(@out).Append(")")).To_Str();
 }
 if ( @in.Length==0 ) {
-obj = (new System.Text.StringBuilder().Append("Func<").Append(@out).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(@out).Append(">")).To_Str();
 }
 else {
-obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(@out).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(@out).Append(">")).To_Str();
 }
 }
 }
 else {
 if ( @out.Length==0 ) {
 if ( @in.Length==0 ) {
-obj = (new System.Text.StringBuilder().Append("Func<").Append(Task).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(Task).Append(">")).To_Str();
 }
 else {
-obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append(">")).To_Str();
 }
 }
 else {
 if ( @in.Length==0 ) {
-obj = (new System.Text.StringBuilder().Append("Func<").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(Task).Append("<").Append(@out).Append(">>")).To_Str();
 }
 else {
-obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).To_Str();
 }
 }
 }
 return obj;
 }
 public  override  object VisitTypeAny( TypeAnyContext context ){
-return Any;
+return TargetTypeAny;
 }
 public  override  object VisitTypeFunctionParameterClause( TypeFunctionParameterClauseContext context ){
 var obj = "";
@@ -94,61 +145,6 @@ obj+=", "+p;
 }
 }
 return obj;
-}
-public  override  object VisitTypeBasic( TypeBasicContext context ){
-switch (context.t.Type) {
-case TypeI8 :
-{ return I8;
-} break;
-case TypeU8 :
-{ return U8;
-} break;
-case TypeI16 :
-{ return I16;
-} break;
-case TypeU16 :
-{ return U16;
-} break;
-case TypeI32 :
-{ return I32;
-} break;
-case TypeU32 :
-{ return U32;
-} break;
-case TypeI64 :
-{ return I64;
-} break;
-case TypeU64 :
-{ return U64;
-} break;
-case TypeF32 :
-{ return F32;
-} break;
-case TypeF64 :
-{ return F64;
-} break;
-case TypeChr :
-{ return Chr;
-} break;
-case TypeStr :
-{ return Str;
-} break;
-case TypeBool :
-{ return Bool;
-} break;
-case TypeInt :
-{ return Int;
-} break;
-case TypeNum :
-{ return Num;
-} break;
-case TypeByte :
-{ return U8;
-} break;
-default:
-{ return Any;
-} break;
-}
 }
 }
 }

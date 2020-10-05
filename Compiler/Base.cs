@@ -12,127 +12,125 @@ namespace Compiler
 public partial class Result{
 public object data;
 public string text;
-public string permission;
-public bool isVirtual;
+public string permission = "public";
+public bool is_virtual;
 public bool isDefine;
+public bool isMutable;
 public string rootID = "";
 }
 public partial class FeelLangVisitor:FeelParserBaseVisitor<object>{
-public string selfID = "";
-public string superID = "";
-public string setID = "";
-public string getID = "";
-public string selfPropertyID = "";
-public list<string> selfPropertyContent = (new list<string>());
-public bool selfPropertyVariable = false;
-public hashset<string> AllIDSet = (new hashset<string>());
-public stack<hashset<string>> CurrentIDSet = (new stack<hashset<string>>());
-public hashset<string> TypeIdSet = (new hashset<string>());
-public stack<bool> FuncAsyncStack = (new stack<bool>());
-public  virtual  bool has_id( string id ){
-return this.AllIDSet.contains(id)||this.CurrentIDSet.peek().contains(id);
+public string self_ID = "";
+public string super_ID = "";
+public string set_ID = "";
+public string get_ID = "";
+public string self_property_ID = "";
+public List<string> self_property_content = (new List<string>());
+public bool self_property_variable = false;
+public HashSet<string> all_ID_set = (new HashSet<string>());
+public Stack<HashSet<string>> cuttent_ID_set = (new Stack<HashSet<string>>());
+public HashSet<string> type_Id_set = (new HashSet<string>());
+public Stack<bool> func_async_stack = (new Stack<bool>());
+public  virtual  bool Has_ID( string id ){
+return this.all_ID_set.Contains(id)||this.cuttent_ID_set.Peek().Contains(id);
 }
-public  virtual  void add_id( string id ){
-this.CurrentIDSet.peek().add(id);
+public  virtual  void Add_ID( string id ){
+this.cuttent_ID_set.Peek().Add(id);
 }
-public  virtual  void add_current_set(){
-foreach (var item in CurrentIDSet.peek()){
-AllIDSet.add(item);
+public  virtual  void Add_current_set(){
+foreach (var item in cuttent_ID_set.Peek()){
+all_ID_set.Add(item);
 }
-this.CurrentIDSet.push((new hashset<string>()));
+this.cuttent_ID_set.Push((new HashSet<string>()));
 }
-public  virtual  void delete_current_set(){
-this.AllIDSet.except_with(this.CurrentIDSet.peek());
-this.CurrentIDSet.pop();
+public  virtual  void Delete_current_set(){
+this.all_ID_set.ExceptWith(this.cuttent_ID_set.Peek());
+this.cuttent_ID_set.Pop();
 }
-public  virtual  bool is_type( string id ){
-return this.TypeIdSet.contains(id);
+public  virtual  bool Is_type( string id ){
+return this.type_Id_set.Contains(id);
 }
-public  virtual  void add_type( string id ){
-this.TypeIdSet.add(id);
+public  virtual  void Add_type( string id ){
+this.type_Id_set.Add(id);
 }
-public  virtual  void add_func_stack(){
-FuncAsyncStack.push(false);
+public  virtual  void Add_func_stack(){
+func_async_stack.Push(false);
 }
-public  virtual  void delete_func_stack(){
-FuncAsyncStack.pop();
+public  virtual  void Delete_func_stack(){
+func_async_stack.Pop();
 }
-public  virtual  bool get_func_async(){
-return FuncAsyncStack.peek();
+public  virtual  bool Get_func_async(){
+return func_async_stack.Peek();
 }
-public  virtual  void set_func_async(){
-if ( FuncAsyncStack.peek() ) {
+public  virtual  void Set_func_async(){
+if ( func_async_stack.Peek() ) {
 return;
 }
-FuncAsyncStack.pop();
-FuncAsyncStack.push(true);
+func_async_stack.Pop();
+func_async_stack.Push(true);
 }
 }
 public partial class FeelLangVisitor{
-public FeelLangVisitor (){this.CurrentIDSet.push((new hashset<string>()));
-FuncAsyncStack.push(false);
+public FeelLangVisitor (){this.cuttent_ID_set.Push((new HashSet<string>()));
+func_async_stack.Push(false);
 }
 }
 public partial class FeelLangVisitor{
 public  override  object VisitProgram( ProgramContext context ){
 var StatementList = context.statement();
-var Result = "";
+var result = "";
 foreach (var item in StatementList){
-Result+=VisitStatement(item);
+result+=VisitStatement(item);
 }
-return Result;
+return result;
 }
 public  override  object VisitId( IdContext context ){
 var r = (new Result(){data = "var"});
 var first = (Result)(Visit(context.GetChild(0)));
 r.permission=first.permission;
 r.text=first.text;
-r.isVirtual=first.isVirtual;
+r.is_virtual=first.is_virtual;
 if ( context.ChildCount>=2 ) {
-foreach (var i in range(1, context.ChildCount-1, 1, true, true)){
+foreach (var i in range(1, context.ChildCount, 1, true, false)){
 var other = (Result)(Visit(context.GetChild(i)));
-r.text+=(new System.Text.StringBuilder().Append("_").Append(other.text)).to_str();
+r.text+=(new System.Text.StringBuilder().Append("_").Append(other.text)).To_Str();
 }
 }
 if ( keywords.Exists((t)=>t==r.text) ) {
-r.text=(new System.Text.StringBuilder().Append("@").Append(r.text)).to_str();
+r.text=(new System.Text.StringBuilder().Append("@").Append(r.text)).To_Str();
 }
-if ( r.text==selfID ) {
+if ( r.text==self_ID ) {
 r.text="this";
 }
-else if ( r.text==superID ) {
+else if ( r.text==super_ID ) {
 r.text="base";
 }
-else if ( r.text==setID ) {
+else if ( r.text==set_ID ) {
 r.text="value";
 }
-else if ( r.text==getID ) {
-r.text="_"+selfPropertyID;
+else if ( r.text==get_ID ) {
+r.text="_"+self_property_ID;
 }
 r.rootID=r.text;
 return r;
 }
 public  override  object VisitIdItem( IdItemContext context ){
 var r = (new Result(){data = "var"});
-if ( context.typeBasic()!=null ) {
-r.permission="public";
-r.text+=context.typeBasic().GetText();
-r.isVirtual=true;
-}
-else if ( context.typeAny()!=null ) {
-r.permission="public";
+if ( context.typeAny()!=null ) {
 r.text+=context.typeAny().GetText();
-r.isVirtual=true;
+r.is_virtual=true;
+return r;
 }
-else if ( context.op.Type==IDPublic ) {
-r.permission="public";
-r.text+=context.op.Text;
-r.isVirtual=true;
+var id = context.Identifier().GetText();
+r.text+=id;
+r.is_virtual=true;
+if ( id[0]=='_' ) {
+r.permission="protected internal";
+if ( id[1].Is_lower() ) {
+r.isMutable=true;
 }
-else if ( context.op.Type==IDPrivate ) {
-r.permission="protected";
-r.text+=context.op.Text;
-r.isVirtual=true;
+}
+else if ( id[0].Is_lower() ) {
+r.isMutable=true;
 }
 return r;
 }
@@ -142,10 +140,13 @@ return "_";
 }
 else {
 var id = ((Result)(Visit(context.id()))).text;
-if ( !this.has_id(id) ) {
-this.add_id(id);
+if ( this.Has_ID(id) ) {
+return id;
 }
+else {
+this.Add_ID(id);
 return "var "+id;
+}
 }
 }
 public  override  object VisitVarIdType( VarIdTypeContext context ){
@@ -154,35 +155,8 @@ return "_";
 }
 else {
 var id = ((Result)(Visit(context.id()))).text;
-if ( !this.has_id(id) ) {
-this.add_id(id);
-}
-return Visit(context.typeType())+" "+id;
-}
-}
-public  override  object VisitConstId( ConstIdContext context ){
-if ( context.Discard()!=null ) {
-return "_";
-}
-else {
-var id = ((Result)(Visit(context.id()))).text;
-if ( this.has_id(id) ) {
-return id;
-}
-else {
-this.add_id(id);
-return "var "+id;
-}
-}
-}
-public  override  object VisitConstIdType( ConstIdTypeContext context ){
-if ( context.Discard()!=null ) {
-return "_";
-}
-else {
-var id = ((Result)(Visit(context.id()))).text;
-if ( !this.has_id(id) ) {
-this.add_id(id);
+if ( !this.Has_ID(id) ) {
+this.Add_ID(id);
 }
 return Visit(context.typeType())+" "+id;
 }
@@ -190,11 +164,11 @@ return Visit(context.typeType())+" "+id;
 public  override  object VisitBoolExpr( BoolExprContext context ){
 var r = (new Result());
 if ( context.t.Type==TrueLiteral ) {
-r.data=Bool;
+r.data=TargetTypeBool;
 r.text=T;
 }
 else if ( context.t.Type==FalseLiteral ) {
-r.data=Bool;
+r.data=TargetTypeBool;
 r.text=F;
 }
 return r;
@@ -224,7 +198,7 @@ public  override  object VisitAnnotationItem( AnnotationItemContext context ){
 var obj = "";
 var id = "";
 if ( context.id().Length==2 ) {
-id = (new System.Text.StringBuilder().Append(((Result)(Visit(context.id(0)))).text).Append(":")).to_str();
+id = (new System.Text.StringBuilder().Append(((Result)(Visit(context.id(0)))).text).Append(":")).To_Str();
 obj+=((Result)(this.Visit(context.id(1)))).text;
 }
 else {
@@ -233,50 +207,50 @@ obj+=((Result)(this.Visit(context.id(0)))).text;
 switch (obj) {
 case "get" :
 { if ( context.lambda()==null ) {
-this.selfPropertyVariable=true;
-this.selfPropertyContent+=(new System.Text.StringBuilder().Append("get{return _").Append(this.selfPropertyID).Append("; }")).to_str();
+this.self_property_variable=true;
+this.self_property_content.Append((new System.Text.StringBuilder().Append("get{return _").Append(this.self_property_ID).Append("; }")).To_Str());
 }
 else {
-this.selfPropertyContent+=(new System.Text.StringBuilder().Append("get{").Append(this.VisitPropertyLambda(context.lambda(), true)).Append("}")).to_str();
+this.self_property_content.Append((new System.Text.StringBuilder().Append("get{").Append(this.VisitPropertyLambda(context.lambda(), true)).Append("}")).To_Str());
 }
 return "";
 } break;
 case "set" :
 { if ( context.lambda()==null ) {
-this.selfPropertyVariable=true;
-this.selfPropertyContent+=(new System.Text.StringBuilder().Append("set{_").Append(this.selfPropertyID).Append("=value;}")).to_str();
+this.self_property_variable=true;
+this.self_property_content.Append((new System.Text.StringBuilder().Append("set{_").Append(this.self_property_ID).Append("=value;}")).To_Str());
 }
 else {
-this.selfPropertyContent+=(new System.Text.StringBuilder().Append("set{").Append(this.VisitPropertyLambda(context.lambda(), false)).Append("}")).to_str();
+this.self_property_content.Append((new System.Text.StringBuilder().Append("set{").Append(this.VisitPropertyLambda(context.lambda(), false)).Append("}")).To_Str());
 }
 return "";
 } break;
-case "_get" :
+case "get_" :
 { if ( context.lambda()==null ) {
-this.selfPropertyVariable=true;
-this.selfPropertyContent+=(new System.Text.StringBuilder().Append("private get{return _").Append(this.selfPropertyID).Append("; }")).to_str();
+this.self_property_variable=true;
+this.self_property_content.Append((new System.Text.StringBuilder().Append("private get{return _").Append(this.self_property_ID).Append("; }")).To_Str());
 }
 else {
-this.selfPropertyContent+=(new System.Text.StringBuilder().Append("private get{").Append(this.VisitPropertyLambda(context.lambda(), true)).Append("}")).to_str();
+this.self_property_content.Append((new System.Text.StringBuilder().Append("private get{").Append(this.VisitPropertyLambda(context.lambda(), true)).Append("}")).To_Str());
 }
 return "";
 } break;
-case "_set" :
+case "set_" :
 { if ( context.lambda()==null ) {
-this.selfPropertyVariable=true;
-this.selfPropertyContent+=(new System.Text.StringBuilder().Append("private set{_").Append(this.selfPropertyID).Append("=value;}")).to_str();
+this.self_property_variable=true;
+this.self_property_content.Append((new System.Text.StringBuilder().Append("private set{_").Append(this.self_property_ID).Append("=value;}")).To_Str());
 }
 else {
-this.selfPropertyContent+=(new System.Text.StringBuilder().Append("private set{").Append(this.VisitPropertyLambda(context.lambda(), false)).Append("}")).to_str();
+this.self_property_content.Append((new System.Text.StringBuilder().Append("private set{").Append(this.VisitPropertyLambda(context.lambda(), false)).Append("}")).To_Str());
 }
 return "";
 } break;
 case "add" :
-{ todo("not yet");
+{ Todo("not yet");
 return "";
 } break;
 case "remove" :
-{ todo("not yet");
+{ Todo("not yet");
 return "";
 } break;
 }
@@ -284,7 +258,7 @@ if ( context.tuple()!=null ) {
 obj+=((Result)(this.Visit(context.tuple()))).text;
 }
 else if ( context.lambda()!=null ) {
-obj+=(new System.Text.StringBuilder().Append("(").Append(((Result)(this.Visit(context.lambda()))).text).Append(")")).to_str();
+obj+=(new System.Text.StringBuilder().Append("(").Append(((Result)(this.Visit(context.lambda()))).text).Append(")")).To_Str();
 }
 else {
 obj+="";
@@ -296,7 +270,7 @@ obj = "["+obj+"]";
 return obj;
 }
 public  virtual  string VisitPropertyLambda( LambdaContext context ,  bool is_get ){
-this.add_current_set();
+this.Add_current_set();
 var obj = "";
 if ( context.lambdaIn()!=null ) {
 this.VisitPropertyLambdaIn(context.lambdaIn(), is_get);
@@ -311,34 +285,34 @@ obj+=Terminate;
 else {
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 }
-this.getID="";
-this.setID="";
-this.delete_current_set();
+this.get_ID="";
+this.set_ID="";
+this.Delete_current_set();
 return obj;
 }
 public  virtual  void VisitPropertyLambdaIn( LambdaInContext context ,  bool is_get ){
 switch (context.id().Length) {
 case 1 :
 { var id0 = (Result)(this.Visit(context.id(0)));
-this.add_id(id0.text);
+this.Add_ID(id0.text);
 if ( is_get ) {
-this.selfPropertyVariable=true;
-this.add_id("_"+this.selfPropertyID);
-this.getID=id0.text;
+this.self_property_variable=true;
+this.Add_ID("_"+this.self_property_ID);
+this.get_ID=id0.text;
 }
 else {
-this.setID=id0.text;
+this.set_ID=id0.text;
 }
 } break;
 case 2 :
-{ this.selfPropertyVariable=true;
-this.add_id("_"+this.selfPropertyID);
+{ this.self_property_variable=true;
+this.Add_ID("_"+this.self_property_ID);
 var id0 = (Result)(this.Visit(context.id(0)));
 var id1 = (Result)(this.Visit(context.id(1)));
-this.add_id(id0.text);
-this.add_id(id1.text);
-this.getID=id0.text;
-this.setID=id1.text;
+this.Add_ID(id0.text);
+this.Add_ID(id1.text);
+this.get_ID=id0.text;
+this.set_ID=id1.text;
 } break;
 }
 }
@@ -346,29 +320,27 @@ this.setID=id1.text;
 public partial class Compiler_static {
 public const string Terminate = ";";
 public const string Wrap = "\r\n";
-public const string Any = "object";
-public const string Int = "int";
-public const string Num = "double";
-public const string I8 = "sbyte";
-public const string I16 = "short";
-public const string I32 = "int";
-public const string I64 = "long";
-public const string U8 = "byte";
-public const string U16 = "ushort";
-public const string U32 = "uint";
-public const string U64 = "ulong";
-public const string F32 = "float";
-public const string F64 = "double";
-public const string Bool = "bool";
+public const string TargetTypeAny = "object";
+public const string TargetTypeInt = "int";
+public const string TargetTypeNum = "double";
+public const string TargetTypeI8 = "sbyte";
+public const string TargetTypeI16 = "short";
+public const string TargetTypeI32 = "int";
+public const string TargetTypeI64 = "long";
+public const string TargetTypeU8 = "byte";
+public const string TargetTypeU16 = "ushort";
+public const string TargetTypeU32 = "uint";
+public const string TargetTypeU64 = "ulong";
+public const string TargetTypeF32 = "float";
+public const string TargetTypeF64 = "double";
+public const string TargetTypeBool = "bool";
 public const string T = "true";
 public const string F = "false";
-public const string Chr = "char";
-public const string Str = "string";
-public const string Lst = "list";
-public const string Set = "hashset";
-public const string Dic = "dict";
-public const string Stk = "stack";
-public const string Que = "queue";
+public const string TargetTypeChr = "char";
+public const string TargetTypeStr = "string";
+public const string TargetTypeLst = "List";
+public const string TargetTypeSet = "Hashset";
+public const string TargetTypeDic = "Dictionary";
 public const string BlockLeft = "{";
 public const string BlockRight = "}";
 public const string Task = "System.Threading.Tasks.Task";

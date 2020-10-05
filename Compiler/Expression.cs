@@ -10,8 +10,8 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class TemplateItem{
-public string Template;
-public string Contract;
+public string template;
+public string contract;
 }
 public partial class DicEle{
 public string key;
@@ -19,7 +19,7 @@ public string value;
 public string text;
 }
 public partial class FeelLangVisitor{
-public  override  object VisitVarStatement( VarStatementContext context ){
+public  override  object VisitBindStatement( BindStatementContext context ){
 var obj = "";
 foreach (var (i, v) in range(context.varId())){
 if ( i!=0 ) {
@@ -33,10 +33,10 @@ if ( context.varId().Length>1 ) {
 obj = "("+obj+")";
 }
 var r2 = (Result)(Visit(context.tupleExpression()));
-obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).To_Str();
 return obj;
 }
-public  override  object VisitVarTypeStatement( VarTypeStatementContext context ){
+public  override  object VisitBindTypeStatement( BindTypeStatementContext context ){
 var obj = "";
 foreach (var (i, v) in range(context.varIdType())){
 if ( i!=0 ) {
@@ -50,61 +50,17 @@ if ( context.varIdType().Length>1 ) {
 obj = "("+obj+")";
 }
 var r2 = (Result)(Visit(context.tupleExpression()));
-obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
-return obj;
-}
-public  override  object VisitBindStatement( BindStatementContext context ){
-var obj = "";
-foreach (var (i, v) in range(context.constId())){
-if ( i!=0 ) {
-obj+=","+Visit(v);
-}
-else {
-obj+=Visit(v);
-}
-}
-if ( context.constId().Length>1 ) {
-obj = "("+obj+")";
-}
-var r2 = (Result)(Visit(context.tupleExpression()));
-obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
-return obj;
-}
-public  override  object VisitBindTypeStatement( BindTypeStatementContext context ){
-var obj = "";
-foreach (var (i, v) in range(context.constIdType())){
-if ( i!=0 ) {
-obj+=","+Visit(v);
-}
-else {
-obj+=Visit(v);
-}
-}
-if ( context.constIdType().Length>1 ) {
-obj = "("+obj+")";
-}
-var r2 = (Result)(Visit(context.tupleExpression()));
-obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).To_Str();
 return obj;
 }
 public  override  object VisitVariableDeclaredStatement( VariableDeclaredStatementContext context ){
 var obj = "";
 var Type = (string)(Visit(context.typeType()));
 var r = (Result)(Visit(context.id()));
-if ( !this.has_id(r.text) ) {
-this.add_id(r.text);
+if ( !this.Has_ID(r.text) ) {
+this.Add_ID(r.text);
 }
-obj = (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
-return obj;
-}
-public  override  object VisitConstantDeclaredStatement( ConstantDeclaredStatementContext context ){
-var obj = "";
-var Type = (string)(Visit(context.typeType()));
-var r = (Result)(Visit(context.id()));
-if ( !this.has_id(r.text) ) {
-this.add_id(r.text);
-}
-obj = (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).to_str();
+obj = (new System.Text.StringBuilder().Append(Type).Append(" ").Append(r.text).Append(Terminate).Append(Wrap)).To_Str();
 return obj;
 }
 public  override  object VisitAssignStatement( AssignStatementContext context ){
@@ -129,46 +85,34 @@ case 3 :
 var e2 = Visit(context.GetChild(2));
 var op = Visit(context.GetChild(1));
 switch (context.GetChild(1)) {
-case CompareCombineContext it :
-{ r.data=I32;
-var s1 = e1.text;
-var s2 = ((Result)(e2)).text;
-r.text=(new System.Text.StringBuilder().Append(s1).Append(" > ").Append(s2).Append(" ? 1 : ( ").Append(s1).Append("==").Append(s2).Append(" ? 0 : -1 )")).to_str();
-return r;
-} break;
-case IteratorContext it :
-{ var fn = (Func<Result, Result, Result>)(op);
-r = fn(e1, (Result)(e2));
-return r;
-} break;
 case CompareContext it :
-{ r.data=Bool;
+{ r.data=TargetTypeBool;
 } break;
 case LogicContext it :
-{ r.data=Bool;
+{ r.data=TargetTypeBool;
 } break;
 case AddContext it :
-{ if ( (string)(e1.data)==Str||(string)(((Result)(e2)).data)==Str ) {
-r.data=Str;
+{ if ( (string)(e1.data)==TargetTypeStr||(string)(((Result)(e2)).data)==TargetTypeStr ) {
+r.data=TargetTypeStr;
 }
-else if ( (string)(e1.data)==I32&&(string)(((Result)(e2)).data)==I32 ) {
-r.data=I32;
+else if ( (string)(e1.data)==TargetTypeI32&&(string)(((Result)(e2)).data)==TargetTypeI32 ) {
+r.data=TargetTypeI32;
 }
 else {
-r.data=F64;
+r.data=TargetTypeF64;
 }
 } break;
 case MulContext it :
-{ if ( (string)(e1.data)==I32&&(string)(((Result)(e2)).data)==I32 ) {
-r.data=I32;
+{ if ( (string)(e1.data)==TargetTypeI32&&(string)(((Result)(e2)).data)==TargetTypeI32 ) {
+r.data=TargetTypeI32;
 }
 else {
-r.data=F64;
+r.data=TargetTypeF64;
 }
 } break;
 case PowContext it :
-{ r.data=F64;
-r.text=(new System.Text.StringBuilder().Append(op).Append("(").Append(e1.text).Append(", ").Append(((Result)(e2)).text).Append(")")).to_str();
+{ r.data=TargetTypeF64;
+r.text=(new System.Text.StringBuilder().Append(op).Append("(").Append(e1.text).Append(", ").Append(((Result)(e2)).text).Append(")")).To_Str();
 return r;
 } break;
 }
@@ -177,19 +121,23 @@ r.text=e1.text+op+((Result)(e2)).text;
 case 2 :
 { r = (Result)(Visit(context.GetChild(0)));
 switch (context.GetChild(1)) {
+case IteratorContext it :
+{ var fn = (Func<Result, Result>)(Visit(it));
+return fn(r);
+} break;
 case TypeConversionContext it :
 { var e2 = (string)(Visit(it));
 r.data=e2;
-r.text=(new System.Text.StringBuilder().Append("(").Append(e2).Append(")(").Append(r.text).Append(")")).to_str();
+r.text=(new System.Text.StringBuilder().Append("(").Append(e2).Append(")(").Append(r.text).Append(")")).To_Str();
 } break;
 case TypeCheckContext it :
 { var e2 = (string)(Visit(it));
 r.data=e2;
-r.text=(new System.Text.StringBuilder().Append(r.text).Append(".@is<").Append(e2).Append(">()")).to_str();
+r.text=(new System.Text.StringBuilder().Append("(").Append(r.text).Append(" is ").Append(e2).Append(")")).To_Str();
 } break;
 case OrElseContext it :
 { var e2 = (Result)(Visit(it));
-r.text=(new System.Text.StringBuilder().Append("(").Append(r.text).Append("??").Append(e2.text).Append(")")).to_str();
+r.text=(new System.Text.StringBuilder().Append("(").Append(r.text).Append("??").Append(e2.text).Append(")")).To_Str();
 } break;
 case CallExpressionContext it :
 { var e2 = (Result)(Visit(it));
@@ -197,8 +145,8 @@ r.text=r.text+e2.text;
 } break;
 case CallFuncContext it :
 { var e2 = (Result)(Visit(it));
-if ( this.is_type(r.rootID) ) {
-r.text=(new System.Text.StringBuilder().Append("(new ").Append(r.text).Append(e2.text).Append(")")).to_str();
+if ( this.Is_type(r.rootID) ) {
+r.text=(new System.Text.StringBuilder().Append("(new ").Append(r.text).Append(e2.text).Append(")")).To_Str();
 r.data=r.rootID;
 }
 else {
@@ -212,7 +160,7 @@ r.text=r.text+e2.text;
 case CallAwaitContext it :
 { var e2 = (Result)(Visit(it));
 r.text="await "+r.text+e2.text;
-set_func_async();
+Set_func_async();
 } break;
 case CallElementContext it :
 { var e2 = (Result)(Visit(it));
@@ -224,7 +172,7 @@ r.text=e2(r.text).text;
 } break;
 default:
 { if ( context.op.Type==FeelParser.Bang ) {
-r.text=(new System.Text.StringBuilder().Append("ref ").Append(r.text)).to_str();
+r.text=(new System.Text.StringBuilder().Append("ref ").Append(r.text)).To_Str();
 }
 else if ( context.op.Type==FeelParser.Question ) {
 r.text+="?";
@@ -287,30 +235,32 @@ public  override  object VisitMul( MulContext context ){
 return context.op.Text;
 }
 public  override  object VisitPow( PowContext context ){
-return "pow";
+return "Pow";
 }
 public  override  object VisitPrimaryExpression( PrimaryExpressionContext context ){
 switch (context.ChildCount) {
 case 1 :
 { var c = context.GetChild(0);
-if ( c.@is<DataStatementContext>() ) {
-return Visit(context.dataStatement());
+switch (c) {
+case DataStatementContext it :
+{ return Visit(context.dataStatement());
+} break;
+case IdContext it :
+{ return Visit(context.id());
+} break;
 }
-else if ( c.@is<IdContext>() ) {
-return Visit(context.id());
-}
-else if ( context.t.Type==Discard ) {
+if ( context.t.Type==Discard ) {
 return (new Result(){text = "_",data = "var"});
 }
 } break;
-case 2 :
+case 4 :
 { var id = (Result)(Visit(context.id()));
 var template = "<"+((string)(Visit(context.templateCall())))+">";
 return (new Result(){text = id.text+template,data = id.text+template,rootID = id.text});
 } break;
 }
 var r = (Result)(Visit(context.expression()));
-return (new Result(){text = (new System.Text.StringBuilder().Append("(").Append(r.text).Append(")")).to_str(),data = r.data});
+return (new Result(){text = (new System.Text.StringBuilder().Append("(").Append(r.text).Append(")")).To_Str(),data = r.data});
 }
 public  override  object VisitExpressionList( ExpressionListContext context ){
 var r = (new Result());
@@ -330,32 +280,32 @@ return r;
 }
 public  override  object VisitTemplateDefine( TemplateDefineContext context ){
 var item = (new TemplateItem());
-item.Template+="<";
+item.template+="<";
 foreach (var i in range(0, context.templateDefineItem().Length, 1, true, false)){
 if ( i>0 ) {
-item.Template+=",";
-if ( item.Contract.len()>0 ) {
-item.Contract+=",";
+item.template+=",";
+if ( item.contract.Size()>0 ) {
+item.contract+=",";
 }
 }
 var r = (TemplateItem)(Visit(context.templateDefineItem(i)));
-item.Template+=r.Template;
-item.Contract+=r.Contract;
+item.template+=r.template;
+item.contract+=r.contract;
 }
-item.Template+=">";
+item.template+=">";
 return item;
 }
 public  override  object VisitTemplateDefineItem( TemplateDefineItemContext context ){
 var item = (new TemplateItem());
-if ( context.id().len()==1 ) {
+if ( context.id().Size()==1 ) {
 var id1 = context.id(0).GetText();
-item.Template=id1;
+item.template=id1;
 }
 else {
 var id1 = context.id(0).GetText();
-item.Template=id1;
+item.template=id1;
 var id2 = context.id(1).GetText();
-item.Contract=(new System.Text.StringBuilder().Append(" where ").Append(id1).Append(":").Append(id2)).to_str();
+item.contract=(new System.Text.StringBuilder().Append(" where ").Append(id1).Append(":").Append(id2)).To_Str();
 }
 return item;
 }
@@ -373,35 +323,35 @@ return obj;
 public  override  object VisitDataStatement( DataStatementContext context ){
 var r = (new Result());
 if ( context.nilExpr()!=null ) {
-r.data=Any;
+r.data=TargetTypeAny;
 r.text="null";
 }
 else if ( context.floatExpr()!=null ) {
-r.data=F64;
+r.data=TargetTypeF64;
 r.text=(string)(Visit(context.floatExpr()));
 }
 else if ( context.integerExpr()!=null ) {
-r.data=I32;
+r.data=TargetTypeI32;
 r.text=(string)(Visit(context.integerExpr()));
 }
 else if ( context.rawStringExpr()!=null ) {
-r.data=Str;
+r.data=TargetTypeStr;
 r.text=(string)(Visit(context.rawStringExpr()));
 }
 else if ( context.stringExpr()!=null ) {
-r.data=Str;
+r.data=TargetTypeStr;
 r.text=(string)(Visit(context.stringExpr()));
 }
 else if ( context.t.Type==FeelParser.CharLiteral ) {
-r.data=Chr;
+r.data=TargetTypeChr;
 r.text=context.CharLiteral().GetText();
 }
 else if ( context.t.Type==FeelParser.TrueLiteral ) {
-r.data=Bool;
+r.data=TargetTypeBool;
 r.text=T;
 }
 else if ( context.t.Type==FeelParser.FalseLiteral ) {
-r.data=Bool;
+r.data=TargetTypeBool;
 r.text=F;
 }
 return r;
@@ -412,21 +362,23 @@ if ( context.stringTemplate().Length==0 ) {
 foreach (var v in context.stringContent()){
 text+=Visit(v);
 }
-return (new System.Text.StringBuilder().Append("\"").Append(text).Append("\"")).to_str();
+return (new System.Text.StringBuilder().Append("\"").Append(text).Append("\"")).To_Str();
 }
 else {
 text = "(new System.Text.StringBuilder()";
 foreach (var i in range(1, context.ChildCount-1, 1, true, false)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
-if ( v.@is<StringContentContext>() ) {
-text+=(new System.Text.StringBuilder().Append(".Append(").Append("\"").Append(r).Append("\"").Append(")")).to_str();
+switch (v) {
+case StringContentContext it :
+{ text+=(new System.Text.StringBuilder().Append(".Append(").Append("\"").Append(r).Append("\"").Append(")")).To_Str();
+} break;
+default:
+{ text+=r;
+} break;
 }
-else {
-text+=r;
 }
-}
-text+=").to_str()";
+text+=").To_Str()";
 return text;
 }
 }
@@ -440,7 +392,7 @@ public  override  object VisitStringTemplate( StringTemplateContext context ){
 var text = "";
 foreach (var v in context.expression()){
 var r = (Result)(Visit(v));
-text+=(new System.Text.StringBuilder().Append(".Append(").Append(r.text).Append(")")).to_str();
+text+=(new System.Text.StringBuilder().Append(".Append(").Append(r.text).Append(")")).To_Str();
 }
 return text;
 }
@@ -450,14 +402,16 @@ if ( context.rawStringTemplate().Length==0 ) {
 foreach (var i in range(1, context.ChildCount-1, 1, true, false)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
-if ( v.@is<RawStringContentContext>() ) {
-text+=r;
+switch (v) {
+case RawStringContentContext it :
+{ text+=r;
+} break;
+default:
+{ text+="\"\"";
+} break;
 }
-else {
-text+="\"\"";
 }
-}
-return (new System.Text.StringBuilder().Append("@").Append("\"").Append(text).Append("\"")).to_str();
+return (new System.Text.StringBuilder().Append("@").Append("\"").Append(text).Append("\"")).To_Str();
 }
 else {
 text = "(new System.Text.StringBuilder()";
@@ -466,7 +420,7 @@ var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 switch (v) {
 case RawStringContentContext it :
-{ text+=(new System.Text.StringBuilder().Append(".Append(@").Append("\"").Append(r).Append("\"").Append(")")).to_str();
+{ text+=(new System.Text.StringBuilder().Append(".Append(@").Append("\"").Append(r).Append("\"").Append(")")).To_Str();
 } break;
 case RawStringTemplateContext it :
 { text+=r;
@@ -476,13 +430,13 @@ default:
 } break;
 }
 }
-text+=").to_str()";
+text+=").To_Str()";
 return text;
 }
 }
 public  override  object VisitRawStringContent( RawStringContentContext context ){
-if ( context.RawTextLiteral().GetText()=="\\$" ) {
-return "$";
+if ( context.RawTextLiteral().GetText()=="\\\\" ) {
+return "\\";
 }
 return context.RawTextLiteral().GetText();
 }
@@ -490,7 +444,7 @@ public  override  object VisitRawStringTemplate( RawStringTemplateContext contex
 var text = "";
 foreach (var v in context.expression()){
 var r = (Result)(Visit(v));
-text+=(new System.Text.StringBuilder().Append(".Append(").Append(r.text).Append(")")).to_str();
+text+=(new System.Text.StringBuilder().Append(".Append(").Append(r.text).Append(")")).To_Str();
 }
 return text;
 }
@@ -528,9 +482,9 @@ public  override  object VisitLinq( LinqContext context ){
 var r = (new Result(){data = "var"});
 r.text+=(string)(Visit(context.linqHeadItem()));
 foreach (var item in context.linqItem()){
-r.text+=(new System.Text.StringBuilder().Append(Visit(item)).Append(" ")).to_str();
+r.text+=(new System.Text.StringBuilder().Append(Visit(item)).Append(" ")).To_Str();
 }
-r.text+=(new System.Text.StringBuilder().Append(((Result)(Visit(context.id()))).text).Append(" ").Append(((Result)(Visit(context.expression()))).text)).to_str();
+r.text+=(new System.Text.StringBuilder().Append(((Result)(Visit(context.id()))).text).Append(" ").Append(((Result)(Visit(context.expression()))).text)).To_Str();
 return r;
 }
 public  override  object VisitLinqItem( LinqItemContext context ){
@@ -539,18 +493,18 @@ return (string)(Visit(context.linqHeadItem()));
 }
 var obj = ((Result)(Visit(context.id()))).text;
 if ( context.expression()!=null ) {
-obj+=(new System.Text.StringBuilder().Append(" ").Append(((Result)(Visit(context.expression()))).text)).to_str();
+obj+=(new System.Text.StringBuilder().Append(" ").Append(((Result)(Visit(context.expression()))).text)).To_Str();
 }
 return obj;
 }
 public  override  object VisitLinqHeadItem( LinqHeadItemContext context ){
 var obj = "";
 var id = (Result)(Visit(context.id()));
-obj+=(new System.Text.StringBuilder().Append("from ").Append(id.text).Append(" in ").Append(((Result)(Visit(context.expression()))).text).Append(" ")).to_str();
+obj+=(new System.Text.StringBuilder().Append("from ").Append(id.text).Append(" in ").Append(((Result)(Visit(context.expression()))).text).Append(" ")).To_Str();
 return obj;
 }
 }
 public partial class Compiler_static {
-public static list<string> keywords = (new list<string>(){ "abstract","as","base","bool","break","byte","case","catch","char","checked","class","const","continue","decimal","default","delegate","do","double","enum","event","explicit","extern","false","finally","fixed","float","for","foreach","goto","implicit","in","int","interface","internal","is","lock","long","namespace","new","null","object","operator","out","override","params","private","protected","public","readonly","ref","return","sbyte","sealed","short","sizeof","stackalloc","static","string","struct","switch","this","throw","true","try","uint","ulong","unchecked","unsafe","ushort","using","virtual","void","volatile","while" });
+public static List<string> keywords = (new List<string>(){ "abstract","as","base","bool","break","byte","case","catch","char","checked","class","const","continue","decimal","default","delegate","do","double","enum","event","explicit","extern","false","finally","fixed","float","for","foreach","goto","implicit","in","int","interface","internal","is","lock","long","namespace","new","null","object","operator","out","override","params","private","protected","public","readonly","ref","return","sbyte","sealed","short","sizeof","stackalloc","static","string","struct","switch","this","throw","true","try","uint","ulong","unchecked","unsafe","ushort","using","virtual","void","volatile","while" });
 }
 }

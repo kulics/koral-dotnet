@@ -7,35 +7,35 @@
     System.Text
 }
 
-!_ReadPath: str
-!_PathLine: str
+_read_path: Str
+_path_line: Str
 
-Main = (args: array`str->) {
-    -- 检查系统平台，区分路径字符
-    !os = Environment.OSVersion.Platform
+Main = (args: (Str)Array) {
+    `  检查系统平台，区分路径字符 `
+    os = Environment.OSVersion.Platform
     os == PlatformID.Unix || os == PlatformID.MacOSX ? {
-        _ReadPath = "./"
-        _PathLine = "/"
+        _read_path = "./"
+        _path_line = "/"
     }
     | ? {
-        _ReadPath = ".\\"
-        _PathLine = "\\"
+        _read_path = ".\\"
+        _path_line = "\\"
     }
 
-    Compiled(_ReadPath)
+    Compiled(_read_path)
 
-    print("Completed")
+    Print("Completed")
 }
 
-Compiled = (path: str->) {
-    -- 获取相对路径下所有文件
+Compiled = (path: Str) {
+    `  获取相对路径下所有文件 `
     Files = Directory.GetFiles(path, "*.feel")
     Files @ file {
-        -- 文件流读文件
+        `  文件流读文件 `
         -> fsRead = FileStream(file, FileMode.Open) {
             {
-                FSLength = fsRead.Length !! int
-                ByteBlock = array`u8(FSLength)
+                FSLength = fsRead.Length ! Int
+                ByteBlock = (U8)Array(FSLength, (i){0})
                 r = fsRead.Read(ByteBlock, 0, ByteBlock.Length)
                 Input = Encoding.UTF8.GetString(ByteBlock)
 
@@ -52,15 +52,15 @@ Compiled = (path: str->) {
                 Visitor = FeelLangVisitor{}
                 Result = Visitor.Visit(AST)
 
-                -- 文件流写文件,使用覆盖模式
-                -- 转换为字节
-                ByteResult = Encoding.UTF8.GetBytes(Result.to_str())  
-                -> fsWrite = FileStream("${_ReadPath; file.replace(".feel", ".cs")}", FileMode.Create) {
+                `  文件流写文件,使用覆盖模式 `
+                `  转换为字节 `
+                ByteResult = Encoding.UTF8.GetBytes(Result.To_Str())  
+                -> fsWrite = FileStream("\{_read_path; file.Replace(".feel", ".cs")}", FileMode.Create) {
                     fsWrite.Write(ByteResult, 0, ByteResult.Length)
                 }
             }
             & err ! {
-                print(err)
+                Print(err)
                 <-
             }
         }

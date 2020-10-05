@@ -13,7 +13,7 @@ public partial class FeelLangVisitor{
 public  override  object VisitImplementStatement( ImplementStatementContext context ){
 var id = (Result)(Visit(context.id()));
 var obj = "";
-var extend = (new list<string>());
+var extend = (new List<string>());
 if ( context.packageFieldStatement()!=null ) {
 var item = context.packageFieldStatement();
 var r = (Result)(Visit(item));
@@ -22,36 +22,36 @@ obj+=r.text;
 if ( context.packageNewStatement()!=null ) {
 var item = context.packageNewStatement();
 var r = (string)(Visit(item));
-obj+=(new System.Text.StringBuilder().Append("public ").Append(id.text).Append(" ").Append(r)).to_str();
+obj+=(new System.Text.StringBuilder().Append("public ").Append(id.text).Append(" ").Append(r)).To_Str();
 }
 obj+=BlockRight+Wrap;
 var header = "";
-header+=(new System.Text.StringBuilder().Append(id.permission).Append(" partial class ").Append(id.text)).to_str();
+header+=(new System.Text.StringBuilder().Append(id.permission).Append(" partial class ").Append(id.text)).To_Str();
 var template = "";
-var templateContract = "";
+var template_contract = "";
 if ( context.templateDefine()!=null ) {
 var item = (TemplateItem)(Visit(context.templateDefine()));
-template+=item.Template;
-templateContract = item.Contract;
+template+=item.template;
+template_contract = item.contract;
 header+=template;
 }
-if ( extend.length>0 ) {
+if ( extend.Size()>0 ) {
 var temp = extend[0];
-foreach (var i in range(1, extend.length, 1, true, false)){
+foreach (var i in range(1, extend.Size(), 1, true, false)){
 temp+=","+extend[i];
 }
 header+=":"+temp;
 }
-header+=templateContract+BlockLeft+Wrap;
+header+=template_contract+BlockLeft+Wrap;
 obj = header+obj;
-this.selfID="";
-this.superID="";
+this.self_ID="";
+this.super_ID="";
 return obj;
 }
 public  override  object VisitOverrideVariableStatement( OverrideVariableStatementContext context ){
 var r1 = (Result)(Visit(context.id()));
-var isMutable = r1.isVirtual;
-var isVirtual = " override ";
+var is_mutable = r1.is_virtual;
+var is_virtual = " override ";
 var typ = "";
 Result? r2 = null;
 if ( context.expression()!=null ) {
@@ -63,32 +63,32 @@ typ = (string)(Visit(context.typeType()));
 }
 var obj = "";
 if ( context.annotationSupport()!=null ) {
-this.selfPropertyID=r1.text;
+this.self_property_ID=r1.text;
 obj+=Visit(context.annotationSupport());
 }
-if ( this.selfPropertyContent.len>0 ) {
+if ( this.self_property_content.Size()>0 ) {
 var pri = "";
-if ( this.selfPropertyVariable ) {
-pri = (new System.Text.StringBuilder().Append("private ").Append(typ).Append(" _").Append(r1.text)).to_str();
+if ( this.self_property_variable ) {
+pri = (new System.Text.StringBuilder().Append("private ").Append(typ).Append(" _").Append(r1.text)).To_Str();
 if ( r2!=null ) {
 pri+=" = "+r2.text;
 }
 pri+=Terminate+Wrap;
 }
 obj = pri+obj;
-obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" ").Append(isVirtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append(BlockLeft)).to_str();
-foreach (var v in this.selfPropertyContent){
+obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" ").Append(is_virtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append(BlockLeft)).To_Str();
+foreach (var v in this.self_property_content){
 obj+=v;
 }
 obj+=BlockRight+Wrap;
-this.selfPropertyContent.clear();
-this.selfPropertyID="";
-this.selfPropertyVariable=false;
+this.self_property_content.Clear();
+this.self_property_ID="";
+this.self_property_variable=false;
 }
 else {
-obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text)).to_str();
+obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text)).To_Str();
 if ( r2!=null ) {
-obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).To_Str();
 }
 else {
 obj+=Terminate+Wrap;
@@ -98,7 +98,7 @@ return obj;
 }
 public  override  object VisitOverrideFunctionStatement( OverrideFunctionStatementContext context ){
 var id = (Result)(Visit(context.id()));
-var isVirtual = " override ";
+var is_virtual = " override ";
 var obj = "";
 var pout = "";
 if ( context.t==null ) {
@@ -108,35 +108,35 @@ else {
 pout = (string)(Visit(context.parameterClauseOut()));
 if ( context.t.Type==Right_Flow ) {
 if ( pout!="void" ) {
-pout = (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).to_str();
+pout = (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).To_Str();
 }
 else {
 pout = Task;
 }
 }
 }
-obj+=(new System.Text.StringBuilder().Append(isVirtual).Append(" ").Append(pout).Append(" ").Append(id.text)).to_str();
-var templateContract = "";
+obj+=(new System.Text.StringBuilder().Append(is_virtual).Append(" ").Append(pout).Append(" ").Append(id.text)).To_Str();
+var template_contract = "";
 if ( context.templateDefine()!=null ) {
 var template = (TemplateItem)(Visit(context.templateDefine()));
-obj+=template.Template;
-templateContract = template.Contract;
+obj+=template.template;
+template_contract = template.contract;
 }
-this.add_current_set();
-this.add_func_stack();
-obj+=Visit(context.parameterClauseIn())+templateContract+BlockLeft+Wrap;
+this.Add_current_set();
+this.Add_func_stack();
+obj+=Visit(context.parameterClauseIn())+template_contract+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
-this.delete_current_set();
+this.Delete_current_set();
 obj+=BlockRight+Wrap;
-if ( get_func_async() ) {
+if ( Get_func_async() ) {
 obj = " async "+obj;
 }
-this.delete_func_stack();
+this.Delete_func_stack();
 if ( context.n!=null ) {
 obj = "protected "+obj;
 }
 else {
-obj = (new System.Text.StringBuilder().Append(id.permission).Append(" ")).to_str()+obj;
+obj = (new System.Text.StringBuilder().Append(id.permission).Append(" ")).To_Str()+obj;
 }
 return obj;
 }
