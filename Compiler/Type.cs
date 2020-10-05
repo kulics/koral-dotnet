@@ -31,6 +31,57 @@ obj = (new System.Text.StringBuilder().Append(Visit(context.templateCall())).App
 else {
 obj+="<"+Visit(context.templateCall())+">";
 }
+return obj;
+}
+switch (obj) {
+case "I8" :
+{ return I8;
+} break;
+case "U8" :
+{ return U8;
+} break;
+case "I16" :
+{ return I16;
+} break;
+case "U16" :
+{ return U16;
+} break;
+case "I32" :
+{ return I32;
+} break;
+case "U32" :
+{ return U32;
+} break;
+case "I64" :
+{ return I64;
+} break;
+case "U64" :
+{ return U64;
+} break;
+case "F32" :
+{ return F32;
+} break;
+case "F64" :
+{ return F64;
+} break;
+case "Chr" :
+{ return Chr;
+} break;
+case "Str" :
+{ return Str;
+} break;
+case "Bool" :
+{ return Bool;
+} break;
+case "Int" :
+{ return Int;
+} break;
+case "Num" :
+{ return Num;
+} break;
+case "Byte" :
+{ return U8;
+} break;
 }
 return obj;
 }
@@ -94,61 +145,6 @@ obj+=", "+p;
 }
 }
 return obj;
-}
-public  override  object VisitTypeBasic( TypeBasicContext context ){
-switch (context.t.Type) {
-case TypeI8 :
-{ return I8;
-} break;
-case TypeU8 :
-{ return U8;
-} break;
-case TypeI16 :
-{ return I16;
-} break;
-case TypeU16 :
-{ return U16;
-} break;
-case TypeI32 :
-{ return I32;
-} break;
-case TypeU32 :
-{ return U32;
-} break;
-case TypeI64 :
-{ return I64;
-} break;
-case TypeU64 :
-{ return U64;
-} break;
-case TypeF32 :
-{ return F32;
-} break;
-case TypeF64 :
-{ return F64;
-} break;
-case TypeChr :
-{ return Chr;
-} break;
-case TypeStr :
-{ return Str;
-} break;
-case TypeBool :
-{ return Bool;
-} break;
-case TypeInt :
-{ return Int;
-} break;
-case TypeNum :
-{ return Num;
-} break;
-case TypeByte :
-{ return U8;
-} break;
-default:
-{ return Any;
-} break;
-}
 }
 }
 }

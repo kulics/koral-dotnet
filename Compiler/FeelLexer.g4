@@ -89,27 +89,10 @@ Back_Quote:  '`';
 
 Sharp:	'#';
 
-TypeI8: 	'i8';
-TypeU8: 	'u8';
-TypeI16: 	'i16';
-TypeU16: 	'u16';
-TypeI32: 	'i32';
-TypeU32: 	'u32';
-TypeI64: 	'i64';
-TypeU64: 	'u64';
-TypeF32: 	'f32';
-TypeF64: 	'f64';
-TypeChr: 	'chr';
-TypeStr: 	'str';
-TypeBool: 	'bool';
-TypeInt: 	'int';
-TypeNum: 	'num';
-TypeByte: 	'byte';
-TypeAny: 	'any';
+TypeAny: 	'Any';
 NilLiteral: 'nil';
 TrueLiteral: 'true';
 FalseLiteral: 'false';
-UndefinedLiteral: 'undef';
 
 FloatLiteral: Digit (Exponent | '.' Digit Exponent?);
 DecimalLiteral: Digit;

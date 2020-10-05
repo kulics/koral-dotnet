@@ -172,11 +172,6 @@ FeelLangVisitor = $ me {
 
     .VisitIdItem = (context: IdItemContext -> v: any) {
         r = Result{data = "var"}
-        context.typeBasic() >< nil ? {
-            r.text += context.typeBasic().GetText()
-            r.isVirtual = true
-            <- r
-        }
         context.typeAny() >< nil ? {
             r.text += context.typeAny().GetText()
             r.isVirtual = true

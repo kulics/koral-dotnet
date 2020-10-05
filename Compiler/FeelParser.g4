@@ -398,9 +398,8 @@ integerExpr: DecimalLiteral | BinaryLiteral | OctalLiteral | HexLiteral;
 
 // 类型
 typeNotNull:
-typeAny | 
-typeBasic | 
-typePackage | 
+typeAny |
+typePackage |
 typeFunction;
 
 typeType: typeNullable | typeNotNull;
@@ -413,25 +412,6 @@ typeAny: TypeAny;
 
 // 函数类型参数
 typeFunctionParameterClause: typeType? (more typeType)*;
-
-// 基础类型名
-typeBasic:
-t=TypeI8 | 
-t=TypeU8 | 
-t=TypeI16 | 
-t=TypeU16 | 
-t=TypeI32 | 
-t=TypeU32 | 
-t=TypeI64 | 
-t=TypeU64 | 
-t=TypeF32 | 
-t=TypeF64 | 
-t=TypeChr | 
-t=TypeStr | 
-t=TypeBool | 
-t=TypeInt | 
-t=TypeNum | 
-t=TypeByte;
 
 // nil值
 nilExpr: NilLiteral;
@@ -460,7 +440,6 @@ wave: op=Tilde_Tilde;
 id: (idItem);
 
 idItem: Identifier |
-typeBasic |
 typeAny ;
 
 end: Semi | New_Line ;

@@ -115,11 +115,6 @@ return r;
 }
 public  override  object VisitIdItem( IdItemContext context ){
 var r = (new Result(){data = "var"});
-if ( context.typeBasic()!=null ) {
-r.text+=context.typeBasic().GetText();
-r.isVirtual=true;
-return r;
-}
 if ( context.typeAny()!=null ) {
 r.text+=context.typeAny().GetText();
 r.isVirtual=true;
