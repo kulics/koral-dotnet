@@ -31,6 +31,18 @@ namespace Library {
         public static ulong to_u64(this object it) => Convert.ToUInt64(it);
         public static float to_f32(this object it) => Convert.ToSingle(it);
         public static double to_f64(this object it) => Convert.ToDouble(it);
+        public static int To_Int(this object it) => Convert.ToInt32(it);
+        public static double To_Num(this object it) => Convert.ToDouble(it);
+        public static sbyte To_I8(this object it) => Convert.ToSByte(it);
+        public static short To_I16(this object it) => Convert.ToInt16(it);
+        public static int To_I32(this object it) => Convert.ToInt32(it);
+        public static long To_I64(this object it) => Convert.ToInt64(it);
+        public static byte To_U8(this object it) => Convert.ToByte(it);
+        public static ushort To_U16(this object it) => Convert.ToUInt16(it);
+        public static uint To_U32(this object it) => Convert.ToUInt32(it);
+        public static ulong To_U64(this object it) => Convert.ToUInt64(it);
+        public static float To_F32(this object it) => Convert.ToSingle(it);
+        public static double To_F64(this object it) => Convert.ToDouble(it);
         // sbyte
         public static int to_int(this sbyte it) => Convert.ToInt32(it);
         public static double to_num(this sbyte it) => Convert.ToDouble(it);
