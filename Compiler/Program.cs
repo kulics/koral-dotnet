@@ -8,20 +8,20 @@ using System.Text;
 namespace Compiler
 {
 public partial class Compiler_static {
-protected static string _ReadPath;
-protected static string _PathLine;
+protected internal static string _read_path;
+protected internal static string _path_line;
 public static void Main( string[] args ){
 var os = Environment.OSVersion.Platform;
 if ( os==PlatformID.Unix||os==PlatformID.MacOSX ) {
-_ReadPath = "./";
-_PathLine = "/";
+_read_path = "./";
+_path_line = "/";
 }
 else {
-_ReadPath = ".\\";
-_PathLine = "\\";
+_read_path = ".\\";
+_path_line = "\\";
 }
-Compiled(_ReadPath);
-print("Completed");
+Compiled(_read_path);
+Print("Completed");
 }
 public static void Compiled( string path ){
 var Files = Directory.GetFiles(path, "*.feel");
@@ -29,7 +29,7 @@ foreach (var file in Files){
 using (var fsRead = (new FileStream(file, FileMode.Open))) {
 try {
 var FSLength = (int)(fsRead.Length);
-var ByteBlock = array<byte>(FSLength);
+var ByteBlock = Array<byte>(FSLength, (i)=>0);
 var r = fsRead.Read(ByteBlock, 0, ByteBlock.Length);
 var Input = Encoding.UTF8.GetString(ByteBlock);
 var Stream = (new AntlrInputStream(Input));
@@ -42,12 +42,12 @@ Parser.AddErrorListener((new ErrorListener(){FileDir = file}));
 var AST = Parser.program();
 var Visitor = (new FeelLangVisitor());
 var Result = Visitor.Visit(AST);
-var ByteResult = Encoding.UTF8.GetBytes(Result.to_str());
-using (var fsWrite = (new FileStream((new System.Text.StringBuilder().Append(_ReadPath).Append(file.replace(".feel", ".cs"))).to_str(), FileMode.Create))) {
+var ByteResult = Encoding.UTF8.GetBytes(Result.To_Str());
+using (var fsWrite = (new FileStream((new System.Text.StringBuilder().Append(_read_path).Append(file.Replace(".feel", ".cs"))).To_Str(), FileMode.Create))) {
 fsWrite.Write(ByteResult, 0, ByteResult.Length);
 }}catch( Exception err )
 {
-print(err);
+Print(err);
 return;
 }
 }}

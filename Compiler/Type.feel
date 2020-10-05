@@ -11,25 +11,25 @@
 }
 
 FeelLangVisitor = $ me {
-    .VisitTypeType = (context: TypeTypeContext -> v: any) {
-        !obj = ""
-        obj = Visit(context.GetChild(0)) !! str
+    .VisitTypeType = (context : TypeTypeContext -> v : Any) {
+        obj = ""
+        obj = Visit(context.GetChild(0)) ! Str
         <- obj
     }
 
-    .VisitTypeNullable = (context: TypeNullableContext -> v: any) {
-        !obj = ""
-        obj = Visit(context.typeNotNull()) !! str
+    .VisitTypeNullable = (context : TypeNullableContext -> v : Any) {
+        obj = ""
+        obj = Visit(context.typeNotNull()) ! Str
         obj += "?"
         <- obj
     }
 
-    .VisitTypePackage = (context: TypePackageContext -> v: any) {
-        !obj = ""
+    .VisitTypePackage = (context : TypePackageContext -> v : Any) {
+        obj = ""
         obj += Visit(context.nameSpaceItem())
-        context.templateCall() >< nil ? {
+        context.templateCall() <> nil ? {
             obj == "Array" ? {
-                obj = "${Visit(context.templateCall())}[]"
+                obj = "\{Visit(context.templateCall())}[]"
             }
             | ? {
                 obj += "<" + Visit(context.templateCall()) + ">"
@@ -37,79 +37,79 @@ FeelLangVisitor = $ me {
             <- obj
         }
         obj ==
-        | "I8" ? {<- I8}
-        | "U8" ? {<- U8}
-        | "I16" ? {<- I16}
-        | "U16" ? {<- U16}
-        | "I32" ? {<- I32} 
-        | "U32" ? {<- U32}
-        | "I64" ? {<- I64}
-        | "U64" ? {<- U64}
-        | "F32" ? {<- F32}
-        | "F64" ? {<- F64}
-        | "Chr" ? {<- Chr}
-        | "Str" ? {<- Str}
-        | "Bool" ? {<- Bool}
-        | "Int" ? {<- Int}
-        | "Num" ? {<- Num}
-        | "Byte" ? {<- U8}
+        | "I8" ? {<- TargetTypeI8}
+        | "U8" ? {<- TargetTypeU8}
+        | "I16" ? {<- TargetTypeI16}
+        | "U16" ? {<- TargetTypeU16}
+        | "I32" ? {<- TargetTypeI32} 
+        | "U32" ? {<- TargetTypeU32}
+        | "I64" ? {<- TargetTypeI64}
+        | "U64" ? {<- TargetTypeU64}
+        | "F32" ? {<- TargetTypeF32}
+        | "F64" ? {<- TargetTypeF64}
+        | "Chr" ? {<- TargetTypeChr}
+        | "Str" ? {<- TargetTypeStr}
+        | "Bool" ? {<- TargetTypeBool}
+        | "Int" ? {<- TargetTypeInt}
+        | "Num" ? {<- TargetTypeNum}
+        | "Byte" ? {<- TargetTypeU8}
         <- obj
     }
 
-    .VisitTypeFunction = (context: TypeFunctionContext -> v: any) {
-        !obj = ""
-        !in = Visit(context.typeFunctionParameterClause(0)) !! str
-        !out = Visit(context.typeFunctionParameterClause(1)) !! str
+    .VisitTypeFunction = (context : TypeFunctionContext -> v : Any) {
+        obj = ""
+        in = Visit(context.typeFunctionParameterClause(0)) ! Str
+        out = Visit(context.typeFunctionParameterClause(1)) ! Str
         context.t.Type == Right_Arrow ? {
             out.Length == 0 ? {
                 in.Length == 0 ? {
                     obj = "Action"
                 }
                 | ? {
-                    obj = "Action<${in}>"
+                    obj = "Action<\{in}>"
                 }
             }
             | ? {
-                out.first_index_of(",") >= 0 ? {
-                    out = "(${out})"
+                out.First_index_of(",") >= 0 ? {
+                    out = "(\{out})"
                 }
                 in.Length == 0 ? {
-                    obj = "Func<${out}>"
+                    obj = "Func<\{out}>"
                 }
                 | ? {
-                    obj = "Func<${in}, ${out}>"
+                    obj = "Func<\{in}, \{out}>"
                 }
             }
         }
         | ? {
             out.Length == 0 ? {
                 in.Length == 0 ? {
-                    obj = "Func<${Task}>"
+                    obj = "Func<\{Task}>"
                 }
                 | ? {
-                    obj = "Func<${in}, ${Task}>"
+                    obj = "Func<\{in}, \{Task}>"
                 }
             }
             | ? {
                 in.Length == 0 ? {
-                    obj = "Func<${Task}<${out}>>"
+                    obj = "Func<\{Task}<\{out}>>"
                 }
                 | ? {
-                    obj = "Func<${in}, ${Task}<${out}>>"
+                    obj = "Func<\{in}, \{Task}<\{out}>>"
                 }
             }
         }
         <- obj
     }
 
-    .VisitTypeAny = (context: TypeAnyContext -> v: any) {
-        <- Any
+    .VisitTypeAny = (context : TypeAnyContext -> v : Any) {
+        <- TargetTypeAny
     }
 
-    .VisitTypeFunctionParameterClause = (context: TypeFunctionParameterClauseContext -> v: any) {
-        !obj = ""
+    .VisitTypeFunctionParameterClause = (context : TypeFunctionParameterClauseContext -> v : Any) {
+        obj = ""
         0 ..< context.typeType().Length @ i {
-            p = Visit(context.typeType(i)) !! str
+            p = Visit(context.typeType(i)) ! Str
             i == 0 ? {
                 obj += p
             }

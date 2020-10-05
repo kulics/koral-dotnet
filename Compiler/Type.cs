@@ -26,7 +26,7 @@ var obj = "";
 obj+=Visit(context.nameSpaceItem());
 if ( context.templateCall()!=null ) {
 if ( obj=="Array" ) {
-obj = (new System.Text.StringBuilder().Append(Visit(context.templateCall())).Append("[]")).to_str();
+obj = (new System.Text.StringBuilder().Append(Visit(context.templateCall())).Append("[]")).To_Str();
 }
 else {
 obj+="<"+Visit(context.templateCall())+">";
@@ -35,52 +35,52 @@ return obj;
 }
 switch (obj) {
 case "I8" :
-{ return I8;
+{ return TargetTypeI8;
 } break;
 case "U8" :
-{ return U8;
+{ return TargetTypeU8;
 } break;
 case "I16" :
-{ return I16;
+{ return TargetTypeI16;
 } break;
 case "U16" :
-{ return U16;
+{ return TargetTypeU16;
 } break;
 case "I32" :
-{ return I32;
+{ return TargetTypeI32;
 } break;
 case "U32" :
-{ return U32;
+{ return TargetTypeU32;
 } break;
 case "I64" :
-{ return I64;
+{ return TargetTypeI64;
 } break;
 case "U64" :
-{ return U64;
+{ return TargetTypeU64;
 } break;
 case "F32" :
-{ return F32;
+{ return TargetTypeF32;
 } break;
 case "F64" :
-{ return F64;
+{ return TargetTypeF64;
 } break;
 case "Chr" :
-{ return Chr;
+{ return TargetTypeChr;
 } break;
 case "Str" :
-{ return Str;
+{ return TargetTypeStr;
 } break;
 case "Bool" :
-{ return Bool;
+{ return TargetTypeBool;
 } break;
 case "Int" :
-{ return Int;
+{ return TargetTypeInt;
 } break;
 case "Num" :
-{ return Num;
+{ return TargetTypeNum;
 } break;
 case "Byte" :
-{ return U8;
+{ return TargetTypeU8;
 } break;
 }
 return obj;
@@ -95,43 +95,43 @@ if ( @in.Length==0 ) {
 obj = "Action";
 }
 else {
-obj = (new System.Text.StringBuilder().Append("Action<").Append(@in).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Action<").Append(@in).Append(">")).To_Str();
 }
 }
 else {
-if ( @out.first_index_of(",")>=0 ) {
-@out = (new System.Text.StringBuilder().Append("(").Append(@out).Append(")")).to_str();
+if ( @out.First_index_of(",")>=0 ) {
+@out = (new System.Text.StringBuilder().Append("(").Append(@out).Append(")")).To_Str();
 }
 if ( @in.Length==0 ) {
-obj = (new System.Text.StringBuilder().Append("Func<").Append(@out).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(@out).Append(">")).To_Str();
 }
 else {
-obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(@out).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(@out).Append(">")).To_Str();
 }
 }
 }
 else {
 if ( @out.Length==0 ) {
 if ( @in.Length==0 ) {
-obj = (new System.Text.StringBuilder().Append("Func<").Append(Task).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(Task).Append(">")).To_Str();
 }
 else {
-obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append(">")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append(">")).To_Str();
 }
 }
 else {
 if ( @in.Length==0 ) {
-obj = (new System.Text.StringBuilder().Append("Func<").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(Task).Append("<").Append(@out).Append(">>")).To_Str();
 }
 else {
-obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).to_str();
+obj = (new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).To_Str();
 }
 }
 }
 return obj;
 }
 public  override  object VisitTypeAny( TypeAnyContext context ){
-return Any;
+return TargetTypeAny;
 }
 public  override  object VisitTypeFunctionParameterClause( TypeFunctionParameterClauseContext context ){
 var obj = "";

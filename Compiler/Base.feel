@@ -13,33 +13,31 @@
 Terminate = ";"
 Wrap = "\r\n"
 
-Any = "object"
-Int = "int"
-Num = "double"
-I8  = "sbyte"
-I16 = "short"
-I32 = "int"
-I64 = "long"
+TargetTypeAny = "object"
+TargetTypeInt = "int"
+TargetTypeNum = "double"
+TargetTypeI8  = "sbyte"
+TargetTypeI16 = "short"
+TargetTypeI32 = "int"
+TargetTypeI64 = "long"
 
-U8  = "byte"
-U16 = "ushort"
-U32 = "uint"
-U64 = "ulong"
+TargetTypeU8  = "byte"
+TargetTypeU16 = "ushort"
+TargetTypeU32 = "uint"
+TargetTypeU64 = "ulong"
 
-F32 = "float"
-F64 = "double"
+TargetTypeF32 = "float"
+TargetTypeF64 = "double"
 
-Bool    = "bool"
+TargetTypeBool    = "bool"
 T       = "true"
 F       = "false"
 
-Chr = "char"
-Str = "string"
-Lst = "List"
-Set = "Hashset"
-Dic = "Dictionary"
-Stk = "Stack"
-Que = "Queue"
+TargetTypeChr = "char"
+TargetTypeStr = "string"
+TargetTypeLst = "List"
+TargetTypeSet = "Hashset"
+TargetTypeDic = "Dictionary"
 
 BlockLeft   = "{"
 BlockRight  = "}"
@@ -47,304 +45,305 @@ BlockRight  = "}"
 Task = "System.Threading.Tasks.Task"
 
 Result = $ {
-    !data: any
-    !text: str
-    !permission: str = "public"
-    !isVirtual: bool
-    !isDefine: bool
-    !isMutable: bool
-    !rootID: str = ""
+    data : Any
+    text : Str
+
+    permission  : Str = "public"
+    is_virtual   : Bool
+    isDefine    : Bool
+    isMutable   : Bool
+    rootID      : Str = ""
 }
 
 FeelLangVisitor = $ me {
-    . FeelParserBaseVisitor`any
+    (Any)FeelParserBaseVisitor
 
-    !selfID     = ""
-    !superID    = ""
-    !setID      = ""
-    !getID      = ""
+    self_ID     = ""
+    super_ID    = ""
+    set_ID      = ""
+    get_ID      = ""
 
-    !selfPropertyID         = ""
-    !selfPropertyContent    = list`str{}
-    !selfPropertyVariable   = false
+    self_property_ID         = ""
+    self_property_content    = (Str)List{}
+    self_property_variable   = false
 
-    !AllIDSet       = hashset`str{}
-    !CurrentIDSet   = stack`(hashset`str){}
-    !TypeIdSet      = hashset`str{}
-    !FuncAsyncStack = stack`bool{}
+    all_ID_set       = (Str)HashSet{}
+    cuttent_ID_set   = ((Str)HashSet)Stack{}
+    type_Id_set      = (Str)HashSet{}
+    func_async_stack = (Bool)Stack{}
 
-    has_id = (id: str -> v: bool) {
-        <- me.AllIDSet.contains(id) || me.CurrentIDSet.peek().contains(id)
+    Has_ID = (id : Str -> v : Bool) {
+        <- me.all_ID_set.Contains(id) || me.cuttent_ID_set.Peek().Contains(id)
     }
 
-    add_id = (id: str ->) {
-        me.CurrentIDSet.peek().add(id)
+    Add_ID = (id : Str ->) {
+        me.cuttent_ID_set.Peek().Add(id)
     }
 
-    add_current_set = (->) {
-        CurrentIDSet.peek() @ item {
-            AllIDSet.add(item)
+    Add_current_set = (->) {
+        cuttent_ID_set.Peek() @ item {
+            all_ID_set.Add(item)
         }
-        me.CurrentIDSet.push(hashset`str{})
+        me.cuttent_ID_set.Push((Str)HashSet{})
     }
 
-    delete_current_set = (->) {
-        me.AllIDSet.except_with(me.CurrentIDSet.peek())
-        me.CurrentIDSet.pop()
+    Delete_current_set = (->) {
+        me.all_ID_set.ExceptWith(me.cuttent_ID_set.Peek())
+        me.cuttent_ID_set.Pop()
     }
 
-    is_type = (id: str->v: bool) {
-        <- me.TypeIdSet.contains(id)
+    Is_type = (id : Str->v : Bool) {
+        <- me.type_Id_set.Contains(id)
     }
 
-    add_type = (id: str ->) {
-        me.TypeIdSet.add(id)
+    Add_type = (id : Str ->) {
+        me.type_Id_set.Add(id)
     }
     
-    add_func_stack = (->) {
-        FuncAsyncStack.push(false)
+    Add_func_stack = (->) {
+        func_async_stack.Push(false)
     }
 
-    delete_func_stack = (->) {
-        FuncAsyncStack.pop()
+    Delete_func_stack = (->) {
+        func_async_stack.Pop()
     }
 
-    get_func_async = (->v: bool) {
-        <- FuncAsyncStack.peek()
+    Get_func_async = (->v : Bool) {
+        <- func_async_stack.Peek()
     }
 
-    set_func_async = (->) {
-        FuncAsyncStack.peek() ? {
+    Set_func_async = (->) {
+        func_async_stack.Peek() ? {
             <-
         }
-        FuncAsyncStack.pop()
-        FuncAsyncStack.push(true)
+        func_async_stack.Pop()
+        func_async_stack.Push(true)
     }
 }
 
 FeelLangVisitor = (->$me) {
-    me.CurrentIDSet.push(hashset`str{})
-    FuncAsyncStack.push(false)
+    me.cuttent_ID_set.Push((Str)HashSet{})
+    func_async_stack.Push(false)
 }
 
 FeelLangVisitor = $ me {
-    .VisitProgram = (context: ProgramContext -> v: any) {
+    .VisitProgram = (context : ProgramContext -> v : Any) {
         StatementList = context.statement()
-        !Result = ""
+        result = ""
         StatementList @ item {
-            Result += VisitStatement(item)
+            result += VisitStatement(item)
         }
-        <- Result
+        <- result
     }
 
-    .VisitId = (context: IdContext -> v: any) {
+    .VisitId = (context : IdContext -> v : Any) {
         r = Result{data = "var"}
-        first = Visit(context.GetChild(0)) !! Result
+        first = Visit(context.GetChild(0)) ! Result
         r.permission = first.permission
         r.text = first.text
-        r.isVirtual = first.isVirtual
+        r.is_virtual = first.is_virtual
         context.ChildCount >= 2 ? {
-            1 .. context.ChildCount-1 @ i {
-                other = Visit(context.GetChild(i)) !! Result
-                r.text += "_${other.text}"
+            1 ..< context.ChildCount @ i {
+                other = Visit(context.GetChild(i)) ! Result
+                r.text += "_\{other.text}"
             }
         }
 
         keywords.Exists((t) {t == r.text}) ? {
-            r.text = "@${r.text}"
+            r.text = "@\{r.text}"
         }
 
-        r.text == selfID ? {
+        r.text == self_ID ? {
             r.text = "this"
         }
-        | r.text == superID ? {
+        | r.text == super_ID ? {
             r.text = "base"
         }
-        | r.text == setID ? {
+        | r.text == set_ID ? {
             r.text = "value"
         }
-        | r.text == getID ? {
-            r.text = "_" + selfPropertyID
+        | r.text == get_ID ? {
+            r.text = "_" + self_property_ID
         }
         r.rootID = r.text
         <- r
     }
 
-    .VisitIdItem = (context: IdItemContext -> v: any) {
+    .VisitIdItem = (context : IdItemContext -> v : Any) {
         r = Result{data = "var"}
-        context.typeAny() >< nil ? {
+        context.typeAny() <> nil ? {
             r.text += context.typeAny().GetText()
-            r.isVirtual = true
+            r.is_virtual = true
             <- r
         }
         id = context.Identifier().GetText()
         r.text += id
-        r.isVirtual = true
+        r.is_virtual = true
         id[0] == '_' ? {
             r.permission = "protected internal"
-            id[1].is_lower() ? {
+            id[1].Is_lower() ? {
                 r.isMutable = true
             }
         }
-        | id[0].is_lower() ? {
+        | id[0].Is_lower() ? {
             r.isMutable = true
         }
         <- r
     }
 
-    .VisitVarId = (context: VarIdContext -> v: any) {
-        context.Discard() >< nil ? {
+    .VisitVarId = (context : VarIdContext -> v : Any) {
+        context.Discard() <> nil ? {
             <- "_"
         }
         | ? {
-            id = (Visit(context.id()) !! Result).text
-            me.has_id(id) ? {
+            id = (Visit(context.id()) ! Result).text
+            me.Has_ID(id) ? {
                 <- id
             }
             | ? {
-                me.add_id(id)
+                me.Add_ID(id)
                 <- "var " + id
             }
         }
     }
 
-    .VisitVarIdType = (context: VarIdTypeContext -> v: any) {
-        context.Discard() >< nil ? {
+    .VisitVarIdType = (context : VarIdTypeContext -> v : Any) {
+        context.Discard() <> nil ? {
             <- "_"
         }
         | ? {
-            id = (Visit(context.id()) !! Result).text
-            ~~me.has_id(id) ? {
-                me.add_id(id)
+            id = (Visit(context.id()) ! Result).text
+            ~~me.Has_ID(id) ? {
+                me.Add_ID(id)
             }
             <- Visit(context.typeType()) + " " + id
         }
     }
 
-    .VisitBoolExpr = (context: BoolExprContext -> v: any) {
+    .VisitBoolExpr = (context : BoolExprContext -> v : Any) {
         r = Result{}
         context.t.Type == TrueLiteral ? {
-            r.data = Bool
+            r.data = TargetTypeBool
             r.text = T
         }
         | context.t.Type == FalseLiteral ? {
-            r.data = Bool
+            r.data = TargetTypeBool
             r.text = F
         }
         <- r
     }
 
-    .VisitAnnotationSupport = (context: AnnotationSupportContext -> v: any) {
-        <- Visit(context.annotation()) !! str
+    .VisitAnnotationSupport = (context : AnnotationSupportContext -> v : Any) {
+        <- Visit(context.annotation()) ! Str
     }
 
-    .VisitAnnotation = (context: AnnotationContext -> v: any) {
-        !obj = ""
+    .VisitAnnotation = (context : AnnotationContext -> v : Any) {
+        obj = ""
 
-        r = Visit(context.annotationList()) !! str
-        r >< "" ? {
+        r = Visit(context.annotationList()) ! Str
+        r <> "" ? {
             obj += r
         }
         <- obj
     }
 
-    .VisitAnnotationList = (context: AnnotationListContext -> v: any) {
-        !obj = ""
+    .VisitAnnotationList = (context : AnnotationListContext -> v : Any) {
+        obj = ""
         context.annotationItem() @ [i]v {
-            txt = me.Visit(v) !! str
-            txt >< "" ? {
+            txt = me.Visit(v) ! Str
+            txt <> "" ? {
                 obj += txt
             }
         }
         <- obj
     }
 
-    .VisitAnnotationItem = (context: AnnotationItemContext -> v: any) {
-        !obj = ""
-        !id = ""
+    .VisitAnnotationItem = (context : AnnotationItemContext -> v : Any) {
+        obj = ""
+        id = ""
         
         context.id().Length == 2 ? {
-            id = "${(Visit(context.id(0)) !! Result).text}:"
-            obj += (me.Visit(context.id(1)) !! Result).text
+            id = "\{(Visit(context.id(0)) ! Result).text}:"
+            obj += (me.Visit(context.id(1)) ! Result).text
         }
         | ? {
-            obj += (me.Visit(context.id(0)) !! Result).text
+            obj += (me.Visit(context.id(0)) ! Result).text
         }
         obj == 
         | "get" ? {
             context.lambda() == nil ? {
-                me.selfPropertyVariable = true
-                me.selfPropertyContent += "get{return _${ me.selfPropertyID }; }"
+                me.self_property_variable = true
+                me.self_property_content.Append( "get{return _\{ me.self_property_ID }; }")
             }
             | ? {
-                me.selfPropertyContent += "get{${ me.VisitPropertyLambda(context.lambda(), true) }}"
+                me.self_property_content.Append( "get{\{ me.VisitPropertyLambda(context.lambda(), true) }}")
             }
             <- ""
         }
         | "set" ? {
             context.lambda() == nil ? {
-                me.selfPropertyVariable = true
-                me.selfPropertyContent += "set{_${ me.selfPropertyID }=value;}"
+                me.self_property_variable = true
+                me.self_property_content.Append( "set{_\{ me.self_property_ID }=value;}")
             }
             | ? {
-                me.selfPropertyContent += "set{${ me.VisitPropertyLambda(context.lambda(), false) }}"
+                me.self_property_content.Append( "set{\{ me.VisitPropertyLambda(context.lambda(), false) }}")
             }
             <- ""
         }
         | "get_" ? {
             context.lambda() == nil ? {
-                me.selfPropertyVariable = true
-                me.selfPropertyContent += "private get{return _${ me.selfPropertyID }; }"
+                me.self_property_variable = true
+                me.self_property_content.Append( "private get{return _\{ me.self_property_ID }; }")
             }
             | ? {
-                me.selfPropertyContent += "private get{${ me.VisitPropertyLambda(context.lambda(), true) }}"
+                me.self_property_content.Append( "private get{\{ me.VisitPropertyLambda(context.lambda(), true) }}")
             }
             <- ""
         }
         | "set_" ? {
             context.lambda() == nil ? {
-                me.selfPropertyVariable = true
-                me.selfPropertyContent += "private set{_${ me.selfPropertyID }=value;}"
+                me.self_property_variable = true
+                me.self_property_content.Append( "private set{_\{ me.self_property_ID }=value;}")
             }
             | ? {
-                me.selfPropertyContent += "private set{${ me.VisitPropertyLambda(context.lambda(), false) }}"
+                me.self_property_content.Append( "private set{\{ me.VisitPropertyLambda(context.lambda(), false) }}")
             }
             <- ""
         }
         | "add" ? {
-            todo("not yet")
+            Todo("not yet")
             <- ""
         }
         | "remove" ? {
-            todo("not yet")
+            Todo("not yet")
             <- ""
         }
         
-        context.tuple() >< nil ? {
-            obj += (me.Visit(context.tuple()) !! Result).text
+        context.tuple() <> nil ? {
+            obj += (me.Visit(context.tuple()) ! Result).text
         }
-        | context.lambda() >< nil ? {
-            obj += "(${ (me.Visit(context.lambda()) !! Result).text })"
+        | context.lambda() <> nil ? {
+            obj += "(\{ (me.Visit(context.lambda()) ! Result).text })"
         }
         | ? {
             obj += ""
         }
-        id >< "" ? {
+        id <> "" ? {
             obj = id + obj
         }
         obj = "[" + obj + "]"
         <- obj
     }
 
-    VisitPropertyLambda = (context: LambdaContext, is_get: bool -> v: str) {
-        me.add_current_set()
-        !obj = ""
-        context.lambdaIn() >< nil ? {
+    VisitPropertyLambda = (context : LambdaContext, is_get : Bool -> v : Str) {
+        me.Add_current_set()
+        obj = ""
+        context.lambdaIn() <> nil ? {
             me.VisitPropertyLambdaIn(context.lambdaIn(), is_get)
         }
 
-        context.tupleExpression() >< nil ? {
-            obj += (Visit(context.tupleExpression()) !! Result).text
+        context.tupleExpression() <> nil ? {
+            obj += (Visit(context.tupleExpression()) ! Result).text
             is_get ? {
                 obj = "return " + obj
             }
@@ -353,35 +352,35 @@ FeelLangVisitor = $ me {
         | ? {
             obj += ProcessFunctionSupport(context.functionSupportStatement())
         }
-        me.getID = ""
-        me.setID = ""
-        me.delete_current_set()
+        me.get_ID = ""
+        me.set_ID = ""
+        me.Delete_current_set()
         <- obj
     }
 
-    VisitPropertyLambdaIn = (context: LambdaInContext, is_get: bool ->) {
+    VisitPropertyLambdaIn = (context : LambdaInContext, is_get : Bool ->) {
         context.id().Length == 
         | 1 ? {
-            id0 = me.Visit(context.id(0)) !! Result
-            me.add_id(id0.text)
+            id0 = me.Visit(context.id(0)) ! Result
+            me.Add_ID(id0.text)
             is_get ? {
-                me.selfPropertyVariable = true
-                me.add_id("_"+me.selfPropertyID)
-                me.getID = id0.text
+                me.self_property_variable = true
+                me.Add_ID("_"+me.self_property_ID)
+                me.get_ID = id0.text
             }
             | ? {
-                me.setID = id0.text
+                me.set_ID = id0.text
             }
         }
         | 2 ? {
-            me.selfPropertyVariable = true
-            me.add_id("_"+me.selfPropertyID)
-            id0 = me.Visit(context.id(0)) !! Result
-            id1 = me.Visit(context.id(1)) !! Result
-            me.add_id(id0.text)
-            me.add_id(id1.text)
-            me.getID = id0.text
-            me.setID = id1.text
+            me.self_property_variable = true
+            me.Add_ID("_"+me.self_property_ID)
+            id0 = me.Visit(context.id(0)) ! Result
+            id1 = me.Visit(context.id(1)) ! Result
+            me.Add_ID(id0.text)
+            me.Add_ID(id1.text)
+            me.get_ID = id0.text
+            me.set_ID = id1.text
         }
     }
 }

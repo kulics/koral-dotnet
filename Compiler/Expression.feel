@@ -11,7 +11,7 @@
 }
 
 
-!keywords = {
+keywords = {
     "abstract"
     "as"
     "base"
@@ -89,21 +89,21 @@
 }
 
 TemplateItem = $ {
-    !Template: str
-    !Contract: str
+    template: Str
+    contract: Str
 }
 
 DicEle = $ {
-    !key: str
-    !value: str
-    !text: str
+    key: Str
+    value: Str
+    text: Str
 }
 
 FeelLangVisitor = $ me {
-    .VisitBindStatement = (context: BindStatementContext -> v: any) {
-        !obj = ""
+    .VisitBindStatement = (context : BindStatementContext -> v : Any) {
+        obj = ""
         context.varId() @ [i]v {
-            i >< 0 ? {
+            i <> 0 ? {
                 obj += "," + Visit(v)
             }
             | ? {
@@ -113,15 +113,15 @@ FeelLangVisitor = $ me {
         context.varId().Length > 1 ? {
             obj = "(" + obj + ")"
         }
-        r2 = Visit(context.tupleExpression()) !! Result
-        obj += " = ${r2.text; Terminate; Wrap}"
+        r2 = Visit(context.tupleExpression()) ! Result
+        obj += " = \{r2.text; Terminate; Wrap}"
         <- obj
     }
 
-    .VisitBindTypeStatement = (context: BindTypeStatementContext -> v: any) {
-        !obj = ""
+    .VisitBindTypeStatement = (context : BindTypeStatementContext -> v : Any) {
+        obj = ""
         context.varIdType() @ [i]v {
-            i >< 0 ? {
+            i <> 0 ? {
                 obj += "," + Visit(v)
             }
             | ? {
@@ -131,109 +131,109 @@ FeelLangVisitor = $ me {
         context.varIdType().Length > 1 ? {
             obj = "(" + obj + ")"
         }
-        r2 = Visit(context.tupleExpression()) !! Result
-        obj += " = ${r2.text; Terminate; Wrap}"
+        r2 = Visit(context.tupleExpression()) ! Result
+        obj += " = \{r2.text; Terminate; Wrap}"
         <- obj
     }
 
-    .VisitVariableDeclaredStatement = (context: VariableDeclaredStatementContext -> v: any) {
-        !obj = ""
-        Type = Visit(context.typeType()) !! str
-        r = Visit(context.id()) !! Result
-        ~~me.has_id(r.text) ? {
-            me.add_id(r.text)
+    .VisitVariableDeclaredStatement = (context : VariableDeclaredStatementContext -> v : Any) {
+        obj = ""
+        Type = Visit(context.typeType()) ! Str
+        r = Visit(context.id()) ! Result
+        ~~me.Has_ID(r.text) ? {
+            me.Add_ID(r.text)
         }
-        obj = "${Type} ${r.text; Terminate; Wrap}"
+        obj = "\{Type} \{r.text; Terminate; Wrap}"
         <- obj
     }
 
-    .VisitAssignStatement = (context: AssignStatementContext -> v: any) {
-        r1 = Visit(context.tupleExpression(0)) !! Result
-        r2 = Visit(context.tupleExpression(1)) !! Result
-        !obj = r1.text + Visit(context.assign()) + r2.text + Terminate + Wrap
+    .VisitAssignStatement = (context : AssignStatementContext -> v : Any) {
+        r1 = Visit(context.tupleExpression(0)) ! Result
+        r2 = Visit(context.tupleExpression(1)) ! Result
+        obj = r1.text + Visit(context.assign()) + r2.text + Terminate + Wrap
         <- obj
     }
 
-    .VisitAssign = (context: AssignContext -> v: any) {
+    .VisitAssign = (context : AssignContext -> v : Any) {
         <- context.op.Text
     }
 
-    .VisitExpressionStatement = (context: ExpressionStatementContext -> v: any) {
-        r = Visit(context.expression()) !! Result
+    .VisitExpressionStatement = (context : ExpressionStatementContext -> v : Any) {
+        r = Visit(context.expression()) ! Result
         <- r.text + Terminate + Wrap
     }
 
-    .VisitExpression = (context: ExpressionContext -> v: any) {
+    .VisitExpression = (context : ExpressionContext -> v : Any) {
         count = context.ChildCount
-        !r = Result{}
+        r = Result{}
         count == 
         | 3 ? {
-            !e1 = Visit(context.GetChild(0)) !! Result
-            !e2 = Visit(context.GetChild(2))
-            !op = Visit(context.GetChild(1))
+            e1 = Visit(context.GetChild(0)) ! Result
+            e2 = Visit(context.GetChild(2))
+            op = Visit(context.GetChild(1))
 
             context.GetChild(1) :: 
             | CompareContext ? {
-                r.data = Bool
+                r.data = TargetTypeBool
             }
             | LogicContext ? {
-                r.data = Bool
+                r.data = TargetTypeBool
             }
             | AddContext ? {
-                e1.data !! str == Str || (e2 !! Result).data !! str == Str ? {
-                    r.data = Str
+                e1.data ! Str == TargetTypeStr || (e2 ! Result).data ! Str == TargetTypeStr ? {
+                    r.data = TargetTypeStr
                 }
-                | e1.data !! str == I32 && (e2 !! Result).data !! str == I32 ? {
-                    r.data = I32
+                | e1.data ! Str == TargetTypeI32 && (e2 ! Result).data ! Str == TargetTypeI32 ? {
+                    r.data = TargetTypeI32
                 }
                 | ? {
-                    r.data = F64
+                    r.data = TargetTypeF64
                 }
             }
             | MulContext ? {
-                e1.data !! str == I32 && (e2 !! Result).data !! str == I32 ? {
-                    r.data = I32
+                e1.data ! Str == TargetTypeI32 && (e2 ! Result).data ! Str == TargetTypeI32 ? {
+                    r.data = TargetTypeI32
                 }
                 | ? {
-                    r.data = F64
+                    r.data = TargetTypeF64
                 }
             }
             | PowContext ? {
-                r.data = F64
-                r.text = "${op}(${e1.text}, ${(e2 !! Result).text})"
+                r.data = TargetTypeF64
+                r.text = "\{op}(\{e1.text}, \{(e2 ! Result).text})"
                 <- r
             }
-            r.text = e1.text + op + (e2 !! Result).text
+            r.text = e1.text + op + (e2 ! Result).text
         }
         | 2 ? {
-            r = Visit(context.GetChild(0)) !! Result
+            r = Visit(context.GetChild(0)) ! Result
             context.GetChild(1) :: 
             | IteratorContext => it ? {
-                fn = Visit(it) !! (Result->Result)
+                fn = Visit(it) ! (Result->Result)
                 <- fn(r)
             }
             | TypeConversionContext => it ? {
-                e2 = Visit(it) !! str
+                e2 = Visit(it) ! Str
                 r.data = e2
-                r.text = "(${e2})(${r.text})"
+                r.text = "(\{e2})(\{r.text})"
             }
             | TypeCheckContext => it ? {
-                e2 = Visit(it) !! str
+                e2 = Visit(it) ! Str
                 r.data = e2
-                r.text = "${r.text}.@is<${e2}>()"
+                r.text = "(\{r.text} is \{e2})"
             }
             | OrElseContext => it ? {
-                e2 = Visit(it) !! Result
-                r.text = "(${r.text}??${e2.text})"
+                e2 = Visit(it) ! Result
+                r.text = "(\{r.text}??\{e2.text})"
             }
             | CallExpressionContext => it ? {
-                e2 = Visit(it) !! Result
+                e2 = Visit(it) ! Result
                 r.text = r.text + e2.text
             }
             | CallFuncContext => it ? {
-                e2 = Visit(it) !! Result
-                me.is_type(r.rootID) ? {
-                    r.text = "(new ${r.text; e2.text})"
+                e2 = Visit(it) ! Result
+                me.Is_type(r.rootID) ? {
+                    r.text = "(new \{r.text; e2.text})"
                     r.data = r.rootID
                 }
                 | ? {
@@ -241,25 +241,25 @@ FeelLangVisitor = $ me {
                 }
             }
             | CallAsyncContext => it ? {
-                e2 = Visit(it) !! Result
+                e2 = Visit(it) ! Result
                 r.text = r.text + e2.text
             }
             | CallAwaitContext => it ? {
-                e2 = Visit(it) !! Result
+                e2 = Visit(it) ! Result
                 r.text = "await " + r.text + e2.text
-                set_func_async()
+                Set_func_async()
             }
             | CallElementContext => it ? {
-                e2 = Visit(it) !! Result
+                e2 = Visit(it) ! Result
                 r.text = r.text + e2.text
             }
             | JudgeExpressionContext => it ? {
-                e2 = Visit(it) !! (str->Result)
+                e2 = Visit(it) ! (Str->Result)
                 r.text = e2(r.text).text
             }
             | ? {
                 context.op.Type == FeelParser.Bang ? {
-                    r.text = "ref ${r.text}"
+                    r.text = "ref \{r.text}"
                 }
                 | context.op.Type == FeelParser.Question ? {
                     r.text += "?"
@@ -267,89 +267,90 @@ FeelLangVisitor = $ me {
             }
         }
         | 1 ? {
-            r = Visit(context.GetChild(0)) !! Result
+            r = Visit(context.GetChild(0)) ! Result
         }
         <- r
     }
 
-    .VisitOrElse = (context: OrElseContext -> v: any) {
-        <- Visit(context.expression()) !! Result
+    .VisitOrElse = (context : OrElseContext -> v : Any) {
+        <- Visit(context.expression()) ! Result
     }
 
-    .VisitTypeConversion = (context: TypeConversionContext -> v: any) {
-        <- Visit(context.typeType()) !! str
+    .VisitTypeConversion = (context : TypeConversionContext -> v : Any) {
+        <- Visit(context.typeType()) ! Str
     }
 
-    .VisitTypeCheck = (context: TypeCheckContext -> v: any) {
-        <- Visit(context.typeType()) !! str
+    .VisitTypeCheck = (context : TypeCheckContext -> v : Any) {
+        <- Visit(context.typeType()) ! Str
     }
 
-    .VisitCall = (context: CallContext -> v: any) {
+    .VisitCall = (context : CallContext -> v : Any) {
         <- context.op.Text
     }
 
-    .VisitWave = (context: WaveContext -> v: any) {
+    .VisitWave = (context : WaveContext -> v : Any) {
         <- context.op.Text
     }
 
-    .VisitBitwise = (context: BitwiseContext -> v: any) {
-        <- me.Visit(context.GetChild(0)) !! str
+    .VisitBitwise = (context : BitwiseContext -> v : Any) {
+        <- me.Visit(context.GetChild(0)) ! Str
     }
 
-    .VisitBitwiseAnd = (context: BitwiseAndContext -> v: any) {
+    .VisitBitwiseAnd = (context : BitwiseAndContext -> v : Any) {
         <- "&"
     }
 
-    .VisitBitwiseOr = (context: BitwiseOrContext -> v: any) {
+    .VisitBitwiseOr = (context : BitwiseOrContext -> v : Any) {
         <- "|"
     }
 
-    .VisitBitwiseXor = (context: BitwiseXorContext -> v: any) {
+    .VisitBitwiseXor = (context : BitwiseXorContext -> v : Any) {
         <- "^"
     }
 
-    .VisitBitwiseLeftShift = (context: BitwiseLeftShiftContext -> v: any) {
+    .VisitBitwiseLeftShift = (context : BitwiseLeftShiftContext -> v : Any) {
         <- "<<"
     }
 
-    .VisitBitwiseRightShift = (context: BitwiseRightShiftContext -> v: any) {
+    .VisitBitwiseRightShift = (context : BitwiseRightShiftContext -> v : Any) {
         <- ">>"
     }
 
-    .VisitCompare = (context: CompareContext -> v: any) {
+    .VisitCompare = (context : CompareContext -> v : Any) {
         context.op.Type == Not_Equal ? {
             <- "!="
         }
         <- context.op.Text
     }
 
-    .VisitLogic = (context: LogicContext -> v: any) {
+    .VisitLogic = (context : LogicContext -> v : Any) {
         <- context.op.Text
     }
 
-    .VisitAdd = (context: AddContext -> v: any) {
+    .VisitAdd = (context : AddContext -> v : Any) {
         <- context.op.Text
     }
 
-    .VisitMul = (context: MulContext -> v: any) {
+    .VisitMul = (context : MulContext -> v : Any) {
         <- context.op.Text
     }
 
-    .VisitPow = (context: PowContext -> v: any) {
-        <- "pow"
+    .VisitPow = (context : PowContext -> v : Any) {
+        <- "Pow"
     }
 
-    .VisitPrimaryExpression = (context: PrimaryExpressionContext -> v: any) {
+    .VisitPrimaryExpression = (context : PrimaryExpressionContext -> v : Any) {
         context.ChildCount == 
         | 1 ? {
             c = context.GetChild(0)
-            c :: DataStatementContext ? {
+            c ::
+            | DataStatementContext ? {
                 <- Visit(context.dataStatement())
             }
-            | c :: IdContext ? {
+            | IdContext ? {
                 <- Visit(context.id())
             }
-            | context.t.Type == Discard ? {
+            context.t.Type == Discard ? {
                 <- Result{
                     text = "_"
                     data = "var"
@@ -357,26 +358,26 @@ FeelLangVisitor = $ me {
             }
         }
         | 4 ? {
-            id = Visit(context.id()) !! Result
-            template = "<" + (Visit(context.templateCall()) !! str) + ">"
+            id = Visit(context.id()) ! Result
+            template = "<" + (Visit(context.templateCall()) ! Str) + ">"
             <- Result{
                 text = id.text + template
                 data = id.text + template
                 rootID = id.text
             }
         }
-        r = Visit(context.expression()) !! Result
+        r = Visit(context.expression()) ! Result
         <- Result{
-            text = "(${r.text})"
+            text = "(\{r.text})"
             data = r.data
         }
     }
 
-    .VisitExpressionList = (context: ExpressionListContext -> v: any) {
+    .VisitExpressionList = (context : ExpressionListContext -> v : Any) {
         r = Result{}
-        !obj = ""
+        obj = ""
         0 ..< context.expression().Length @ i {
-            temp = Visit(context.expression(i)) !! Result
+            temp = Visit(context.expression(i)) ! Result
             i == 0 ? {
                 obj += temp.text
             }
@@ -389,41 +390,41 @@ FeelLangVisitor = $ me {
         <- r
     }
 
-    .VisitTemplateDefine = (context: TemplateDefineContext -> v: any) {
+    .VisitTemplateDefine = (context : TemplateDefineContext -> v : Any) {
         item = TemplateItem{}
-        item.Template += "<"
+        item.template += "<"
         0 ..< context.templateDefineItem().Length @ i {
             i > 0 ? {
-                item.Template += ","
-                item.Contract.len() > 0 ? {
-                    item.Contract += ","
+                item.template += ","
+                item.contract.Size() > 0 ? {
+                    item.contract += ","
                 }
             }
-            r = Visit(context.templateDefineItem(i)) !! TemplateItem
-            item.Template += r.Template
-            item.Contract += r.Contract
+            r = Visit(context.templateDefineItem(i)) ! TemplateItem
+            item.template += r.template
+            item.contract += r.contract
         }
-        item.Template += ">"
+        item.template += ">"
         <- item
     }
 
-    .VisitTemplateDefineItem = (context: TemplateDefineItemContext -> v: any) {
+    .VisitTemplateDefineItem = (context : TemplateDefineItemContext -> v : Any) {
         item = TemplateItem{}
-        context.id().len() == 1 ? {
+        context.id().Size() == 1 ? {
             id1 = context.id(0).GetText()
-            item.Template = id1
+            item.template = id1
         }
         | ? {
             id1 = context.id(0).GetText()
-            item.Template = id1
+            item.template = id1
             id2 = context.id(1).GetText()
-            item.Contract = " where ${id1}:${id2}"
+            item.contract = " where \{id1}:\{id2}"
         }
         <- item
     }
 
-    .VisitTemplateCall = (context: TemplateCallContext -> v: any) {
-        !obj = ""
+    .VisitTemplateCall = (context : TemplateCallContext -> v : Any) {
+        obj = ""
         0 ..< context.typeType().Length @ i {
             i > 0 ? {
                 obj += ","
@@ -434,110 +435,112 @@ FeelLangVisitor = $ me {
         <- obj
     }
 
-    .VisitDataStatement = (context: DataStatementContext -> v: any) {
+    .VisitDataStatement = (context : DataStatementContext -> v : Any) {
         r = Result{}
-        context.nilExpr() >< nil ? {
-            r.data = Any
+        context.nilExpr() <> nil ? {
+            r.data = TargetTypeAny
             r.text = "null"
         }
-        | context.floatExpr() >< nil ? {
-            r.data = F64
-            r.text = Visit(context.floatExpr()) !! str
+        | context.floatExpr() <> nil ? {
+            r.data = TargetTypeF64
+            r.text = Visit(context.floatExpr()) ! Str
         }
-        | context.integerExpr() >< nil ? {
-            r.data = I32
-            r.text = Visit(context.integerExpr()) !! str
+        | context.integerExpr() <> nil ? {
+            r.data = TargetTypeI32
+            r.text = Visit(context.integerExpr()) ! Str
         }
-        | context.rawStringExpr() >< nil ? {
-            r.data = Str
-            r.text = Visit(context.rawStringExpr()) !! str
+        | context.rawStringExpr() <> nil ? {
+            r.data = TargetTypeStr
+            r.text = Visit(context.rawStringExpr()) ! Str
         }
-        | context.stringExpr() >< nil ? {
-            r.data = Str
-            r.text = Visit(context.stringExpr()) !! str
+        | context.stringExpr() <> nil ? {
+            r.data = TargetTypeStr
+            r.text = Visit(context.stringExpr()) ! Str
         }
         | context.t.Type == FeelParser.CharLiteral ? {
-            r.data = Chr
+            r.data = TargetTypeChr
             r.text = context.CharLiteral().GetText()
         }
         | context.t.Type == FeelParser.TrueLiteral ? {
-            r.data = Bool
+            r.data = TargetTypeBool
             r.text = T
         }
         | context.t.Type == FeelParser.FalseLiteral ? {
-            r.data = Bool
+            r.data = TargetTypeBool
             r.text = F
         }
         <- r
     }
 
-    .VisitStringExpr = (context: StringExprContext -> v: any) {
-        !text = ""
+    .VisitStringExpr = (context : StringExprContext -> v : Any) {
+        text = ""
         context.stringTemplate().Length == 0 ? {
             context.stringContent() @ v {
                 text += Visit(v)
             }
-            <- "\"${text}\""
+            <- "\"\{text}\""
         }
         | ? {
             text = "(new System.Text.StringBuilder()"
-            -- 去除前后一个元素
+
             1 ..< context.ChildCount-1 @ i {
                 v = context.GetChild(i)
-                r = Visit(context.GetChild(i)) !! str
-                v :: StringContentContext ? {
-                    text += ".Append(\"${r}\")"
+                r = Visit(context.GetChild(i)) ! Str
+                v ::
+                | StringContentContext ? {
+                    text += ".Append(\"\{r}\")"
                 }
                 | ? {
                     text += r
                 }
             }
-            text += ").to_str()"
+            text += ").To_Str()"
             <- text
         }
     }
 
-    .VisitStringContent = (context: StringContentContext -> v: any) {
+    .VisitStringContent = (context : StringContentContext -> v : Any) {
         context.TextLiteral().GetText() == "\\$" ? {
             <- "$"
         }
         <- context.TextLiteral().GetText() 
     }
 
-    .VisitStringTemplate = (context: StringTemplateContext -> v: any) {
-        !text = ""
+    .VisitStringTemplate = (context : StringTemplateContext -> v : Any) {
+        text = ""
         context.expression() @ v {
-            r = Visit(v) !! Result
-            text += ".Append(${r.text})"
+            r = Visit(v) ! Result
+            text += ".Append(\{r.text})"
         }
         <- text
     }
 
-    .VisitRawStringExpr = (context: RawStringExprContext -> v: any) {
-        !text = ""
+    .VisitRawStringExpr = (context : RawStringExprContext -> v : Any) {
+        text = ""
         context.rawStringTemplate().Length == 0 ? {
-            -- 去除前后一个元素
+
             1 ..< context.ChildCount-1 @ i {
                 v = context.GetChild(i)
-                r = Visit(context.GetChild(i)) !! str
-                v :: RawStringContentContext ? {
+                r = Visit(context.GetChild(i)) ! Str
+                v ::
+                | RawStringContentContext ? {
                     text += r
                 }
                 | ? {
                     text += "\"\""
                 }
             }
-            <- "@\"${text}\""
+            <- "@\"\{text}\""
         }
         | ? {
             text = "(new System.Text.StringBuilder()"
-            -- 去除前后一个元素
+
             1 ..< context.ChildCount-1 @ i {
                 v = context.GetChild(i)
-                r = Visit(context.GetChild(i)) !! str
+                r = Visit(context.GetChild(i)) ! Str
                 v :: 
                 | RawStringContentContext ? {
-                    text += ".Append(@\"${r}\")"
+                    text += ".Append(@\"\{r}\")"
                 }
                 | RawStringTemplateContext ? {
                     text += r
@@ -546,87 +549,87 @@ FeelLangVisitor = $ me {
                     text += ".Append('\"')"
                 }
             }
-            text += ").to_str()"
+            text += ").To_Str()"
             <- text
         }
     }
 
-    .VisitRawStringContent = (context: RawStringContentContext -> v: any) {
-        context.RawTextLiteral().GetText() == "\\$" ? {
-            <- "$"
+    .VisitRawStringContent = (context : RawStringContentContext -> v : Any) {
+        context.RawTextLiteral().GetText() == "\\\\" ? {
+            <- "\\"
         }
         <- context.RawTextLiteral().GetText()
     }
 
-    .VisitRawStringTemplate = (context: RawStringTemplateContext -> v: any) {
-        !text = ""
+    .VisitRawStringTemplate = (context : RawStringTemplateContext -> v : Any) {
+        text = ""
         context.expression() @ v {
-            r = Visit(v) !! Result
-            text += ".Append(${r.text})"
+            r = Visit(v) ! Result
+            text += ".Append(\{r.text})"
         }
         <- text
     }
 
-    .VisitFloatExpr = (context: FloatExprContext -> v: any) {
+    .VisitFloatExpr = (context : FloatExprContext -> v : Any) {
         number = context.FloatLiteral().GetText()
         <- number
     }
 
-    .VisitIntegerExpr = (context: IntegerExprContext -> v: any) {
+    .VisitIntegerExpr = (context : IntegerExprContext -> v : Any) {
         number = context.GetChild(0).GetText()
         <- number
     }
 
-    .VisitPlusMinus = (context: PlusMinusContext -> v: any) {
+    .VisitPlusMinus = (context : PlusMinusContext -> v : Any) {
         r = Result{}
-        expr = Visit(context.expression()) !! Result
+        expr = Visit(context.expression()) ! Result
         op = Visit(context.add())
         r.data = expr.data
         r.text = op + expr.text
         <- r
     }
 
-    .VisitNegate = (context: NegateContext -> v: any) {
+    .VisitNegate = (context : NegateContext -> v : Any) {
         r = Result{}
-        expr = Visit(context.expression()) !! Result
+        expr = Visit(context.expression()) ! Result
         r.data = expr.data
         r.text = "!" + expr.text
         <- r
     }
 
-    .VisitBitwiseNotExpression = (context: BitwiseNotExpressionContext -> v: any) {
+    .VisitBitwiseNotExpression = (context : BitwiseNotExpressionContext -> v : Any) {
         r = Result{}
-        expr = Visit(context.expression()) !! Result
+        expr = Visit(context.expression()) ! Result
         r.data = expr.data
         r.text = "~" + expr.text
         <- r
     }
 
-    .VisitLinq = (context: LinqContext -> v: any) {
+    .VisitLinq = (context : LinqContext -> v : Any) {
         r = Result{data = "var"}
-        r.text += Visit(context.linqHeadItem()) !! str
+        r.text += Visit(context.linqHeadItem()) ! Str
         context.linqItem() @ item {
-            r.text += "${Visit(item)} "
+            r.text += "\{Visit(item)} "
         }
-        r.text += "${(Visit(context.id()) !! Result).text} ${(Visit(context.expression()) !! Result).text}"
+        r.text += "\{(Visit(context.id()) ! Result).text} \{(Visit(context.expression()) ! Result).text}"
         <- r
     }
 
-    .VisitLinqItem = (context: LinqItemContext -> v: any) {
-        context.linqHeadItem() >< nil ? {
-            <- Visit(context.linqHeadItem()) !! str
+    .VisitLinqItem = (context : LinqItemContext -> v : Any) {
+        context.linqHeadItem() <> nil ? {
+            <- Visit(context.linqHeadItem()) ! Str
         }
-        !obj = (Visit(context.id()) !! Result).text
-        context.expression() >< nil ? {
-            obj += " ${(Visit(context.expression()) !! Result).text}"
+        obj = (Visit(context.id()) ! Result).text
+        context.expression() <> nil ? {
+            obj += " \{(Visit(context.expression()) ! Result).text}"
         }
         <- obj
     }
 
-    .VisitLinqHeadItem = (context: LinqHeadItemContext -> v: any) {
-        !obj = ""
-        id = Visit(context.id()) !! Result
-        obj += "from ${id.text} in ${(Visit(context.expression()) !! Result).text} "
+    .VisitLinqHeadItem = (context : LinqHeadItemContext -> v : Any) {
+        obj = ""
+        id = Visit(context.id()) ! Result
+        obj += "from \{id.text} in \{(Visit(context.expression()) ! Result).text} "
         <- obj
     }
 }

@@ -11,18 +11,18 @@
 }
 
 ErrorListener = $ me, base {
-    . BaseErrorListener
-    !FileDir: str
+    BaseErrorListener
+    FileDir: Str
 
     .SyntaxError = (recognizer: IRecognizer, offendingSymbol: IToken?, 
-            line: int, charPositionInLine: int, msg: str, 
+            line: Int, charPositionInLine: Int, msg: Str, 
             e: RecognitionException?->) {
         base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
-        print("------Syntax Error------")
-        print("File: ${me.FileDir}")
-        print("Line: ${line}  Column: ${charPositionInLine}")
-        print("OffendingSymbol: ${offendingSymbol.Text}")
-        print("Message: ${msg}")
+        Print("------Syntax Error------")
+        Print("File: \{me.FileDir}")
+        Print("Line: \{line}  Column: \{charPositionInLine}")
+        Print("OffendingSymbol: \{offendingSymbol.Text}")
+        Print("Message: \{msg}")
     }
 }
 

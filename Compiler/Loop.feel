@@ -12,98 +12,98 @@
 
 
 Iterator = $ {
-    !begin:  Result
-    !end:    Result
-    !step:   Result
-    !order:  str = T
-    !close:  str = T
+    begin : Result
+    end   : Result
+    step  : Result
+    order : Str = T
+    close : Str = T
 }
 
 FeelLangVisitor = $ me {
-    .VisitIterator = (context: IteratorContext -> v: any) {
-        fn: (Result->Result) = (e1) {
+    .VisitIterator = (context : IteratorContext -> v : Any) {
+        fn : (Result->Result) = (e1) {
             it = Iterator{}
-            context.Dot_Dot_Dot() >< nil || context.Dot_Dot_Greater() >< nil ? {
+            context.Dot_Dot_Dot() <> nil || context.Dot_Dot_Greater() <> nil ? {
                 it.order = F
             }
-            context.Dot_Dot_Less() >< nil || context.Dot_Dot_Greater() >< nil ? {
+            context.Dot_Dot_Less() <> nil || context.Dot_Dot_Greater() <> nil ? {
                 it.close = F
             }
-            e2 = Visit(context.expression(0)) !! Result
+            e2 = Visit(context.expression(0)) ! Result
             step = context.expression(1)
             step == nil ? {
                 it.begin = e1
                 it.end = e2
                 it.step = Result{
-                    data = I32
+                    data = TargetTypeI32
                     text = "1"
                 }
             }
             | ? {
                 it.begin = e1
                 it.end = e2
-                it.step = Visit(step) !! Result
+                it.step = Visit(step) ! Result
             }
             r = Result{}
             r.data = "IEnumerable<int>"
-            r.text = "range(${it.begin.text}, ${it.end.text}, ${it.step.text}, ${it.order}, ${it.close})"
+            r.text = "range(\{it.begin.text}, \{it.end.text}, \{it.step.text}, \{it.order}, \{it.close})"
             <- r
         }
         <- fn
     }
 
-    .VisitLoopStatement = (context: LoopStatementContext -> v: any) {
-        !obj = ""
-        arr = Visit(context.expression()) !! Result
-        !target = arr.text
-        !id = "ea"
+    .VisitLoopStatement = (context : LoopStatementContext -> v : Any) {
+        obj = ""
+        arr = Visit(context.expression()) ! Result
+        target = arr.text
+        id = "ea"
         context.id().Length == 2 ? {
-            target = "range(${target})"
-            id = "(${(Visit(context.id(0)) !! Result).text}, ${(Visit(context.id(1)) !! Result).text})"
+            target = "range(\{target})"
+            id = "(\{(Visit(context.id(0)) ! Result).text}, \{(Visit(context.id(1)) ! Result).text})"
         }
         | context.id().Length == 1 ? {
-            id = (Visit(context.id(0)) !! Result).text
+            id = (Visit(context.id(0)) ! Result).text
         }
 
-        obj += "foreach (var ${id} in ${target})"
+        obj += "foreach (var \{id} in \{target})"
         obj += BlockLeft+Wrap
-        me.add_current_set()
+        me.Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.delete_current_set()
+        me.Delete_current_set()
         obj += BlockRight+Wrap
         <- obj
     }
 
-    .VisitLoopCaseStatement = (context: LoopCaseStatementContext -> v: any) {
-        !obj = ""
-        expr = Visit(context.expression()) !! Result
-        obj += "while (true) { ${Wrap} if (${expr.text}) "
+    .VisitLoopCaseStatement = (context : LoopCaseStatementContext -> v : Any) {
+        obj = ""
+        expr = Visit(context.expression()) ! Result
+        obj += "while (true) { \{Wrap} if (\{expr.text}) "
         obj += BlockLeft+Wrap
-        me.add_current_set()
+        me.Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.delete_current_set()
+        me.Delete_current_set()
         obj += BlockRight+Wrap
-        obj += " else { ${Wrap}"
-        context.loopElseStatement() >< nil ? {
+        obj += " else { \{Wrap}"
+        context.loopElseStatement() <> nil ? {
             obj += Visit(context.loopElseStatement())
         }
-        obj += " break; ${Wrap} } }"
+        obj += " break; \{Wrap} } }"
         <- obj
     }
 
-    .VisitLoopElseStatement = (context: LoopElseStatementContext -> v: any) {
-        !obj = ""
-        me.add_current_set()
+    .VisitLoopElseStatement = (context : LoopElseStatementContext -> v : Any) {
+        obj = ""
+        me.Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.delete_current_set()
+        me.Delete_current_set()
         <- obj
     }
 
-    .VisitLoopJumpStatement = (context: LoopJumpStatementContext -> v: any) {
-        <- "break${Terminate; Wrap}"
+    .VisitLoopJumpStatement = (context : LoopJumpStatementContext -> v : Any) {
+        <- "break\{Terminate; Wrap}"
     }
 
-    .VisitLoopContinueStatement = (context: LoopContinueStatementContext -> v: any) {
-        <- "continue${Terminate; Wrap}"
+    .VisitLoopContinueStatement = (context : LoopContinueStatementContext -> v : Any) {
+        <- "continue\{Terminate; Wrap}"
     }
 }

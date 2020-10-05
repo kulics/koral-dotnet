@@ -11,42 +11,42 @@
 }
 
 Namespace = $ {
-    !name: str
-    !imports: str
+    name    : Str
+    imports : Str
 }
 
 FeelLangVisitor = $ me {
-    .VisitStatement = (context: StatementContext -> v: any) {
-        !obj = ""
-        !imports = ""
-        ns = Visit(context.exportStatement()) !! Namespace
-        context.annotationSupport() >< nil ? {
+    .VisitStatement = (context : StatementContext -> v : Any) {
+        obj = ""
+        imports = ""
+        ns = Visit(context.exportStatement()) ! Namespace
+        context.annotationSupport() <> nil ? {
             obj += Visit(context.annotationSupport())
         }
-        obj += "namespace ${ns.name; Wrap; BlockLeft; Wrap}"
+        obj += "namespace \{ns.name; Wrap; BlockLeft; Wrap}"
 
-        !content = ""
-        !contentStatic = ""
-        me.add_current_set()
-        -- pre process to get type id
+        content = ""
+        content_static = ""
+        me.Add_current_set()
+
         context.namespaceSupportStatement() @ item {
             child = item.GetChild(0)
             type = child.GetType()
             type == typeof(PackageStatementContext) ? {
-                childContext = child !! PackageStatementContext
-                id = Visit(childContext.id()) !! Result
-                me.add_type(id.text)
+                childContext = child ! PackageStatementContext
+                id = Visit(childContext.id()) ! Result
+                me.Add_type(id.text)
             }
             | type == typeof(TypeTagStatementContext) ? {
-                childContext = child !! TypeTagStatementContext
-                me.add_type(childContext.Comment_Tag().GetText().sub_str(2))
+                childContext = child ! TypeTagStatementContext
+                me.Add_type(childContext.Comment_Tag().GetText().Sub_Str(2))
             }
         }
         context.namespaceSupportStatement() @ item {
             type = item.GetChild(0).GetType()
             type == typeof(NamespaceVariableStatementContext) ||
             type == typeof(NamespaceFunctionStatementContext) ? {
-                contentStatic += Visit(item)
+                content_static += Visit(item)
             }
             | type == typeof(ImportStatementContext) ? {
                 imports += Visit(item)
@@ -56,55 +56,55 @@ FeelLangVisitor = $ me {
             }
         }
         obj += content
-        contentStatic >< "" ? {
-            obj += "public partial class ${ns.name.sub_str(ns.name.last_index_of(".") + 1)}_static ${BlockLeft; Wrap; contentStatic; BlockRight; Wrap}"
+        content_static <> "" ? {
+            obj += "public partial class \{ns.name.Sub_Str(ns.name.Last_index_of(".") + 1)}_static \{BlockLeft; Wrap; content_static; BlockRight; Wrap}"
         }
-        me.delete_current_set()
+        me.Delete_current_set()
         obj += BlockRight + Wrap
-        -- import library
-        obj = "using Library;${Wrap}using static Library.Lib;${Wrap; imports; Wrap}" + obj
+
+        obj = "using Library;\{Wrap}using static Library.Lib;\{Wrap; imports; Wrap}" + obj
         <- obj
     }
 
-    .VisitExportStatement = (context: ExportStatementContext -> v: any) {
-        name = Visit(context.nameSpaceItem()) !! str
+    .VisitExportStatement = (context : ExportStatementContext -> v : Any) {
+        name = Visit(context.nameSpaceItem()) ! Str
         obj = Namespace{
             name = name
         }
         <- obj
     }
 
-    .VisitImportStatement = (context: ImportStatementContext -> v: any) {
-        !obj = ""
+    .VisitImportStatement = (context : ImportStatementContext -> v : Any) {
+        obj = ""
         context.importSubStatement() @ item {
-            obj += Visit(item) !! str
+            obj += Visit(item) ! Str
         }
         <- obj
     }
 
-    .VisitImportSubStatement = (context: ImportSubStatementContext -> v: any) {
-        !obj = ""
-        context.annotationSupport() >< nil ? {
+    .VisitImportSubStatement = (context : ImportSubStatementContext -> v : Any) {
+        obj = ""
+        context.annotationSupport() <> nil ? {
             obj += Visit(context.annotationSupport())
         }
-        ns = Visit(context.nameSpaceItem()) !! str
-        context.Dot() >< nil ? {
-            obj += "using static ${ ns }"
+        ns = Visit(context.nameSpaceItem()) ! Str
+        context.Dot() <> nil ? {
+            obj += "using static \{ ns }"
         }
-        | context.id() >< nil ? {
-            obj += "using ${ns}.${(Visit(context.id()) !! Result).text}"
+        | context.id() <> nil ? {
+            obj += "using \{ns}.\{(Visit(context.id()) ! Result).text}"
         }
         | ? {
-            obj += "using ${ns}"
+            obj += "using \{ns}"
         }
         obj += Terminate + Wrap
         <- obj
     }
 
-    .VisitNameSpaceItem = (context: NameSpaceItemContext -> v: any) {
-        !obj = ""
+    .VisitNameSpaceItem = (context : NameSpaceItemContext -> v : Any) {
+        obj = ""
         0 ..< context.id().Length @ i {
-            id = Visit(context.id(i)) !! Result
+            id = Visit(context.id(i)) ! Result
             i == 0 ? {
                 obj += id.text
             }
@@ -115,10 +115,10 @@ FeelLangVisitor = $ me {
         <- obj
     }
 
-    .VisitName = (context: NameContext -> v: any) {
-        !obj = ""
+    .VisitName = (context : NameContext -> v : Any) {
+        obj = ""
         0 ..< context.id().Length @ i {
-            id = Visit(context.id(i)) !! Result
+            id = Visit(context.id(i)) ! Result
             i == 0 ? {
                 obj += id.text
             }
@@ -129,15 +129,15 @@ FeelLangVisitor = $ me {
         <- obj
     }
 
-    .VisitEnumStatement = (context: EnumStatementContext -> v: any) {
-        !obj = ""
-        id = Visit(context.id()) !! Result
-        !header = ""
-        !typ = "int"
-        context.annotationSupport() >< nil ? {
+    .VisitEnumStatement = (context : EnumStatementContext -> v : Any) {
+        obj = ""
+        id = Visit(context.id()) ! Result
+        header = ""
+        typ = "int"
+        context.annotationSupport() <> nil ? {
             header += Visit(context.annotationSupport())
         }
-        header += "${id.permission} enum ${id.text}:${typ}"
+        header += "\{id.permission} enum \{id.text}:\{typ}"
         header += Wrap + BlockLeft + Wrap
         0 ..< context.enumSupportStatement().Length @ i {
             obj += Visit(context.enumSupportStatement(i))
@@ -147,75 +147,75 @@ FeelLangVisitor = $ me {
         <- obj
     }
 
-    .VisitEnumSupportStatement = (context: EnumSupportStatementContext -> v: any) {
-        id = Visit(context.id()) !! Result
-        context.integerExpr() >< nil ? {
-            !op = ""
-            context.add() >< nil ? {
-                op = Visit(context.add()) !! str
+    .VisitEnumSupportStatement = (context : EnumSupportStatementContext -> v : Any) {
+        id = Visit(context.id()) ! Result
+        context.integerExpr() <> nil ? {
+            op = ""
+            context.add() <> nil ? {
+                op = Visit(context.add()) ! Str
             }
             id.text += " = " + op + Visit(context.integerExpr())
         }
         <- id.text + ","
     }
 
-    .VisitNamespaceFunctionStatement = (context: NamespaceFunctionStatementContext -> v: any) {
-        id = Visit(context.id()) !! Result
-        !obj = ""
-        context.annotationSupport() >< nil ? {
+    .VisitNamespaceFunctionStatement = (context : NamespaceFunctionStatementContext -> v : Any) {
+        id = Visit(context.id()) ! Result
+        obj = ""
+        context.annotationSupport() <> nil ? {
             obj += Visit(context.annotationSupport())
         }
 
-        !pout = ""
+        pout = ""
         context.t == nil ? {
             pout = "void"
         }
         | ? {
-            pout = Visit(context.parameterClauseOut()) !! str
+            pout = Visit(context.parameterClauseOut()) ! Str
             context.t.Type == Right_Flow ? {
-                pout >< "void" ? {
-                    pout = "${Task}<${pout}>"
+                pout <> "void" ? {
+                    pout = "\{Task}<\{pout}>"
                 }
                 | ? {
                     pout = Task
                 }
             }
         }
-        obj += "${pout} ${id.text}"
+        obj += "\{pout} \{id.text}"
 
-        !templateContract = ""
-        context.templateDefine() >< nil ? {
-            template = Visit(context.templateDefine()) !! TemplateItem
-            obj += template.Template
-            templateContract = template.Contract
+        template_contract = ""
+        context.templateDefine() <> nil ? {
+            template = Visit(context.templateDefine()) ! TemplateItem
+            obj += template.template
+            template_contract = template.contract
         }
-        me.add_current_set()
-        me.add_func_stack()
-        obj += Visit(context.parameterClauseIn()) + templateContract + BlockLeft + Wrap
+        me.Add_current_set()
+        me.Add_func_stack()
+        obj += Visit(context.parameterClauseIn()) + template_contract + BlockLeft + Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.delete_current_set()
+        me.Delete_current_set()
         obj += BlockRight + Wrap
 
-        get_func_async() ? {
+        Get_func_async() ? {
             obj = " async " + obj
         }
-        me.delete_func_stack()
+        me.Delete_func_stack()
         obj = id.permission + " static " + obj
         <- obj
     }
 
-    .VisitNamespaceVariableStatement = (context: NamespaceVariableStatementContext -> v: any) {
-        r1 = Visit(context.id()) !! Result
-        me.add_id(r1.text)
-        !isMutable = r1.isVirtual
-        !typ = ""
-        !r2: Result? = nil
-        context.expression() >< nil ? {
-            r2 = Visit(context.expression()) !! Result
-            typ = r2.data !! str
+    .VisitNamespaceVariableStatement = (context : NamespaceVariableStatementContext -> v : Any) {
+        r1 = Visit(context.id()) ! Result
+        me.Add_ID(r1.text)
+        is_mutable = r1.is_virtual
+        typ = ""
+        r2 : Result? = nil
+        context.expression() <> nil ? {
+            r2 = Visit(context.expression()) ! Result
+            typ = r2.data ! Str
         }
-        context.typeType() >< nil ? {
-            typ = Visit(context.typeType()) !! str
+        context.typeType() <> nil ? {
+            typ = Visit(context.typeType()) ! Str
         }
         isMutable = true
         ~~r1.isMutable ? {
@@ -224,46 +224,46 @@ FeelLangVisitor = $ me {
                 isMutable = false
             }
         }
-        !obj = ""
-        context.annotationSupport() >< nil ? {
-            me.selfPropertyID = r1.text
+        obj = ""
+        context.annotationSupport() <> nil ? {
+            me.self_property_ID = r1.text
             obj += Visit(context.annotationSupport())
         }
-        me.selfPropertyContent.len > 0 ? {
-            !pri = ""
-            me.selfPropertyVariable ? {
-                pri = "private static ${typ} _${r1.text}" 
-                r2 >< nil ? {
+        me.self_property_content.Size() > 0 ? {
+            pri = ""
+            me.self_property_variable ? {
+                pri = "private static \{typ} _\{r1.text}" 
+                r2 <> nil ? {
                     pri += " = " + r2.text
                 }
                 pri += Terminate + Wrap
             }
             obj = pri + obj
-            obj += "${r1.permission} static ${typ} ${r1.text; BlockLeft}"
-            me.selfPropertyContent @ v {
+            obj += "\{r1.permission} static \{typ} \{r1.text; BlockLeft}"
+            me.self_property_content @ v {
                 obj += v
             }
             obj += BlockRight+Wrap
-            me.selfPropertyContent.clear()
-            me.selfPropertyID = ""
-            me.selfPropertyVariable = false
+            me.self_property_content.Clear()
+            me.self_property_ID = ""
+            me.self_property_variable = false
         }
         | isMutable || r2 == nil ? {
-            obj += "${r1.permission} static ${typ} ${r1.text}"
-            r2 >< nil ? {
-                obj += " = ${r2.text; Terminate; Wrap}"
+            obj += "\{r1.permission} static \{typ} \{r1.text}"
+            r2 <> nil ? {
+                obj += " = \{r2.text; Terminate; Wrap}"
             }
             | ? {
                 obj += Terminate + Wrap
             }
         }
         | ? {
-            obj += "${r1.permission} const ${typ} ${r1.text} = ${r2.text; Terminate; Wrap}"
+            obj += "\{r1.permission} const \{typ} \{r1.text} = \{r2.text; Terminate; Wrap}"
         }
         <- obj
     }
 
-    .VisitTypeTagStatement = (context: TypeTagStatementContext -> v: any) {
+    .VisitTypeTagStatement = (context : TypeTagStatementContext -> v : Any) {
         <- ""
     }
 }

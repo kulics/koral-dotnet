@@ -21,27 +21,27 @@ var ns = (Namespace)(Visit(context.exportStatement()));
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-obj+=(new System.Text.StringBuilder().Append("namespace ").Append(ns.name).Append(Wrap).Append(BlockLeft).Append(Wrap)).to_str();
+obj+=(new System.Text.StringBuilder().Append("namespace ").Append(ns.name).Append(Wrap).Append(BlockLeft).Append(Wrap)).To_Str();
 var content = "";
-var contentStatic = "";
-this.add_current_set();
+var content_static = "";
+this.Add_current_set();
 foreach (var item in context.namespaceSupportStatement()){
 var child = item.GetChild(0);
 var type = child.GetType();
 if ( type==typeof(PackageStatementContext) ) {
 var childContext = (PackageStatementContext)(child);
 var id = (Result)(Visit(childContext.id()));
-this.add_type(id.text);
+this.Add_type(id.text);
 }
 else if ( type==typeof(TypeTagStatementContext) ) {
 var childContext = (TypeTagStatementContext)(child);
-this.add_type(childContext.Comment_Tag().GetText().sub_str(2));
+this.Add_type(childContext.Comment_Tag().GetText().Sub_Str(2));
 }
 }
 foreach (var item in context.namespaceSupportStatement()){
 var type = item.GetChild(0).GetType();
 if ( type==typeof(NamespaceVariableStatementContext)||type==typeof(NamespaceFunctionStatementContext) ) {
-contentStatic+=Visit(item);
+content_static+=Visit(item);
 }
 else if ( type==typeof(ImportStatementContext) ) {
 imports+=Visit(item);
@@ -51,12 +51,12 @@ content+=Visit(item);
 }
 }
 obj+=content;
-if ( contentStatic!="" ) {
-obj+=(new System.Text.StringBuilder().Append("public partial class ").Append(ns.name.sub_str(ns.name.last_index_of(".")+1)).Append("_static ").Append(BlockLeft).Append(Wrap).Append(contentStatic).Append(BlockRight).Append(Wrap)).to_str();
+if ( content_static!="" ) {
+obj+=(new System.Text.StringBuilder().Append("public partial class ").Append(ns.name.Sub_Str(ns.name.Last_index_of(".")+1)).Append("_static ").Append(BlockLeft).Append(Wrap).Append(content_static).Append(BlockRight).Append(Wrap)).To_Str();
 }
-this.delete_current_set();
+this.Delete_current_set();
 obj+=BlockRight+Wrap;
-obj = (new System.Text.StringBuilder().Append("using Library;").Append(Wrap).Append("using static Library.Lib;").Append(Wrap).Append(imports).Append(Wrap)).to_str()+obj;
+obj = (new System.Text.StringBuilder().Append("using Library;").Append(Wrap).Append("using static Library.Lib;").Append(Wrap).Append(imports).Append(Wrap)).To_Str()+obj;
 return obj;
 }
 public  override  object VisitExportStatement( ExportStatementContext context ){
@@ -78,13 +78,13 @@ obj+=Visit(context.annotationSupport());
 }
 var ns = (string)(Visit(context.nameSpaceItem()));
 if ( context.Dot()!=null ) {
-obj+=(new System.Text.StringBuilder().Append("using static ").Append(ns)).to_str();
+obj+=(new System.Text.StringBuilder().Append("using static ").Append(ns)).To_Str();
 }
 else if ( context.id()!=null ) {
-obj+=(new System.Text.StringBuilder().Append("using ").Append(ns).Append(".").Append(((Result)(Visit(context.id()))).text)).to_str();
+obj+=(new System.Text.StringBuilder().Append("using ").Append(ns).Append(".").Append(((Result)(Visit(context.id()))).text)).To_Str();
 }
 else {
-obj+=(new System.Text.StringBuilder().Append("using ").Append(ns)).to_str();
+obj+=(new System.Text.StringBuilder().Append("using ").Append(ns)).To_Str();
 }
 obj+=Terminate+Wrap;
 return obj;
@@ -123,7 +123,7 @@ var typ = "int";
 if ( context.annotationSupport()!=null ) {
 header+=Visit(context.annotationSupport());
 }
-header+=(new System.Text.StringBuilder().Append(id.permission).Append(" enum ").Append(id.text).Append(":").Append(typ)).to_str();
+header+=(new System.Text.StringBuilder().Append(id.permission).Append(" enum ").Append(id.text).Append(":").Append(typ)).To_Str();
 header+=Wrap+BlockLeft+Wrap;
 foreach (var i in range(0, context.enumSupportStatement().Length, 1, true, false)){
 obj+=Visit(context.enumSupportStatement(i));
@@ -157,37 +157,37 @@ else {
 pout = (string)(Visit(context.parameterClauseOut()));
 if ( context.t.Type==Right_Flow ) {
 if ( pout!="void" ) {
-pout = (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).to_str();
+pout = (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).To_Str();
 }
 else {
 pout = Task;
 }
 }
 }
-obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).to_str();
-var templateContract = "";
+obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).To_Str();
+var template_contract = "";
 if ( context.templateDefine()!=null ) {
 var template = (TemplateItem)(Visit(context.templateDefine()));
-obj+=template.Template;
-templateContract = template.Contract;
+obj+=template.template;
+template_contract = template.contract;
 }
-this.add_current_set();
-this.add_func_stack();
-obj+=Visit(context.parameterClauseIn())+templateContract+BlockLeft+Wrap;
+this.Add_current_set();
+this.Add_func_stack();
+obj+=Visit(context.parameterClauseIn())+template_contract+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
-this.delete_current_set();
+this.Delete_current_set();
 obj+=BlockRight+Wrap;
-if ( get_func_async() ) {
+if ( Get_func_async() ) {
 obj = " async "+obj;
 }
-this.delete_func_stack();
+this.Delete_func_stack();
 obj = id.permission+" static "+obj;
 return obj;
 }
 public  override  object VisitNamespaceVariableStatement( NamespaceVariableStatementContext context ){
 var r1 = (Result)(Visit(context.id()));
-this.add_id(r1.text);
-var isMutable = r1.isVirtual;
+this.Add_ID(r1.text);
+var is_mutable = r1.is_virtual;
 var typ = "";
 Result? r2 = null;
 if ( context.expression()!=null ) {
@@ -197,7 +197,7 @@ typ = (string)(r2.data);
 if ( context.typeType()!=null ) {
 typ = (string)(Visit(context.typeType()));
 }
-isMutable = true;
+var isMutable = true;
 if ( !r1.isMutable ) {
 switch (typ) {
 case "int" :
@@ -231,39 +231,39 @@ case "int" :
 }
 var obj = "";
 if ( context.annotationSupport()!=null ) {
-this.selfPropertyID=r1.text;
+this.self_property_ID=r1.text;
 obj+=Visit(context.annotationSupport());
 }
-if ( this.selfPropertyContent.len>0 ) {
+if ( this.self_property_content.Size()>0 ) {
 var pri = "";
-if ( this.selfPropertyVariable ) {
-pri = (new System.Text.StringBuilder().Append("private static ").Append(typ).Append(" _").Append(r1.text)).to_str();
+if ( this.self_property_variable ) {
+pri = (new System.Text.StringBuilder().Append("private static ").Append(typ).Append(" _").Append(r1.text)).To_Str();
 if ( r2!=null ) {
 pri+=" = "+r2.text;
 }
 pri+=Terminate+Wrap;
 }
 obj = pri+obj;
-obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append(BlockLeft)).to_str();
-foreach (var v in this.selfPropertyContent){
+obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append(BlockLeft)).To_Str();
+foreach (var v in this.self_property_content){
 obj+=v;
 }
 obj+=BlockRight+Wrap;
-this.selfPropertyContent.clear();
-this.selfPropertyID="";
-this.selfPropertyVariable=false;
+this.self_property_content.Clear();
+this.self_property_ID="";
+this.self_property_variable=false;
 }
 else if ( isMutable||r2==null ) {
-obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text)).to_str();
+obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text)).To_Str();
 if ( r2!=null ) {
-obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).To_Str();
 }
 else {
 obj+=Terminate+Wrap;
 }
 }
 else {
-obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" const ").Append(typ).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).to_str();
+obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" const ").Append(typ).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).To_Str();
 }
 return obj;
 }
