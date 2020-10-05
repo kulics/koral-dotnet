@@ -34,8 +34,6 @@ Left_Arrow: 	'<-';
 Right_Wave:		'~>';
 Left_Wave: 		'<~';
 
-Equal: 	'=';
-
 Less_Less_Less: 			'<<<';
 Greater_Greater_Greater: 	'>>>';
 Caret_Caret_Caret: 			'^^^';
@@ -43,9 +41,9 @@ And_And_And: 				'&&&';
 Or_Or_Or: 					'|||';
 Tilde_Tilde_Tilde: 			'~~~';
 
-And_And: 			'&&';
-Or_Or: 				'||';
-Tilde_Tilde: 		'~~';
+And_And: 		'&&';
+Or_Or: 			'||';
+Tilde_Tilde: 	'~~';
 
 Question_Question:	'??';
 Bang_Bang:			'!!';
@@ -53,62 +51,59 @@ Bang_Bang:			'!!';
 Less: 		'<';
 Greater: 	'>';
 
-Semi: ';';
+Colon: 	':';
+Equal: 	'=';
+Semi: 	';';
 
-Left_Paren:             '(';
-Right_Paren:             ')';
-Left_Brace:             '{' -> pushMode(DEFAULT_MODE);
-Right_Brace:             '}' -> popMode;
-Left_Brack:             '[';
-Right_Brack:            ']';
+Left_Paren:  	'(';
+Right_Paren:    ')';
+Left_Brace:     '{' -> pushMode(DEFAULT_MODE);
+Right_Brace:    '}' -> popMode;
+Left_Brack:     '[';
+Right_Brack:    ']';
 
-Colon: ':';
-
-Question: '?';
-
-At: '@';
-
-Bang: '!';
-
-Coin: '$';
-
-Tilde: '~';
+Question: 	'?';
+At: 		'@';
+Bang: 		'!';
+Coin: 		'$';
 
 Add:    '+';
 Sub:    '-';
 Mul:    '*';
 Div:    '/';
 Mod:   	'%';
+Caret:  '^';
 
 And:    '&';
 Or:     '|';
-Caret:    '^';
+Tilde: 	'~';
 
-Back_Quote:  '`';
+// Back_Quote:  '`';
+// Sharp:	'#';
 
-Sharp:	'#';
+TypeAny: 		'Any';
+NilLiteral: 	'nil';
+TrueLiteral: 	'true';
+FalseLiteral: 	'false';
 
-TypeAny: 	'Any';
-NilLiteral: 'nil';
-TrueLiteral: 'true';
-FalseLiteral: 'false';
-
-FloatLiteral: Digit (Exponent | '.' Digit Exponent?);
+FloatLiteral: 	Digit (Exponent | '.' Digit Exponent?);
 DecimalLiteral: Digit;
-BinaryLiteral: '0' [bB] [0-1_]* [0-1]; 
-OctalLiteral: '0' [oO] [0-7_]* [0-7];
-HexLiteral: '0' [xX] [a-fA-F0-9_]* [a-fA-F0-9];
-fragment Digit: [0-9] | [0-9] [0-9_]* [0-9];   // 单个数字
-fragment Exponent: [eE] [+-]? [0-9]+;
-Quote_Quote_Quote_Open: '"""' -> pushMode(ModeRawString); // 多行字符串
-Quote_Open: '"' -> pushMode(ModeString); // 单行字符串
-CharLiteral: '\'' ('\\\'' | '\\' [btnfr\\] | .)*? '\''; // 单字符
-Identifier: '_'? LetterCharacter IdentifierPartCharacter*; // 公有标识符
-Discard: '_'; // 匿名变量
+BinaryLiteral: 	'0' [bB] [0-1_]* [0-1]; 
+OctalLiteral: 	'0' [oO] [0-7_]* [0-7];
+HexLiteral: 	'0' [xX] [a-fA-F0-9_]* [a-fA-F0-9];
+fragment Digit: 	[0-9] | [0-9] [0-9_]* [0-9];   // 单个数字
+fragment Exponent: 	[eE] [+-]? [0-9]+;
 
-Comment_Tag: '##' ~[\r\n]* ; // 特殊注释
-Comment_Block_Big: '```' .*? '```' -> skip; // 块注释
-Comment_Block: '`' .*? '`' -> skip; // 块注释
+Quote_Quote_Quote_Open: '"""' -> pushMode(ModeRawString); // 多行字符串
+Quote_Open: 			'"' -> pushMode(ModeString); // 单行字符串
+CharLiteral: 			'\'' ('\\\'' | '\\' [btnfr\\] | .)*? '\''; // 单字符
+
+Identifier: '_'? LetterCharacter IdentifierPartCharacter*; // 公有标识符
+Discard: 	'_'; // 匿名变量
+
+Comment_Tag: 		'##' ~[\r\n]* ; // 特殊注释
+Comment_Block_Big: 	'```' .*? '```' -> skip; // 块注释
+Comment_Block: 		'`' .*? '`' -> skip; // 块注释
 // Comment_Line: '--' ~[\r\n]* -> skip; // 行注释
 
 New_Line: '\r'? '\n'; 
