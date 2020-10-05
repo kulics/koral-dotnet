@@ -843,9 +843,9 @@ mode ModeString;
 
 Quote_Close: '"' -> popMode;
 
-String_Template_Open: '${' -> pushMode(DEFAULT_MODE);
+String_Template_Open: '\\{' -> pushMode(DEFAULT_MODE);
 
-TextLiteral: '\\' [btnfr"\\$] | ~('\\' | '"' | '$' )+ | '$' ; // 文本
+TextLiteral: '\\' [btnfr"\\] | ~('\\' | '"' )+ ; // 文本
 
 mode ModeRawString;
 
@@ -853,6 +853,6 @@ Quote_Quote_Quote_Close: '"""' -> popMode;
 
 Raw_Quote: '"' ;
 
-Raw_String_Template_Open: '${' -> pushMode(DEFAULT_MODE);
+Raw_String_Template_Open: '\\{' -> pushMode(DEFAULT_MODE);
 
-RawTextLiteral: '\\$' | ~( '"' | '$' )+ | '$' ; // 文本
+RawTextLiteral: '\\' [btnfr"\\] | ~( '"' | '\\' )+ ; // 文本
