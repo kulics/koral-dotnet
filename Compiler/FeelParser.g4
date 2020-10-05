@@ -299,9 +299,9 @@ callElement: left_brack (slice | expression) right_brack; // 元素调用
 
 callPkg: typeNotNull left_brace (pkgAssign|listAssign|dictionaryAssign)? right_brace; // 新建包
 
-orElse: Question_Question expression; // 可空取值
+orElse: Question expression; // 可空取值
 
-typeConversion: Bang_Bang typeType; // 类型转化
+typeConversion: Bang typeType; // 类型转化
 
 typeCheck: Colon_Colon typeType; // 类型转化
 
