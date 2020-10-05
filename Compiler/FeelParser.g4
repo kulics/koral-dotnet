@@ -132,7 +132,7 @@ parameterClauseIn: parameter? (more parameter)*;
 // 出参
 parameterClauseOut: parameter? (more parameter)*;
 // 参数结构
-parameter: (annotationSupport)? Bang? id Colon (Comma_Comma|Comma_Comma_Comma)? typeType;
+parameter: (annotationSupport)? id Colon (Comma_Comma|Comma_Comma_Comma)? typeType Bang?;
 
 // 函数支持的语句
 functionSupportStatement:
@@ -346,7 +346,7 @@ pkgAnonymous: pkgAnonymousAssign; // 匿名包
 pkgAnonymousAssign: Coin left_brace (pkgAnonymousAssignElement end)*
  pkgAnonymousAssignElement right_brace left_brace right_brace; // 简化赋值
 
-pkgAnonymousAssignElement: Bang? name Equal expression; // 简化赋值元素
+pkgAnonymousAssignElement: name Equal expression; // 简化赋值元素
 
 functionExpression: left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
 parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
