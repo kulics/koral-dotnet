@@ -15,5 +15,13 @@ namespace Library {
         public static string read() => Console.ReadLine();
 
         public static void clear() => Console.Clear();
+
+        public static void Print(params object[] paramList) {
+            print(paramList);
+        }
+
+        public static string Read() => Console.ReadLine();
+
+        public static void Clear() => Console.Clear();
     }
 }

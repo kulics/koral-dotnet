@@ -9,11 +9,17 @@ namespace Library {
 
     public static partial class Lib {
 
-        public static System.Type @typeof<T>() => typeof(T);
+        public static Type @typeof<T>() => typeof(T);
+
+        public static Type Typeof<T>() => typeof(T);
 
         public static void @throw(Exception it) => throw it;
 
+        public static void Throw(Exception it) => throw it;
+
         public static T[] array_of<T>(params T[] item) => item;
+
+        public static T[] Array_of<T>(params T[] item) => item;
 
         public static T[] array<T>(int cap, params T[] item) {
             var arr = new T[cap];
@@ -23,24 +29,52 @@ namespace Library {
             return arr;
         }
 
+        public static T[] Array<T>(int size, Func<int, T> initElement) {
+            var arr = new T[size];
+            for (int i = 0; i < size; i++) {
+                arr[i] = initElement(i);
+            }
+            return arr;
+        }
+
         public static list<T> list_of<T>(params T[] item) => new list<T>(item);
 
-        public static T empty<T>() => default(T);
+        public static List<T> List_of<T>(params T[] item) => new List<T>(item);
+
+        public static T empty<T>() => default;
+
+        public static T Empty<T>() => default;
 
         public static T to<T>(object it) => (T)it;
 
+        public static T To<T>(object it) => (T)it;
+
         public static bool @is<T>(object it) => it is T;
+
+        public static bool Is<T>(object it) => it is T;
         public static bool is_not<T>(object it) => !(it is T);
+
+        public static bool Is_not<T>(object it) => !(it is T);
 
         public static T @as<T>(object it) where T : class => it as T;
 
+        public static T As<T>(object it) where T : class => it as T;
+
         public static void print(params object[] paramList) => Cmd.print(paramList);
+
+        public static void Print(params object[] paramList) => Cmd.Print(paramList);
 
         public static string read() => Cmd.read();
 
+        public static string Read() => Cmd.read();
+
         public static void clear() => Cmd.clear();
 
-        public static T run<T>(Func<T> rn) => rn();
+        public static void Clear() => Cmd.clear();
+
+        public static T run<T>(Func<T> fn) => fn();
+
+        public static T Run<T>(Func<T> fn) => fn();
 
         public static list<T2> runloop<T1, T2>(IEnumerable<T1> source, Func<T1, T2> fn) {
             var temp = new list<T2>();
@@ -70,15 +104,27 @@ namespace Library {
 
         public static void wait(params Task[] tasks) => Task.WaitAll(tasks);
 
+        public static void Wait(params Task[] tasks) => Task.WaitAll(tasks);
+
         public static void sleep(int milliseconds) => Thread.Sleep(milliseconds);
+
+        public static void Sleep(int milliseconds) => Thread.Sleep(milliseconds);
 
         public static Task delay(int milliseconds) => Task.Delay(milliseconds);
 
+        public static Task Delay(int milliseconds) => Task.Delay(milliseconds);
+
         public static double pow(double a, double b) => Math.Pow(a, b);
+
+        public static double Pow(double a, double b) => Math.Pow(a, b);
 
         public static double root(double a, double b) => Math.Pow(a, 1 / b);
 
+        public static double Root(double a, double b) => Math.Pow(a, 1 / b);
+
         public static double log(double a, double b) => Math.Log(a, b);
+
+        public static double Log(double a, double b) => Math.Log(a, b);
 
         public static int len<T>(T[] it) => it.Length;
         public static int length<T>(T[] it) => it.Length;

@@ -209,21 +209,50 @@ namespace Library {
         public static int cap<T>(this List<T> it) => it.Capacity;
         public static int capacity<T>(this List<T> it) => it.Capacity;
 
-        public static list<T> sub_list<T>(this List<T> it, int startIndex, int endIndex) //=> GetRange(startIndex, count) as lst<T>;
+        public static int Size<T>(this ICollection<T> it) => it.Count;
+        public static int Append<T>(this IList<T> it, T element) {
+            it.Add(element);
+            return it.Count - 1;
+        }
+        public static int Last_index<T>(this IList<T> it) => it.Count == 0 ? 0 : it.Count - 1;
+
+        public static List<T> Slice<T>(this IList<T> it, int? startIndex, int? endIndex, bool order = true, bool close = true) {
+            if (startIndex == null && endIndex == null) {
+                return Sub_List(it, 0, it.Last_index());
+            } else if (endIndex == null) {
+                return Sub_List(it, startIndex ?? 0, it.Last_index());
+            } else { // (startIndex == null)
+                return Sub_List(it, 0, endIndex ?? 0);
+            }
+        }
+
+        public static List<T> Sub_List<T>(this IList<T> it, int startIndex, int endIndex) //=> GetRange(startIndex, count) as lst<T>;
         {
-            var temp = new list<T>();
+            var temp = new List<T>();
             int currIndex = startIndex;
             while (currIndex <= endIndex) {
-                temp += it[currIndex];
+                temp.Append(it[currIndex]);
                 currIndex++;
             }
             return temp;
         }
-        public static list<T> slice<T>(this List<T> it, int? startIndex, int? endIndex, bool order = true, bool close = true) {
+
+        public static list<T> sub_list<T>(this IList<T> it, int startIndex, int endIndex) //=> GetRange(startIndex, count) as lst<T>;
+        {
+            var temp = new list<T>();
+            int currIndex = startIndex;
+            while (currIndex <= endIndex) {
+                temp.Append(it[currIndex]);
+                currIndex++;
+            }
+            return temp;
+        }
+
+        public static list<T> slice<T>(this IList<T> it, int? startIndex, int? endIndex, bool order = true, bool close = true) {
             if (startIndex == null && endIndex == null) {
                 return it.sub_list(0, it.len() - 1);
             } else if (endIndex == null) {
-                    return it.sub_list(startIndex ?? 0, it.len() - 1);
+                return it.sub_list(startIndex ?? 0, it.len() - 1);
             } else { // (startIndex == null)
                 return it.sub_list(0, endIndex ?? 0);
             }

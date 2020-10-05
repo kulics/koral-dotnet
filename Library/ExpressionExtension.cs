@@ -7,13 +7,17 @@ namespace Library {
     public static partial class ExpressionExtension {
         // object 
         public static string to_str(this object it) => it.ToString();
+
+        public static string To_Str(this object it) => it.ToString();
         public static T to<T>(this object it) => (T)it;
+
+        public static T To<T>(this object it) => (T)it;
         public static bool @is<T>(this object it) => it is T;
         public static bool is_not<T>(this object it) => !(it is T);
         public static T @as<T>(this object it) where T : class => it as T;
         public static T or_else<T>(this T it, T value) where T : class => it != null ? it : value;
         public static T or_else<T>(this T? it, T value) where T : struct => it ?? value;
-        public static System.Type get_type(this object it) => it.GetType();
+        public static Type get_type(this object it) => it.GetType();
 
         public static int to_int(this object it) => Convert.ToInt32(it);
         public static double to_num(this object it) => Convert.ToDouble(it);
@@ -340,15 +344,25 @@ namespace Library {
         public static ulong to_u64_from_base(this string it, int fromBase) => Convert.ToUInt64(it, fromBase);
 
         public static byte[] to_bytes_by_base64(this string it) => Convert.FromBase64String(it);
+        public static byte[] To_Bytes_by_Base64(this string it) => Convert.FromBase64String(it);
 
         public static string to_str(this byte[] it) => Encoding.UTF8.GetString(it);
+
+        public static string To_Str(this byte[] it) => Encoding.UTF8.GetString(it);
         public static string to_hex(this byte[] it) => BitConverter.ToString(it, 0).Replace("-", string.Empty);
+        public static string To_hex(this byte[] it) => BitConverter.ToString(it, 0).Replace("-", string.Empty);
         public static string to_lower_hex(this byte[] it) => it.to_hex().ToLower();
+
+        public static string To_lower_hex(this byte[] it) => it.to_hex().ToLower();
         public static string to_upper_hex(this byte[] it) => it.to_hex();
+        public static string To_upper_hex(this byte[] it) => it.to_hex();
 
         public static string to_base64_str(this byte[] it) => Convert.ToBase64String(it, 0, it.Length);
+        public static string To_Base64_Str(this byte[] it) => Convert.ToBase64String(it, 0, it.Length);
         public static byte[] from_base64_str(this string it) => Convert.FromBase64String(it);
+        public static byte[] From_Base64_Str(this string it) => Convert.FromBase64String(it);
 
         public static byte[] sub_bytes(this byte[] it, int start, int length) => it.Skip(start).Take(length).ToArray();
+        public static byte[] Sub_Bytes(this byte[] it, int start, int length) => it.Skip(start).Take(length).ToArray();
     }
 }
