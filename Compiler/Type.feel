@@ -28,7 +28,7 @@ FeelLangVisitor = $ me {
         !obj = ""
         obj += Visit(context.nameSpaceItem())
         context.templateCall() >< nil ? {
-            obj == "array" ? {
+            obj == "Array" ? {
                 obj = "${Visit(context.templateCall())}[]"
             }
             | ? {

@@ -216,6 +216,8 @@ namespace Library {
         }
         public static int Last_index<T>(this IList<T> it) => it.Count == 0 ? 0 : it.Count - 1;
 
+        public static void Put<TKey, TValue>(this IDictionary<TKey, TValue> it, TKey key, TValue value) => it.Add(key, value);
+
         public static List<T> Slice<T>(this IList<T> it, int? startIndex, int? endIndex, bool order = true, bool close = true) {
             if (startIndex == null && endIndex == null) {
                 return Sub_List(it, 0, it.Last_index());

@@ -25,7 +25,7 @@ public  override  object VisitTypePackage( TypePackageContext context ){
 var obj = "";
 obj+=Visit(context.nameSpaceItem());
 if ( context.templateCall()!=null ) {
-if ( obj=="array" ) {
+if ( obj=="Array" ) {
 obj = (new System.Text.StringBuilder().Append(Visit(context.templateCall())).Append("[]")).to_str();
 }
 else {
