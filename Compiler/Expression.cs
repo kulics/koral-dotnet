@@ -251,7 +251,7 @@ else if ( context.t.Type==Discard ) {
 return (new Result(){text = "_",data = "var"});
 }
 } break;
-case 2 :
+case 4 :
 { var id = (Result)(Visit(context.id()));
 var template = "<"+((string)(Visit(context.templateCall())))+">";
 return (new Result(){text = id.text+template,data = id.text+template,rootID = id.text});

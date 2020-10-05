@@ -356,7 +356,7 @@ FeelLangVisitor = $ me {
                 }
             }
         }
-        | 2 ? {
+        | 4 ? {
             id = Visit(context.id()) !! Result
             template = "<" + (Visit(context.templateCall()) !! str) + ">"
             <- Result{
