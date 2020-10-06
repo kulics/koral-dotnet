@@ -168,7 +168,7 @@ if ( context.annotationSupport()!=null ) {
 p.annotation=(string)(Visit(context.annotationSupport()));
 }
 p.type=(string)(Visit(context.typeType()));
-if ( context.Comma_Comma_Comma()!=null ) {
+if ( context.Dot_Dot()!=null ) {
 p.type=(new System.Text.StringBuilder().Append("params ").Append(p.type).Append("[]")).To_Str();
 }
 if ( context.Bang()!=null ) {

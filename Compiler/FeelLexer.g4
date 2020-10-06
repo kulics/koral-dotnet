@@ -19,8 +19,6 @@ Dot_Dot_Greater:	'..>';
 Dot_Dot: 			'..';
 Dot: 				'.';
 
-Comma_Comma_Comma: 	',,,';
-Comma_Comma: 		',,';
 Comma: 				',';
 
 Double_Arrow:	'=>';

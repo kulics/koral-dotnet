@@ -191,7 +191,7 @@ FeelLangVisitor = $ me {
             p.annotation = Visit(context.annotationSupport()) ! Str
         }
         p.type = Visit(context.typeType()) ! Str
-        context.Comma_Comma_Comma() <> nil ? {
+        context.Dot_Dot() <> nil ? {
             p.type = "params \{p.type}[]"
         }
         context.Bang() <> nil ? {
