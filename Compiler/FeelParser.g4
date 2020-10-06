@@ -132,7 +132,7 @@ parameterClauseIn: parameter? (more parameter)*;
 // 出参
 parameterClauseOut: parameter? (more parameter)*;
 // 参数结构
-parameter: (annotationSupport)? id Colon (Comma_Comma|Comma_Comma_Comma)? typeType Bang?;
+parameter: (annotationSupport)? id Colon Dot_Dot? typeType Bang?;
 
 // 函数支持的语句
 functionSupportStatement:
@@ -419,7 +419,7 @@ nilExpr: NilLiteral;
 boolExpr: t=TrueLiteral|t=FalseLiteral;
 
 // 迭代器
-iterator: (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater) expression (Comma_Comma expression)?;
+iterator: (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater) expression (Tilde expression)?;
 bitwise: (bitwiseAnd | bitwiseOr | bitwiseXor 
 | bitwiseLeftShift | bitwiseRightShift) (New_Line)?;
 bitwiseAnd: And_And_And;
