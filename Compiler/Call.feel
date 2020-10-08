@@ -42,31 +42,19 @@ FeelLangVisitor = $ me {
     }
 
     .VisitSliceFull = (context : SliceFullContext -> v : Any) {
-        order = "true"
-        context.Dot_Dot() == nil ? {
-            order = "false"
-        }
         expr1 = Visit(context.expression(0)) ! Result
         expr2 = Visit(context.expression(1)) ! Result
-        <- ".Slice(\{expr1.text}, \{expr2.text}, \{order})"
+        <- ".Slice(\{expr1.text}, \{expr2.text})"
     }
 
     .VisitSliceStart = (context : SliceStartContext -> v : Any) {
-        order = "true"
-        context.Dot_Dot() == nil ? {
-            order = "false"
-        }
         expr = Visit(context.expression()) ! Result
-        <- ".Slice(\{expr.text}, null, \{order})"
+        <- ".Slice(\{expr.text}, null)"
     }
 
     .VisitSliceEnd = (context : SliceEndContext -> v : Any) {
-        order = "true"
-        context.Dot_Dot() == nil ? {
-            order = "false"
-        }
         expr = Visit(context.expression()) ! Result
-        <- ".Slice(null, \{expr.text}, \{order})"
+        <- ".Slice(null, \{expr.text})"
     }
 
     .VisitCallFunc = (context : CallFuncContext -> v : Any) {
@@ -113,7 +101,7 @@ FeelLangVisitor = $ me {
     .VisitPkgAssign = (context : PkgAssignContext -> v : Any) {
         obj = ""
         obj += "{"
-        0 ..< context.pkgAssignElement().Length @ i {
+        0 .. context.pkgAssignElement().Length @ i {
             i == 0 ? {
                 obj += Visit(context.pkgAssignElement(i))
             }
@@ -128,7 +116,7 @@ FeelLangVisitor = $ me {
     .VisitListAssign = (context : ListAssignContext -> v : Any) {
         obj = ""
         obj += "{"
-        0 ..< context.expression().Length @ i {
+        0 .. context.expression().Length @ i {
             r = Visit(context.expression(i)) ! Result
             i == 0 ? {
                 obj += r.text
@@ -144,7 +132,7 @@ FeelLangVisitor = $ me {
     .VisitDictionaryAssign = (context : DictionaryAssignContext -> v : Any) {
         obj = ""
         obj += "{"
-        0 ..< context.dictionaryElement().Length @ i {
+        0 .. context.dictionaryElement().Length @ i {
             r = Visit(context.dictionaryElement(i)) ! DicEle
             i == 0 ? {
                 obj += r.text
@@ -173,7 +161,7 @@ FeelLangVisitor = $ me {
     .VisitPkgAnonymousAssign = (context : PkgAnonymousAssignContext -> v : Any) {
         obj = ""
         obj += "{"
-        0 ..< context.pkgAnonymousAssignElement().Length @ i {
+        0 .. context.pkgAnonymousAssignElement().Length @ i {
             i == 0 ? {
                 obj += Visit(context.pkgAnonymousAssignElement(i))
             }
@@ -194,7 +182,7 @@ FeelLangVisitor = $ me {
     .VisitList = (context : ListContext -> v : Any) {
         type = TargetTypeAny
         result = Result{}
-        0 ..< context.expression().Length @ i {
+        0 .. context.expression().Length @ i {
             r = Visit(context.expression(i)) ! Result
             i == 0 ? {
                 type = r.data ! Str
@@ -216,7 +204,7 @@ FeelLangVisitor = $ me {
         key = TargetTypeAny
         value = TargetTypeAny
         result = Result{}
-        0 ..< context.dictionaryElement().Length @ i {
+        0 .. context.dictionaryElement().Length @ i {
             r = Visit(context.dictionaryElement(i)) ! DicEle
             i == 0 ? {
                 key = r.key
@@ -295,7 +283,7 @@ FeelLangVisitor = $ me {
 
     .VisitLambdaIn = (context : LambdaInContext -> v : Any) {
         obj = ""
-        0 ..< context.id().Length @ i {
+        0 .. context.id().Length @ i {
             r = Visit(context.id(i)) ! Result
             i == 0 ? {
                 obj += r.text

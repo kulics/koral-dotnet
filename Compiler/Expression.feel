@@ -376,7 +376,7 @@ FeelLangVisitor = $ me {
     .VisitExpressionList = (context : ExpressionListContext -> v : Any) {
         r = Result{}
         obj = ""
-        0 ..< context.expression().Length @ i {
+        0 .. context.expression().Length @ i {
             temp = Visit(context.expression(i)) ! Result
             i == 0 ? {
                 obj += temp.text
@@ -393,7 +393,7 @@ FeelLangVisitor = $ me {
     .VisitTemplateDefine = (context : TemplateDefineContext -> v : Any) {
         item = TemplateItem{}
         item.template += "<"
-        0 ..< context.templateDefineItem().Length @ i {
+        0 .. context.templateDefineItem().Length @ i {
             i > 0 ? {
                 item.template += ","
                 item.contract.Size() > 0 ? {
@@ -425,7 +425,7 @@ FeelLangVisitor = $ me {
 
     .VisitTemplateCall = (context : TemplateCallContext -> v : Any) {
         obj = ""
-        0 ..< context.typeType().Length @ i {
+        0 .. context.typeType().Length @ i {
             i > 0 ? {
                 obj += ","
             }
@@ -483,7 +483,7 @@ FeelLangVisitor = $ me {
         | ? {
             text = "(new System.Text.StringBuilder()"
 
-            1 ..< context.ChildCount-1 @ i {
+            1 .. context.ChildCount-1 @ i {
                 v = context.GetChild(i)
                 r = Visit(context.GetChild(i)) ! Str
                 v ::
@@ -519,7 +519,7 @@ FeelLangVisitor = $ me {
         text = ""
         context.rawStringTemplate().Length == 0 ? {
 
-            1 ..< context.ChildCount-1 @ i {
+            1 .. context.ChildCount-1 @ i {
                 v = context.GetChild(i)
                 r = Visit(context.GetChild(i)) ! Str
                 v ::
@@ -535,7 +535,7 @@ FeelLangVisitor = $ me {
         | ? {
             text = "(new System.Text.StringBuilder()"
 
-            1 ..< context.ChildCount-1 @ i {
+            1 .. context.ChildCount-1 @ i {
                 v = context.GetChild(i)
                 r = Visit(context.GetChild(i)) ! Str
                 v :: 

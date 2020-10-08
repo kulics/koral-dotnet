@@ -143,7 +143,7 @@ FeelLangVisitor = $ me {
         r.text = first.text
         r.is_virtual = first.is_virtual
         context.ChildCount >= 2 ? {
-            1 ..< context.ChildCount @ i {
+            1 .. context.ChildCount @ i {
                 other = Visit(context.GetChild(i)) ! Result
                 r.text += "_\{other.text}"
             }

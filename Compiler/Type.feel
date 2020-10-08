@@ -108,7 +108,7 @@ FeelLangVisitor = $ me {
 
     .VisitTypeFunctionParameterClause = (context : TypeFunctionParameterClauseContext -> v : Any) {
         obj = ""
-        0 ..< context.typeType().Length @ i {
+        0 .. context.typeType().Length @ i {
             p = Visit(context.typeType(i)) ! Str
             i == 0 ? {
                 obj += p

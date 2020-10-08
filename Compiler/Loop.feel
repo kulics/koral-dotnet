@@ -10,25 +10,16 @@
     . = Compiler.Compiler_static
 }
 
-
 Iterator = $ {
     begin : Result
     end   : Result
     step  : Result
-    order : Str = T
-    close : Str = T
 }
 
 FeelLangVisitor = $ me {
     .VisitIterator = (context : IteratorContext -> v : Any) {
         fn : (Result->Result) = (e1) {
             it = Iterator{}
-            context.Dot_Dot_Dot() <> nil || context.Dot_Dot_Greater() <> nil ? {
-                it.order = F
-            }
-            context.Dot_Dot_Less() <> nil || context.Dot_Dot_Greater() <> nil ? {
-                it.close = F
-            }
             e2 = Visit(context.expression(0)) ! Result
             step = context.expression(1)
             step == nil ? {
@@ -46,7 +37,11 @@ FeelLangVisitor = $ me {
             }
             r = Result{}
             r.data = "IEnumerable<int>"
-            r.text = "range(\{it.begin.text}, \{it.end.text}, \{it.step.text}, \{it.order}, \{it.close})"
+            context.Dot_Dot_Dot() <> nil ? {
+                r.text = "Range_close(\{it.begin.text}, \{it.end.text}, \{it.step.text})"
+                <- r
+            }
+            r.text = "Range(\{it.begin.text}, \{it.end.text}, \{it.step.text})"
             <- r
         }
         <- fn
@@ -58,7 +53,7 @@ FeelLangVisitor = $ me {
         target = arr.text
         id = "ea"
         context.id().Length == 2 ? {
-            target = "range(\{target})"
+            target = "Range(\{target})"
             id = "(\{(Visit(context.id(0)) ! Result).text}, \{(Visit(context.id(1)) ! Result).text})"
         }
         | context.id().Length == 1 ? {

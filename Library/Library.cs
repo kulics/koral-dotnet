@@ -5,18 +5,22 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Library {
+namespace Library
+{
 
-    public static partial class Lib {
+    public static partial class Lib
+    {
         public static Type Typeof<T>() => typeof(T);
 
         public static void Throw(Exception it) => throw it;
 
         public static T[] Array_of<T>(params T[] item) => item;
 
-        public static T[] Array<T>(int size, Func<int, T> initElement) {
+        public static T[] Array<T>(int size, Func<int, T> initElement)
+        {
             var arr = new T[size];
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < size; i++)
+            {
                 arr[i] = initElement(i);
             }
             return arr;
@@ -60,60 +64,54 @@ namespace Library {
 
         public static double Log(double a, double b) => Math.Log(a, b);
 
-        public static IEnumerable<int> range(int begin, int end, int step = 1, bool order = true, bool close = true) {
-            if (close) {
-                if (order) {
-                    for (int index = begin; index <= end; index += step) {
-                        yield return index;
-                    }
-                } else {
-                    for (int index = begin; index >= end; index -= step) {
-                        yield return index;
-                    }
-                }
-            } else {
-                if (order) {
-                    for (int index = begin; index < end; index += step) {
-                        yield return index;
-                    }
-                } else {
-                    for (int index = begin; index > end; index -= step) {
-                        yield return index;
-                    }
-                }
-            }
+        public static IntRange Range(int begin, int end, int step)
+        {
+            return new IntRange(begin, end, step);
         }
 
-        public static IEnumerable<(int index, T item)> range<T>(IEnumerable<T> self)
+        public static IEnumerable<int> Range_close(int begin, int end, int step)
+        {
+            return new IntRangeClose(begin, end, step);
+        }
+
+        public static IEnumerable<(int index, T item)> Range<T>(IEnumerable<T> self)
 => self.Select((item, index) => (index, item));
 
-        public static IEnumerable<(TKey, TValue)> range<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> self)
+        public static IEnumerable<(TKey, TValue)> Range<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> self)
    => self.Select((item) => (item.Key, item.Value));
 
-        public static bool can_range<T>(IEnumerable<T> self) => self.GetEnumerator().MoveNext();
+        public static bool Can_range<T>(IEnumerable<T> self) => self.GetEnumerator().MoveNext();
 
-        public static bool can_range<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> self) => self.GetEnumerator().MoveNext();
+        public static bool Can_range<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> self) => self.GetEnumerator().MoveNext();
 
         public static void Todo(string it) => throw new Exception(it);
 
         //编码
-        public static string encode_base64(string code) {
+        public static string encode_base64(string code)
+        {
             string encode = "";
             byte[] bytes = Encoding.GetEncoding("utf-8").GetBytes(code);
-            try {
+            try
+            {
                 encode = Convert.ToBase64String(bytes);
-            } catch {
+            }
+            catch
+            {
                 encode = code;
             }
             return encode;
         }
         //解码
-        public static string decode_base64(string code) {
+        public static string decode_base64(string code)
+        {
             string decode = "";
             byte[] bytes = Convert.FromBase64String(code);
-            try {
+            try
+            {
                 decode = Encoding.GetEncoding("utf-8").GetString(bytes);
-            } catch {
+            }
+            catch
+            {
                 decode = code;
             }
             return decode;

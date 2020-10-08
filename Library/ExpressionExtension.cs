@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Library {
-    public static partial class ExpressionExtension {
+namespace Library
+{
+    public static partial class ExpressionExtension
+    {
         // object
         public static string To_Str(this object it) => it.ToString();
 
@@ -45,9 +47,12 @@ namespace Library {
         public static int Size(this string it) => it.Length;
         public static int Last_index(this string it) => it.Length - 1;
 
-        public static int Find_first(this string it, Func<char, bool> fn) {
-            for (int i = 0; i < it.Size(); i++) {
-                if (fn(it[i])) {
+        public static int Find_first(this string it, Func<char, bool> fn)
+        {
+            for (int i = 0; i < it.Size(); i++)
+            {
+                if (fn(it[i]))
+                {
                     return i;
                 }
             }
@@ -64,13 +69,18 @@ namespace Library {
 
 
         public static string[] Split(this string it, string[] separator, StringSplitOptions options = StringSplitOptions.None) => it.Split(separator, options);
-        public static string Slice(this string it, int? startIndex, int? endIndex) {
-            if (startIndex == null && endIndex == null) {
+        public static string Slice(this string it, int? startIndex, int? endIndex)
+        {
+            if (startIndex == null && endIndex == null)
+            {
                 return it;
-            } else if (endIndex == null) {
+            }
+            else if (endIndex == null)
+            {
                 return it.Sub_Str(startIndex ?? 0, it.Last_index() - startIndex ?? 0);
-            } else // (startIndex == null)
-              {
+            }
+            else // (startIndex == null)
+            {
                 return it.Sub_Str(0, it.Last_index() - endIndex ?? 0);
             }
         }

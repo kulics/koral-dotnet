@@ -37,7 +37,7 @@ header+=template;
 }
 if ( extend.Size()>0 ) {
 var temp = extend[0];
-foreach (var i in range(1, extend.Size(), 1, true, false)){
+foreach (var i in Range(1, extend.Size(), 1)){
 temp+=","+extend[i];
 }
 header+=":"+temp;
