@@ -55,7 +55,7 @@ FeelLangVisitor = $ me {
 
         extend.Size() > 0 ? {
             temp = extend[0]
-            1 ..< extend.Size() @ i {
+            1 .. extend.Size() @ i {
                 temp += "," + extend[i]
             }
             header += ":" + temp
@@ -334,7 +334,7 @@ FeelLangVisitor = $ me {
         obj += "public partial interface \{ptclName}"
         extend.Size() > 0 ? {
             temp = extend[0]
-            1 ..< extend.Size() @ i {
+            1 .. extend.Size() @ i {
                 temp += "," + extend[i]
             }
             obj += ":" + temp

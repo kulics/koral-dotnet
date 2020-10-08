@@ -135,7 +135,7 @@ return TargetTypeAny;
 }
 public  override  object VisitTypeFunctionParameterClause( TypeFunctionParameterClauseContext context ){
 var obj = "";
-foreach (var i in range(0, context.typeType().Length, 1, true, false)){
+foreach (var i in Range(0, context.typeType().Length, 1)){
 var p = (string)(Visit(context.typeType(i)));
 if ( i==0 ) {
 obj+=p;

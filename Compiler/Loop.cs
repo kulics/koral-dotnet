@@ -13,18 +13,10 @@ public partial class Iterator{
 public Result begin;
 public Result end;
 public Result step;
-public string order = T;
-public string close = T;
 }
 public partial class FeelLangVisitor{
 public  override  object VisitIterator( IteratorContext context ){
 Func<Result, Result> fn = (e1)=>{var it = (new Iterator());
-if ( context.Dot_Dot_Dot()!=null||context.Dot_Dot_Greater()!=null ) {
-it.order=F;
-}
-if ( context.Dot_Dot_Less()!=null||context.Dot_Dot_Greater()!=null ) {
-it.close=F;
-}
 var e2 = (Result)(Visit(context.expression(0)));
 var step = context.expression(1);
 if ( step==null ) {
@@ -39,7 +31,11 @@ it.step=(Result)(Visit(step));
 }
 var r = (new Result());
 r.data="IEnumerable<int>";
-r.text=(new System.Text.StringBuilder().Append("range(").Append(it.begin.text).Append(", ").Append(it.end.text).Append(", ").Append(it.step.text).Append(", ").Append(it.order).Append(", ").Append(it.close).Append(")")).To_Str();
+if ( context.Dot_Dot_Dot()!=null ) {
+r.text=(new System.Text.StringBuilder().Append("Range_close(").Append(it.begin.text).Append(", ").Append(it.end.text).Append(", ").Append(it.step.text).Append(")")).To_Str();
+return r;
+}
+r.text=(new System.Text.StringBuilder().Append("Range(").Append(it.begin.text).Append(", ").Append(it.end.text).Append(", ").Append(it.step.text).Append(")")).To_Str();
 return r;
 };
 return fn;
@@ -50,7 +46,7 @@ var arr = (Result)(Visit(context.expression()));
 var target = arr.text;
 var id = "ea";
 if ( context.id().Length==2 ) {
-target = (new System.Text.StringBuilder().Append("range(").Append(target).Append(")")).To_Str();
+target = (new System.Text.StringBuilder().Append("Range(").Append(target).Append(")")).To_Str();
 id = (new System.Text.StringBuilder().Append("(").Append(((Result)(Visit(context.id(0)))).text).Append(", ").Append(((Result)(Visit(context.id(1)))).text).Append(")")).To_Str();
 }
 else if ( context.id().Length==1 ) {

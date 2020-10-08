@@ -13,9 +13,7 @@ Less_Equal:         '<=';
 Greater_Equal:      '>=';
 Not_Equal:          '<>';
 
-Dot_Dot_Dot: 		'...';
-Dot_Dot_Less:		'..<';
-Dot_Dot_Greater:	'..>';
+Dot_Dot_Dot:		'...';
 Dot_Dot: 			'..';
 Dot: 				'.';
 

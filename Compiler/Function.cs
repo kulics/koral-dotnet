@@ -84,7 +84,7 @@ return (new System.Text.StringBuilder().Append("yield break").Append(Terminate).
 }
 public  override  object VisitTuple( TupleContext context ){
 var obj = "(";
-foreach (var i in range(0, context.expression().Length, 1, true, false)){
+foreach (var i in Range(0, context.expression().Length, 1)){
 var r = (Result)(Visit(context.expression(i)));
 if ( i==0 ) {
 obj+=r.text;
@@ -98,7 +98,7 @@ return (new Result(){data = "var",text = obj});
 }
 public  override  object VisitTupleExpression( TupleExpressionContext context ){
 var obj = "";
-foreach (var i in range(0, context.expression().Length, 1, true, false)){
+foreach (var i in Range(0, context.expression().Length, 1)){
 var r = (Result)(Visit(context.expression(i)));
 if ( i==0 ) {
 obj+=r.text;
@@ -114,19 +114,16 @@ return (new Result(){data = "var",text = obj});
 }
 public  override  object VisitParameterClauseIn( ParameterClauseInContext context ){
 var obj = "(";
-var temp = (new List<string>());
-foreach (var i in range(context.parameter().Length-1, 0, 1, false, true)){
+foreach (var i in Range(0, context.parameter().Length, 1)){
 var p = (Parameter)(Visit(context.parameter(i)));
-temp.Append((new System.Text.StringBuilder().Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value)).To_Str());
-this.Add_ID(p.id);
-}
-foreach (var i in range(temp.Count-1, 0, 1, false, true)){
-if ( i==temp.Count-1 ) {
-obj+=temp[i];
+var param = (new System.Text.StringBuilder().Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value)).To_Str();
+if ( i==0 ) {
+obj+=param;
 }
 else {
-obj+=", "+temp[i];
+obj+=", "+param;
 }
+this.Add_ID(p.id);
 }
 obj+=")";
 return obj;
@@ -141,21 +138,18 @@ var p = (Parameter)(Visit(context.parameter(0)));
 obj+=p.type;
 }
 if ( context.parameter().Length>1 ) {
-obj+="( ";
-var temp = (new List<string>());
-foreach (var i in range(context.parameter().Length-1, 0, 1, false, true)){
+obj+="(";
+foreach (var i in Range(0, context.parameter().Length, 1)){
 var p = (Parameter)(Visit(context.parameter(i)));
-temp.Append((new System.Text.StringBuilder().Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value)).To_Str());
-}
-foreach (var i in range(temp.Count-1, 0, 1, false, true)){
-if ( i==temp.Count-1 ) {
-obj+=temp[i];
+var param = (new System.Text.StringBuilder().Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value)).To_Str();
+if ( i==0 ) {
+obj+=param;
 }
 else {
-obj+=", "+temp[i];
+obj+=", "+param;
 }
 }
-obj+=" )";
+obj+=")";
 }
 return obj;
 }

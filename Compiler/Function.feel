@@ -96,7 +96,7 @@ FeelLangVisitor = $ me {
 
     .VisitTuple = (context : TupleContext -> v : Any) {
         obj = "("
-        0 ..< context.expression().Length @ i {
+        0 .. context.expression().Length @ i {
             r = Visit(context.expression(i)) ! Result
             i == 0 ? {
                 obj += r.text
@@ -114,7 +114,7 @@ FeelLangVisitor = $ me {
 
     .VisitTupleExpression = (context : TupleExpressionContext -> v : Any) {
         obj = ""
-        0 ..< context.expression().Length @ i {
+        0 .. context.expression().Length @ i {
             r = Visit(context.expression(i)) ! Result
             i == 0 ? {
                 obj += r.text
@@ -134,21 +134,17 @@ FeelLangVisitor = $ me {
 
     .VisitParameterClauseIn = (context : ParameterClauseInContext -> v : Any) {
         obj = "("
-        temp = (Str)List{}
-        context.parameter().Length-1 ... 0 @ i {
+        0 .. context.parameter().Length @ i {
             p = Visit(context.parameter(i)) ! Parameter
-            temp.Append("\{p.annotation} \{p.type} \{p.id} \{p.value}")
-            me.Add_ID(p.id)
-        }
-        temp.Count-1 ... 0 @ i {
-            i == temp.Count - 1 ? {
-                obj += temp[i]
+            param = "\{p.annotation} \{p.type} \{p.id} \{p.value}"
+            i == 0 ? {
+                obj += param
             }
             | ? {
-                obj += ", " + temp[i]
+                obj += ", " + param
             }
+            me.Add_ID(p.id)
         }
-
         obj += ")"
         <- obj
     }
@@ -163,21 +159,18 @@ FeelLangVisitor = $ me {
             obj += p.type
         }
         context.parameter().Length > 1 ? {
-            obj += "( "
-            temp = (Str)List{}
-            context.parameter().Length-1 ... 0 @ i {
+            obj += "("
+            0 .. context.parameter().Length @ i {
                 p = Visit(context.parameter(i)) ! Parameter
-                temp.Append("\{p.annotation} \{p.type} \{p.id} \{p.value}")
-            }
-            temp.Count-1 ... 0 @ i {
-                i == temp.Count - 1 ? {
-                    obj += temp[i]
+                param = "\{p.annotation} \{p.type} \{p.id} \{p.value}"
+                i == 0 ? {
+                    obj += param
                 }
                 | ? {
-                    obj += ", " + temp[i]
+                    obj += ", " + param
                 }
             }
-            obj += " )"
+            obj += ")"
         }
         <- obj
     }

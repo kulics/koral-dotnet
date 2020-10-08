@@ -21,7 +21,7 @@ public string text;
 public partial class FeelLangVisitor{
 public  override  object VisitBindStatement( BindStatementContext context ){
 var obj = "";
-foreach (var (i, v) in range(context.varId())){
+foreach (var (i, v) in Range(context.varId())){
 if ( i!=0 ) {
 obj+=","+Visit(v);
 }
@@ -38,7 +38,7 @@ return obj;
 }
 public  override  object VisitBindTypeStatement( BindTypeStatementContext context ){
 var obj = "";
-foreach (var (i, v) in range(context.varIdType())){
+foreach (var (i, v) in Range(context.varIdType())){
 if ( i!=0 ) {
 obj+=","+Visit(v);
 }
@@ -265,7 +265,7 @@ return (new Result(){text = (new System.Text.StringBuilder().Append("(").Append(
 public  override  object VisitExpressionList( ExpressionListContext context ){
 var r = (new Result());
 var obj = "";
-foreach (var i in range(0, context.expression().Length, 1, true, false)){
+foreach (var i in Range(0, context.expression().Length, 1)){
 var temp = (Result)(Visit(context.expression(i)));
 if ( i==0 ) {
 obj+=temp.text;
@@ -281,7 +281,7 @@ return r;
 public  override  object VisitTemplateDefine( TemplateDefineContext context ){
 var item = (new TemplateItem());
 item.template+="<";
-foreach (var i in range(0, context.templateDefineItem().Length, 1, true, false)){
+foreach (var i in Range(0, context.templateDefineItem().Length, 1)){
 if ( i>0 ) {
 item.template+=",";
 if ( item.contract.Size()>0 ) {
@@ -311,7 +311,7 @@ return item;
 }
 public  override  object VisitTemplateCall( TemplateCallContext context ){
 var obj = "";
-foreach (var i in range(0, context.typeType().Length, 1, true, false)){
+foreach (var i in Range(0, context.typeType().Length, 1)){
 if ( i>0 ) {
 obj+=",";
 }
@@ -366,7 +366,7 @@ return (new System.Text.StringBuilder().Append("\"").Append(text).Append("\"")).
 }
 else {
 text = "(new System.Text.StringBuilder()";
-foreach (var i in range(1, context.ChildCount-1, 1, true, false)){
+foreach (var i in Range(1, context.ChildCount-1, 1)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 switch (v) {
@@ -399,7 +399,7 @@ return text;
 public  override  object VisitRawStringExpr( RawStringExprContext context ){
 var text = "";
 if ( context.rawStringTemplate().Length==0 ) {
-foreach (var i in range(1, context.ChildCount-1, 1, true, false)){
+foreach (var i in Range(1, context.ChildCount-1, 1)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 switch (v) {
@@ -415,7 +415,7 @@ return (new System.Text.StringBuilder().Append("@").Append("\"").Append(text).Ap
 }
 else {
 text = "(new System.Text.StringBuilder()";
-foreach (var i in range(1, context.ChildCount-1, 1, true, false)){
+foreach (var i in Range(1, context.ChildCount-1, 1)){
 var v = context.GetChild(i);
 var r = (string)(Visit(context.GetChild(i)));
 switch (v) {

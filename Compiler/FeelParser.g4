@@ -321,9 +321,9 @@ dictionaryElement: left_brack expression right_brack Equal expression; // 字典
 
 slice: sliceStart | sliceEnd | sliceFull;
 
-sliceFull: expression (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater) expression; 
-sliceStart: expression (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater);
-sliceEnd: (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater) expression; 
+sliceFull: expression Dot_Dot expression; 
+sliceStart: expression Dot_Dot;
+sliceEnd: Dot_Dot expression; 
 
 nameSpaceItem: (id call New_Line?)* id;
 
@@ -381,8 +381,7 @@ stringExpr |
 t=CharLiteral | 
 t=TrueLiteral | 
 t=FalseLiteral | 
-nilExpr | 
-t=UndefinedLiteral;
+nilExpr;
 
 // 字符串表达式
 stringExpr: Quote_Open (stringContent | stringTemplate)* Quote_Close;
@@ -419,7 +418,7 @@ nilExpr: NilLiteral;
 boolExpr: t=TrueLiteral|t=FalseLiteral;
 
 // 迭代器
-iterator: (Dot_Dot|Dot_Dot_Dot|Dot_Dot_Less|Dot_Dot_Greater) expression (Tilde expression)?;
+iterator: (Dot_Dot|Dot_Dot_Dot) expression (Tilde expression)?;
 bitwise: (bitwiseAnd | bitwiseOr | bitwiseXor 
 | bitwiseLeftShift | bitwiseRightShift) (New_Line)?;
 bitwiseAnd: And_And_And;

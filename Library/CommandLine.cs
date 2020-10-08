@@ -1,15 +1,18 @@
 ﻿using System;
 
-namespace Library {
-    public static class Cmd {
-        public static void Print(params object[] paramList) {
-            foreach (var item in paramList) {
-                Console.Write(item);
-            }
-            if (paramList.Length > 0 && paramList[paramList.Length - 1] as string == "") {
+namespace Library
+{
+    public static class Cmd
+    {
+        public static void Print(params object[] paramList)
+        {
+            var context = string.Join("", paramList);
+            if (paramList.Length > 0 && paramList[paramList.Length - 1] as string == "")
+            {
+                Console.Write(context);
                 return;
             }
-            Console.WriteLine();
+            Console.WriteLine(context);
         }
 
         public static string Read() => Console.ReadLine();

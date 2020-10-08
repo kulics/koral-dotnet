@@ -38,29 +38,17 @@ public  override  object VisitSlice( SliceContext context ){
 return (string)(Visit(context.GetChild(0)));
 }
 public  override  object VisitSliceFull( SliceFullContext context ){
-var order = "true";
-if ( context.Dot_Dot()==null ) {
-order = "false";
-}
 var expr1 = (Result)(Visit(context.expression(0)));
 var expr2 = (Result)(Visit(context.expression(1)));
-return (new System.Text.StringBuilder().Append(".Slice(").Append(expr1.text).Append(", ").Append(expr2.text).Append(", ").Append(order).Append(")")).To_Str();
+return (new System.Text.StringBuilder().Append(".Slice(").Append(expr1.text).Append(", ").Append(expr2.text).Append(")")).To_Str();
 }
 public  override  object VisitSliceStart( SliceStartContext context ){
-var order = "true";
-if ( context.Dot_Dot()==null ) {
-order = "false";
-}
 var expr = (Result)(Visit(context.expression()));
-return (new System.Text.StringBuilder().Append(".Slice(").Append(expr.text).Append(", null, ").Append(order).Append(")")).To_Str();
+return (new System.Text.StringBuilder().Append(".Slice(").Append(expr.text).Append(", null)")).To_Str();
 }
 public  override  object VisitSliceEnd( SliceEndContext context ){
-var order = "true";
-if ( context.Dot_Dot()==null ) {
-order = "false";
-}
 var expr = (Result)(Visit(context.expression()));
-return (new System.Text.StringBuilder().Append(".Slice(null, ").Append(expr.text).Append(", ").Append(order).Append(")")).To_Str();
+return (new System.Text.StringBuilder().Append(".Slice(null, ").Append(expr.text).Append(")")).To_Str();
 }
 public  override  object VisitCallFunc( CallFuncContext context ){
 var r = (new Result(){data = "var",text = ((Result)(Visit(context.tuple()))).text});
@@ -96,7 +84,7 @@ return r;
 public  override  object VisitPkgAssign( PkgAssignContext context ){
 var obj = "";
 obj+="{";
-foreach (var i in range(0, context.pkgAssignElement().Length, 1, true, false)){
+foreach (var i in Range(0, context.pkgAssignElement().Length, 1)){
 if ( i==0 ) {
 obj+=Visit(context.pkgAssignElement(i));
 }
@@ -110,7 +98,7 @@ return obj;
 public  override  object VisitListAssign( ListAssignContext context ){
 var obj = "";
 obj+="{";
-foreach (var i in range(0, context.expression().Length, 1, true, false)){
+foreach (var i in Range(0, context.expression().Length, 1)){
 var r = (Result)(Visit(context.expression(i)));
 if ( i==0 ) {
 obj+=r.text;
@@ -125,7 +113,7 @@ return obj;
 public  override  object VisitDictionaryAssign( DictionaryAssignContext context ){
 var obj = "";
 obj+="{";
-foreach (var i in range(0, context.dictionaryElement().Length, 1, true, false)){
+foreach (var i in Range(0, context.dictionaryElement().Length, 1)){
 var r = (DicEle)(Visit(context.dictionaryElement(i)));
 if ( i==0 ) {
 obj+=r.text;
@@ -148,7 +136,7 @@ return (new Result(){data = "var",text = (string)("new"+Visit(context.pkgAnonymo
 public  override  object VisitPkgAnonymousAssign( PkgAnonymousAssignContext context ){
 var obj = "";
 obj+="{";
-foreach (var i in range(0, context.pkgAnonymousAssignElement().Length, 1, true, false)){
+foreach (var i in Range(0, context.pkgAnonymousAssignElement().Length, 1)){
 if ( i==0 ) {
 obj+=Visit(context.pkgAnonymousAssignElement(i));
 }
@@ -167,7 +155,7 @@ return obj;
 public  override  object VisitList( ListContext context ){
 var type = TargetTypeAny;
 var result = (new Result());
-foreach (var i in range(0, context.expression().Length, 1, true, false)){
+foreach (var i in Range(0, context.expression().Length, 1)){
 var r = (Result)(Visit(context.expression(i)));
 if ( i==0 ) {
 type = (string)(r.data);
@@ -188,7 +176,7 @@ public  override  object VisitDictionary( DictionaryContext context ){
 var key = TargetTypeAny;
 var value = TargetTypeAny;
 var result = (new Result());
-foreach (var i in range(0, context.dictionaryElement().Length, 1, true, false)){
+foreach (var i in Range(0, context.dictionaryElement().Length, 1)){
 var r = (DicEle)(Visit(context.dictionaryElement(i)));
 if ( i==0 ) {
 key = r.key;
@@ -256,7 +244,7 @@ return r;
 }
 public  override  object VisitLambdaIn( LambdaInContext context ){
 var obj = "";
-foreach (var i in range(0, context.id().Length, 1, true, false)){
+foreach (var i in Range(0, context.id().Length, 1)){
 var r = (Result)(Visit(context.id(i)));
 if ( i==0 ) {
 obj+=r.text;

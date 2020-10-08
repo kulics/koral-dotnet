@@ -103,7 +103,7 @@ FeelLangVisitor = $ me {
 
     .VisitNameSpaceItem = (context : NameSpaceItemContext -> v : Any) {
         obj = ""
-        0 ..< context.id().Length @ i {
+        0 .. context.id().Length @ i {
             id = Visit(context.id(i)) ! Result
             i == 0 ? {
                 obj += id.text
@@ -117,7 +117,7 @@ FeelLangVisitor = $ me {
 
     .VisitName = (context : NameContext -> v : Any) {
         obj = ""
-        0 ..< context.id().Length @ i {
+        0 .. context.id().Length @ i {
             id = Visit(context.id(i)) ! Result
             i == 0 ? {
                 obj += id.text
@@ -139,7 +139,7 @@ FeelLangVisitor = $ me {
         }
         header += "\{id.permission} enum \{id.text}:\{typ}"
         header += Wrap + BlockLeft + Wrap
-        0 ..< context.enumSupportStatement().Length @ i {
+        0 .. context.enumSupportStatement().Length @ i {
             obj += Visit(context.enumSupportStatement(i))
         }
         obj += BlockRight + Terminate + Wrap

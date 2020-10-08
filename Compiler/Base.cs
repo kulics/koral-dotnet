@@ -90,7 +90,7 @@ r.permission=first.permission;
 r.text=first.text;
 r.is_virtual=first.is_virtual;
 if ( context.ChildCount>=2 ) {
-foreach (var i in range(1, context.ChildCount, 1, true, false)){
+foreach (var i in Range(1, context.ChildCount, 1)){
 var other = (Result)(Visit(context.GetChild(i)));
 r.text+=(new System.Text.StringBuilder().Append("_").Append(other.text)).To_Str();
 }
@@ -186,7 +186,7 @@ return obj;
 }
 public  override  object VisitAnnotationList( AnnotationListContext context ){
 var obj = "";
-foreach (var (i, v) in range(context.annotationItem())){
+foreach (var (i, v) in Range(context.annotationItem())){
 var txt = (string)(this.Visit(v));
 if ( txt!="" ) {
 obj+=txt;
