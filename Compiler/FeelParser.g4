@@ -105,7 +105,7 @@ parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Li
 // 协议
 protocolStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal protocolSubStatement;
 
-protocolSubStatement: left_brace (protocolSupportStatement end|New_Line)* protocolSupportStatement end? right_brace;
+protocolSubStatement: Coin left_brace (protocolSupportStatement end|New_Line)* protocolSupportStatement end? right_brace;
 // 协议支持的语句
 protocolSupportStatement:
 includeStatement |
