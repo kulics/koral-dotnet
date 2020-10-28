@@ -38,9 +38,9 @@ typeTagStatement: Comment_Tag;
 
 // 枚举
 enumStatement: (annotationSupport)? id Equal New_Line* Coin
- left_brace (enumSupportStatement end|New_Line)* enumSupportStatement end? right_brace;
+ enumSupportStatement (New_Line? Or enumSupportStatement)+ (New_Line? left_brace right_brace)? end?;
 
-enumSupportStatement: Or id (Equal (add)? integerExpr)?;
+enumSupportStatement: id (Equal (add)? integerExpr)?;
 // 命名空间变量
 namespaceVariableStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
 // 命名空间函数
