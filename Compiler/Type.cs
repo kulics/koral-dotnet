@@ -24,6 +24,14 @@ return obj;
 public  override  object VisitTypePackage( TypePackageContext context ){
 var obj = "";
 obj+=Visit(context.nameSpaceItem());
+switch (obj) {
+case "List" :
+{ obj = TargetTypeLst;
+} break;
+case "Dict" :
+{ obj = TargetTypeDic;
+} break;
+}
 if ( context.templateCall()!=null ) {
 if ( obj=="Array" ) {
 obj = (new System.Text.StringBuilder().Append(Visit(context.templateCall())).Append("[]")).To_Str();

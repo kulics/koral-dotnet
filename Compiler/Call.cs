@@ -152,52 +152,6 @@ var obj = "";
 obj+=(new System.Text.StringBuilder().Append(Visit(context.name())).Append(" = ").Append(((Result)(Visit(context.expression()))).text)).To_Str();
 return obj;
 }
-public  override  object VisitList( ListContext context ){
-var type = TargetTypeAny;
-var result = (new Result());
-foreach (var i in Range(0, context.expression().Length, 1)){
-var r = (Result)(Visit(context.expression(i)));
-if ( i==0 ) {
-type = (string)(r.data);
-result.text+=r.text;
-}
-else {
-if ( type!=((string)(r.data)) ) {
-type = TargetTypeAny;
-}
-result.text+=","+r.text;
-}
-}
-result.data=(new System.Text.StringBuilder().Append(TargetTypeLst).Append("<").Append(type).Append(">")).To_Str();
-result.text=(new System.Text.StringBuilder().Append("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).To_Str();
-return result;
-}
-public  override  object VisitDictionary( DictionaryContext context ){
-var key = TargetTypeAny;
-var value = TargetTypeAny;
-var result = (new Result());
-foreach (var i in Range(0, context.dictionaryElement().Length, 1)){
-var r = (DicEle)(Visit(context.dictionaryElement(i)));
-if ( i==0 ) {
-key = r.key;
-value = r.value;
-result.text+=r.text;
-}
-else {
-if ( key!=r.key ) {
-key = TargetTypeAny;
-}
-if ( value!=r.value ) {
-value = TargetTypeAny;
-}
-result.text+=","+r.text;
-}
-}
-var type = (new System.Text.StringBuilder().Append(key).Append(", ").Append(value)).To_Str();
-result.data=(new System.Text.StringBuilder().Append(TargetTypeDic).Append("<").Append(type).Append(">")).To_Str();
-result.text=(new System.Text.StringBuilder().Append("(new ").Append(result.data).Append("(){ ").Append(result.text).Append(" })")).To_Str();
-return result;
-}
 public  override  object VisitDictionaryElement( DictionaryElementContext context ){
 var r1 = (Result)(Visit(context.expression(0)));
 var r2 = (Result)(Visit(context.expression(1)));

@@ -26,7 +26,20 @@ namespace Library
             return arr;
         }
 
-        public static List<T> List_of<T>(params T[] item) => new List<T>(item);
+        public static List<T> List_of<T>(params T[] item)
+        {
+            return new List<T>(item);
+        }
+
+        public static KeyValuePair<TKey, TValue> Pair_of<TKey, TValue>(TKey key, TValue value)
+        {
+            return new KeyValuePair<TKey, TValue>(key, value);
+        }
+
+        public static Dictionary<TKey, TValue> Dict_of<TKey, TValue>(params KeyValuePair<TKey, TValue>[] item)
+        {
+            return new Dictionary<TKey, TValue>(item);
+        }
 
         public static T Empty<T>() => default;
 

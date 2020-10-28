@@ -240,8 +240,6 @@ linq // 联合查询
 | callPkg // 新建包 
 | callChannel // 通道访问
 | callAsync // 创建异步调用
-| list // 列表
-| dictionary // 字典
 | lambda // lambda表达式
 | functionExpression // 函数
 | pkgAnonymous // 匿名包
@@ -312,10 +310,6 @@ pkgAssignElement: name Equal expression; // 简化赋值元素
 listAssign: (expression end)* expression;
 
 dictionaryAssign: (dictionaryElement end)* dictionaryElement;
-
-list: left_brace (expression end)* expression right_brace; // 列表
-
-dictionary: left_brace (dictionaryElement end)* dictionaryElement right_brace; // 字典
 
 dictionaryElement: left_brack expression right_brack Equal expression; // 字典元素
 

@@ -27,6 +27,13 @@ FeelLangVisitor = $ me {
     .VisitTypePackage = (context : TypePackageContext -> v : Any) {
         obj = ""
         obj += Visit(context.nameSpaceItem())
+        obj ==
+        | "List" ? {
+            obj = TargetTypeLst
+        }
+        | "Dict" ? {
+            obj = TargetTypeDic
+        }
         context.templateCall() <> nil ? {
             obj == "Array" ? {
                 obj = "\{Visit(context.templateCall())}[]"

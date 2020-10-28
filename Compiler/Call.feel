@@ -179,54 +179,6 @@ FeelLangVisitor = $ me {
         <- obj
     }
 
-    .VisitList = (context : ListContext -> v : Any) {
-        type = TargetTypeAny
-        result = Result{}
-        0 .. context.expression().Length @ i {
-            r = Visit(context.expression(i)) ! Result
-            i == 0 ? {
-                type = r.data ! Str
-                result.text += r.text
-            }
-            | ? {
-                type <> (r.data ! Str) ? {
-                    type = TargetTypeAny
-                }
-                result.text += "," + r.text
-            }
-        }
-        result.data = "\{TargetTypeLst}<\{type}>"
-        result.text = "(new \{result.data}(){ \{result.text} })"
-        <- result
-    }
-
-    .VisitDictionary = (context : DictionaryContext -> v : Any) {
-        key = TargetTypeAny
-        value = TargetTypeAny
-        result = Result{}
-        0 .. context.dictionaryElement().Length @ i {
-            r = Visit(context.dictionaryElement(i)) ! DicEle
-            i == 0 ? {
-                key = r.key
-                value = r.value
-                result.text += r.text
-            }
-            | ? {
-                key <> r.key ? {
-                    key = TargetTypeAny
-                }
-                value <> r.value ? {
-                    value = TargetTypeAny
-                }
-                result.text += "," + r.text
-            }
-        }
-        type = "\{key}, \{value}"
-        result.data = "\{TargetTypeDic}<\{type}>"
-        result.text = "(new \{result.data}(){ \{result.text} })"
-        <- result
-    }
-
     .VisitDictionaryElement = (context : DictionaryElementContext -> v : Any) {
         r1 = Visit(context.expression(0)) ! Result
         r2 = Visit(context.expression(1)) ! Result

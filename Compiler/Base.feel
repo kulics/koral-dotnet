@@ -29,9 +29,9 @@ TargetTypeU64 = "ulong"
 TargetTypeF32 = "float"
 TargetTypeF64 = "double"
 
-TargetTypeBool    = "bool"
-T       = "true"
-F       = "false"
+TargetTypeBool = "bool"
+T = "true"
+F = "false"
 
 TargetTypeChr = "char"
 TargetTypeStr = "string"
@@ -49,7 +49,7 @@ Result = $ {
     text : Str
 
     permission  : Str = "public"
-    is_virtual   : Bool
+    is_virtual  : Bool
     isDefine    : Bool
     isMutable   : Bool
     rootID      : Str = ""
