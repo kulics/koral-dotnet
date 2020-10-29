@@ -75,13 +75,6 @@ return (new System.Text.StringBuilder().Append("return ").Append(Task).Append(".
 }
 return (new System.Text.StringBuilder().Append("return ").Append(Task).Append(".FromResult(true)").Append(Terminate).Append(Wrap)).To_Str();
 }
-public  override  object VisitYieldReturnStatement( YieldReturnStatementContext context ){
-var r = (Result)(Visit(context.tupleExpression()));
-return (new System.Text.StringBuilder().Append("yield return ").Append(r.text).Append(Terminate).Append(Wrap)).To_Str();
-}
-public  override  object VisitYieldBreakStatement( YieldBreakStatementContext context ){
-return (new System.Text.StringBuilder().Append("yield break").Append(Terminate).Append(Wrap)).To_Str();
-}
 public  override  object VisitTuple( TupleContext context ){
 var obj = "(";
 foreach (var i in Range(0, context.expression().Length, 1)){
@@ -162,7 +155,7 @@ if ( context.annotationSupport()!=null ) {
 p.annotation=(string)(Visit(context.annotationSupport()));
 }
 p.type=(string)(Visit(context.typeType()));
-if ( context.Dot_Dot()!=null ) {
+if ( context.Dot_Dot_Dot()!=null ) {
 p.type=(new System.Text.StringBuilder().Append("params ").Append(p.type).Append("[]")).To_Str();
 }
 if ( context.Bang()!=null ) {

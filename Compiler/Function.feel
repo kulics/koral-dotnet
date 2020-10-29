@@ -85,15 +85,6 @@ FeelLangVisitor = $ me {
         <- "return \{Task}.FromResult(true)\{Terminate; Wrap}"
     }
 
-    .VisitYieldReturnStatement = (context : YieldReturnStatementContext -> v : Any) {
-        r = Visit(context.tupleExpression()) ! Result
-        <- "yield return \{r.text; Terminate; Wrap}"
-    }
-
-    .VisitYieldBreakStatement = (context : YieldBreakStatementContext -> v : Any) {
-        <- "yield break\{Terminate; Wrap}"
-    }
-
     .VisitTuple = (context : TupleContext -> v : Any) {
         obj = "("
         0 .. context.expression().Length @ i {
@@ -184,7 +175,7 @@ FeelLangVisitor = $ me {
             p.annotation = Visit(context.annotationSupport()) ! Str
         }
         p.type = Visit(context.typeType()) ! Str
-        context.Dot_Dot() <> nil ? {
+        context.Dot_Dot_Dot() <> nil ? {
             p.type = "params \{p.type}[]"
         }
         context.Bang() <> nil ? {

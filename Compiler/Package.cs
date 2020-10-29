@@ -17,11 +17,6 @@ public  override  object VisitPackageStatement( PackageStatementContext context 
 var id = (Result)(Visit(context.id()));
 var obj = "";
 var extend = (new List<string>());
-if ( context.packageStaticStatement()!=null ) {
-var item = context.packageStaticStatement();
-var r = (Result)(Visit(item));
-obj+=r.text;
-}
 if ( context.packageFieldStatement()!=null ) {
 var item = context.packageFieldStatement();
 var r = (Result)(Visit(item));
@@ -56,97 +51,6 @@ header+=":"+temp;
 }
 header+=template_contract+BlockLeft+Wrap;
 obj = header+obj;
-return obj;
-}
-public  override  object VisitPackageStaticStatement( PackageStaticStatementContext context ){
-var obj = "";
-foreach (var item in context.packageStaticSupportStatement()){
-obj+=Visit(item);
-}
-return (new Result(){text = obj});
-}
-public  override  object VisitPackageStaticVariableStatement( PackageStaticVariableStatementContext context ){
-var r1 = (Result)(Visit(context.id()));
-var typ = "";
-Result r2 = null;
-if ( context.expression()!=null ) {
-r2 = (Result)(Visit(context.expression()));
-typ = (string)(r2.data);
-}
-if ( context.typeType()!=null ) {
-typ = (string)(Visit(context.typeType()));
-}
-var obj = "";
-if ( context.annotationSupport()!=null ) {
-this.self_property_ID=r1.text;
-obj+=Visit(context.annotationSupport());
-}
-if ( this.self_property_content.Size()>0 ) {
-var pri = "";
-if ( this.self_property_variable ) {
-pri = (new System.Text.StringBuilder().Append("private static ").Append(typ).Append(" _").Append(r1.text)).To_Str();
-if ( r2!=null ) {
-pri+=" = "+r2.text;
-}
-pri+=Terminate+Wrap;
-}
-obj = pri+obj;
-obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append(BlockLeft)).To_Str();
-foreach (var v in this.self_property_content){
-obj+=v;
-}
-obj+=BlockRight+Wrap;
-this.self_property_content.Clear();
-this.self_property_ID="";
-this.self_property_variable=false;
-}
-else {
-obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text)).To_Str();
-if ( r2!=null ) {
-obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).To_Str();
-}
-else {
-obj+=Terminate+Wrap;
-}
-}
-return obj;
-}
-public  override  object VisitPackageStaticFunctionStatement( PackageStaticFunctionStatementContext context ){
-var id = (Result)(Visit(context.id()));
-var obj = "";
-var pout = "";
-if ( context.t==null ) {
-pout = "void";
-}
-else {
-pout = (string)(Visit(context.parameterClauseOut()));
-if ( context.t.Type==Right_Flow ) {
-if ( pout!="void" ) {
-pout = (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).To_Str();
-}
-else {
-pout = Task;
-}
-}
-}
-obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).To_Str();
-var template_contract = "";
-if ( context.templateDefine()!=null ) {
-var template = (TemplateItem)(Visit(context.templateDefine()));
-obj+=template.template;
-template_contract = template.contract;
-}
-this.Add_current_set();
-this.Add_func_stack();
-obj+=Visit(context.parameterClauseIn())+template_contract+BlockLeft+Wrap;
-obj+=ProcessFunctionSupport(context.functionSupportStatement());
-this.Delete_current_set();
-obj+=BlockRight+Wrap;
-if ( Get_func_async() ) {
-obj = " async "+obj;
-}
-this.Delete_func_stack();
-obj = (new System.Text.StringBuilder().Append(id.permission).Append(" static ")).To_Str()+obj;
 return obj;
 }
 public  override  object VisitPackageFieldStatement( PackageFieldStatementContext context ){
@@ -286,13 +190,6 @@ this.Delete_current_set();
 this.self_ID="";
 this.super_ID="";
 return text;
-}
-public  override  object VisitPackageEventStatement( PackageEventStatementContext context ){
-var obj = "";
-var id = (Result)(Visit(context.id()));
-var nameSpace = Visit(context.nameSpaceItem());
-obj+=(new System.Text.StringBuilder().Append("public event ").Append(nameSpace).Append(" ").Append(id.text).Append(Terminate).Append(Wrap)).To_Str();
-return obj;
 }
 public  override  object VisitProtocolStatement( ProtocolStatementContext context ){
 var id = (Result)(Visit(context.id()));

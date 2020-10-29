@@ -48,54 +48,6 @@ this.self_ID="";
 this.super_ID="";
 return obj;
 }
-public  override  object VisitOverrideVariableStatement( OverrideVariableStatementContext context ){
-var r1 = (Result)(Visit(context.id()));
-var is_mutable = r1.is_virtual;
-var is_virtual = " override ";
-var typ = "";
-Result? r2 = null;
-if ( context.expression()!=null ) {
-r2 = (Result)(Visit(context.expression()));
-typ = (string)(r2.data);
-}
-if ( context.typeType()!=null ) {
-typ = (string)(Visit(context.typeType()));
-}
-var obj = "";
-if ( context.annotationSupport()!=null ) {
-this.self_property_ID=r1.text;
-obj+=Visit(context.annotationSupport());
-}
-if ( this.self_property_content.Size()>0 ) {
-var pri = "";
-if ( this.self_property_variable ) {
-pri = (new System.Text.StringBuilder().Append("private ").Append(typ).Append(" _").Append(r1.text)).To_Str();
-if ( r2!=null ) {
-pri+=" = "+r2.text;
-}
-pri+=Terminate+Wrap;
-}
-obj = pri+obj;
-obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" ").Append(is_virtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append(BlockLeft)).To_Str();
-foreach (var v in this.self_property_content){
-obj+=v;
-}
-obj+=BlockRight+Wrap;
-this.self_property_content.Clear();
-this.self_property_ID="";
-this.self_property_variable=false;
-}
-else {
-obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text)).To_Str();
-if ( r2!=null ) {
-obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).To_Str();
-}
-else {
-obj+=Terminate+Wrap;
-}
-}
-return obj;
-}
 public  override  object VisitOverrideFunctionStatement( OverrideFunctionStatementContext context ){
 var id = (Result)(Visit(context.id()));
 var is_virtual = " override ";

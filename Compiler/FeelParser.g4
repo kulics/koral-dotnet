@@ -50,20 +50,7 @@ parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Li
 
 // 定义包
 packageStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
- (packageFieldStatement|packageStaticStatement|packageNewStatement);
-
-packageStaticStatement: Coin left_brace (packageStaticSupportStatement end|New_Line)* packageStaticSupportStatement end? right_brace left_brace right_brace;
-// 包静态语句
-packageStaticSupportStatement:
-packageStaticFunctionStatement |
-packageStaticVariableStatement ;
-
-// 定义变量
-packageStaticVariableStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
-// 函数
-packageStaticFunctionStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
- left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+ (packageFieldStatement|packageNewStatement);
 
 packageFieldStatement: Coin (p=Question? id (more id)?)? left_brace (packageSupportStatement end|New_Line)* packageSupportStatement end? right_brace;
 
@@ -72,9 +59,7 @@ packageSupportStatement:
 includeStatement |
 packageFunctionStatement |
 packageVariableStatement |
-packageEventStatement |
 overrideFunctionStatement |
-overrideVariableStatement |
 New_Line;
 
 // 包含
@@ -88,15 +73,11 @@ packageVariableStatement: (annotationSupport)? id (Equal expression | Colon type
 packageFunctionStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
  left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
 parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
-// 定义包事件
-packageEventStatement: id left_brack Right_Arrow right_brack nameSpaceItem;
 
 // 扩展
 implementStatement: (templateDefine New_Line?)? id Colon Equal
 (packageNewStatement|packageFieldStatement);
 
-// 定义变量
-overrideVariableStatement: (annotationSupport)? Dot id (Equal expression | Colon typeType (Equal expression)?);
 // 函数
 overrideFunctionStatement: (annotationSupport)? Dot (n='_')? (templateDefine New_Line?)? id Equal
  left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
@@ -124,22 +105,17 @@ functionStatement: (templateDefine New_Line?)? id Equal left_paren parameterClau
 returnStatement: Left_Arrow (tupleExpression)?;
 // 异步返回
 returnAsyncStatement: Left_Flow (tupleExpression)?;
-// 生成器
-yieldReturnStatement: At Left_Arrow tupleExpression;
-yieldBreakStatement: At Left_Arrow;
 // 入参
 parameterClauseIn: parameter? (more parameter)*;
 // 出参
 parameterClauseOut: parameter? (more parameter)*;
 // 参数结构
-parameter: (annotationSupport)? id Colon Dot_Dot? typeType Bang?;
+parameter: (annotationSupport)? id Colon Dot_Dot_Dot? typeType Bang?;
 
 // 函数支持的语句
 functionSupportStatement:
 returnStatement |
 returnAsyncStatement |
-yieldReturnStatement |
-yieldBreakStatement |
 judgeEqualStatement |
 judgeTypeStatement |
 judgeStatement |

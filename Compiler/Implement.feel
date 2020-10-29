@@ -54,56 +54,7 @@ FeelLangVisitor = $ me {
         me.super_ID = ""
         <- obj
     }
-
-    .VisitOverrideVariableStatement = (context : OverrideVariableStatementContext -> v : Any) {
-        r1 = Visit(context.id()) ! Result
-        is_mutable = r1.is_virtual
-        is_virtual = " override "
-        typ = ""
-        r2 : Result? = nil
-        context.expression() <> nil ? {
-            r2 = Visit(context.expression()) ! Result
-            typ = r2.data ! Str
-        }
-        context.typeType() <> nil ? {
-            typ = Visit(context.typeType()) ! Str
-        }
-        obj = ""
-        context.annotationSupport() <> nil ? {
-            me.self_property_ID = r1.text
-            obj += Visit(context.annotationSupport())
-        }
-        me.self_property_content.Size() > 0 ? {
-            pri = ""
-            me.self_property_variable ? {
-                pri = "private \{typ} _\{r1.text}" 
-                r2 <> nil ? {
-                    pri += " = " + r2.text
-                }
-                pri += Terminate + Wrap
-            }
-            obj = pri + obj
-            obj += "\{r1.permission} \{is_virtual} \{typ} \{r1.text; BlockLeft}"
-            me.self_property_content @ v {
-                obj += v
-            }
-            obj += BlockRight+Wrap
-            me.self_property_content.Clear()
-            me.self_property_ID = ""
-            me.self_property_variable = false
-        }
-        | ? {
-            obj += "\{r1.permission} \{typ} \{r1.text}"
-            r2 <> nil ? {
-                obj += " = \{r2.text; Terminate; Wrap}"
-            }
-            | ? {
-                obj += Terminate + Wrap
-            }
-        }
-        <- obj
-    }
-
+       
     .VisitOverrideFunctionStatement = (context : OverrideFunctionStatementContext -> v : Any) {
         id = Visit(context.id()) ! Result
         is_virtual = " override "

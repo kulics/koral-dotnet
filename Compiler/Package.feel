@@ -21,11 +21,6 @@ FeelLangVisitor = $ me {
 
         obj = ""
         extend = (Str)List{}
-        context.packageStaticStatement() <> nil ? {
-            item = context.packageStaticStatement()
-            r = Visit(item) ! Result
-            obj += r.text
-        }
         context.packageFieldStatement() <> nil ? {
             item = context.packageFieldStatement()
             r = Visit(item) ! Result
@@ -63,102 +58,6 @@ FeelLangVisitor = $ me {
 
         header += template_contract + BlockLeft + Wrap
         obj = header + obj
-        <- obj
-    }
-
-    .VisitPackageStaticStatement = (context : PackageStaticStatementContext -> v : Any) {
-        obj = ""
-        context.packageStaticSupportStatement() @ item {
-            obj += Visit(item)
-        }
-        <- Result{text = obj}
-    }
-
-    .VisitPackageStaticVariableStatement = (context : PackageStaticVariableStatementContext -> v : Any) {
-        r1 = Visit(context.id()) ! Result
-        typ = ""
-        r2 : Result = nil
-        context.expression() <> nil ? {
-            r2 = Visit(context.expression()) ! Result
-            typ = r2.data ! Str
-        }
-        context.typeType() <> nil ? {
-            typ = Visit(context.typeType()) ! Str
-        }
-        obj = ""
-        context.annotationSupport() <> nil ? {
-            me.self_property_ID = r1.text
-            obj += Visit(context.annotationSupport())
-        }
-        me.self_property_content.Size() > 0 ? {
-            pri = ""
-            me.self_property_variable ? {
-                pri = "private static \{typ} _\{r1.text}" 
-                r2 <> nil ? {
-                    pri += " = " + r2.text
-                }
-                pri += Terminate + Wrap
-            }
-            obj = pri + obj
-            obj += "\{r1.permission} static \{typ} \{r1.text; BlockLeft}"
-            me.self_property_content @ v {
-                obj += v
-            }
-            obj += BlockRight+Wrap
-            me.self_property_content.Clear()
-            me.self_property_ID = ""
-            me.self_property_variable = false
-        }
-        | ? {
-            obj += "\{r1.permission} static \{typ} \{r1.text}"
-            r2 <> nil ? {
-                obj += " = \{r2.text; Terminate; Wrap}"
-            }
-            | ? {
-                obj += Terminate + Wrap
-            }
-        }
-        <- obj
-    }
-
-    .VisitPackageStaticFunctionStatement = (context : PackageStaticFunctionStatementContext -> v : Any) {
-        id = Visit(context.id()) ! Result
-        obj = ""
-        pout = ""
-        context.t == nil ? {
-            pout = "void"
-        }
-        | ? {
-            pout = Visit(context.parameterClauseOut()) ! Str
-            context.t.Type == Right_Flow ? {
-                pout <> "void" ? {
-                    pout = "\{Task}<\{pout}>"
-                }
-                | ? {
-                    pout = Task
-                }
-            }
-        }
-        obj += "\{pout} \{id.text}"
-        
-        template_contract = ""
-        context.templateDefine() <> nil ? {
-            template = Visit(context.templateDefine()) ! TemplateItem
-            obj += template.template
-            template_contract = template.contract
-        }
-        me.Add_current_set()
-        me.Add_func_stack()
-        obj += Visit(context.parameterClauseIn()) + template_contract + BlockLeft + Wrap
-        obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.Delete_current_set()
-        obj += BlockRight + Wrap
-
-        Get_func_async() ? {
-            obj = " async " + obj
-        }
-        me.Delete_func_stack()
-        obj = "\{id.permission} static " + obj
         <- obj
     }
 
@@ -305,14 +204,6 @@ FeelLangVisitor = $ me {
         me.self_ID = ""
         me.super_ID = ""
         <- text
-    }
-
-    .VisitPackageEventStatement = (context : PackageEventStatementContext -> v : Any) {
-        obj = ""
-        id = Visit(context.id()) ! Result
-        nameSpace = Visit(context.nameSpaceItem())
-        obj += "public event \{nameSpace} \{id.text; Terminate; Wrap}"
-        <- obj
     }
 
     .VisitProtocolStatement = (context : ProtocolStatementContext -> v : Any) {
