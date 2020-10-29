@@ -64,6 +64,15 @@ if ( context.id(1)!=null ) {
 var Super = (Result)(Visit(context.id(1)));
 this.super_ID=Super.text;
 }
+foreach (var item in context.packageConstructor()){
+if ( item.GetChild(0).GetType()==typeof(IncludeStatementContext) ) {
+var r = (string)(Visit(item));
+extend.Append(r);
+}
+else {
+obj+=Visit(item);
+}
+}
 foreach (var item in context.packageSupportStatement()){
 if ( item.GetChild(0).GetType()==typeof(IncludeStatementContext) ) {
 var r = (string)(Visit(item));
@@ -84,15 +93,7 @@ var is_virtual = "";
 if ( r1.is_virtual ) {
 is_virtual = " virtual ";
 }
-var typ = "";
-Result? r2 = null;
-if ( context.expression()!=null ) {
-r2 = (Result)(Visit(context.expression()));
-typ = (string)(r2.data);
-}
-if ( context.typeType()!=null ) {
-typ = (string)(Visit(context.typeType()));
-}
+var typ = (string)(Visit(context.typeType()));
 var obj = "";
 if ( context.annotationSupport()!=null ) {
 this.self_property_ID=r1.text;
@@ -101,11 +102,7 @@ obj+=Visit(context.annotationSupport());
 if ( this.self_property_content.Size()>0 ) {
 var pri = "";
 if ( this.self_property_variable ) {
-pri = (new System.Text.StringBuilder().Append("private ").Append(typ).Append(" _").Append(r1.text)).To_Str();
-if ( r2!=null ) {
-pri+=" = "+r2.text;
-}
-pri+=Terminate+Wrap;
+pri = (new System.Text.StringBuilder().Append("private ").Append(typ).Append(" _").Append(r1.text).Append(" ").Append(Terminate+Wrap)).To_Str();
 }
 obj = pri+obj;
 obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" ").Append(is_virtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append(BlockLeft)).To_Str();
@@ -118,13 +115,7 @@ this.self_property_ID="";
 this.self_property_variable=false;
 }
 else {
-obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text)).To_Str();
-if ( r2!=null ) {
-obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).To_Str();
-}
-else {
-obj+=Terminate+Wrap;
-}
+obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text).Append(" ").Append(Terminate+Wrap)).To_Str();
 }
 return obj;
 }

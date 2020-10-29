@@ -72,7 +72,16 @@ FeelLangVisitor = $ me {
             Super = Visit(context.id(1)) ! Result
             me.super_ID = Super.text
         }
-        context.packageSupportStatement() @ item{
+        context.packageConstructor() @ item {
+            item.GetChild(0).GetType() == typeof(IncludeStatementContext) ? {
+                r = Visit(item) ! Str
+                extend.Append(r)
+            }
+            | ? {
+                obj += Visit(item)
+            }
+        }
+        context.packageSupportStatement() @ item {
             item.GetChild(0).GetType() == typeof(IncludeStatementContext) ? {
                 r = Visit(item) ! Str
                 extend.Append(r)
@@ -93,15 +102,7 @@ FeelLangVisitor = $ me {
         r1.is_virtual ? {
             is_virtual = " virtual "
         }
-        typ = ""
-        r2 : Result? = nil
-        context.expression() <> nil ? {
-            r2 = Visit(context.expression()) ! Result
-            typ = r2.data ! Str
-        }
-        context.typeType() <> nil ? {
-            typ = Visit(context.typeType()) ! Str
-        }
+        typ = Visit(context.typeType()) ! Str
         obj = ""
         context.annotationSupport() <> nil ? {
             me.self_property_ID = r1.text
@@ -110,11 +111,7 @@ FeelLangVisitor = $ me {
         me.self_property_content.Size() > 0 ? {
             pri = ""
             me.self_property_variable ? {
-                pri = "private \{typ} _\{r1.text}" 
-                r2 <> nil ? {
-                    pri += " = " + r2.text
-                }
-                pri += Terminate + Wrap
+                pri = "private \{typ} _\{r1.text} \{Terminate + Wrap}"
             }
             obj = pri + obj
             obj += "\{r1.permission} \{is_virtual} \{typ} \{r1.text; BlockLeft}"
@@ -127,13 +124,7 @@ FeelLangVisitor = $ me {
             me.self_property_variable = false
         }
         | ? {
-            obj += "\{r1.permission} \{typ} \{r1.text}"
-            r2 <> nil ? {
-                obj += " = \{r2.text; Terminate; Wrap}"
-            }
-            | ? {
-                obj += Terminate + Wrap
-            }
+            obj += "\{r1.permission} \{typ} \{r1.text} \{Terminate + Wrap}"
         }
         <- obj
     }

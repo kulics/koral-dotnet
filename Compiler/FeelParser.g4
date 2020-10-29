@@ -52,13 +52,17 @@ parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Li
 packageStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
  (packageFieldStatement|packageNewStatement);
 
-packageFieldStatement: Coin (p=Question? id (more id)?)? left_brace (packageSupportStatement end|New_Line)* packageSupportStatement end? right_brace;
+packageFieldStatement: Coin left_paren New_Line* (packageConstructor (more packageConstructor)*)? New_Line* right_paren 
+(Right_Arrow id (more id)?)? (left_brace (packageSupportStatement end|New_Line)* packageSupportStatement end? right_brace)?;
+
+packageConstructor:
+includeStatement |
+packageVariableStatement ;
 
 // 包支持的语句
 packageSupportStatement:
 includeStatement |
 packageFunctionStatement |
-packageVariableStatement |
 overrideFunctionStatement |
 New_Line;
 
@@ -68,7 +72,7 @@ includeStatement: typeType;
 packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arrow Coin p=Question? (id (more id)?)? right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 定义变量
-packageVariableStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
+packageVariableStatement: (annotationSupport)? id Colon typeType;
 // 函数
 packageFunctionStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
  left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
