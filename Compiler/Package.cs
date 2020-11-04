@@ -64,15 +64,7 @@ if ( context.id(1)!=null ) {
 var Super = (Result)(Visit(context.id(1)));
 this.super_ID=Super.text;
 }
-foreach (var item in context.packageConstructor()){
-if ( item.GetChild(0).GetType()==typeof(IncludeStatementContext) ) {
-var r = (string)(Visit(item));
-extend.Append(r);
-}
-else {
-obj+=Visit(item);
-}
-}
+obj+=Visit(context.parameterConstruct());
 foreach (var item in context.packageSupportStatement()){
 if ( item.GetChild(0).GetType()==typeof(IncludeStatementContext) ) {
 var r = (string)(Visit(item));
@@ -86,36 +78,25 @@ this.self_ID="";
 this.super_ID="";
 return (new Result(){text = obj,data = extend});
 }
-public  override  object VisitPackageVariableStatement( PackageVariableStatementContext context ){
-var r1 = (Result)(Visit(context.id()));
-var is_mutable = r1.is_virtual;
-var is_virtual = "";
-if ( r1.is_virtual ) {
-is_virtual = " virtual ";
-}
-var typ = (string)(Visit(context.typeType()));
+public  override  object VisitParameterConstruct( ParameterConstructContext context ){
 var obj = "";
-if ( context.annotationSupport()!=null ) {
-this.self_property_ID=r1.text;
-obj+=Visit(context.annotationSupport());
+foreach (var i in Range(0, context.parameter().Length, 1)){
+var p = (Parameter)(Visit(context.parameter(i)));
+var param = (new System.Text.StringBuilder().Append(p.annotation).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(p.value)).To_Str();
+if ( p.annotation!=null ) {
+obj+=p.annotation;
 }
 if ( this.self_property_content.Size()>0 ) {
-var pri = "";
-if ( this.self_property_variable ) {
-pri = (new System.Text.StringBuilder().Append("private ").Append(typ).Append(" _").Append(r1.text).Append(" ").Append(Terminate+Wrap)).To_Str();
-}
-obj = pri+obj;
-obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" ").Append(is_virtual).Append(" ").Append(typ).Append(" ").Append(r1.text).Append(BlockLeft)).To_Str();
+obj+=(new System.Text.StringBuilder().Append(p.permission).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(BlockLeft)).To_Str();
 foreach (var v in this.self_property_content){
 obj+=v;
 }
 obj+=BlockRight+Wrap;
 this.self_property_content.Clear();
-this.self_property_ID="";
-this.self_property_variable=false;
 }
 else {
-obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" ").Append(typ).Append(" ").Append(r1.text).Append(" ").Append(Terminate+Wrap)).To_Str();
+obj+=(new System.Text.StringBuilder().Append(p.permission).Append(" ").Append(p.type).Append(" ").Append(p.id).Append(" ").Append(Terminate+Wrap)).To_Str();
+}
 }
 return obj;
 }

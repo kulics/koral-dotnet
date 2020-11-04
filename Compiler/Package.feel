@@ -72,15 +72,7 @@ FeelLangVisitor = $ me {
             Super = Visit(context.id(1)) ! Result
             me.super_ID = Super.text
         }
-        context.packageConstructor() @ item {
-            item.GetChild(0).GetType() == typeof(IncludeStatementContext) ? {
-                r = Visit(item) ! Str
-                extend.Append(r)
-            }
-            | ? {
-                obj += Visit(item)
-            }
-        }
+        obj += Visit(context.parameterConstruct())
         context.packageSupportStatement() @ item {
             item.GetChild(0).GetType() == typeof(IncludeStatementContext) ? {
                 r = Visit(item) ! Str
@@ -95,36 +87,25 @@ FeelLangVisitor = $ me {
         <- Result{text = obj; data = extend}
     }
 
-    .VisitPackageVariableStatement = (context : PackageVariableStatementContext -> v : Any) {
-        r1 = Visit(context.id()) ! Result
-        is_mutable = r1.is_virtual
-        is_virtual = ""
-        r1.is_virtual ? {
-            is_virtual = " virtual "
-        }
-        typ = Visit(context.typeType()) ! Str
+    .VisitParameterConstruct = (context : ParameterConstructContext -> v : Any) {
         obj = ""
-        context.annotationSupport() <> nil ? {
-            me.self_property_ID = r1.text
-            obj += Visit(context.annotationSupport())
-        }
-        me.self_property_content.Size() > 0 ? {
-            pri = ""
-            me.self_property_variable ? {
-                pri = "private \{typ} _\{r1.text} \{Terminate + Wrap}"
+        0 .. context.parameter().Length @ i {
+            p = Visit(context.parameter(i)) ! Parameter
+            param = "\{p.annotation} \{p.type} \{p.id} \{p.value}"
+            p.annotation <> nil ? {
+                obj += p.annotation
             }
-            obj = pri + obj
-            obj += "\{r1.permission} \{is_virtual} \{typ} \{r1.text; BlockLeft}"
-            me.self_property_content @ v {
-                obj += v
+            me.self_property_content.Size() > 0 ? {
+                obj += "\{p.permission} \{p.type} \{p.id; BlockLeft}"
+                me.self_property_content @ v {
+                    obj += v
+                }
+                obj += BlockRight+Wrap
+                me.self_property_content.Clear()
             }
-            obj += BlockRight+Wrap
-            me.self_property_content.Clear()
-            me.self_property_ID = ""
-            me.self_property_variable = false
-        }
-        | ? {
-            obj += "\{r1.permission} \{typ} \{r1.text} \{Terminate + Wrap}"
+            | ? {
+                obj += "\{p.permission} \{p.type} \{p.id} \{Terminate + Wrap}"
+            }
         }
         <- obj
     }

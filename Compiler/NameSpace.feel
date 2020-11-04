@@ -226,27 +226,15 @@ FeelLangVisitor = $ me {
         }
         obj = ""
         context.annotationSupport() <> nil ? {
-            me.self_property_ID = r1.text
             obj += Visit(context.annotationSupport())
         }
         me.self_property_content.Size() > 0 ? {
-            pri = ""
-            me.self_property_variable ? {
-                pri = "private static \{typ} _\{r1.text}" 
-                r2 <> nil ? {
-                    pri += " = " + r2.text
-                }
-                pri += Terminate + Wrap
-            }
-            obj = pri + obj
             obj += "\{r1.permission} static \{typ} \{r1.text; BlockLeft}"
             me.self_property_content @ v {
                 obj += v
             }
             obj += BlockRight+Wrap
             me.self_property_content.Clear()
-            me.self_property_ID = ""
-            me.self_property_variable = false
         }
         | isMutable || r2 == nil ? {
             obj += "\{r1.permission} static \{typ} \{r1.text}"

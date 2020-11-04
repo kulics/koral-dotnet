@@ -60,12 +60,8 @@ FeelLangVisitor = $ me {
 
     self_ID     = ""
     super_ID    = ""
-    set_ID      = ""
-    get_ID      = ""
 
-    self_property_ID         = ""
     self_property_content    = (Str)List{}
-    self_property_variable   = false
 
     all_ID_set       = (Str)HashSet{}
     cuttent_ID_set   = ((Str)HashSet)Stack{}
@@ -158,12 +154,6 @@ FeelLangVisitor = $ me {
         }
         | r.text == super_ID ? {
             r.text = "base"
-        }
-        | r.text == set_ID ? {
-            r.text = "value"
-        }
-        | r.text == get_ID ? {
-            r.text = "_" + self_property_ID
         }
         r.rootID = r.text
         <- r
@@ -271,116 +261,21 @@ FeelLangVisitor = $ me {
         }
         obj == 
         | "get" ? {
-            context.lambda() == nil ? {
-                me.self_property_variable = true
-                me.self_property_content.Append( "get{return _\{ me.self_property_ID }; }")
-            }
-            | ? {
-                me.self_property_content.Append( "get{\{ me.VisitPropertyLambda(context.lambda(), true) }}")
-            }
+            me.self_property_content.Append( "get;")
             <- ""
         }
         | "set" ? {
-            context.lambda() == nil ? {
-                me.self_property_variable = true
-                me.self_property_content.Append( "set{_\{ me.self_property_ID }=value;}")
-            }
-            | ? {
-                me.self_property_content.Append( "set{\{ me.VisitPropertyLambda(context.lambda(), false) }}")
-            }
-            <- ""
-        }
-        | "get_" ? {
-            context.lambda() == nil ? {
-                me.self_property_variable = true
-                me.self_property_content.Append( "private get{return _\{ me.self_property_ID }; }")
-            }
-            | ? {
-                me.self_property_content.Append( "private get{\{ me.VisitPropertyLambda(context.lambda(), true) }}")
-            }
-            <- ""
-        }
-        | "set_" ? {
-            context.lambda() == nil ? {
-                me.self_property_variable = true
-                me.self_property_content.Append( "private set{_\{ me.self_property_ID }=value;}")
-            }
-            | ? {
-                me.self_property_content.Append( "private set{\{ me.VisitPropertyLambda(context.lambda(), false) }}")
-            }
-            <- ""
-        }
-        | "add" ? {
-            Todo("not yet")
-            <- ""
-        }
-        | "remove" ? {
-            Todo("not yet")
+            me.self_property_content.Append( "set;")
             <- ""
         }
         
         context.tuple() <> nil ? {
             obj += (me.Visit(context.tuple()) ! Result).text
         }
-        | context.lambda() <> nil ? {
-            obj += "(\{ (me.Visit(context.lambda()) ! Result).text })"
-        }
-        | ? {
-            obj += ""
-        }
         id <> "" ? {
             obj = id + obj
         }
         obj = "[" + obj + "]"
         <- obj
-    }
-
-    VisitPropertyLambda = (context : LambdaContext, is_get : Bool -> v : Str) {
-        me.Add_current_set()
-        obj = ""
-        context.lambdaIn() <> nil ? {
-            me.VisitPropertyLambdaIn(context.lambdaIn(), is_get)
-        }
-
-        context.tupleExpression() <> nil ? {
-            obj += (Visit(context.tupleExpression()) ! Result).text
-            is_get ? {
-                obj = "return " + obj
-            }
-            obj += Terminate
-        }
-        | ? {
-            obj += ProcessFunctionSupport(context.functionSupportStatement())
-        }
-        me.get_ID = ""
-        me.set_ID = ""
-        me.Delete_current_set()
-        <- obj
-    }
-
-    VisitPropertyLambdaIn = (context : LambdaInContext, is_get : Bool ->) {
-        context.id().Length == 
-        | 1 ? {
-            id0 = me.Visit(context.id(0)) ! Result
-            me.Add_ID(id0.text)
-            is_get ? {
-                me.self_property_variable = true
-                me.Add_ID("_"+me.self_property_ID)
-                me.get_ID = id0.text
-            }
-            | ? {
-                me.set_ID = id0.text
-            }
-        }
-        | 2 ? {
-            me.self_property_variable = true
-            me.Add_ID("_"+me.self_property_ID)
-            id0 = me.Visit(context.id(0)) ! Result
-            id1 = me.Visit(context.id(1)) ! Result
-            me.Add_ID(id0.text)
-            me.Add_ID(id1.text)
-            me.get_ID = id0.text
-            me.set_ID = id1.text
-        }
     }
 }

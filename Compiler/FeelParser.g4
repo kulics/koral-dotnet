@@ -38,7 +38,7 @@ typeTagStatement: Comment_Tag;
 
 // 枚举
 enumStatement: (annotationSupport)? id Equal New_Line* Coin
- enumSupportStatement (New_Line? Or enumSupportStatement)+ (New_Line? left_brace right_brace)? end?;
+left_brack enumSupportStatement (more enumSupportStatement)+ right_brack (New_Line? left_brace right_brace)? end?;
 
 enumSupportStatement: id (Equal (add)? integerExpr)?;
 // 命名空间变量
@@ -52,12 +52,8 @@ parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Li
 packageStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
  (packageFieldStatement|packageNewStatement);
 
-packageFieldStatement: Coin left_paren New_Line* (packageConstructor (more packageConstructor)*)? New_Line* right_paren 
+packageFieldStatement: Coin left_paren New_Line? parameterConstruct New_Line? right_paren 
 (Right_Arrow id (more id)?)? (left_brace (packageSupportStatement end|New_Line)* packageSupportStatement end? right_brace)?;
-
-packageConstructor:
-includeStatement |
-packageVariableStatement ;
 
 // 包支持的语句
 packageSupportStatement:
@@ -71,8 +67,6 @@ includeStatement: typeType;
 // 包构造方法
 packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arrow Coin p=Question? (id (more id)?)? right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
-// 定义变量
-packageVariableStatement: (annotationSupport)? id Colon typeType;
 // 函数
 packageFunctionStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
  left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
@@ -113,6 +107,8 @@ returnAsyncStatement: Left_Flow (tupleExpression)?;
 parameterClauseIn: parameter? (more parameter)*;
 // 出参
 parameterClauseOut: parameter? (more parameter)*;
+// 构造
+parameterConstruct: parameter? (more parameter)*;
 // 参数结构
 parameter: (annotationSupport)? id Colon Dot_Dot_Dot? typeType Bang?;
 
@@ -259,7 +255,7 @@ annotation: left_brack annotationList right_brack; // 注解
 
 annotationList: (annotationItem|annotationString) (more annotationItem)*;
 
-annotationItem: (id left_brace id (tuple|lambda)? right_brace | id (tuple|lambda)?);
+annotationItem: (id left_brace id (tuple)? right_brace | id (tuple)?);
 
 annotationString: stringExpr|rawStringExpr;
 

@@ -21,11 +21,7 @@ public string rootID = "";
 public partial class FeelLangVisitor:FeelParserBaseVisitor<object>{
 public string self_ID = "";
 public string super_ID = "";
-public string set_ID = "";
-public string get_ID = "";
-public string self_property_ID = "";
 public List<string> self_property_content = (new List<string>());
-public bool self_property_variable = false;
 public HashSet<string> all_ID_set = (new HashSet<string>());
 public Stack<HashSet<string>> cuttent_ID_set = (new Stack<HashSet<string>>());
 public HashSet<string> type_Id_set = (new HashSet<string>());
@@ -103,12 +99,6 @@ r.text="this";
 }
 else if ( r.text==super_ID ) {
 r.text="base";
-}
-else if ( r.text==set_ID ) {
-r.text="value";
-}
-else if ( r.text==get_ID ) {
-r.text="_"+self_property_ID;
 }
 r.rootID=r.text;
 return r;
@@ -206,115 +196,22 @@ obj+=((Result)(this.Visit(context.id(0)))).text;
 }
 switch (obj) {
 case "get" :
-{ if ( context.lambda()==null ) {
-this.self_property_variable=true;
-this.self_property_content.Append((new System.Text.StringBuilder().Append("get{return _").Append(this.self_property_ID).Append("; }")).To_Str());
-}
-else {
-this.self_property_content.Append((new System.Text.StringBuilder().Append("get{").Append(this.VisitPropertyLambda(context.lambda(), true)).Append("}")).To_Str());
-}
+{ this.self_property_content.Append("get;");
 return "";
 } break;
 case "set" :
-{ if ( context.lambda()==null ) {
-this.self_property_variable=true;
-this.self_property_content.Append((new System.Text.StringBuilder().Append("set{_").Append(this.self_property_ID).Append("=value;}")).To_Str());
-}
-else {
-this.self_property_content.Append((new System.Text.StringBuilder().Append("set{").Append(this.VisitPropertyLambda(context.lambda(), false)).Append("}")).To_Str());
-}
-return "";
-} break;
-case "get_" :
-{ if ( context.lambda()==null ) {
-this.self_property_variable=true;
-this.self_property_content.Append((new System.Text.StringBuilder().Append("private get{return _").Append(this.self_property_ID).Append("; }")).To_Str());
-}
-else {
-this.self_property_content.Append((new System.Text.StringBuilder().Append("private get{").Append(this.VisitPropertyLambda(context.lambda(), true)).Append("}")).To_Str());
-}
-return "";
-} break;
-case "set_" :
-{ if ( context.lambda()==null ) {
-this.self_property_variable=true;
-this.self_property_content.Append((new System.Text.StringBuilder().Append("private set{_").Append(this.self_property_ID).Append("=value;}")).To_Str());
-}
-else {
-this.self_property_content.Append((new System.Text.StringBuilder().Append("private set{").Append(this.VisitPropertyLambda(context.lambda(), false)).Append("}")).To_Str());
-}
-return "";
-} break;
-case "add" :
-{ Todo("not yet");
-return "";
-} break;
-case "remove" :
-{ Todo("not yet");
+{ this.self_property_content.Append("set;");
 return "";
 } break;
 }
 if ( context.tuple()!=null ) {
 obj+=((Result)(this.Visit(context.tuple()))).text;
 }
-else if ( context.lambda()!=null ) {
-obj+=(new System.Text.StringBuilder().Append("(").Append(((Result)(this.Visit(context.lambda()))).text).Append(")")).To_Str();
-}
-else {
-obj+="";
-}
 if ( id!="" ) {
 obj = id+obj;
 }
 obj = "["+obj+"]";
 return obj;
-}
-public  virtual  string VisitPropertyLambda( LambdaContext context ,  bool is_get ){
-this.Add_current_set();
-var obj = "";
-if ( context.lambdaIn()!=null ) {
-this.VisitPropertyLambdaIn(context.lambdaIn(), is_get);
-}
-if ( context.tupleExpression()!=null ) {
-obj+=((Result)(Visit(context.tupleExpression()))).text;
-if ( is_get ) {
-obj = "return "+obj;
-}
-obj+=Terminate;
-}
-else {
-obj+=ProcessFunctionSupport(context.functionSupportStatement());
-}
-this.get_ID="";
-this.set_ID="";
-this.Delete_current_set();
-return obj;
-}
-public  virtual  void VisitPropertyLambdaIn( LambdaInContext context ,  bool is_get ){
-switch (context.id().Length) {
-case 1 :
-{ var id0 = (Result)(this.Visit(context.id(0)));
-this.Add_ID(id0.text);
-if ( is_get ) {
-this.self_property_variable=true;
-this.Add_ID("_"+this.self_property_ID);
-this.get_ID=id0.text;
-}
-else {
-this.set_ID=id0.text;
-}
-} break;
-case 2 :
-{ this.self_property_variable=true;
-this.Add_ID("_"+this.self_property_ID);
-var id0 = (Result)(this.Visit(context.id(0)));
-var id1 = (Result)(this.Visit(context.id(1)));
-this.Add_ID(id0.text);
-this.Add_ID(id1.text);
-this.get_ID=id0.text;
-this.set_ID=id1.text;
-} break;
-}
 }
 }
 public partial class Compiler_static {

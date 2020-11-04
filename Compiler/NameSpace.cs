@@ -231,27 +231,15 @@ case "int" :
 }
 var obj = "";
 if ( context.annotationSupport()!=null ) {
-this.self_property_ID=r1.text;
 obj+=Visit(context.annotationSupport());
 }
 if ( this.self_property_content.Size()>0 ) {
-var pri = "";
-if ( this.self_property_variable ) {
-pri = (new System.Text.StringBuilder().Append("private static ").Append(typ).Append(" _").Append(r1.text)).To_Str();
-if ( r2!=null ) {
-pri+=" = "+r2.text;
-}
-pri+=Terminate+Wrap;
-}
-obj = pri+obj;
 obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text).Append(BlockLeft)).To_Str();
 foreach (var v in this.self_property_content){
 obj+=v;
 }
 obj+=BlockRight+Wrap;
 this.self_property_content.Clear();
-this.self_property_ID="";
-this.self_property_variable=false;
 }
 else if ( isMutable||r2==null ) {
 obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" static ").Append(typ).Append(" ").Append(r1.text)).To_Str();
