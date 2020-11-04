@@ -37,10 +37,6 @@ FeelLangVisitor = $ me {
                 id = Visit(childContext.id()) ! Result
                 me.Add_type(id.text)
             }
-            | type == typeof(TypeTagStatementContext) ? {
-                childContext = child ! TypeTagStatementContext
-                me.Add_type(childContext.Comment_Tag().GetText().Sub_Str(2))
-            }
         }
         context.namespaceSupportStatement() @ item {
             type = item.GetChild(0).GetType()
@@ -249,9 +245,5 @@ FeelLangVisitor = $ me {
             obj += "\{r1.permission} const \{typ} \{r1.text} = \{r2.text; Terminate; Wrap}"
         }
         <- obj
-    }
-
-    .VisitTypeTagStatement = (context : TypeTagStatementContext -> v : Any) {
-        <- ""
     }
 }

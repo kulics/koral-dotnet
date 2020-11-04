@@ -68,95 +68,10 @@ return r;
 }
 public  override  object VisitCallPkg( CallPkgContext context ){
 var r = (new Result(){data = Visit(context.typeNotNull())});
-r.text=(new System.Text.StringBuilder().Append("(new ").Append(Visit(context.typeNotNull())).Append("()")).To_Str();
-if ( context.pkgAssign()!=null ) {
-r.text+=Visit(context.pkgAssign());
-}
-else if ( context.listAssign()!=null ) {
-r.text+=Visit(context.listAssign());
-}
-else if ( context.dictionaryAssign()!=null ) {
-r.text+=Visit(context.dictionaryAssign());
-}
+r.text=(new System.Text.StringBuilder().Append("(new ").Append(Visit(context.typeNotNull()))).To_Str();
+r.text+=((Result)(Visit(context.tuple()))).text;
 r.text+=")";
 return r;
-}
-public  override  object VisitPkgAssign( PkgAssignContext context ){
-var obj = "";
-obj+="{";
-foreach (var i in Range(0, context.pkgAssignElement().Length, 1)){
-if ( i==0 ) {
-obj+=Visit(context.pkgAssignElement(i));
-}
-else {
-obj+=","+Visit(context.pkgAssignElement(i));
-}
-}
-obj+="}";
-return obj;
-}
-public  override  object VisitListAssign( ListAssignContext context ){
-var obj = "";
-obj+="{";
-foreach (var i in Range(0, context.expression().Length, 1)){
-var r = (Result)(Visit(context.expression(i)));
-if ( i==0 ) {
-obj+=r.text;
-}
-else {
-obj+=","+r.text;
-}
-}
-obj+="}";
-return obj;
-}
-public  override  object VisitDictionaryAssign( DictionaryAssignContext context ){
-var obj = "";
-obj+="{";
-foreach (var i in Range(0, context.dictionaryElement().Length, 1)){
-var r = (DicEle)(Visit(context.dictionaryElement(i)));
-if ( i==0 ) {
-obj+=r.text;
-}
-else {
-obj+=","+r.text;
-}
-}
-obj+="}";
-return obj;
-}
-public  override  object VisitPkgAssignElement( PkgAssignElementContext context ){
-var obj = "";
-obj+=(new System.Text.StringBuilder().Append(Visit(context.name())).Append(" = ").Append(((Result)(Visit(context.expression()))).text)).To_Str();
-return obj;
-}
-public  override  object VisitPkgAnonymous( PkgAnonymousContext context ){
-return (new Result(){data = "var",text = (string)("new"+Visit(context.pkgAnonymousAssign()))});
-}
-public  override  object VisitPkgAnonymousAssign( PkgAnonymousAssignContext context ){
-var obj = "";
-obj+="{";
-foreach (var i in Range(0, context.pkgAnonymousAssignElement().Length, 1)){
-if ( i==0 ) {
-obj+=Visit(context.pkgAnonymousAssignElement(i));
-}
-else {
-obj+=","+Visit(context.pkgAnonymousAssignElement(i));
-}
-}
-obj+="}";
-return obj;
-}
-public  override  object VisitPkgAnonymousAssignElement( PkgAnonymousAssignElementContext context ){
-var obj = "";
-obj+=(new System.Text.StringBuilder().Append(Visit(context.name())).Append(" = ").Append(((Result)(Visit(context.expression()))).text)).To_Str();
-return obj;
-}
-public  override  object VisitDictionaryElement( DictionaryElementContext context ){
-var r1 = (Result)(Visit(context.expression(0)));
-var r2 = (Result)(Visit(context.expression(1)));
-var result = (new DicEle(){key = (string)(r1.data),value = (string)(r2.data),text = (new System.Text.StringBuilder().Append("{").Append(r1.text).Append(", ").Append(r2.text).Append("}")).To_Str()});
-return result;
 }
 public  override  object VisitFunctionExpression( FunctionExpressionContext context ){
 var r = (new Result());

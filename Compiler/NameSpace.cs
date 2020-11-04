@@ -33,10 +33,6 @@ var childContext = (PackageStatementContext)(child);
 var id = (Result)(Visit(childContext.id()));
 this.Add_type(id.text);
 }
-else if ( type==typeof(TypeTagStatementContext) ) {
-var childContext = (TypeTagStatementContext)(child);
-this.Add_type(childContext.Comment_Tag().GetText().Sub_Str(2));
-}
 }
 foreach (var item in context.namespaceSupportStatement()){
 var type = item.GetChild(0).GetType();
@@ -254,9 +250,6 @@ else {
 obj+=(new System.Text.StringBuilder().Append(r1.permission).Append(" const ").Append(typ).Append(" ").Append(r1.text).Append(" = ").Append(r2.text).Append(Terminate).Append(Wrap)).To_Str();
 }
 return obj;
-}
-public  override  object VisitTypeTagStatement( TypeTagStatementContext context ){
-return "";
 }
 }
 }

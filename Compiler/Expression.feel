@@ -604,32 +604,4 @@ FeelLangVisitor = $ me {
         r.text = "~" + expr.text
         <- r
     }
-
-    .VisitLinq = (context : LinqContext -> v : Any) {
-        r = Result{data = "var"}
-        r.text += Visit(context.linqHeadItem()) ! Str
-        context.linqItem() @ item {
-            r.text += "\{Visit(item)} "
-        }
-        r.text += "\{(Visit(context.id()) ! Result).text} \{(Visit(context.expression()) ! Result).text}"
-        <- r
-    }
-
-    .VisitLinqItem = (context : LinqItemContext -> v : Any) {
-        context.linqHeadItem() <> nil ? {
-            <- Visit(context.linqHeadItem()) ! Str
-        }
-        obj = (Visit(context.id()) ! Result).text
-        context.expression() <> nil ? {
-            obj += " \{(Visit(context.expression()) ! Result).text}"
-        }
-        <- obj
-    }
-
-    .VisitLinqHeadItem = (context : LinqHeadItemContext -> v : Any) {
-        obj = ""
-        id = Visit(context.id()) ! Result
-        obj += "from \{id.text} in \{(Visit(context.expression()) ! Result).text} "
-        <- obj
-    }
 }

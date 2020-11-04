@@ -478,31 +478,6 @@ r.data=expr.data;
 r.text="~"+expr.text;
 return r;
 }
-public  override  object VisitLinq( LinqContext context ){
-var r = (new Result(){data = "var"});
-r.text+=(string)(Visit(context.linqHeadItem()));
-foreach (var item in context.linqItem()){
-r.text+=(new System.Text.StringBuilder().Append(Visit(item)).Append(" ")).To_Str();
-}
-r.text+=(new System.Text.StringBuilder().Append(((Result)(Visit(context.id()))).text).Append(" ").Append(((Result)(Visit(context.expression()))).text)).To_Str();
-return r;
-}
-public  override  object VisitLinqItem( LinqItemContext context ){
-if ( context.linqHeadItem()!=null ) {
-return (string)(Visit(context.linqHeadItem()));
-}
-var obj = ((Result)(Visit(context.id()))).text;
-if ( context.expression()!=null ) {
-obj+=(new System.Text.StringBuilder().Append(" ").Append(((Result)(Visit(context.expression()))).text)).To_Str();
-}
-return obj;
-}
-public  override  object VisitLinqHeadItem( LinqHeadItemContext context ){
-var obj = "";
-var id = (Result)(Visit(context.id()));
-obj+=(new System.Text.StringBuilder().Append("from ").Append(id.text).Append(" in ").Append(((Result)(Visit(context.expression()))).text).Append(" ")).To_Str();
-return obj;
-}
 }
 public partial class Compiler_static {
 public static List<string> keywords = (new List<string>(){ "abstract","as","base","bool","break","byte","case","catch","char","checked","class","const","continue","decimal","default","delegate","do","double","enum","event","explicit","extern","false","finally","fixed","float","for","foreach","goto","implicit","in","int","interface","internal","is","lock","long","namespace","new","null","object","operator","out","override","params","private","protected","public","readonly","ref","return","sbyte","sealed","short","sizeof","stackalloc","static","string","struct","switch","this","throw","true","try","uint","ulong","unchecked","unsafe","ushort","using","virtual","void","volatile","while" });

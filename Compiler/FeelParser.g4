@@ -19,7 +19,6 @@ namespaceFunctionStatement |
 namespaceVariableStatement |
 enumStatement |
 typeRedefineStatement |
-typeTagStatement |
 New_Line ;
 
 // 导入命名空间
@@ -33,8 +32,6 @@ importSubStatement: (annotationSupport)? ((id|Dot) Equal)?
 typeAliasStatement: id Equal typeType;
 // 类型重定义
 typeRedefineStatement: id Equal New_Line* typeType;
-// 特殊类型注释
-typeTagStatement: Comment_Tag; 
 
 // 枚举
 enumStatement: (annotationSupport)? id Equal New_Line* Coin
@@ -211,14 +208,12 @@ dataStatement;
 
 // 表达式
 expression:
-linq // 联合查询
-| primaryExpression 
+primaryExpression 
 | callPkg // 新建包 
 | callChannel // 通道访问
 | callAsync // 创建异步调用
 | lambda // lambda表达式
 | functionExpression // 函数
-| pkgAnonymous // 匿名包
 | plusMinus // 正负处理
 | bitwiseNotExpression // 位运算取反
 | negate // 取反
@@ -271,23 +266,13 @@ transfer: Left_Wave; // 传递通道值
 
 callElement: left_brack (slice | expression) right_brack; // 元素调用
 
-callPkg: typeNotNull left_brace (pkgAssign|listAssign|dictionaryAssign)? right_brace; // 新建包
+callPkg: typeNotNull Coin tuple; // 类型构造
 
 orElse: Question expression; // 可空取值
 
 typeConversion: Bang typeType; // 类型转化
 
 typeCheck: Colon_Colon typeType; // 类型转化
-
-pkgAssign: (pkgAssignElement end)* pkgAssignElement; // 简化赋值
-
-pkgAssignElement: name Equal expression; // 简化赋值元素
-
-listAssign: (expression end)* expression;
-
-dictionaryAssign: (dictionaryElement end)* dictionaryElement;
-
-dictionaryElement: left_brack expression right_brack Equal expression; // 字典元素
 
 slice: sliceStart | sliceEnd | sliceFull;
 
@@ -311,13 +296,6 @@ lambda: left_paren (lambdaIn)? (t=Greater)? right_paren left_brace tupleExpressi
 
 lambdaIn: id (more id)*;
 
-pkgAnonymous: pkgAnonymousAssign; // 匿名包
-
-pkgAnonymousAssign: Coin left_brace (pkgAnonymousAssignElement end)*
- pkgAnonymousAssignElement right_brace left_brace right_brace; // 简化赋值
-
-pkgAnonymousAssignElement: name Equal expression; // 简化赋值元素
-
 functionExpression: left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
 parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
@@ -326,12 +304,6 @@ plusMinus: add expression;
 negate: wave expression;
 
 bitwiseNotExpression: bitwiseNot expression;
-
-linq: linqHeadItem Right_Arrow New_Line?  (linqItem)* id New_Line? expression;
-
-linqHeadItem: At Bang? id Equal expression;
-
-linqItem: (linqHeadItem | id (expression)?) Right_Arrow New_Line?;
 
 // 判断表达式
 judgeExpression:
