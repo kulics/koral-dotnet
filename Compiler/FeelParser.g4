@@ -268,9 +268,9 @@ callElement: left_brack (slice | expression) right_brack; // 元素调用
 
 callPkg: typeNotNull Coin tuple; // 类型构造
 
-orElse: Question expression; // 可空取值
+orElse: Question Or expression; // 可空取值
 
-typeConversion: Bang typeType; // 类型转化
+typeConversion: Colon_Arrow typeType; // 类型转化
 
 typeCheck: Colon_Colon typeType; // 类型转化
 
