@@ -146,7 +146,7 @@ if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
 var pout = "";
-if ( context.t==null ) {
+if ( context.parameterClauseOut()==null ) {
 pout = "void";
 }
 else {

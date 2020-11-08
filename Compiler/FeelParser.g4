@@ -42,8 +42,9 @@ enumSupportStatement: id (Equal (add)? integerExpr)?;
 namespaceVariableStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
 // 命名空间函数
 namespaceFunctionStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
- left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+ left_paren parameterClauseIn ((Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut)? right_paren t=(Right_Arrow|Right_Flow) (functionSupportStatement|
+ left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
 
 // 定义包
 packageStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
@@ -63,11 +64,12 @@ New_Line;
 includeStatement: typeType;
 // 包构造方法
 packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arrow Coin p=Question? (id (more id)?)? right_paren
-(left_paren expressionList? right_paren)? left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+(left_paren expressionList? right_paren)? Right_Arrow left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 函数
 packageFunctionStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
- left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+ left_paren parameterClauseIn ((Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut)? right_paren t=(Right_Arrow|Right_Flow) (functionSupportStatement|
+ left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
 
 // 扩展
 implementStatement: (templateDefine New_Line?)? id Colon Equal
@@ -75,8 +77,9 @@ implementStatement: (templateDefine New_Line?)? id Colon Equal
 
 // 函数
 overrideFunctionStatement: (annotationSupport)? Dot (n='_')? (templateDefine New_Line?)? id Equal
- left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace end;
+ left_paren parameterClauseIn ((Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut)? right_paren t=(Right_Arrow|Right_Flow) (functionSupportStatement|
+ left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
 
 // 协议
 protocolStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal protocolSubStatement;
@@ -94,8 +97,9 @@ t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut right_paren;
 
 // 函数
 functionStatement: (templateDefine New_Line?)? id Equal left_paren parameterClauseIn
- (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)?
-  right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+ ((Right_Arrow|Right_Flow) New_Line* parameterClauseOut)?
+  right_paren t=(Right_Arrow|Right_Flow) (functionSupportStatement|
+   left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
 // 返回
 returnStatement: Left_Arrow (tupleExpression)?;
 // 异步返回
@@ -147,7 +151,7 @@ judgeEqualCase: expression;
 caseTypeStatement: New_Line? Or judgeTypeCase (Or New_Line? judgeTypeCase)* Question left_brace
  (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
-judgeTypeCase: typeType (Double_Arrow id)?;
+judgeTypeCase: typeType (Equal_Arrow id)?;
 
 // 判断
 judgeStatement:
@@ -155,17 +159,21 @@ judgeIfStatement judgeElseIfStatement* judgeElseStatement?;
 // else if 判断
 judgeElseIfStatement: New_Line? Or judgeIfStatement;
 // else 判断
-judgeElseStatement: New_Line? Or Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+judgeElseStatement: New_Line? Or (New_Line? functionSupportStatement | 
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
 // if 判断
-judgeIfStatement: expression Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+judgeIfStatement: expression Question (New_Line? functionSupportStatement |
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
 
 // 循环
-loopStatement: expression At (left_brack id right_brack)? Bang? id
- left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace ;
+loopStatement: expression Equal_Arrow (left_brack id right_brack)? id At (New_Line? functionSupportStatement |
+ left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace) ;
 // 条件循环
-loopCaseStatement: expression At left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace loopElseStatement? ;
+loopCaseStatement: expression At (New_Line? functionSupportStatement |
+ left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace ) loopElseStatement?;
 // else 判断
-loopElseStatement: New_Line? Or At left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+loopElseStatement: New_Line? And (New_Line? functionSupportStatement |
+ left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
 // 跳出循环
 loopJumpStatement: Tilde At ;
 // 跳过当前循环
@@ -235,7 +243,6 @@ primaryExpression
 | expression typeCheck // 类型判断
 | expression compare expression // 比较表达式
 | expression logic expression // 逻辑表达式
-| expression judgeExpression // 判断表达式
 ; 
 
 callExpression: call New_Line? (left_paren templateCall right_paren)? id (callFunc|callElement)?;
@@ -290,29 +297,22 @@ templateDefineItem: id (Colon id)?;
 
 templateCall: typeType (more typeType)*;
 
-lambda: left_paren (lambdaIn)? (t=Greater)? right_paren left_brace tupleExpression right_brace
-| left_paren (lambdaIn)? (t=Greater)? right_paren left_brace
+lambda: left_paren (lambdaIn)? right_paren t=(Right_Arrow|Right_Flow) (New_Line? tupleExpression|
+ left_brace tupleExpression right_brace) 
+| left_paren (lambdaIn)? right_paren t=(Right_Arrow|Right_Flow) left_brace
 (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 lambdaIn: id (more id)*;
 
-functionExpression: left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut)? right_paren left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+functionExpression: left_paren parameterClauseIn ((Right_Arrow|Right_Flow) New_Line*
+parameterClauseOut)? right_paren t=(Right_Arrow|Right_Flow) (New_Line? functionSupportStatement| 
+ left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
 
 plusMinus: add expression;
 
 negate: wave expression;
 
 bitwiseNotExpression: bitwiseNot expression;
-
-// 判断表达式
-judgeExpression:
-judgeIfExpression judgeElseExpression;
-
-// else 判断
-judgeElseExpression: New_Line? Or Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace;
-// if 判断
-judgeIfExpression: Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? tupleExpression right_brace;
 
 // 基础数据
 dataStatement:

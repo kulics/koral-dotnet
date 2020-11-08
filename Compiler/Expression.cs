@@ -166,10 +166,6 @@ case CallElementContext it :
 { var e2 = (Result)(Visit(it));
 r.text=r.text+e2.text;
 } break;
-case JudgeExpressionContext it :
-{ var e2 = (Func<string, Result>)(Visit(it));
-r.text=e2(r.text).text;
-} break;
 default:
 { if ( context.op.Type==FeelParser.Bang ) {
 r.text=(new System.Text.StringBuilder().Append("ref ").Append(r.text)).To_Str();

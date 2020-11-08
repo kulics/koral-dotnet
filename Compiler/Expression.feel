@@ -253,10 +253,6 @@ FeelLangVisitor = $ me {
                 e2 = Visit(it) ! Result
                 r.text = r.text + e2.text
             }
-            | JudgeExpressionContext => it ? {
-                e2 = Visit(it) ! (Str->Result)
-                r.text = e2(r.text).text
-            }
             | ? {
                 context.op.Type == FeelParser.Bang ? {
                     r.text = "ref \{r.text}"

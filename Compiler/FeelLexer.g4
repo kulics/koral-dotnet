@@ -19,7 +19,7 @@ Dot: 				'.';
 
 Comma: 				',';
 
-Double_Arrow:	'=>';
+Equal_Arrow:	'=>';
 Colon_Arrow:	':>';
 
 Right_Flow: 	'->>';

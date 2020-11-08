@@ -28,7 +28,7 @@ public  override  object VisitFunctionStatement( FunctionStatementContext contex
 var id = (Result)(Visit(context.id()));
 var obj = "";
 var pout = "";
-if ( context.t==null ) {
+if ( context.parameterClauseOut()==null ) {
 pout = "void";
 }
 else {

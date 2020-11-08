@@ -105,7 +105,7 @@ else {
 r.text+=(new System.Text.StringBuilder().Append("{").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append("}")).To_Str();
 }
 this.Delete_current_set();
-if ( Get_func_async()||context.t!=null ) {
+if ( Get_func_async()||context.t.Type==Right_Flow ) {
 r.text=" async "+r.text;
 }
 this.Delete_func_stack();

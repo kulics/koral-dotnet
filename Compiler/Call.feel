@@ -126,7 +126,7 @@ FeelLangVisitor = $ me {
         }
         me.Delete_current_set()
 
-        Get_func_async() || context.t <> nil ? {
+        Get_func_async() || context.t.Type == Right_Flow ? {
             r.text = " async " + r.text
         }
         me.Delete_func_stack()

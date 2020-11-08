@@ -53,7 +53,7 @@ var id = (Result)(Visit(context.id()));
 var is_virtual = " override ";
 var obj = "";
 var pout = "";
-if ( context.t==null ) {
+if ( context.parameterClauseOut()==null ) {
 pout = "void";
 }
 else {

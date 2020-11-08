@@ -108,7 +108,7 @@ is_virtual = " virtual ";
 }
 var obj = "";
 var pout = "";
-if ( context.t==null ) {
+if ( context.parameterClauseOut()==null ) {
 pout = "void";
 }
 else {

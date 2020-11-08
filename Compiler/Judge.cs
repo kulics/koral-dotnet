@@ -124,35 +124,5 @@ var obj = "else ";
 obj+=Visit(context.judgeIfStatement());
 return obj;
 }
-public  override  object VisitJudgeExpression( JudgeExpressionContext context ){
-Func<string, Result> fn = (expr)=>{var r = (new Result());
-r.data="var";
-r.text="Run(()=> "+BlockLeft+" if (";
-r.text+=expr;
-r.text+=Visit(context.judgeIfExpression());
-r.text+=Visit(context.judgeElseExpression());
-r.text+=BlockRight+")";
-return r;
-};
-return fn;
-}
-public  override  object VisitJudgeIfExpression( JudgeIfExpressionContext context ){
-var obj = (new System.Text.StringBuilder().Append(" ) ").Append(BlockLeft).Append(Wrap)).To_Str();
-this.Add_current_set();
-obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=(new System.Text.StringBuilder().Append("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).To_Str();
-this.Delete_current_set();
-obj+=BlockRight+Wrap;
-return obj;
-}
-public  override  object VisitJudgeElseExpression( JudgeElseExpressionContext context ){
-var obj = (new System.Text.StringBuilder().Append("else ").Append(BlockLeft).Append(Wrap)).To_Str();
-this.Add_current_set();
-obj+=ProcessFunctionSupport(context.functionSupportStatement());
-obj+=(new System.Text.StringBuilder().Append("return ").Append(((Result)(Visit(context.tupleExpression()))).text).Append(";")).To_Str();
-this.Delete_current_set();
-obj+=BlockRight+Wrap;
-return obj;
-}
 }
 }

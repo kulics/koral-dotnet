@@ -60,7 +60,7 @@ FeelLangVisitor = $ me {
         is_virtual = " override "
         obj = ""
         pout = ""
-        context.t == nil ? {
+        context.parameterClauseOut() == nil ? {
             pout = "void"
         }
         | ? {

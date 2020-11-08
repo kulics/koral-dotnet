@@ -118,7 +118,7 @@ FeelLangVisitor = $ me {
         }
         obj = ""
         pout = ""
-        context.t == nil ? {
+        context.parameterClauseOut() == nil ? {
             pout = "void"
         }
         | ? {
