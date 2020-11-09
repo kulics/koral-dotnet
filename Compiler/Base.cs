@@ -91,14 +91,14 @@ var other = (Result)(Visit(context.GetChild(i)));
 r.text+=(new System.Text.StringBuilder().Append("_").Append(other.text)).To_Str();
 }
 }
-if ( keywords.Exists((t)=>t==r.text) ) {
-r.text=(new System.Text.StringBuilder().Append("@").Append(r.text)).To_Str();
-}
 if ( r.text==self_ID ) {
 r.text="this";
 }
 else if ( r.text==super_ID ) {
 r.text="base";
+}
+else if ( keywords.Exists((t)=>t==r.text) ) {
+r.text=(new System.Text.StringBuilder().Append("@").Append(r.text)).To_Str();
 }
 r.rootID=r.text;
 return r;

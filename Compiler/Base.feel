@@ -145,15 +145,14 @@ FeelLangVisitor = $ me {
             }
         }
 
-        keywords.Exists((t) {t == r.text}) ? {
-            r.text = "@\{r.text}"
-        }
-
         r.text == self_ID ? {
             r.text = "this"
         }
         | r.text == super_ID ? {
             r.text = "base"
+        }
+        | keywords.Exists((t) {t == r.text}) ? {
+            r.text = "@\{r.text}"
         }
         r.rootID = r.text
         <- r

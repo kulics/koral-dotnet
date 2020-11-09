@@ -68,6 +68,9 @@ FeelLangVisitor = $ me {
             Self = Visit(context.id(0)) ! Result
             me.self_ID = Self.text
         }
+        | ? {
+            me.self_ID = "this"
+        }
         context.id(1) <> nil ? {
             Super = Visit(context.id(1)) ! Result
             me.super_ID = Super.text
@@ -160,6 +163,9 @@ FeelLangVisitor = $ me {
         context.id(0) <> nil ? {
             Self = Visit(context.id(0)) ! Result
             me.self_ID = Self.text
+        }
+        | ? {
+            me.self_ID = "this"
         }
         context.id(1) <> nil ? {
             Super = Visit(context.id(1)) ! Result

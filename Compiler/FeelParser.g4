@@ -51,7 +51,7 @@ packageStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
  (packageFieldStatement|packageNewStatement);
 
 packageFieldStatement: Coin left_paren New_Line? parameterConstruct New_Line? right_paren 
-(Right_Arrow id (more id)?)? (left_brace (packageSupportStatement end|New_Line)* packageSupportStatement end? right_brace)?;
+(Right_Arrow left_paren id (more id)? right_paren)? (left_brace (packageSupportStatement end|New_Line)* packageSupportStatement end? right_brace)?;
 
 // 包支持的语句
 packageSupportStatement:

@@ -60,6 +60,9 @@ if ( context.id(0)!=null ) {
 var Self = (Result)(Visit(context.id(0)));
 this.self_ID=Self.text;
 }
+else {
+this.self_ID="this";
+}
 if ( context.id(1)!=null ) {
 var Super = (Result)(Visit(context.id(1)));
 this.super_ID=Super.text;
@@ -147,6 +150,9 @@ var text = "";
 if ( context.id(0)!=null ) {
 var Self = (Result)(Visit(context.id(0)));
 this.self_ID=Self.text;
+}
+else {
+this.self_ID="this";
 }
 if ( context.id(1)!=null ) {
 var Super = (Result)(Visit(context.id(1)));
