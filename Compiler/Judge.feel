@@ -11,24 +11,13 @@
 }
 
 FeelLangVisitor = $ me {
-    .VisitJudgeEqualStatement = (context : JudgeEqualStatementContext -> v : Any)  {
+    .VisitJudgeMatchStatement = (context : JudgeMatchStatementContext -> v : Any)  {
         obj = ""
         expr = Visit(context.expression()) ! Result
         obj += "switch (\{expr.text}) \{BlockLeft; Wrap}"
         context.caseEqualStatement() @ it {
             obj += Visit(it) ! Str + Wrap
         }
-        context.caseElseStatement() <> nil ? {
-            obj += Visit(context.caseElseStatement()) ! Str + Wrap
-        }
-        obj += BlockRight+Wrap
-        <- obj
-    }
-
-    .VisitJudgeTypeStatement = (context : JudgeTypeStatementContext -> v : Any)  {
-        obj = ""
-        expr = Visit(context.expression()) ! Result
-        obj += "switch (\{expr.text}) \{BlockLeft; Wrap}"
         context.caseTypeStatement() @ it {
             obj += Visit(it) ! Str + Wrap
         }

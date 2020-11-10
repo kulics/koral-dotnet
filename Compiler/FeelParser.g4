@@ -117,8 +117,7 @@ parameter: (annotationSupport)? id Colon Dot_Dot_Dot? typeType Bang?;
 functionSupportStatement:
 returnStatement |
 returnAsyncStatement |
-judgeEqualStatement |
-judgeTypeStatement |
+judgeMatchStatement |
 judgeStatement |
 loopStatement |
 loopCaseStatement |
@@ -135,21 +134,21 @@ assignStatement |
 expressionStatement ;
 
 // 条件判断
-judgeEqualStatement:
-expression Equal_Equal caseEqualStatement+ caseElseStatement?;
-
-judgeTypeStatement:
-expression Colon_Colon caseTypeStatement+ caseElseStatement?;
+judgeMatchStatement:
+expression Question (caseEqualStatement|caseTypeStatement)+ caseElseStatement?;
 
 // 判断条件声明
-caseElseStatement: New_Line? Or Question left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
-caseEqualStatement: New_Line? Or judgeEqualCase (Or New_Line? judgeEqualCase)* Question left_brace
- (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+caseElseStatement: New_Line? Or (New_Line? functionSupportStatement | 
+ left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
+caseEqualStatement: New_Line? Or Equal_Equal judgeEqualCase (more New_Line? judgeEqualCase)* Question
+(New_Line? functionSupportStatement | left_brace
+ (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
 
 judgeEqualCase: expression;
 
-caseTypeStatement: New_Line? Or judgeTypeCase (Or New_Line? judgeTypeCase)* Question left_brace
- (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+caseTypeStatement: New_Line? Or Colon_Colon judgeTypeCase (more New_Line? judgeTypeCase)* Question
+(New_Line? functionSupportStatement | left_brace
+ (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
 
 judgeTypeCase: typeType (Equal_Arrow id)?;
 

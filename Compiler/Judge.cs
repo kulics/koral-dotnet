@@ -10,23 +10,13 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class FeelLangVisitor{
-public  override  object VisitJudgeEqualStatement( JudgeEqualStatementContext context ){
+public  override  object VisitJudgeMatchStatement( JudgeMatchStatementContext context ){
 var obj = "";
 var expr = (Result)(Visit(context.expression()));
 obj+=(new System.Text.StringBuilder().Append("switch (").Append(expr.text).Append(") ").Append(BlockLeft).Append(Wrap)).To_Str();
 foreach (var it in context.caseEqualStatement()){
 obj+=(string)(Visit(it))+Wrap;
 }
-if ( context.caseElseStatement()!=null ) {
-obj+=(string)(Visit(context.caseElseStatement()))+Wrap;
-}
-obj+=BlockRight+Wrap;
-return obj;
-}
-public  override  object VisitJudgeTypeStatement( JudgeTypeStatementContext context ){
-var obj = "";
-var expr = (Result)(Visit(context.expression()));
-obj+=(new System.Text.StringBuilder().Append("switch (").Append(expr.text).Append(") ").Append(BlockLeft).Append(Wrap)).To_Str();
 foreach (var it in context.caseTypeStatement()){
 obj+=(string)(Visit(it))+Wrap;
 }
