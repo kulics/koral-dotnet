@@ -90,23 +90,6 @@ FeelLangVisitor = $ me {
         <- r
     }
 
-    .VisitFunctionExpression = (context : FunctionExpressionContext -> v : Any) {
-        r = Result{}
-        r.text += Visit(context.parameterClauseIn()) + " => " + BlockLeft + Wrap
-        me.Add_current_set()
-        me.Add_func_stack()
-        r.text += ProcessFunctionSupport(context.functionSupportStatement())
-        me.Delete_current_set()
-        r.text += BlockRight + Wrap
-
-        Get_func_async() ? {
-            r.text = " async " + r.text
-        }
-        me.Delete_func_stack()
-        r.data = "var"
-        <- r
-    }
-
     .VisitLambda = (context : LambdaContext -> v : Any) {
         me.Add_current_set()
         me.Add_func_stack()
@@ -126,7 +109,7 @@ FeelLangVisitor = $ me {
         }
         me.Delete_current_set()
 
-        Get_func_async() || context.t.Type == Right_Flow ? {
+        Get_func_async() || (context.t <> nil && context.t.Type == Right_Flow) ? {
             r.text = " async " + r.text
         }
         me.Delete_func_stack()

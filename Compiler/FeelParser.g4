@@ -42,9 +42,8 @@ enumSupportStatement: id (Equal (add)? integerExpr)?;
 namespaceVariableStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
 // 命名空间函数
 namespaceFunctionStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
- left_paren parameterClauseIn ((Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut)? right_paren t=(Right_Arrow|Right_Flow) (functionSupportStatement|
- left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
+left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 定义包
 packageStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
@@ -64,12 +63,11 @@ New_Line;
 includeStatement: typeType;
 // 包构造方法
 packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arrow Coin p=Question? (id (more id)?)? right_paren
-(left_paren expressionList? right_paren)? Right_Arrow left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+(left_paren expressionList? right_paren)? left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 函数
 packageFunctionStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
- left_paren parameterClauseIn ((Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut)? right_paren t=(Right_Arrow|Right_Flow) (functionSupportStatement|
- left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
+left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 扩展
 implementStatement: (templateDefine New_Line?)? id Colon Equal
@@ -77,9 +75,8 @@ implementStatement: (templateDefine New_Line?)? id Colon Equal
 
 // 函数
 overrideFunctionStatement: (annotationSupport)? Dot (n='_')? (templateDefine New_Line?)? id Equal
- left_paren parameterClauseIn ((Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut)? right_paren t=(Right_Arrow|Right_Flow) (functionSupportStatement|
- left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
+left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 协议
 protocolStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal protocolSubStatement;
@@ -97,9 +94,8 @@ t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut right_paren;
 
 // 函数
 functionStatement: (templateDefine New_Line?)? id Equal left_paren parameterClauseIn
- ((Right_Arrow|Right_Flow) New_Line* parameterClauseOut)?
-  right_paren t=(Right_Arrow|Right_Flow) (functionSupportStatement|
-   left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
+(t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 返回
 returnStatement: Left_Arrow (tupleExpression)?;
 // 异步返回
@@ -220,7 +216,6 @@ primaryExpression
 | callChannel // 通道访问
 | callAsync // 创建异步调用
 | lambda // lambda表达式
-| functionExpression // 函数
 | plusMinus // 正负处理
 | bitwiseNotExpression // 位运算取反
 | negate // 取反
@@ -296,16 +291,12 @@ templateDefineItem: id (Colon id)?;
 
 templateCall: typeType (more typeType)*;
 
-lambda: left_paren (lambdaIn)? right_paren t=(Right_Arrow|Right_Flow) (New_Line? tupleExpression|
- left_brace tupleExpression right_brace) 
-| left_paren (lambdaIn)? right_paren t=(Right_Arrow|Right_Flow) left_brace
-(functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+lambda: left_paren (lambdaIn)? (t=(Right_Arrow|Right_Flow) parameterClauseOut?)? right_paren 
+ left_brace tupleExpression right_brace
+| left_paren (lambdaIn)? (t=(Right_Arrow|Right_Flow) parameterClauseOut?)? right_paren
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
-lambdaIn: id (more id)*;
-
-functionExpression: left_paren parameterClauseIn ((Right_Arrow|Right_Flow) New_Line*
-parameterClauseOut)? right_paren t=(Right_Arrow|Right_Flow) (New_Line? functionSupportStatement| 
- left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
+lambdaIn: id (Colon typeType)? (more id (Colon typeType)?)*;
 
 plusMinus: add expression;
 

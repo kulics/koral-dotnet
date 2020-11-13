@@ -73,21 +73,6 @@ r.text+=((Result)(Visit(context.tuple()))).text;
 r.text+=")";
 return r;
 }
-public  override  object VisitFunctionExpression( FunctionExpressionContext context ){
-var r = (new Result());
-r.text+=Visit(context.parameterClauseIn())+" => "+BlockLeft+Wrap;
-this.Add_current_set();
-this.Add_func_stack();
-r.text+=ProcessFunctionSupport(context.functionSupportStatement());
-this.Delete_current_set();
-r.text+=BlockRight+Wrap;
-if ( Get_func_async() ) {
-r.text=" async "+r.text;
-}
-this.Delete_func_stack();
-r.data="var";
-return r;
-}
 public  override  object VisitLambda( LambdaContext context ){
 this.Add_current_set();
 this.Add_func_stack();
@@ -105,7 +90,7 @@ else {
 r.text+=(new System.Text.StringBuilder().Append("{").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append("}")).To_Str();
 }
 this.Delete_current_set();
-if ( Get_func_async()||context.t.Type==Right_Flow ) {
+if ( Get_func_async()||(context.t!=null&&context.t.Type==Right_Flow) ) {
 r.text=" async "+r.text;
 }
 this.Delete_func_stack();
