@@ -110,8 +110,12 @@ obj+=BlockRight+Wrap;
 return obj;
 }
 public  override  object VisitJudgeElseIfStatement( JudgeElseIfStatementContext context ){
-var obj = "else ";
-obj+=Visit(context.judgeIfStatement());
+var b = (Result)(Visit(context.expression()));
+var obj = (new System.Text.StringBuilder().Append("else if ( ").Append(b.text).Append(" ) ").Append(BlockLeft).Append(Wrap)).To_Str();
+this.Add_current_set();
+obj+=ProcessFunctionSupport(context.functionSupportStatement());
+this.Delete_current_set();
+obj+=BlockRight+Wrap;
 return obj;
 }
 }

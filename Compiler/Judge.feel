@@ -122,8 +122,12 @@ FeelLangVisitor = $ me {
     }
 
     .VisitJudgeElseIfStatement = (context : JudgeElseIfStatementContext -> v : Any) {
-        obj = "else "
-        obj += Visit(context.judgeIfStatement())
+        b = Visit(context.expression()) ! Result
+        obj = "else if ( \{b.text} ) \{BlockLeft; Wrap}"
+        me.Add_current_set()
+        obj += ProcessFunctionSupport(context.functionSupportStatement())
+        me.Delete_current_set()
+        obj += BlockRight+Wrap
         <- obj
     }
 }
