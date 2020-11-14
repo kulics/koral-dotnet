@@ -73,7 +73,7 @@ Or:     '|';
 Tilde: 	'~';
 
 // Back_Quote:  '`';
-// Sharp:	'#';
+Sharp:	'#';
 
 TypeAny: 		'Any';
 NilLiteral: 	'nil';

@@ -8,7 +8,7 @@ statement: New_Line* (annotationSupport)?
 exportStatement end? New_Line* (namespaceSupportStatement end|New_Line)* (namespaceSupportStatement end?)? New_Line* ;
 
 // 导出命名空间
-exportStatement: Left_Arrow nameSpaceItem;
+exportStatement: Sharp nameSpaceItem;
 
 namespaceSupportStatement:
 importStatement |
@@ -22,7 +22,7 @@ typeRedefineStatement |
 New_Line ;
 
 // 导入命名空间
-importStatement: Right_Arrow left_brace ((importSubStatement | typeAliasStatement) end|New_Line)*
+importStatement: Sharp left_brace ((importSubStatement | typeAliasStatement) end|New_Line)*
 ((importSubStatement | typeAliasStatement) end?)? right_brace;
 
 importSubStatement: (annotationSupport)? ((id|Dot) Equal)?
