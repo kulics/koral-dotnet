@@ -83,8 +83,13 @@ FeelLangVisitor = $ me {
     }
 
     .VisitCallPkg = (context : CallPkgContext -> v : Any) {
-        r = Result{data = Visit(context.typeNotNull())}
-        r.text = "(new \{Visit(context.typeNotNull())}"
+        ty = ""
+        r = Result{data = "object"}
+        context.typeNotNull() <> nil ? {
+            ty = Visit(context.typeNotNull()) ! Str
+            r.data = ty
+        }
+        r.text = "(new \{ty}"
         r.text += (Visit(context.tuple()) ! Result).text
         r.text += ")"
         <- r

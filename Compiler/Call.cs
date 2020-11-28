@@ -67,8 +67,13 @@ var r = (new Result(){data = "var",text = ((Result)(Visit(context.tuple()))).tex
 return r;
 }
 public  override  object VisitCallPkg( CallPkgContext context ){
-var r = (new Result(){data = Visit(context.typeNotNull())});
-r.text=(new System.Text.StringBuilder().Append("(new ").Append(Visit(context.typeNotNull()))).To_Str();
+var ty = "";
+var r = (new Result(){data = "object"});
+if ( context.typeNotNull()!=null ) {
+ty = (string)(Visit(context.typeNotNull()));
+r.data=ty;
+}
+r.text=(new System.Text.StringBuilder().Append("(new ").Append(ty)).To_Str();
 r.text+=((Result)(Visit(context.tuple()))).text;
 r.text+=")";
 return r;

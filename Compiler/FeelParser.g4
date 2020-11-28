@@ -35,7 +35,7 @@ typeRedefineStatement: id Equal New_Line* typeType;
 
 // 枚举
 enumStatement: (annotationSupport)? id Equal New_Line* Coin
-left_brack enumSupportStatement (more enumSupportStatement)+ right_brack (New_Line? left_brace right_brace)? end?;
+left_brack enumSupportStatement (more enumSupportStatement)+ right_brack New_Line? left_brace right_brace;
 
 enumSupportStatement: id (Equal (add)? integerExpr)?;
 // 命名空间变量
@@ -50,7 +50,7 @@ packageStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
  (packageFieldStatement|packageNewStatement);
 
 packageFieldStatement: Coin left_paren New_Line? parameterConstruct New_Line? right_paren 
-(Right_Arrow left_paren id (more id)? right_paren)? (left_brace (packageSupportStatement end|New_Line)* packageSupportStatement end? right_brace)?;
+(Right_Arrow left_paren id (more id)? right_paren)? left_brace ((packageSupportStatement end|New_Line)* packageSupportStatement end?)? right_brace;
 
 // 包支持的语句
 packageSupportStatement:
@@ -62,7 +62,7 @@ New_Line;
 // 包含
 includeStatement: typeType;
 // 包构造方法
-packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arrow Coin p=Question? (id (more id)?)? right_paren
+packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arrow Coin (id (more id)?)? right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 函数
 packageFunctionStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
@@ -267,7 +267,7 @@ transfer: Left_Wave; // 传递通道值
 
 callElement: left_brack (slice | expression) right_brack; // 元素调用
 
-callPkg: typeNotNull Coin tuple; // 类型构造
+callPkg: typeNotNull? Coin tuple; // 类型构造
 
 orElse: Question Or expression; // 可空取值
 
