@@ -41,12 +41,12 @@ enumSupportStatement: id (Equal (add)? integerExpr)?;
 // 命名空间变量
 namespaceVariableStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
 // 命名空间函数
-namespaceFunctionStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
+namespaceFunctionStatement: (annotationSupport)? id Equal (templateDefine New_Line?)?
 left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 定义包
-packageStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
+packageStatement: (annotationSupport)? id Equal (templateDefine New_Line?)?
  (packageFieldStatement|packageNewStatement);
 
 packageFieldStatement: Coin left_paren New_Line? parameterConstruct New_Line? right_paren 
@@ -65,21 +65,21 @@ includeStatement: typeType;
 packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arrow Coin (id (more id)?)? right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 函数
-packageFunctionStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal
+packageFunctionStatement: (annotationSupport)? id Equal (templateDefine New_Line?)?
 left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 扩展
-implementStatement: (templateDefine New_Line?)? id Colon Equal
+implementStatement: id Colon Equal (templateDefine New_Line?)?
 (packageNewStatement|packageFieldStatement);
 
 // 函数
-overrideFunctionStatement: (annotationSupport)? Dot (n='_')? (templateDefine New_Line?)? id Equal
+overrideFunctionStatement: (annotationSupport)? Dot (n='_')? id Equal (templateDefine New_Line?)?
 left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 协议
-protocolStatement: (annotationSupport)? (templateDefine New_Line?)? id Equal protocolSubStatement;
+protocolStatement: (annotationSupport)? id Equal (templateDefine New_Line?)? protocolSubStatement;
 
 protocolSubStatement: Coin left_brace (protocolSupportStatement end|New_Line)* protocolSupportStatement end? right_brace;
 // 协议支持的语句
@@ -89,11 +89,11 @@ protocolFunctionStatement |
 New_Line ;
 
 // 函数
-protocolFunctionStatement: (annotationSupport)? (templateDefine New_Line?)? id Colon left_paren parameterClauseIn 
+protocolFunctionStatement: (annotationSupport)? id Colon (templateDefine New_Line?)? left_paren parameterClauseIn 
 t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut right_paren;
 
 // 函数
-functionStatement: (templateDefine New_Line?)? id Equal left_paren parameterClauseIn
+functionStatement: id Equal (templateDefine New_Line?)? left_paren parameterClauseIn
 (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 返回
@@ -107,7 +107,7 @@ parameterClauseOut: parameter? (more parameter)*;
 // 构造
 parameterConstruct: parameter? (more parameter)*;
 // 参数结构
-parameter: (annotationSupport)? id Colon Dot_Dot_Dot? typeType Bang?;
+parameter: (annotationSupport)? id Colon Dot_Dot_Dot? Bang? typeType;
 
 // 函数支持的语句
 functionSupportStatement:
@@ -203,7 +203,7 @@ varIdType: id Colon typeType | Discard;
 tupleExpression: expression (more expression)* ; // 元组
 // 基础表达式
 primaryExpression: 
-left_paren templateCall right_paren id |
+id left_brack templateCall right_brack |
 id |
 t=Discard |
 left_paren expression right_paren | 
@@ -239,7 +239,7 @@ primaryExpression
 | expression logic expression // 逻辑表达式
 ; 
 
-callExpression: call New_Line? (left_paren templateCall right_paren)? id (callFunc|callElement)?;
+callExpression: call New_Line? id (left_brack templateCall right_brack)? (callFunc|callElement)?;
 
 tuple: left_paren (expression (more expression)* )? right_paren; // 元组
 
@@ -265,7 +265,7 @@ callChannel: Left_Wave expression; // 通道访问
 
 transfer: Left_Wave; // 传递通道值
 
-callElement: left_brack (slice | expression) right_brack; // 元素调用
+callElement: Dot left_paren (slice | expression) right_paren; // 元素调用
 
 callPkg: typeNotNull? Coin tuple; // 类型构造
 
@@ -285,7 +285,7 @@ nameSpaceItem: (id call New_Line?)* id;
 
 name: id (call New_Line? id)* ;
 
-templateDefine: left_paren templateDefineItem (more templateDefineItem)* right_paren;
+templateDefine: left_brack templateDefineItem (more templateDefineItem)* right_brack;
 
 templateDefineItem: id (Colon id)?; 
 
@@ -335,9 +335,9 @@ typeFunction;
 
 typeType: typeNullable | typeNotNull;
 
-typeNullable: typeNotNull Question;
+typeNullable: Question typeNotNull;
 
-typePackage: (left_paren templateCall right_paren)? nameSpaceItem;
+typePackage: nameSpaceItem (left_brack templateCall right_brack)?;
 typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) New_Line* typeFunctionParameterClause right_paren;
 typeAny: TypeAny;
 
