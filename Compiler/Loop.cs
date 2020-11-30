@@ -44,21 +44,35 @@ public  override  object VisitLoopStatement( LoopStatementContext context ){
 var obj = "";
 var arr = (Result)(Visit(context.expression()));
 var target = arr.text;
-var id = "ea";
-if ( context.id().Length==2 ) {
-target = (new System.Text.StringBuilder().Append("Range(").Append(target).Append(")")).To_Str();
-id = (new System.Text.StringBuilder().Append("(").Append(((Result)(Visit(context.id(0)))).text).Append(", ").Append(((Result)(Visit(context.id(1)))).text).Append(")")).To_Str();
+var ids = "";
+foreach (var (i, v) in Range(context.loopId())){
+if ( i!=0 ) {
+ids+=","+Visit(v);
 }
-else if ( context.id().Length==1 ) {
-id = ((Result)(Visit(context.id(0)))).text;
+else {
+ids+=Visit(v);
 }
-obj+=(new System.Text.StringBuilder().Append("foreach (var ").Append(id).Append(" in ").Append(target).Append(")")).To_Str();
+}
+if ( context.loopId().Length>1 ) {
+ids = "("+ids+")";
+}
+obj+=(new System.Text.StringBuilder().Append("foreach (var ").Append(ids).Append(" in ").Append(target).Append(")")).To_Str();
 obj+=BlockLeft+Wrap;
 this.Add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 this.Delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
+}
+public  override  object VisitLoopId( LoopIdContext context ){
+var id = ((Result)(Visit(context.id()))).text;
+if ( this.Has_ID(id) ) {
+return id;
+}
+else {
+this.Add_ID(id);
+return id;
+}
 }
 public  override  object VisitLoopCaseStatement( LoopCaseStatementContext context ){
 var obj = "";

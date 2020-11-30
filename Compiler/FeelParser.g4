@@ -161,8 +161,9 @@ judgeIfStatement: Question expression
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 循环
-loopStatement: At expression Equal_Arrow (left_brack id right_brack)? id 
+loopStatement: At expression Equal_Arrow loopId (more loopId)*
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+loopId: id (Colon typeType)?;
 // 条件循环
 loopCaseStatement: At expression 
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace loopElseStatement?;
@@ -247,7 +248,7 @@ expressionList: expression (more expression)* ; // 表达式列
 
 annotationSupport: annotation New_Line?;
 
-annotation: left_brack annotationList right_brack; // 注解
+annotation: Back_Quote annotationList Back_Quote; // 注解
 
 annotationList: (annotationItem|annotationString) (more annotationItem)*;
 

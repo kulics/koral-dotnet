@@ -51,22 +51,36 @@ FeelLangVisitor = $ me {
         obj = ""
         arr = Visit(context.expression()) ! Result
         target = arr.text
-        id = "ea"
-        context.id().Length == 2 ? {
-            target = "Range(\{target})"
-            id = "(\{(Visit(context.id(0)) ! Result).text}, \{(Visit(context.id(1)) ! Result).text})"
+        ids = ""
+        context.loopId() @ [i]v {
+            i <> 0 ? {
+                ids += "," + Visit(v)
+            }
+            | ? {
+                ids += Visit(v)
+            }
         }
-        | context.id().Length == 1 ? {
-            id = (Visit(context.id(0)) ! Result).text
+        context.loopId().Length > 1 ? {
+            ids = "(" + ids + ")"
         }
 
-        obj += "foreach (var \{id} in \{target})"
+        obj += "foreach (var \{ids} in \{target})"
         obj += BlockLeft+Wrap
         me.Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         me.Delete_current_set()
         obj += BlockRight+Wrap
         <- obj
+    }
+
+    .VisitLoopId = (context : LoopIdContext -> v : Any) {
+        id = (Visit(context.id()) ! Result).text
+        me.Has_ID(id) ? {
+            <- id
+        } | ? {
+            me.Add_ID(id)
+            <- id
+        }
     }
 
     .VisitLoopCaseStatement = (context : LoopCaseStatementContext -> v : Any) {

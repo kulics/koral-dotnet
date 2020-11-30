@@ -72,7 +72,7 @@ And:    '&';
 Or:     '|';
 Tilde: 	'~';
 
-// Back_Quote:  '`';
+Back_Quote:  '`';
 Sharp:	'#';
 
 TypeAny: 		'Any';
@@ -95,9 +95,8 @@ CharLiteral: 			'\'' ('\\\'' | '\\' [btnfr\\] | .)*? '\''; // 单字符
 Identifier: '_'? LetterCharacter IdentifierPartCharacter*; // 公有标识符
 Discard: 	'_'; // 匿名变量
 
-Comment_Block_Big: 	'```' .*? '```' -> skip; // 块注释
-Comment_Block: 		'`' .*? '`' -> skip; // 块注释
-// Comment_Line: '--' ~[\r\n]* -> skip; // 行注释
+Comment_Block:  '/*' .*? '*/' -> skip; // 块注释
+Comment_Line: 	'//' ~[\r\n]* -> skip; // 行注释
 
 New_Line: '\r'? '\n'; 
 //WS: (' ' |'\t' |'\n' |'\r' )+ -> skip ;

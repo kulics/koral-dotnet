@@ -93,6 +93,12 @@ namespace Library
         public static IEnumerable<(TKey, TValue)> Range<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> self)
    => self.Select((item) => (item.Key, item.Value));
 
+        public static IEnumerable<(int index, T item)> WithIndex<T>(this IEnumerable<T> self)
+=> self.Select((item, index) => (index, item));
+
+        public static IEnumerable<(TKey, TValue)> WithIndex<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> self)
+   => self.Select((item) => (item.Key, item.Value));
+
         public static bool Can_range<T>(IEnumerable<T> self) => self.GetEnumerator().MoveNext();
 
         public static bool Can_range<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> self) => self.GetEnumerator().MoveNext();
