@@ -215,7 +215,7 @@ FeelLangVisitor = $ me {
             | TypeConversionContext => it ? {
                 e2 = Visit(it) ! Str
                 r.data = e2
-                r.text = "(\{e2})(\{r.text})"
+                r.text = "((\{e2})\{r.text})"
             }
             | TypeCheckContext => it ? {
                 e2 = Visit(it) ! Str

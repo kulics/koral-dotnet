@@ -272,7 +272,7 @@ callPkg: typeNotNull? Coin tuple; // 类型构造
 
 orElse: Question Or expression; // 可空取值
 
-typeConversion: Colon_Arrow typeType; // 类型转化
+typeConversion: Dot left_brack typeType right_brack; // 类型转化
 
 typeCheck: Colon_Colon typeType; // 类型转化
 

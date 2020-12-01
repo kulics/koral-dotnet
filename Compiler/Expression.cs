@@ -128,7 +128,7 @@ return fn(r);
 case TypeConversionContext it :
 { var e2 = (string)(Visit(it));
 r.data=e2;
-r.text=(new System.Text.StringBuilder().Append("(").Append(e2).Append(")(").Append(r.text).Append(")")).To_Str();
+r.text=(new System.Text.StringBuilder().Append("((").Append(e2).Append(")").Append(r.text).Append(")")).To_Str();
 } break;
 case TypeCheckContext it :
 { var e2 = (string)(Visit(it));
