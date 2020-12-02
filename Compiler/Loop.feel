@@ -17,36 +17,6 @@ Iterator = $ {
 }
 
 FeelLangVisitor = $ me {
-    .VisitIterator = (context : IteratorContext -> v : Any) {
-        fn : (Result->Result) = (e1) {
-            it = Iterator{}
-            e2 = Visit(context.expression(0)) ! Result
-            step = context.expression(1)
-            step == nil ? {
-                it.begin = e1
-                it.end = e2
-                it.step = Result{
-                    data = TargetTypeI32
-                    text = "1"
-                }
-            }
-            | ? {
-                it.begin = e1
-                it.end = e2
-                it.step = Visit(step) ! Result
-            }
-            r = Result{}
-            r.data = "IEnumerable<int>"
-            context.Dot_Dot_Dot() <> nil ? {
-                r.text = "Range_close(\{it.begin.text}, \{it.end.text}, \{it.step.text})"
-                <- r
-            }
-            r.text = "Range(\{it.begin.text}, \{it.end.text}, \{it.step.text})"
-            <- r
-        }
-        <- fn
-    }
-
     .VisitLoopStatement = (context : LoopStatementContext -> v : Any) {
         obj = ""
         arr = Visit(context.expression()) ! Result

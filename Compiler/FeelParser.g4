@@ -161,7 +161,7 @@ judgeIfStatement: Question expression
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 循环
-loopStatement: At expression Equal_Arrow loopId (more loopId)*
+loopStatement: At loopId (more loopId)* Equal expression Dot_Dot_Dot
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 loopId: id (Colon typeType)?;
 // 条件循环
@@ -171,7 +171,7 @@ left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement en
 loopElseStatement: New_Line? And
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 跳出循环
-loopJumpStatement: Tilde At ;
+loopJumpStatement: At Left_Arrow ;
 // 跳过当前循环
 loopContinueStatement: At ;
 // 检查
@@ -233,7 +233,6 @@ primaryExpression
 | expression mul expression // 积型表达式
 | expression add expression // 和型表达式
 | expression bitwise expression // 位运算表达式
-| expression iterator // 迭代器
 | expression typeConversion // 类型转换
 | expression typeCheck // 类型判断
 | expression compare expression // 比较表达式
@@ -350,8 +349,6 @@ nilExpr: NilLiteral;
 // bool值
 boolExpr: t=TrueLiteral|t=FalseLiteral;
 
-// 迭代器
-iterator: (Dot_Dot|Dot_Dot_Dot) expression (Tilde expression)?;
 bitwise: (bitwiseAnd | bitwiseOr | bitwiseXor 
 | bitwiseLeftShift | bitwiseRightShift) (New_Line)?;
 bitwiseAnd: And_And_And;

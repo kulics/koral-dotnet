@@ -207,11 +207,7 @@ FeelLangVisitor = $ me {
         }
         | 2 ? {
             r = Visit(context.GetChild(0)) ! Result
-            context.GetChild(1) :: 
-            | IteratorContext => it ? {
-                fn = Visit(it) ! (Result->Result)
-                <- fn(r)
-            }
+            context.GetChild(1) ::
             | TypeConversionContext => it ? {
                 e2 = Visit(it) ! Str
                 r.data = e2

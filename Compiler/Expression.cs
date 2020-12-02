@@ -121,10 +121,6 @@ r.text=e1.text+op+((Result)(e2)).text;
 case 2 :
 { r = (Result)(Visit(context.GetChild(0)));
 switch (context.GetChild(1)) {
-case IteratorContext it :
-{ var fn = (Func<Result, Result>)(Visit(it));
-return fn(r);
-} break;
 case TypeConversionContext it :
 { var e2 = (string)(Visit(it));
 r.data=e2;

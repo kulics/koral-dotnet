@@ -15,31 +15,6 @@ public Result end;
 public Result step;
 }
 public partial class FeelLangVisitor{
-public  override  object VisitIterator( IteratorContext context ){
-Func<Result, Result> fn = (e1)=>{var it = (new Iterator());
-var e2 = (Result)(Visit(context.expression(0)));
-var step = context.expression(1);
-if ( step==null ) {
-it.begin=e1;
-it.end=e2;
-it.step=(new Result(){data = TargetTypeI32,text = "1"});
-}
-else {
-it.begin=e1;
-it.end=e2;
-it.step=(Result)(Visit(step));
-}
-var r = (new Result());
-r.data="IEnumerable<int>";
-if ( context.Dot_Dot_Dot()!=null ) {
-r.text=(new System.Text.StringBuilder().Append("Range_close(").Append(it.begin.text).Append(", ").Append(it.end.text).Append(", ").Append(it.step.text).Append(")")).To_Str();
-return r;
-}
-r.text=(new System.Text.StringBuilder().Append("Range(").Append(it.begin.text).Append(", ").Append(it.end.text).Append(", ").Append(it.step.text).Append(")")).To_Str();
-return r;
-};
-return fn;
-}
 public  override  object VisitLoopStatement( LoopStatementContext context ){
 var obj = "";
 var arr = (Result)(Visit(context.expression()));
