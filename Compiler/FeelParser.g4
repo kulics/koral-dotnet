@@ -50,7 +50,7 @@ packageStatement: (annotationSupport)? id Equal (templateDefine New_Line?)?
  (packageFieldStatement|packageNewStatement);
 
 packageFieldStatement: Coin left_paren New_Line? parameterConstruct New_Line? right_paren 
-(Right_Arrow left_paren id (more id)? right_paren)? left_brace ((packageSupportStatement end|New_Line)* packageSupportStatement end?)? right_brace;
+left_brace (id (more id)? Right_Arrow)? ((packageSupportStatement end|New_Line)* packageSupportStatement end?)? right_brace;
 
 // 包支持的语句
 packageSupportStatement:
@@ -179,10 +179,10 @@ checkStatement:
 Bang left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)* checkFinallyStatment 
 | Bang left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)+ ;
 // 定义检查变量
-usingStatement: Bang id (more id)* Equal tupleExpression And varId (more varId)*
+usingStatement: Bang id (more id)* Equal tupleExpression Semi varId (more varId)*
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 错误处理
-checkErrorStatement: New_Line? And (id | id Colon typeType) left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+checkErrorStatement: New_Line? Or (Colon_Colon typeType)? Equal_Arrow id left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 最终执行
 checkFinallyStatment: New_Line? And left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 抛出异常
