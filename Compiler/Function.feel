@@ -181,6 +181,9 @@ FeelLangVisitor = $ me {
         context.Bang() <> nil ? {
             p.type = "ref \{p.type}"
         }
+        context.expression() <> nil {
+            p.value = " = " + (Visit(context.expression()) ! Result).text
+        }
         <- p
     }
 }

@@ -24,7 +24,7 @@ FeelLangVisitor = $ me {
         context.packageFieldStatement() <> nil ? {
             item = context.packageFieldStatement()
             r = Visit(item) ! Result
-            obj += r.text
+            obj += "public \{id.text}\{r.text}"
             extend.Append_all(r.data ! (Str)List)
         }
         context.packageNewStatement() <> nil ? {
@@ -92,9 +92,15 @@ FeelLangVisitor = $ me {
 
     .VisitParameterConstruct = (context : ParameterConstructContext -> v : Any) {
         obj = ""
+        param = ""
+        body = ""
         0 .. context.parameter().Length @ i {
             p = Visit(context.parameter(i)) ! Parameter
-            param = "\{p.annotation} \{p.type} \{p.id} \{p.value}"
+            i <> 0 ? {
+                param += ", "
+            }
+            param += "\{p.type} \{p.id} \{p.value}"
+            body += "this.\{p.id} = \{p.id; Terminate; Wrap}"
             p.annotation <> nil ? {
                 obj += p.annotation
             }
@@ -103,13 +109,15 @@ FeelLangVisitor = $ me {
                 me.self_property_content @ v {
                     obj += v
                 }
-                obj += BlockRight+Wrap
+                obj += BlockRight + Wrap
                 me.self_property_content.Clear()
             }
             | ? {
-                obj += "\{p.permission} \{p.type} \{p.id} \{Terminate + Wrap}"
+                obj += "\{p.permission} \{p.type} \{p.id}"
+                obj += Terminate + Wrap
             }
         }
+        obj = "(\{param}){\{body}}\{Wrap}" + obj
         <- obj
     }
 

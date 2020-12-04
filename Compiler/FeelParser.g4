@@ -107,7 +107,7 @@ parameterClauseOut: parameter? (more parameter)*;
 // 构造
 parameterConstruct: parameter? (more parameter)*;
 // 参数结构
-parameter: (annotationSupport)? id Colon Dot_Dot_Dot? Bang? typeType;
+parameter: (annotationSupport)? id Colon Dot_Dot_Dot? Bang? typeType (Equal expression)?;
 
 // 函数支持的语句
 functionSupportStatement:
@@ -322,7 +322,7 @@ stringTemplate: String_Template_Open (expression end)* expression Right_Brace;
 // 原始字符串表达式
 rawStringExpr: Quote_Quote_Quote_Open (rawStringContent | rawStringTemplate | Raw_Quote)* Quote_Quote_Quote_Close;
 rawStringContent: RawTextLiteral;
-rawStringTemplate: Raw_String_Template_Open New_Line* (expression end)* expression New_Line* Right_Brace;
+rawStringTemplate: Raw_String_Template_Open New_Line* expression (more expression)*  New_Line* Right_Brace;
 
 floatExpr: FloatLiteral;
 integerExpr: DecimalLiteral | BinaryLiteral | OctalLiteral | HexLiteral;
