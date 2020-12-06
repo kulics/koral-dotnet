@@ -57,22 +57,24 @@ namespace Library
         public readonly int begin;
         public readonly int end;
         public readonly int step;
+        public readonly bool order;
 
-        public IntRange(int begin, int end, int step)
+        public IntRange(int begin, int end, bool order) : this(begin, end, 1, order)
         {
-            if (step == 0)
-            {
-                throw new Exception("Step must be non-zero.");
-            }
+        }
+
+        private IntRange(int begin, int end, int step, bool order)
+        {
             this.begin = begin;
             this.end = end;
             this.step = step;
+            this.order = order;
         }
 
         public IEnumerator<int> GetEnumerator()
         {
             var next = begin;
-            if (step > 0)
+            if (order)
             {
                 while (next < end)
                 {
@@ -85,7 +87,7 @@ namespace Library
                 while (next > end)
                 {
                     yield return next;
-                    next += step;
+                    next -= step;
                 }
             }
         }
@@ -97,11 +99,20 @@ namespace Library
 
         public IntRange Reversed()
         {
-            if (step > 0)
+            if (order)
             {
-                return new IntRange(end-1, begin-1, -step);
+                return new(end - 1, begin - 1, step, !order);
             }
-            return new IntRange(end+1, begin+1, -step);
+            return new(end + 1, begin + 1, step, !order);
+        }
+
+        public IntRange Step(int step)
+        {
+            if (step <= 0)
+            {
+                throw new("Step must be bigger than zero.");
+            }
+            return new(begin, end, step, order);
         }
     }
 
@@ -110,22 +121,24 @@ namespace Library
         public readonly int begin;
         public readonly int end;
         public readonly int step;
+        public readonly bool order;
 
-        public IntRangeClose(int begin, int end, int step)
+        public IntRangeClose(int begin, int end, bool order) : this(begin, end, 1, order)
         {
-            if (step == 0)
-            {
-                throw new Exception("Step must be non-zero.");
-            }
+        }
+
+        private IntRangeClose(int begin, int end, int step, bool order)
+        {
             this.begin = begin;
             this.end = end;
             this.step = step;
+            this.order = order;
         }
 
         public IEnumerator<int> GetEnumerator()
         {
             var next = begin;
-            if (step > 0)
+            if (order)
             {
                 while (next <= end)
                 {
@@ -138,7 +151,7 @@ namespace Library
                 while (next >= end)
                 {
                     yield return next;
-                    next += step;
+                    next -= step;
                 }
             }
         }
@@ -150,7 +163,16 @@ namespace Library
 
         public IntRangeClose Reversed()
         {
-            return new IntRangeClose(end, begin, -step);
+            return new(end, begin, !order);
+        }
+
+        public IntRangeClose Step(int step)
+        {
+            if (step <= 0)
+            {
+                throw new("Step must be bigger than zero.");
+            }
+            return new(begin, end, step, order);
         }
     }
 }

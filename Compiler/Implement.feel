@@ -1,151 +1,100 @@
-<- Compiler
+# Compiler
 
--> {
+# {
     Antlr4.Runtime
     Antlr4.Runtime.Misc
     System
     System.Collections.Generic
 
-    . = Compiler.FeelParser
-    . = Compiler.Compiler_static
+    Compiler.FeelParser => .
+    Compiler.Compiler_static => .
 }
 
 
-FeelLangVisitor = $ me {
-    .VisitImplementStatement = (context : ImplementStatementContext -> v : Any) {
-        id = Visit(context.id()) ! Result
+FeelLangVisitorImplement := $ () {
+    FeelLangVisitorFunction
+
+    .VisitImplementStatement := (context : ImplementStatementContext -> v : Any) {
+        id := Visit(context.id()).[Result]
         
-        obj = ""
-        extend = (Str)List{}
-        context.packageFieldStatement() <> nil ? {
-            item = context.packageFieldStatement()
-            r = Visit(item) ! Result
+        obj := ""
+        extend := List[Str]$()
+        ? context.packageFieldStatement() <> nil {
+            item := context.packageFieldStatement()
+            r := Visit(item).[Result]
             obj += r.text
         }
-        context.packageNewStatement() <> nil ? {
-            item = context.packageNewStatement()
-            r = Visit(item) ! Str
+        ? context.packageNewStatement() <> nil {
+            item := context.packageNewStatement()
+            r := Visit(item).[Str]
             obj += "public \{id.text} \{r}"
         }
         obj += BlockRight + Wrap
-        header = ""
-        header += "\{id.permission} partial class \{id.text}"
+        header := "\{id.permission} partial class \{id.text}"
 
-        template = ""
-        template_contract = ""
-        context.templateDefine() <> nil ? {
-            item = Visit(context.templateDefine()) ! TemplateItem
+        template := ""
+        template_contract := ""
+        ? context.templateDefine() <> nil {
+            item := Visit(context.templateDefine()).[TemplateItem]
             template += item.template
             template_contract = item.contract
             header += template
         }
 
-        extend.Size() > 0 ? {
-            temp = extend[0]
-            1 .. extend.Size() @ i {
-                temp += "," + extend[i]
+        ? extend.Size() > 0 {
+            temp := extend.(0)
+            @ i := 1.Up_until(extend.Size())... {
+                temp += "," + extend.(i)
             }
             header += ":" + temp
         }
 
         header += template_contract + BlockLeft + Wrap
         obj = header + obj
-        me.self_ID = ""
-        me.super_ID = ""
+        self_ID = ""
+        super_ID = ""
         <- obj
     }
 
-    .VisitOverrideVariableStatement = (context : OverrideVariableStatementContext -> v : Any) {
-        r1 = Visit(context.id()) ! Result
-        is_mutable = r1.is_virtual
-        is_virtual = " override "
-        typ = ""
-        r2 : Result? = nil
-        context.expression() <> nil ? {
-            r2 = Visit(context.expression()) ! Result
-            typ = r2.data ! Str
-        }
-        context.typeType() <> nil ? {
-            typ = Visit(context.typeType()) ! Str
-        }
-        obj = ""
-        context.annotationSupport() <> nil ? {
-            me.self_property_ID = r1.text
-            obj += Visit(context.annotationSupport())
-        }
-        me.self_property_content.Size() > 0 ? {
-            pri = ""
-            me.self_property_variable ? {
-                pri = "private \{typ} _\{r1.text}" 
-                r2 <> nil ? {
-                    pri += " = " + r2.text
-                }
-                pri += Terminate + Wrap
-            }
-            obj = pri + obj
-            obj += "\{r1.permission} \{is_virtual} \{typ} \{r1.text; BlockLeft}"
-            me.self_property_content @ v {
-                obj += v
-            }
-            obj += BlockRight+Wrap
-            me.self_property_content.Clear()
-            me.self_property_ID = ""
-            me.self_property_variable = false
-        }
-        | ? {
-            obj += "\{r1.permission} \{typ} \{r1.text}"
-            r2 <> nil ? {
-                obj += " = \{r2.text; Terminate; Wrap}"
-            }
-            | ? {
-                obj += Terminate + Wrap
-            }
-        }
-        <- obj
-    }
-
-    .VisitOverrideFunctionStatement = (context : OverrideFunctionStatementContext -> v : Any) {
-        id = Visit(context.id()) ! Result
-        is_virtual = " override "
-        obj = ""
-        pout = ""
-        context.t == nil ? {
+    .VisitOverrideFunctionStatement := (context : OverrideFunctionStatementContext -> v : Any) {
+        id := Visit(context.id()).[Result]
+        is_virtual := " override "
+        obj := ""
+        pout := ""
+        ? context.parameterClauseOut() == nil {
             pout = "void"
-        }
-        | ? {
-            pout = Visit(context.parameterClauseOut()) ! Str
-            context.t.Type == Right_Flow ? {
-                pout <> "void" ? {
+        } | {
+            pout = Visit(context.parameterClauseOut()).[Str]
+            ? context.t.Type == Right_Flow {
+                ? pout <> "void" {
                     pout = "\{Task}<\{pout}>"
-                }
-                | ? {
+                } | {
                     pout = Task
                 }
             }
         }
         obj += "\{is_virtual} \{pout} \{id.text}"
         
-        template_contract = ""
-        context.templateDefine() <> nil ? {
-            template = Visit(context.templateDefine()) ! TemplateItem
+        template_contract := ""
+        ? context.templateDefine() <> nil {
+            template := Visit(context.templateDefine()).[TemplateItem]
             obj += template.template
             template_contract = template.contract
         }
-        me.Add_current_set()
-        me.Add_func_stack()
+        Add_current_set()
+        Add_func_stack()
         obj += Visit(context.parameterClauseIn()) + template_contract + BlockLeft + Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.Delete_current_set()
+        Delete_current_set()
         obj += BlockRight + Wrap
 
-        Get_func_async() ? {
+        ? Get_func_async() {
             obj = " async " + obj
         }
-        me.Delete_func_stack()
-        context.n <> nil ? {
+        Delete_func_stack()
+        ? context.n <> nil {
             obj = "protected " + obj
-        }
-        | ? {
+        } | {
             obj = "\{id.permission} " + obj
         }
         <- obj

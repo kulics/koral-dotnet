@@ -26,7 +26,20 @@ namespace Library
             return arr;
         }
 
-        public static List<T> List_of<T>(params T[] item) => new List<T>(item);
+        public static List<T> List_of<T>(params T[] item)
+        {
+            return new List<T>(item);
+        }
+
+        public static KeyValuePair<TKey, TValue> Pair_of<TKey, TValue>(TKey key, TValue value)
+        {
+            return new KeyValuePair<TKey, TValue>(key, value);
+        }
+
+        public static Dictionary<TKey, TValue> Dict_of<TKey, TValue>(params KeyValuePair<TKey, TValue>[] item)
+        {
+            return new Dictionary<TKey, TValue>(item);
+        }
 
         public static T Empty<T>() => default;
 
@@ -64,14 +77,52 @@ namespace Library
 
         public static double Log(double a, double b) => Math.Log(a, b);
 
-        public static IntRange Range(int begin, int end, int step)
+        public static IntRangeClose Up_to(this int begin, int end)
         {
-            return new IntRange(begin, end, step);
+            return new(begin, end, true);
         }
 
-        public static IEnumerable<int> Range_close(int begin, int end, int step)
+        public static IntRangeClose Down_to(this int begin, int end)
         {
-            return new IntRangeClose(begin, end, step);
+            return new(begin, end, false);
+        }
+
+        public static IntRange Up_until(this int begin, int end)
+        {
+            return new(begin, end, true);
+        }
+
+        public static IntRange Down_until(this int begin, int end)
+        {
+            return new(begin, end, false);
+        }
+
+        public static IEnumerable<(int index, T item)> WithIndex<T>(this IEnumerable<T> self)
+        {
+            return self.Select((item, index) => (index, item));
+        }
+
+        public static IEnumerable<(TKey, TValue)> WithIndex<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> self)
+        {
+            return self.Select((item) => (item.Key, item.Value));
+        }
+
+        public static IntRange Range(int begin, int end, int step)
+        {
+            if (step > 0)
+            {
+                return new IntRange(begin, end, true).Step(step);
+            }
+            return new IntRange(begin, end, false).Step(-step);
+        }
+
+        public static IntRangeClose Range_close(int begin, int end, int step)
+        {
+            if (step > 0)
+            {
+                return new IntRangeClose(begin, end, true).Step(step);
+            }
+            return new IntRangeClose(begin, end, false).Step(-step);
         }
 
         public static IEnumerable<(int index, T item)> Range<T>(IEnumerable<T> self)
@@ -80,11 +131,17 @@ namespace Library
         public static IEnumerable<(TKey, TValue)> Range<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> self)
    => self.Select((item) => (item.Key, item.Value));
 
-        public static bool Can_range<T>(IEnumerable<T> self) => self.GetEnumerator().MoveNext();
+        public static bool Can_range<T>(IEnumerable<T> self)
+        {
+            return self.GetEnumerator().MoveNext();
+        }
 
-        public static bool Can_range<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> self) => self.GetEnumerator().MoveNext();
+        public static bool Can_range<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> self)
+        {
+            return self.GetEnumerator().MoveNext();
+        }
 
-        public static void Todo(string it) => throw new Exception(it);
+        public static void Todo(string it) => throw new(it);
 
         //编码
         public static string encode_base64(string code)

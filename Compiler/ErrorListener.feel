@@ -1,23 +1,22 @@
-<- Compiler
+# Compiler
 
--> {
+# {
     Antlr4.Runtime
     Antlr4.Runtime.Misc
     System
     System.Collections.Generic
 
-    . = Compiler.FeelParser
-    . = Compiler.Compiler_static
+    Compiler.FeelParser => .
+    Compiler.Compiler_static => .
 }
 
-ErrorListener = $ me, base {
+ErrorListener := $ (FileDir : Str = "") { me, super ->
     BaseErrorListener
-    FileDir: Str
 
-    .SyntaxError = (recognizer: IRecognizer, offendingSymbol: IToken?, 
-            line: Int, charPositionInLine: Int, msg: Str, 
-            e: RecognitionException?->) {
-        base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
+    .SyntaxError := (recognizer : IRecognizer, offendingSymbol : ?IToken, 
+            line : Int, charPositionInLine : Int, msg : Str, 
+            e : ?RecognitionException->) {
+        super.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
         Print("------Syntax Error------")
         Print("File: \{me.FileDir}")
         Print("Line: \{line}  Column: \{charPositionInLine}")

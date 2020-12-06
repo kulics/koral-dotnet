@@ -14,12 +14,11 @@ Greater_Equal:      '>=';
 Not_Equal:          '<>';
 
 Dot_Dot_Dot:		'...';
-Dot_Dot: 			'..';
 Dot: 				'.';
 
 Comma: 				',';
 
-Double_Arrow:	'=>';
+Equal_Arrow:	'=>';
 
 Right_Flow: 	'->>';
 Left_Flow: 		'<<-';
@@ -71,8 +70,8 @@ And:    '&';
 Or:     '|';
 Tilde: 	'~';
 
-// Back_Quote:  '`';
-// Sharp:	'#';
+Back_Quote:  '`';
+Sharp:	'#';
 
 TypeAny: 		'Any';
 NilLiteral: 	'nil';
@@ -94,10 +93,8 @@ CharLiteral: 			'\'' ('\\\'' | '\\' [btnfr\\] | .)*? '\''; // 单字符
 Identifier: '_'? LetterCharacter IdentifierPartCharacter*; // 公有标识符
 Discard: 	'_'; // 匿名变量
 
-Comment_Tag: 		'##' ~[\r\n]* ; // 特殊注释
-Comment_Block_Big: 	'```' .*? '```' -> skip; // 块注释
-Comment_Block: 		'`' .*? '`' -> skip; // 块注释
-// Comment_Line: '--' ~[\r\n]* -> skip; // 行注释
+Comment_Block:  '/*' .*? '*/' -> skip; // 块注释
+Comment_Line: 	'//' ~[\r\n]* -> skip; // 行注释
 
 New_Line: '\r'? '\n'; 
 //WS: (' ' |'\t' |'\n' |'\r' )+ -> skip ;

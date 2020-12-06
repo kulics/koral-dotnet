@@ -10,6 +10,8 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class ErrorListener:BaseErrorListener{
+public ErrorListener(string FileDir  = ""){this.FileDir = FileDir;
+}
 public string FileDir;
 public  override  void SyntaxError( IRecognizer recognizer ,  IToken? offendingSymbol ,  int line ,  int charPositionInLine ,  string msg ,  RecognitionException? e ){
 base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e);
