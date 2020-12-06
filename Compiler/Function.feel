@@ -78,7 +78,7 @@ FeelLangVisitorFunction := $ () {
 
     .VisitTuple := (context : TupleContext -> v : Any) {
         obj := "("
-        @ i, v := context.expression().WithIndex()... {
+        @ i, v := context.tupleItem().WithIndex()... {
             r := Visit(v).[Result]
             ? i == 0 {
                 obj += r.text
@@ -87,6 +87,15 @@ FeelLangVisitorFunction := $ () {
             }
         }
         obj += ")"
+        <- Result$("var", obj)
+    }
+
+    .VisitTupleItem := (context : TupleItemContext -> v : Any) {
+        obj := ""
+        ? context.id() <> nil {
+            obj += Visit(context.id()).[Result].text + ": "
+        }
+        obj += Visit(context.expression()).[Result].text
         <- Result$("var", obj)
     }
 

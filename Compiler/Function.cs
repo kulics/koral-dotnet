@@ -77,7 +77,7 @@ return (new System.Text.StringBuilder().Append("return ").Append(Task).Append(".
 }
 public  override  object VisitTuple( TupleContext context ){
 var obj = "(";
-foreach (var (i,v) in context.expression().WithIndex()){
+foreach (var (i,v) in context.tupleItem().WithIndex()){
 var r = ((Result)Visit(v));
 if ( i==0 ) {
 obj+=r.text;
@@ -87,6 +87,14 @@ obj+=", "+r.text;
 }
 }
 obj+=")";
+return (new Result("var", obj));
+}
+public  override  object VisitTupleItem( TupleItemContext context ){
+var obj = "";
+if ( context.id()!=null ) {
+obj+=((Result)Visit(context.id())).text+": ";
+}
+obj+=((Result)Visit(context.expression())).text;
 return (new Result("var", obj));
 }
 public  override  object VisitTupleExpression( TupleExpressionContext context ){

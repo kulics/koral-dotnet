@@ -240,7 +240,9 @@ primaryExpression
 
 callExpression: call New_Line? id (left_brack templateCall right_brack)? (callFunc|callElement)?;
 
-tuple: left_paren (expression (more expression)* )? right_paren; // 元组
+tuple: left_paren (tupleItem (more tupleItem)*)? right_paren; // 元组
+
+tupleItem: (id Equal)? expression; // 元组元素
 
 expressionList: expression (more expression)* ; // 表达式列
 
