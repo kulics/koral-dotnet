@@ -28,9 +28,9 @@ FeelLangVisitorExpression = $ () {
         obj = ""
         @ i, v = context.varId().WithIndex()... {
             ? i <> 0 {
-                obj += "," + Visit(v)
+                obj += ", var " + Visit(v)
             } | {
-                obj += Visit(v)
+                obj += "var " + Visit(v)
             }
         }
         ? context.varId().Length > 1 {

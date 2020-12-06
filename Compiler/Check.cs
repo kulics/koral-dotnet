@@ -52,10 +52,10 @@ public  override  object VisitUsingStatement( UsingStatementContext context ){
 var obj = "";
 foreach (var (i,v) in context.varId().WithIndex()){
 if ( i!=0 ) {
-obj+=","+Visit(v);
+obj+=", var "+Visit(v);
 }
 else {
-obj+=Visit(v);
+obj+="var "+Visit(v);
 }
 }
 if ( context.varId().Length>1 ) {

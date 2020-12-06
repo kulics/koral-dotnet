@@ -294,7 +294,7 @@ FeelLangVisitorBase = $ () {
                 <- id
             } | {
                 this.Add_ID(id)
-                <- "var " + id
+                <- id
             }
         }
     }

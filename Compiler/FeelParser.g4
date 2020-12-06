@@ -25,28 +25,27 @@ New_Line ;
 importStatement: Sharp left_brace ((importSubStatement | typeAliasStatement) end|New_Line)*
 ((importSubStatement | typeAliasStatement) end?)? right_brace;
 
-importSubStatement: (annotationSupport)? ((id|Dot) Equal)?
- (nameSpaceItem stringExpr? | nameSpaceItem? stringExpr);
+importSubStatement: (annotationSupport)? (nameSpaceItem stringExpr? | nameSpaceItem? stringExpr) (Equal_Arrow (id|Dot))?;
 
 // 类型别名
-typeAliasStatement: id Equal typeType;
+typeAliasStatement: id Colon Equal typeType;
 // 类型重定义
-typeRedefineStatement: id Equal New_Line* typeType;
+typeRedefineStatement: id Colon Equal New_Line* typeType;
 
 // 枚举
-enumStatement: (annotationSupport)? id Equal New_Line* Coin
+enumStatement: (annotationSupport)? id Colon Equal New_Line* Coin
 left_brack enumSupportStatement (more enumSupportStatement)+ right_brack New_Line? left_brace right_brace;
 
 enumSupportStatement: id (Equal (add)? integerExpr)?;
 // 命名空间变量
-namespaceVariableStatement: (annotationSupport)? id (Equal expression | Colon typeType (Equal expression)?);
+namespaceVariableStatement: (annotationSupport)? id (Colon Equal expression | Colon typeType (Equal expression)?);
 // 命名空间函数
-namespaceFunctionStatement: (annotationSupport)? id Equal (templateDefine New_Line?)?
+namespaceFunctionStatement: (annotationSupport)? id Colon Equal (templateDefine New_Line?)?
 left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 定义包
-packageStatement: (annotationSupport)? id Equal (templateDefine New_Line?)?
+packageStatement: (annotationSupport)? id Colon Equal (templateDefine New_Line?)?
  (packageFieldStatement|packageNewStatement);
 
 packageFieldStatement: Coin left_paren New_Line? parameterConstruct New_Line? right_paren 
@@ -65,7 +64,7 @@ includeStatement: typeType;
 packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arrow Coin (id (more id)?)? right_paren
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 函数
-packageFunctionStatement: (annotationSupport)? id Equal (templateDefine New_Line?)?
+packageFunctionStatement: (annotationSupport)? id Colon Equal (templateDefine New_Line?)?
 left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
@@ -74,12 +73,12 @@ implementStatement: id Colon Equal (templateDefine New_Line?)?
 (packageNewStatement|packageFieldStatement);
 
 // 函数
-overrideFunctionStatement: (annotationSupport)? Dot (n='_')? id Equal (templateDefine New_Line?)?
+overrideFunctionStatement: (annotationSupport)? Dot (n='_')? id Colon Equal (templateDefine New_Line?)?
 left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 协议
-protocolStatement: (annotationSupport)? id Equal (templateDefine New_Line?)? protocolSubStatement;
+protocolStatement: (annotationSupport)? id Colon Equal (templateDefine New_Line?)? protocolSubStatement;
 
 protocolSubStatement: Coin left_brace (protocolSupportStatement end|New_Line)* protocolSupportStatement end? right_brace;
 // 协议支持的语句
@@ -93,7 +92,7 @@ protocolFunctionStatement: (annotationSupport)? id Colon (templateDefine New_Lin
 t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut right_paren;
 
 // 函数
-functionStatement: id Equal (templateDefine New_Line?)? left_paren parameterClauseIn
+functionStatement: id Colon Equal (templateDefine New_Line?)? left_paren parameterClauseIn
 (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 返回
@@ -161,9 +160,9 @@ judgeIfStatement: Question expression
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 循环
-loopStatement: At loopId (more loopId)* Equal expression Dot_Dot_Dot
+loopStatement: At loopId (more loopId)* Colon Equal expression Dot_Dot_Dot
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
-loopId: id (Colon typeType)?;
+loopId: id;
 // 条件循环
 loopCaseStatement: At expression 
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace loopElseStatement?;
@@ -179,7 +178,7 @@ checkStatement:
 Bang left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)* checkFinallyStatment 
 | Bang left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)+ ;
 // 定义检查变量
-usingStatement: Bang id (more id)* Equal tupleExpression Semi varId (more varId)*
+usingStatement: Bang id (more id)* Colon Equal tupleExpression Semi varId (more varId)*
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 错误处理
 checkErrorStatement: New_Line? Or (Colon_Colon typeType)? Equal_Arrow id left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
@@ -191,7 +190,7 @@ checkReportStatement: Bang Left_Arrow expression ;
 // 声明变量
 variableDeclaredStatement: id Colon typeType ;
 // 绑定
-bindStatement: varId (more varId)* Equal tupleExpression ;
+bindStatement: varId (more varId)* Colon Equal tupleExpression ;
 bindTypeStatement: varIdType (more varIdType)* Equal tupleExpression ;
 // 复合赋值
 assignStatement: tupleExpression assign tupleExpression ;

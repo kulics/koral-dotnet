@@ -20,7 +20,6 @@ Dot: 				'.';
 Comma: 				',';
 
 Equal_Arrow:	'=>';
-Colon_Arrow:	':>';
 
 Right_Flow: 	'->>';
 Left_Flow: 		'<<-';

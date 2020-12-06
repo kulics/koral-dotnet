@@ -182,7 +182,7 @@ return id;
 }
 else {
 this.Add_ID(id);
-return "var "+id;
+return id;
 }
 }
 }
