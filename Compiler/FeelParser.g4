@@ -266,7 +266,7 @@ callChannel: Left_Wave expression; // 通道访问
 
 transfer: Left_Wave; // 传递通道值
 
-callElement: Dot left_paren (slice | expression) right_paren; // 元素调用
+callElement: Dot tuple; // 元素调用
 
 callPkg: typeNotNull? Coin tuple; // 类型构造
 
@@ -275,12 +275,6 @@ orElse: Question Or expression; // 可空取值
 typeConversion: Dot left_brack typeType right_brack; // 类型转化
 
 typeCheck: Colon_Colon typeType; // 类型转化
-
-slice: sliceStart | sliceEnd | sliceFull;
-
-sliceFull: expression Dot_Dot expression; 
-sliceStart: expression Dot_Dot;
-sliceEnd: Dot_Dot expression; 
 
 nameSpaceItem: (id call New_Line?)* id;
 

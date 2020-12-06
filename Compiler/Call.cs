@@ -28,28 +28,9 @@ r.text=r.text+e2.text;
 return r;
 }
 public  override  object VisitCallElement( CallElementContext context ){
-if ( context.expression()==null ) {
-return (new Result(null, ((string)Visit(context.slice()))));
-}
-var r = ((Result)Visit(context.expression()));
+var r = ((Result)Visit(context.tuple()));
 r.text=(new System.Text.StringBuilder().Append("[").Append(r.text).Append("]")).To_Str();
 return r;
-}
-public  override  object VisitSlice( SliceContext context ){
-return ((string)Visit(context.GetChild(0)));
-}
-public  override  object VisitSliceFull( SliceFullContext context ){
-var expr1 = ((Result)Visit(context.expression(0)));
-var expr2 = ((Result)Visit(context.expression(1)));
-return (new System.Text.StringBuilder().Append(".Slice(").Append(expr1.text).Append(", ").Append(expr2.text).Append(")")).To_Str();
-}
-public  override  object VisitSliceStart( SliceStartContext context ){
-var expr = ((Result)Visit(context.expression()));
-return (new System.Text.StringBuilder().Append(".Slice(").Append(expr.text).Append(", null)")).To_Str();
-}
-public  override  object VisitSliceEnd( SliceEndContext context ){
-var expr = ((Result)Visit(context.expression()));
-return (new System.Text.StringBuilder().Append(".Slice(null, ").Append(expr.text).Append(")")).To_Str();
 }
 public  override  object VisitCallFunc( CallFuncContext context ){
 var r = (new Result("var", ((Result)Visit(context.tuple())).text));

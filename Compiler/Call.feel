@@ -30,32 +30,9 @@ FeelLangVisitorCall := $ () {
     }
 
     .VisitCallElement := (context : CallElementContext -> v : Any) {
-        ? context.expression() == nil {
-            <- Result$(nil, Visit(context.slice()).[Str])
-        }
-        r := Visit(context.expression()).[Result]
+        r := Visit(context.tuple()).[Result]
         r.text = "[\{ r.text }]"
         <- r
-    }
-
-    .VisitSlice := (context : SliceContext -> v : Any) {
-        <- Visit(context.GetChild(0)).[Str]
-    }
-
-    .VisitSliceFull := (context : SliceFullContext -> v : Any) {
-        expr1 := Visit(context.expression(0)).[Result]
-        expr2 := Visit(context.expression(1)).[Result]
-        <- ".Slice(\{expr1.text}, \{expr2.text})"
-    }
-
-    .VisitSliceStart := (context : SliceStartContext -> v : Any) {
-        expr := Visit(context.expression()).[Result]
-        <- ".Slice(\{expr.text}, null)"
-    }
-
-    .VisitSliceEnd := (context : SliceEndContext -> v : Any) {
-        expr := Visit(context.expression()).[Result]
-        <- ".Slice(null, \{expr.text})"
     }
 
     .VisitCallFunc := (context : CallFuncContext -> v : Any) {

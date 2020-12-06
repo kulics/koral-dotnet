@@ -14,7 +14,6 @@ Greater_Equal:      '>=';
 Not_Equal:          '<>';
 
 Dot_Dot_Dot:		'...';
-Dot_Dot: 			'..';
 Dot: 				'.';
 
 Comma: 				',';
