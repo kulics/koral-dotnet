@@ -1,6 +1,6 @@
-<- Compiler
+# Compiler
 
--> {
+# {
     Antlr4.Runtime
     Antlr4.Runtime.Misc
     System
@@ -10,64 +10,62 @@
     . = Compiler.Compiler_static
 }
 
-FeelLangVisitor = $ me {
+FeelLangVisitorCall = $ () {
+    FeelLangVisitorBase
+
     .VisitCallExpression = (context : CallExpressionContext -> v : Any) {
-        r = Visit(context.id()) ! Result
+        r = Visit(context.id()).[Result]
         r.text = "." + r.text
-        context.templateCall() <> nil ? {
-            r.text += "<" + (Visit(context.templateCall()) ! Str) + ">"
+        ? context.templateCall() <> nil {
+            r.text += "<" + (Visit(context.templateCall()).[Str]) + ">"
         }
-        context.callFunc() <> nil ? {
-            e2 = Visit(context.callFunc()) ! Result
+        ? context.callFunc() <> nil {
+            e2 = Visit(context.callFunc()).[Result]
             r.text = r.text + e2.text
-        }
-        | context.callElement() <> nil ? {
-            e2 = Visit(context.callElement()) ! Result
+        } | context.callElement() <> nil {
+            e2 = Visit(context.callElement()).[Result]
             r.text = r.text + e2.text
         }
         <- r
     }
 
     .VisitCallElement = (context : CallElementContext -> v : Any) {
-        context.expression() == nil ? {
-            <- (Result{ text = Visit(context.slice()) ! Str })
+        ? context.expression() == nil {
+            <- Result$(nil, Visit(context.slice()).[Str])
         }
-        r = Visit(context.expression()) ! Result
+        r = Visit(context.expression()).[Result]
         r.text = "[\{ r.text }]"
         <- r
     }
 
     .VisitSlice = (context : SliceContext -> v : Any) {
-        <- Visit(context.GetChild(0)) ! Str
+        <- Visit(context.GetChild(0)).[Str]
     }
 
     .VisitSliceFull = (context : SliceFullContext -> v : Any) {
-        expr1 = Visit(context.expression(0)) ! Result
-        expr2 = Visit(context.expression(1)) ! Result
+        expr1 = Visit(context.expression(0)).[Result]
+        expr2 = Visit(context.expression(1)).[Result]
         <- ".Slice(\{expr1.text}, \{expr2.text})"
     }
 
     .VisitSliceStart = (context : SliceStartContext -> v : Any) {
-        expr = Visit(context.expression()) ! Result
+        expr = Visit(context.expression()).[Result]
         <- ".Slice(\{expr.text}, null)"
     }
 
     .VisitSliceEnd = (context : SliceEndContext -> v : Any) {
-        expr = Visit(context.expression()) ! Result
+        expr = Visit(context.expression()).[Result]
         <- ".Slice(null, \{expr.text})"
     }
 
     .VisitCallFunc = (context : CallFuncContext -> v : Any) {
-        r = Result{
-            data = "var"
-            text = (Visit(context.tuple()) ! Result).text
-        }
+        r = Result$("var", Visit(context.tuple()).[Result].text)
         <- r
     }
 
     .VisitCallAsync = (context : CallAsyncContext -> v : Any) {
-        r = Result{}
-        expr = Visit(context.expression()) ! Result
+        r = Result$()
+        expr = Visit(context.expression()).[Result]
         r.data = "var"
         r.text = "await " + expr.text
         Set_func_async()
@@ -75,63 +73,58 @@ FeelLangVisitor = $ me {
     }
 
     .VisitCallAwait = (context : CallAwaitContext -> v : Any) {
-        r = Result{
-            data = "var"
-            text = (Visit(context.tuple()) ! Result).text
-        }
+        r = Result$("var", Visit(context.tuple()).[Result].text)
         <- r
     }
 
     .VisitCallPkg = (context : CallPkgContext -> v : Any) {
         ty = ""
-        r = Result{data = "object"}
-        context.typeNotNull() <> nil ? {
-            ty = Visit(context.typeNotNull()) ! Str
+        r = Result$("object")
+        ? context.typeNotNull() <> nil {
+            ty = Visit(context.typeNotNull()).[Str]
             r.data = ty
         }
         r.text = "(new \{ty}"
-        r.text += (Visit(context.tuple()) ! Result).text
+        r.text += Visit(context.tuple()).[Result].text
         r.text += ")"
         <- r
     }
 
     .VisitLambda = (context : LambdaContext -> v : Any) {
-        me.Add_current_set()
-        me.Add_func_stack()
-        r = Result{data = "var"}
+        Add_current_set()
+        Add_func_stack()
+        r = Result$("var")
         r.text += "("
-        context.lambdaIn() <> nil ? {
+        ? context.lambdaIn() <> nil {
             r.text += Visit(context.lambdaIn())
         }
         r.text += ")"
         r.text += "=>"
 
-        context.tupleExpression() <> nil ? {
-            r.text += (Visit(context.tupleExpression()) ! Result).text
-        }
-        | ? {
+        ? context.tupleExpression() <> nil {
+            r.text += (Visit(context.tupleExpression()).[Result]).text
+        } | {
             r.text += "{\{ProcessFunctionSupport(context.functionSupportStatement())}}"
         }
-        me.Delete_current_set()
+        Delete_current_set()
 
-        Get_func_async() || (context.t <> nil && context.t.Type == Right_Flow) ? {
+        ? Get_func_async() || (context.t <> nil && context.t.Type == Right_Flow) {
             r.text = " async " + r.text
         }
-        me.Delete_func_stack()
+        Delete_func_stack()
         <- r
     }
 
     .VisitLambdaIn = (context : LambdaInContext -> v : Any) {
         obj = ""
-        0 .. context.id().Length @ i {
-            r = Visit(context.id(i)) ! Result
-            i == 0 ? {
+        @ i, v = context.id().WithIndex()... {
+            r = Visit(v).[Result]
+            ? i == 0 {
                 obj += r.text
-            }
-            | ? {
+            } | {
                 obj += ", " + r.text
             }
-            me.Add_ID(r.text)
+            Add_ID(r.text)
         }
         <- obj
     }

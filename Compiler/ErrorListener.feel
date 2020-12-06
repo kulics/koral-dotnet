@@ -1,6 +1,6 @@
-<- Compiler
+# Compiler
 
--> {
+# {
     Antlr4.Runtime
     Antlr4.Runtime.Misc
     System
@@ -10,13 +10,12 @@
     . = Compiler.Compiler_static
 }
 
-ErrorListener = $ me, base {
+ErrorListener = $ (FileDir : Str = "") { me, base ->
     BaseErrorListener
-    FileDir: Str
 
-    .SyntaxError = (recognizer: IRecognizer, offendingSymbol: IToken?, 
-            line: Int, charPositionInLine: Int, msg: Str, 
-            e: RecognitionException?->) {
+    .SyntaxError = (recognizer : IRecognizer, offendingSymbol : ?IToken, 
+            line : Int, charPositionInLine : Int, msg : Str, 
+            e : ?RecognitionException->) {
         base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
         Print("------Syntax Error------")
         Print("File: \{me.FileDir}")

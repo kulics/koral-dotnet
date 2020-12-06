@@ -10,17 +10,22 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class Iterator{
-public Result begin;
-public Result end;
-public Result step;
+public Iterator (Result begin , Result end , Result step ){ this.begin = begin ; 
+this.end = end ; 
+this.step = step ; 
+ }
+public Result begin ;
+public Result end ;
+public Result step ;
 }
-public partial class FeelLangVisitor{
+public partial class FeelLangVisitorLoop:FeelLangVisitorJudge{
+public FeelLangVisitorLoop (){  }
 public  override  object VisitLoopStatement( LoopStatementContext context ){
 var obj = "";
-var arr = (Result)(Visit(context.expression()));
+var arr = ((Result)Visit(context.expression()));
 var target = arr.text;
 var ids = "";
-foreach (var (i, v) in Range(context.loopId())){
+foreach (var (i,v) in context.loopId().WithIndex()){
 if ( i!=0 ) {
 ids+=","+Visit(v);
 }
@@ -33,30 +38,30 @@ ids = "("+ids+")";
 }
 obj+=(new System.Text.StringBuilder().Append("foreach (var ").Append(ids).Append(" in ").Append(target).Append(")")).To_Str();
 obj+=BlockLeft+Wrap;
-this.Add_current_set();
+Add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
-this.Delete_current_set();
+Delete_current_set();
 obj+=BlockRight+Wrap;
 return obj;
 }
 public  override  object VisitLoopId( LoopIdContext context ){
-var id = ((Result)(Visit(context.id()))).text;
-if ( this.Has_ID(id) ) {
+var id = (((Result)Visit(context.id()))).text;
+if ( Has_ID(id) ) {
 return id;
 }
 else {
-this.Add_ID(id);
+Add_ID(id);
 return id;
 }
 }
 public  override  object VisitLoopCaseStatement( LoopCaseStatementContext context ){
 var obj = "";
-var expr = (Result)(Visit(context.expression()));
+var expr = ((Result)Visit(context.expression()));
 obj+=(new System.Text.StringBuilder().Append("while (true) { ").Append(Wrap).Append(" if (").Append(expr.text).Append(") ")).To_Str();
 obj+=BlockLeft+Wrap;
-this.Add_current_set();
+Add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
-this.Delete_current_set();
+Delete_current_set();
 obj+=BlockRight+Wrap;
 obj+=(new System.Text.StringBuilder().Append(" else { ").Append(Wrap)).To_Str();
 if ( context.loopElseStatement()!=null ) {
@@ -67,9 +72,9 @@ return obj;
 }
 public  override  object VisitLoopElseStatement( LoopElseStatementContext context ){
 var obj = "";
-this.Add_current_set();
+Add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
-this.Delete_current_set();
+Delete_current_set();
 return obj;
 }
 public  override  object VisitLoopJumpStatement( LoopJumpStatementContext context ){

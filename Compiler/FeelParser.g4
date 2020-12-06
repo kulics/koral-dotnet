@@ -318,11 +318,11 @@ nilExpr;
 // 字符串表达式
 stringExpr: Quote_Open (stringContent | stringTemplate)* Quote_Close;
 stringContent: TextLiteral;
-stringTemplate: String_Template_Open (expression end)* expression Right_Brace;
+stringTemplate: String_Template_Open expression (more expression)* Right_Brace;
 // 原始字符串表达式
 rawStringExpr: Quote_Quote_Quote_Open (rawStringContent | rawStringTemplate | Raw_Quote)* Quote_Quote_Quote_Close;
 rawStringContent: RawTextLiteral;
-rawStringTemplate: Raw_String_Template_Open New_Line* expression (more expression)*  New_Line* Right_Brace;
+rawStringTemplate: Raw_String_Template_Open New_Line* expression (more expression)* New_Line* Right_Brace;
 
 floatExpr: FloatLiteral;
 integerExpr: DecimalLiteral | BinaryLiteral | OctalLiteral | HexLiteral;
@@ -377,8 +377,8 @@ more: Comma  New_Line* ;
 left_brace: Left_Brace  New_Line*;
 right_brace:  New_Line* Right_Brace;
 
-left_paren: Left_Paren;
-right_paren: Right_Paren;
+left_paren: Left_Paren New_Line*;
+right_paren: New_Line* Right_Paren;
 
 left_brack: Left_Brack  New_Line*;
 right_brack:  New_Line* Right_Brack;

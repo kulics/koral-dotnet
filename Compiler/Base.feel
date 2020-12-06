@@ -1,6 +1,6 @@
-<- Compiler
+# Compiler
 
--> {
+# {
     Antlr4.Runtime
     Antlr4.Runtime.Misc
     System
@@ -44,56 +44,147 @@ BlockRight  = "}"
 
 Task = "System.Threading.Tasks.Task"
 
-Result = $ {
-    data : Any
-    text : Str
+keywords : List[Str] = List_of(
+    "abstract",
+    "as",
+    "base",
+    "bool",
+    "break",
+    "byte",
+    "case",
+    "catch",
+    "char",
+    "checked",
+    "class",
+    "const",
+    "continue",
+    "decimal",
+    "default",
+    "delegate",
+    "do",
+    "double",
+    "enum",
+    "event",
+    "explicit",
+    "extern",
+    "false",
+    "finally",
+    "fixed",
+    "float",
+    "for",
+    "foreach",
+    "goto",
+    "implicit",
+    "in",
+    "int",
+    "interface",
+    "internal",
+    "is",
+    "lock",
+    "long",
+    "namespace",
+    "new",
+    "null",
+    "object",
+    "operator",
+    "out",
+    "override",
+    "params",
+    "private",
+    "protected",
+    "public",
+    "readonly",
+    "ref",
+    "return",
+    "sbyte",
+    "sealed",
+    "short",
+    "sizeof",
+    "stackalloc",
+    "static",
+    "string",
+    "struct",
+    "switch",
+    "this",
+    "throw",
+    "true",
+    "try",
+    "uint",
+    "ulong",
+    "unchecked",
+    "unsafe",
+    "ushort",
+    "using",
+    "virtual",
+    "void",
+    "volatile",
+    "while"
+)
 
-    permission  : Str = "public"
-    is_virtual  : Bool
-    isDefine    : Bool
-    isMutable   : Bool
-    rootID      : Str = ""
+Namespace = $ (
+    name    : Str,
+    imports : Str
+) {}
+
+Result = $ (
+    data : Any,
+    text : Str,
+
+    permission  : Str,
+    is_virtual  : Bool,
+    isDefine    : Bool,
+    isMutable   : Bool,
+    rootID      : Str
+) {}
+
+Result = (data: Any = nil, text: Str = ""->$) {
+    this.data = data
+    this.text = text
+    this.permission = "public"
+    this.is_virtual = false
+    this.isDefine = false
+    this.isMutable = false
 }
 
-FeelLangVisitor = $ me {
-    (Any)FeelParserBaseVisitor
+FeelLangVisitorCore = $ (
+    self_ID : Str,
+    super_ID : Str,
 
-    self_ID     = ""
-    super_ID    = ""
+    self_property_content : List[Str],
 
-    self_property_content    = (Str)List{}
-
-    all_ID_set       = (Str)HashSet{}
-    cuttent_ID_set   = ((Str)HashSet)Stack{}
-    type_Id_set      = (Str)HashSet{}
-    func_async_stack = (Bool)Stack{}
+    all_ID_set       : HashSet[Str],
+    cuttent_ID_set   : Stack[HashSet[Str]],
+    type_Id_set      : HashSet[Str],
+    func_async_stack : Stack[Bool]
+) {
+    FeelParserBaseVisitor[Any]
 
     Has_ID = (id : Str -> v : Bool) {
-        <- me.all_ID_set.Contains(id) || me.cuttent_ID_set.Peek().Contains(id)
+        <- all_ID_set.Contains(id) || cuttent_ID_set.Peek().Contains(id)
     }
 
     Add_ID = (id : Str ->) {
-        me.cuttent_ID_set.Peek().Add(id)
+        cuttent_ID_set.Peek().Add(id)
     }
 
     Add_current_set = (->) {
-        cuttent_ID_set.Peek() @ item {
+        @ item = cuttent_ID_set.Peek()... {
             all_ID_set.Add(item)
         }
-        me.cuttent_ID_set.Push((Str)HashSet{})
+        cuttent_ID_set.Push(HashSet[Str]$())
     }
 
     Delete_current_set = (->) {
-        me.all_ID_set.ExceptWith(me.cuttent_ID_set.Peek())
-        me.cuttent_ID_set.Pop()
+        all_ID_set.ExceptWith(cuttent_ID_set.Peek())
+        cuttent_ID_set.Pop()
     }
 
     Is_type = (id : Str->v : Bool) {
-        <- me.type_Id_set.Contains(id)
+        <- type_Id_set.Contains(id)
     }
 
     Add_type = (id : Str ->) {
-        me.type_Id_set.Add(id)
+        type_Id_set.Add(id)
     }
     
     Add_func_stack = (->) {
@@ -109,49 +200,64 @@ FeelLangVisitor = $ me {
     }
 
     Set_func_async = (->) {
-        func_async_stack.Peek() ? {
+        ? func_async_stack.Peek() {
             <-
         }
         func_async_stack.Pop()
         func_async_stack.Push(true)
     }
+
+    ProcessFunctionSupport = (items: Array[FunctionSupportStatementContext] -> v : Str) {
+        obj = ""
+        @ item = items... {
+            obj += Visit(item)
+        }
+        <- obj
+    }
 }
 
-FeelLangVisitor = (->$me) {
-    me.cuttent_ID_set.Push((Str)HashSet{})
-    func_async_stack.Push(false)
+FeelLangVisitorCore = (->$) {
+    this.self_ID = ""
+    this.super_ID = ""
+    this.self_property_content = List[Str]$()
+    this.all_ID_set = HashSet[Str]$()
+    this.cuttent_ID_set = Stack[HashSet[Str]]$()
+    this.type_Id_set = HashSet[Str]$()
+    this.func_async_stack = Stack[Bool]$()
+    this.cuttent_ID_set.Push(HashSet[Str]$())
+    this.func_async_stack.Push(false)
 }
 
-FeelLangVisitor = $ me {
+FeelLangVisitorBase = $ () {
+    FeelLangVisitorCore
+
     .VisitProgram = (context : ProgramContext -> v : Any) {
-        StatementList = context.statement()
+        StatethisntList = context.statement()
         result = ""
-        StatementList @ item {
+        @ item = StatethisntList... {
             result += VisitStatement(item)
         }
         <- result
     }
 
     .VisitId = (context : IdContext -> v : Any) {
-        r = Result{data = "var"}
-        first = Visit(context.GetChild(0)) ! Result
+        r = Result$("var")
+        first = Visit(context.GetChild(0)).[Result]
         r.permission = first.permission
         r.text = first.text
         r.is_virtual = first.is_virtual
-        context.ChildCount >= 2 ? {
-            1 .. context.ChildCount @ i {
-                other = Visit(context.GetChild(i)) ! Result
+        ? context.ChildCount >= 2 {
+            @ i = 1.Up_until(context.ChildCount)... {
+                other = Visit(context.GetChild(i)).[Result]
                 r.text += "_\{other.text}"
             }
         }
 
-        r.text == self_ID ? {
+        ? r.text == self_ID {
             r.text = "this"
-        }
-        | r.text == super_ID ? {
+        } | r.text == super_ID {
             r.text = "base"
-        }
-        | keywords.Exists((t) {t == r.text}) ? {
+        } | keywords.Exists((t) {t == r.text}) {
             r.text = "@\{r.text}"
         }
         r.rootID = r.text
@@ -159,8 +265,8 @@ FeelLangVisitor = $ me {
     }
 
     .VisitIdItem = (context : IdItemContext -> v : Any) {
-        r = Result{data = "var"}
-        context.typeAny() <> nil ? {
+        r = Result$("var")
+        ? context.typeAny() <> nil {
             r.text += context.typeAny().GetText()
             r.is_virtual = true
             <- r
@@ -168,54 +274,49 @@ FeelLangVisitor = $ me {
         id = context.Identifier().GetText()
         r.text += id
         r.is_virtual = true
-        id[0] == '_' ? {
+        ? id.(0) == '_' {
             r.permission = "protected internal"
-            id[1].Is_lower() ? {
+            ? id.(1).Is_lower() {
                 r.isMutable = true
             }
-        }
-        | id[0].Is_lower() ? {
+        } | id.(0).Is_lower() {
             r.isMutable = true
         }
         <- r
     }
 
     .VisitVarId = (context : VarIdContext -> v : Any) {
-        context.Discard() <> nil ? {
+        ? context.Discard() <> nil {
             <- "_"
-        }
-        | ? {
-            id = (Visit(context.id()) ! Result).text
-            me.Has_ID(id) ? {
+        } | {
+            id = Visit(context.id()).[Result].text
+            ? this.Has_ID(id) {
                 <- id
-            }
-            | ? {
-                me.Add_ID(id)
+            } | {
+                this.Add_ID(id)
                 <- "var " + id
             }
         }
     }
 
     .VisitVarIdType = (context : VarIdTypeContext -> v : Any) {
-        context.Discard() <> nil ? {
+        ? context.Discard() <> nil {
             <- "_"
-        }
-        | ? {
-            id = (Visit(context.id()) ! Result).text
-            ~~me.Has_ID(id) ? {
-                me.Add_ID(id)
+        } | {
+            id = Visit(context.id()).[Result].text
+            ? ~~this.Has_ID(id) {
+                this.Add_ID(id)
             }
             <- Visit(context.typeType()) + " " + id
         }
     }
 
     .VisitBoolExpr = (context : BoolExprContext -> v : Any) {
-        r = Result{}
-        context.t.Type == TrueLiteral ? {
+        r = Result$()
+        ? context.t.Type == TrueLiteral {
             r.data = TargetTypeBool
             r.text = T
-        }
-        | context.t.Type == FalseLiteral ? {
+        } | context.t.Type == FalseLiteral {
             r.data = TargetTypeBool
             r.text = F
         }
@@ -223,14 +324,14 @@ FeelLangVisitor = $ me {
     }
 
     .VisitAnnotationSupport = (context : AnnotationSupportContext -> v : Any) {
-        <- Visit(context.annotation()) ! Str
+        <- Visit(context.annotation()).[Str]
     }
 
     .VisitAnnotation = (context : AnnotationContext -> v : Any) {
         obj = ""
 
-        r = Visit(context.annotationList()) ! Str
-        r <> "" ? {
+        r = Visit(context.annotationList()).[Str]
+        ? r <> "" {
             obj += r
         }
         <- obj
@@ -238,9 +339,9 @@ FeelLangVisitor = $ me {
 
     .VisitAnnotationList = (context : AnnotationListContext -> v : Any) {
         obj = ""
-        context.annotationItem() @ [i]v {
-            txt = me.Visit(v) ! Str
-            txt <> "" ? {
+        @ i, v = context.annotationItem().WithIndex()... {
+            txt = this.Visit(v).[Str]
+            ? txt <> "" {
                 obj += txt
             }
         }
@@ -251,27 +352,24 @@ FeelLangVisitor = $ me {
         obj = ""
         id = ""
         
-        context.id().Length == 2 ? {
-            id = "\{(Visit(context.id(0)) ! Result).text}:"
-            obj += (me.Visit(context.id(1)) ! Result).text
+        ? context.id().Length == 2 {
+            id = "\{(Visit(context.id(0)).[Result]).text}:"
+            obj += Visit(context.id(1)).[Result].text
+        } | {
+            obj += Visit(context.id(0)).[Result].text
         }
-        | ? {
-            obj += (me.Visit(context.id(0)) ! Result).text
-        }
-        obj == 
-        | "get" ? {
-            me.self_property_content.Append( "get;")
+        ? obj ==  "get" {
+            this.self_property_content.Append( "get;")
             <- ""
-        }
-        | "set" ? {
-            me.self_property_content.Append( "set;")
+        } | == "set" {
+            this.self_property_content.Append( "set;")
             <- ""
         }
         
-        context.tuple() <> nil ? {
-            obj += (me.Visit(context.tuple()) ! Result).text
+        ? context.tuple() <> nil {
+            obj += Visit(context.tuple()).[Result].text
         }
-        id <> "" ? {
+        ? id <> "" {
             obj = id + obj
         }
         obj = "[" + obj + "]"

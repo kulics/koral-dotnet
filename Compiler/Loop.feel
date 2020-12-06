@@ -1,6 +1,6 @@
-<- Compiler
+# Compiler
 
--> {
+# {
     Antlr4.Runtime
     Antlr4.Runtime.Misc
     System
@@ -10,60 +10,57 @@
     . = Compiler.Compiler_static
 }
 
-Iterator = $ {
-    begin : Result
-    end   : Result
-    step  : Result
-}
+Iterator = $ (begin : Result, end   : Result, step  : Result) {}
 
-FeelLangVisitor = $ me {
+FeelLangVisitorLoop = $ () {
+    FeelLangVisitorJudge
+
     .VisitLoopStatement = (context : LoopStatementContext -> v : Any) {
         obj = ""
-        arr = Visit(context.expression()) ! Result
+        arr = Visit(context.expression()).[Result]
         target = arr.text
         ids = ""
-        context.loopId() @ [i]v {
-            i <> 0 ? {
+        @ i, v = context.loopId().WithIndex()... {
+            ? i <> 0 {
                 ids += "," + Visit(v)
-            }
-            | ? {
+            } | {
                 ids += Visit(v)
             }
         }
-        context.loopId().Length > 1 ? {
+        ? context.loopId().Length > 1 {
             ids = "(" + ids + ")"
         }
 
         obj += "foreach (var \{ids} in \{target})"
         obj += BlockLeft+Wrap
-        me.Add_current_set()
+        Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.Delete_current_set()
+        Delete_current_set()
         obj += BlockRight+Wrap
         <- obj
     }
 
     .VisitLoopId = (context : LoopIdContext -> v : Any) {
-        id = (Visit(context.id()) ! Result).text
-        me.Has_ID(id) ? {
+        id = (Visit(context.id()).[Result]).text
+        ? Has_ID(id) {
             <- id
-        } | ? {
-            me.Add_ID(id)
+        } | {
+            Add_ID(id)
             <- id
         }
     }
 
     .VisitLoopCaseStatement = (context : LoopCaseStatementContext -> v : Any) {
         obj = ""
-        expr = Visit(context.expression()) ! Result
+        expr = Visit(context.expression()).[Result]
         obj += "while (true) { \{Wrap} if (\{expr.text}) "
-        obj += BlockLeft+Wrap
-        me.Add_current_set()
+        obj += BlockLeft + Wrap
+        Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.Delete_current_set()
-        obj += BlockRight+Wrap
+        Delete_current_set()
+        obj += BlockRight + Wrap
         obj += " else { \{Wrap}"
-        context.loopElseStatement() <> nil ? {
+        ? context.loopElseStatement() <> nil {
             obj += Visit(context.loopElseStatement())
         }
         obj += " break; \{Wrap} } }"
@@ -72,17 +69,17 @@ FeelLangVisitor = $ me {
 
     .VisitLoopElseStatement = (context : LoopElseStatementContext -> v : Any) {
         obj = ""
-        me.Add_current_set()
+        Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.Delete_current_set()
+        Delete_current_set()
         <- obj
     }
 
     .VisitLoopJumpStatement = (context : LoopJumpStatementContext -> v : Any) {
-        <- "break\{Terminate; Wrap}"
+        <- "break\{Terminate, Wrap}"
     }
 
     .VisitLoopContinueStatement = (context : LoopContinueStatementContext -> v : Any) {
-        <- "continue\{Terminate; Wrap}"
+        <- "continue\{Terminate, Wrap}"
     }
 }

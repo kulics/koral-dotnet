@@ -1,6 +1,6 @@
-<- Compiler
+# Compiler
 
--> {
+# {
     Antlr4.Runtime
     Antlr4.Runtime.Misc
     System
@@ -10,76 +10,76 @@
     . = Compiler.Compiler_static
 }
 
+FeelLangVisitorCheck = $ () {
+    FeelLangVisitorCall
 
-FeelLangVisitor = $ me {
     .VisitCheckStatement = (context : CheckStatementContext -> v : Any) {
-        obj = "try \{BlockLeft; Wrap}"
-        me.Add_current_set()
+        obj = "try \{BlockLeft, Wrap}"
+        Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.Delete_current_set()
+        Delete_current_set()
         obj += BlockRight
-        context.checkErrorStatement() @ item {
+        @ item = context.checkErrorStatement()... {
             obj += Visit(item) + Wrap
         }
 
-        context.checkFinallyStatment() <> nil ? {
+        ? context.checkFinallyStatment() <> nil {
             obj += Visit(context.checkFinallyStatment())
         }
         <- obj
     }
 
     .VisitCheckErrorStatement = (context : CheckErrorStatementContext -> v : Any) {
-        me.Add_current_set()
+        Add_current_set()
         obj = ""
-        ID = (Visit(context.id()) ! Result).text
-        me.Add_ID(ID)
+        ID = Visit(context.id()).[Result].text
+        Add_ID(ID)
 
         Type = "Exception"
-        context.typeType() <> nil ? {
-            Type = Visit(context.typeType()) ! Str
+        ? context.typeType() <> nil {
+            Type = Visit(context.typeType()).[Str]
         }
 
-        obj += "catch( \{Type} \{ID} )\{Wrap; BlockLeft; Wrap}"
+        obj += "catch( \{Type} \{ID} )\{Wrap, BlockLeft, Wrap}"
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.Delete_current_set()
+        Delete_current_set()
         obj += BlockRight
         <- obj
     }
 
     .VisitCheckFinallyStatment = (context : CheckFinallyStatmentContext -> v : Any) {
-        obj = "finally \{Wrap; BlockLeft; Wrap}"
-        me.Add_current_set()
+        obj = "finally \{Wrap, BlockLeft, Wrap}"
+        Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.Delete_current_set()
+        Delete_current_set()
         obj += BlockRight + Wrap
         <- obj
     }
 
     .VisitUsingStatement = (context : UsingStatementContext -> v : Any) {
         obj = ""
-        context.varId() @ [i]v {
-            i <> 0 ? {
+        @ i, v = context.varId().WithIndex()... {
+            ? i <> 0 {
                 obj += "," + Visit(v)
-            }
-            | ? {
+            } | {
                 obj += Visit(v)
             }
         }
-        context.varId().Length > 1 ? {
+        ? context.varId().Length > 1 {
             obj = "(" + obj + ")"
         }
-        r2 = Visit(context.tupleExpression()) ! Result
+        r2 = Visit(context.tupleExpression()).[Result]
         obj += " = \{r2.text}"
-        obj = "using (\{obj}) \{BlockLeft; Wrap}"
-        me.Add_current_set()
+        obj = "using (\{obj}) \{BlockLeft, Wrap}"
+        Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
-        me.Delete_current_set()
+        Delete_current_set()
         obj += BlockRight
         <- obj
     }
 
     .VisitCheckReportStatement = (context : CheckReportStatementContext -> v : Any) {
-        obj = "throw \{(Visit(context.expression()) ! Result).text; Terminate; Wrap}"
+        obj = "throw \{(Visit(context.expression()).[Result]).text, Terminate, Wrap}"
         <- obj
     }
 }
