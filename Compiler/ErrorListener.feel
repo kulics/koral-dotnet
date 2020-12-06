@@ -6,14 +6,14 @@
     System
     System.Collections.Generic
 
-    . = Compiler.FeelParser
-    . = Compiler.Compiler_static
+    Compiler.FeelParser => .
+    Compiler.Compiler_static => .
 }
 
-ErrorListener = $ (FileDir : Str = "") { me, super ->
+ErrorListener := $ (FileDir : Str = "") { me, super ->
     BaseErrorListener
 
-    .SyntaxError = (recognizer : IRecognizer, offendingSymbol : ?IToken, 
+    .SyntaxError := (recognizer : IRecognizer, offendingSymbol : ?IToken, 
             line : Int, charPositionInLine : Int, msg : Str, 
             e : ?RecognitionException->) {
         super.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)

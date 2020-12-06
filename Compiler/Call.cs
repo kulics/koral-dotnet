@@ -10,12 +10,12 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class FeelLangVisitorCall:FeelLangVisitorBase{
-public FeelLangVisitorCall (){  }
+public FeelLangVisitorCall(){}
 public  override  object VisitCallExpression( CallExpressionContext context ){
 var r = ((Result)Visit(context.id()));
 r.text="."+r.text;
 if ( context.templateCall()!=null ) {
-r.text+="<"+(((string)Visit(context.templateCall())))+">";
+r.text+="<"+((string)Visit(context.templateCall()))+">";
 }
 if ( context.callFunc()!=null ) {
 var e2 = ((Result)Visit(context.callFunc()));
@@ -71,7 +71,7 @@ public  override  object VisitCallPkg( CallPkgContext context ){
 var ty = "";
 var r = (new Result("object"));
 if ( context.typeNotNull()!=null ) {
-ty = ((string)Visit(context.typeNotNull()));
+ty=((string)Visit(context.typeNotNull()));
 r.data=ty;
 }
 r.text=(new System.Text.StringBuilder().Append("(new ").Append(ty)).To_Str();
@@ -90,7 +90,7 @@ r.text+=Visit(context.lambdaIn());
 r.text+=")";
 r.text+="=>";
 if ( context.tupleExpression()!=null ) {
-r.text+=(((Result)Visit(context.tupleExpression()))).text;
+r.text+=((Result)Visit(context.tupleExpression())).text;
 }
 else {
 r.text+=(new System.Text.StringBuilder().Append("{").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append("}")).To_Str();

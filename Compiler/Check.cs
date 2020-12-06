@@ -10,7 +10,7 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class FeelLangVisitorCheck:FeelLangVisitorCall{
-public FeelLangVisitorCheck (){  }
+public FeelLangVisitorCheck(){}
 public  override  object VisitCheckStatement( CheckStatementContext context ){
 var obj = (new System.Text.StringBuilder().Append("try ").Append(BlockLeft).Append(Wrap)).To_Str();
 Add_current_set();
@@ -30,11 +30,11 @@ Add_current_set();
 var obj = "";
 var ID = ((Result)Visit(context.id())).text;
 Add_ID(ID);
-var Type = "Exception";
+var type_data = "Exception";
 if ( context.typeType()!=null ) {
-Type = ((string)Visit(context.typeType()));
+type_data=((string)Visit(context.typeType()));
 }
-obj+=(new System.Text.StringBuilder().Append("catch( ").Append(Type).Append(" ").Append(ID).Append(" )").Append(Wrap).Append(BlockLeft).Append(Wrap)).To_Str();
+obj+=(new System.Text.StringBuilder().Append("catch( ").Append(type_data).Append(" ").Append(ID).Append(" )").Append(Wrap).Append(BlockLeft).Append(Wrap)).To_Str();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 Delete_current_set();
 obj+=BlockRight;
@@ -59,11 +59,11 @@ obj+="var "+Visit(v);
 }
 }
 if ( context.varId().Length>1 ) {
-obj = "("+obj+")";
+obj="("+obj+")";
 }
 var r2 = ((Result)Visit(context.tupleExpression()));
 obj+=(new System.Text.StringBuilder().Append(" = ").Append(r2.text)).To_Str();
-obj = (new System.Text.StringBuilder().Append("using (").Append(obj).Append(") ").Append(BlockLeft).Append(Wrap)).To_Str();
+obj=(new System.Text.StringBuilder().Append("using (").Append(obj).Append(") ").Append(BlockLeft).Append(Wrap)).To_Str();
 Add_current_set();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 Delete_current_set();
@@ -71,7 +71,7 @@ obj+=BlockRight;
 return obj;
 }
 public  override  object VisitCheckReportStatement( CheckReportStatementContext context ){
-var obj = (new System.Text.StringBuilder().Append("throw ").Append((((Result)Visit(context.expression()))).text).Append(Terminate).Append(Wrap)).To_Str();
+var obj = (new System.Text.StringBuilder().Append("throw ").Append(((Result)Visit(context.expression())).text).Append(Terminate).Append(Wrap)).To_Str();
 return obj;
 }
 }

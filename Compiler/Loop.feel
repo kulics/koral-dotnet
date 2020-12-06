@@ -6,21 +6,21 @@
     System
     System.Collections.Generic
 
-    . = Compiler.FeelParser
-    . = Compiler.Compiler_static
+    Compiler.FeelParser => .
+    Compiler.Compiler_static => .
 }
 
-Iterator = $ (begin : Result, end   : Result, step  : Result) {}
+Iterator := $ (begin : Result, end   : Result, step  : Result) {}
 
-FeelLangVisitorLoop = $ () {
+FeelLangVisitorLoop := $ () {
     FeelLangVisitorJudge
 
-    .VisitLoopStatement = (context : LoopStatementContext -> v : Any) {
-        obj = ""
-        arr = Visit(context.expression()).[Result]
-        target = arr.text
-        ids = ""
-        @ i, v = context.loopId().WithIndex()... {
+    .VisitLoopStatement := (context : LoopStatementContext -> v : Any) {
+        obj := ""
+        arr := Visit(context.expression()).[Result]
+        target := arr.text
+        ids := ""
+        @ i, v := context.loopId().WithIndex()... {
             ? i <> 0 {
                 ids += "," + Visit(v)
             } | {
@@ -40,8 +40,8 @@ FeelLangVisitorLoop = $ () {
         <- obj
     }
 
-    .VisitLoopId = (context : LoopIdContext -> v : Any) {
-        id = (Visit(context.id()).[Result]).text
+    .VisitLoopId := (context : LoopIdContext -> v : Any) {
+        id := Visit(context.id()).[Result].text
         ? Has_ID(id) {
             <- id
         } | {
@@ -50,9 +50,9 @@ FeelLangVisitorLoop = $ () {
         }
     }
 
-    .VisitLoopCaseStatement = (context : LoopCaseStatementContext -> v : Any) {
-        obj = ""
-        expr = Visit(context.expression()).[Result]
+    .VisitLoopCaseStatement := (context : LoopCaseStatementContext -> v : Any) {
+        obj := ""
+        expr := Visit(context.expression()).[Result]
         obj += "while (true) { \{Wrap} if (\{expr.text}) "
         obj += BlockLeft + Wrap
         Add_current_set()
@@ -67,19 +67,19 @@ FeelLangVisitorLoop = $ () {
         <- obj
     }
 
-    .VisitLoopElseStatement = (context : LoopElseStatementContext -> v : Any) {
-        obj = ""
+    .VisitLoopElseStatement := (context : LoopElseStatementContext -> v : Any) {
+        obj := ""
         Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         Delete_current_set()
         <- obj
     }
 
-    .VisitLoopJumpStatement = (context : LoopJumpStatementContext -> v : Any) {
+    .VisitLoopJumpStatement := (context : LoopJumpStatementContext -> v : Any) {
         <- "break\{Terminate, Wrap}"
     }
 
-    .VisitLoopContinueStatement = (context : LoopContinueStatementContext -> v : Any) {
+    .VisitLoopContinueStatement := (context : LoopContinueStatementContext -> v : Any) {
         <- "continue\{Terminate, Wrap}"
     }
 }

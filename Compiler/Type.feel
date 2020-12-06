@@ -6,28 +6,28 @@
     System
     System.Collections.Generic
 
-    . = Compiler.FeelParser
-    . = Compiler.Compiler_static
+    Compiler.FeelParser => .
+    Compiler.Compiler_static => .
 }
 
-FeelLangVisitor = $ () {
+FeelLangVisitor := $ () {
     FeelLangVisitorPackage
 
-    .VisitTypeType = (context : TypeTypeContext -> v : Any) {
-        obj = ""
+    .VisitTypeType := (context : TypeTypeContext -> v : Any) {
+        obj := ""
         obj = Visit(context.GetChild(0)).[Str]
         <- obj
     }
 
-    .VisitTypeNullable = (context : TypeNullableContext -> v : Any) {
-        obj = ""
+    .VisitTypeNullable := (context : TypeNullableContext -> v : Any) {
+        obj := ""
         obj = Visit(context.typeNotNull()).[Str]
         obj += "?"
         <- obj
     }
 
-    .VisitTypePackage = (context : TypePackageContext -> v : Any) {
-        obj = ""
+    .VisitTypePackage := (context : TypePackageContext -> v : Any) {
+        obj := ""
         obj += Visit(context.nameSpaceItem())
         ? obj == "List" {
             obj = TargetTypeLst
@@ -78,10 +78,10 @@ FeelLangVisitor = $ () {
         <- obj
     }
 
-    .VisitTypeFunction = (context : TypeFunctionContext -> v : Any) {
-        obj = ""
-        in = Visit(context.typeFunctionParameterClause(0)).[Str]
-        out = Visit(context.typeFunctionParameterClause(1)).[Str]
+    .VisitTypeFunction := (context : TypeFunctionContext -> v : Any) {
+        obj := ""
+        in := Visit(context.typeFunctionParameterClause(0)).[Str]
+        out := Visit(context.typeFunctionParameterClause(1)).[Str]
         ? context.t.Type == Right_Arrow {
             ? out.Length == 0 {
                 ? in.Length == 0 {
@@ -117,14 +117,14 @@ FeelLangVisitor = $ () {
         <- obj
     }
 
-    .VisitTypeAny = (context : TypeAnyContext -> v : Any) {
+    .VisitTypeAny := (context : TypeAnyContext -> v : Any) {
         <- TargetTypeAny
     }
 
-    .VisitTypeFunctionParameterClause = (context : TypeFunctionParameterClauseContext -> v : Any) {
-        obj = ""
-        @ i, v = context.typeType().WithIndex()...  {
-            p = Visit(v).[Str]
+    .VisitTypeFunctionParameterClause := (context : TypeFunctionParameterClauseContext -> v : Any) {
+        obj := ""
+        @ i, v := context.typeType().WithIndex()...  {
+            p := Visit(v).[Str]
             ? i == 0 {
                 obj += p
             } | {

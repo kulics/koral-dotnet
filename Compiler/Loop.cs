@@ -10,16 +10,16 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class Iterator{
-public Iterator (Result begin , Result end , Result step ){ this.begin = begin ; 
-this.end = end ; 
-this.step = step ; 
- }
-public Result begin ;
-public Result end ;
-public Result step ;
+public Iterator(Result begin , Result end , Result step ){this.begin = begin;
+this.end = end;
+this.step = step;
+}
+public Result begin;
+public Result end;
+public Result step;
 }
 public partial class FeelLangVisitorLoop:FeelLangVisitorJudge{
-public FeelLangVisitorLoop (){  }
+public FeelLangVisitorLoop(){}
 public  override  object VisitLoopStatement( LoopStatementContext context ){
 var obj = "";
 var arr = ((Result)Visit(context.expression()));
@@ -34,7 +34,7 @@ ids+=Visit(v);
 }
 }
 if ( context.loopId().Length>1 ) {
-ids = "("+ids+")";
+ids="("+ids+")";
 }
 obj+=(new System.Text.StringBuilder().Append("foreach (var ").Append(ids).Append(" in ").Append(target).Append(")")).To_Str();
 obj+=BlockLeft+Wrap;
@@ -45,7 +45,7 @@ obj+=BlockRight+Wrap;
 return obj;
 }
 public  override  object VisitLoopId( LoopIdContext context ){
-var id = (((Result)Visit(context.id()))).text;
+var id = ((Result)Visit(context.id())).text;
 if ( Has_ID(id) ) {
 return id;
 }

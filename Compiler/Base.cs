@@ -10,54 +10,54 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class Namespace{
-public Namespace (string name , string imports ){ this.name = name ; 
-this.imports = imports ; 
- }
-public string name ;
-public string imports ;
+public Namespace(string name , string imports ){this.name = name;
+this.imports = imports;
+}
+public string name;
+public string imports;
 }
 public partial class Result{
-public Result (object data , string text , string permission , bool is_virtual , bool isDefine , bool isMutable , string rootID ){ this.data = data ; 
-this.text = text ; 
-this.permission = permission ; 
-this.is_virtual = is_virtual ; 
-this.isDefine = isDefine ; 
-this.isMutable = isMutable ; 
-this.rootID = rootID ; 
- }
-public object data ;
-public string text ;
-public string permission ;
-public bool is_virtual ;
-public bool isDefine ;
-public bool isMutable ;
-public string rootID ;
+public Result(object data , string text , string permission , bool is_virtual , bool isDefine , bool isMutable , string rootID ){this.data = data;
+this.text = text;
+this.permission = permission;
+this.is_virtual = is_virtual;
+this.isDefine = isDefine;
+this.isMutable = isMutable;
+this.rootID = rootID;
+}
+public object data;
+public string text;
+public string permission;
+public bool is_virtual;
+public bool isDefine;
+public bool isMutable;
+public string rootID;
 }
 public partial class Result{
 public Result ( object data  = null,  string text  = ""){this.data=data;
 this.text=text;
-this.permission="public";
-this.is_virtual=false;
-this.isDefine=false;
-this.isMutable=false;
+permission="public";
+is_virtual=false;
+isDefine=false;
+isMutable=false;
 }
 }
 public partial class FeelLangVisitorCore:FeelParserBaseVisitor<object>{
-public FeelLangVisitorCore (string self_ID , string super_ID , List<string> self_property_content , HashSet<string> all_ID_set , Stack<HashSet<string>> cuttent_ID_set , HashSet<string> type_Id_set , Stack<bool> func_async_stack ){ this.self_ID = self_ID ; 
-this.super_ID = super_ID ; 
-this.self_property_content = self_property_content ; 
-this.all_ID_set = all_ID_set ; 
-this.cuttent_ID_set = cuttent_ID_set ; 
-this.type_Id_set = type_Id_set ; 
-this.func_async_stack = func_async_stack ; 
- }
-public string self_ID ;
-public string super_ID ;
-public List<string> self_property_content ;
-public HashSet<string> all_ID_set ;
-public Stack<HashSet<string>> cuttent_ID_set ;
-public HashSet<string> type_Id_set ;
-public Stack<bool> func_async_stack ;
+public FeelLangVisitorCore(string self_ID , string super_ID , List<string> self_property_content , HashSet<string> all_ID_set , Stack<HashSet<string>> cuttent_ID_set , HashSet<string> type_Id_set , Stack<bool> func_async_stack ){this.self_ID = self_ID;
+this.super_ID = super_ID;
+this.self_property_content = self_property_content;
+this.all_ID_set = all_ID_set;
+this.cuttent_ID_set = cuttent_ID_set;
+this.type_Id_set = type_Id_set;
+this.func_async_stack = func_async_stack;
+}
+public string self_ID;
+public string super_ID;
+public List<string> self_property_content;
+public HashSet<string> all_ID_set;
+public Stack<HashSet<string>> cuttent_ID_set;
+public HashSet<string> type_Id_set;
+public Stack<bool> func_async_stack;
 public  virtual  bool Has_ID( string id ){
 return all_ID_set.Contains(id)||cuttent_ID_set.Peek().Contains(id);
 }
@@ -105,19 +105,19 @@ return obj;
 }
 }
 public partial class FeelLangVisitorCore{
-public FeelLangVisitorCore (){this.self_ID="";
-this.super_ID="";
-this.self_property_content=(new List<string>());
-this.all_ID_set=(new HashSet<string>());
-this.cuttent_ID_set=(new Stack<HashSet<string>>());
-this.type_Id_set=(new HashSet<string>());
-this.func_async_stack=(new Stack<bool>());
-this.cuttent_ID_set.Push((new HashSet<string>()));
-this.func_async_stack.Push(false);
+public FeelLangVisitorCore (){self_ID="";
+super_ID="";
+self_property_content=(new List<string>());
+all_ID_set=(new HashSet<string>());
+cuttent_ID_set=(new Stack<HashSet<string>>());
+type_Id_set=(new HashSet<string>());
+func_async_stack=(new Stack<bool>());
+cuttent_ID_set.Push((new HashSet<string>()));
+func_async_stack.Push(false);
 }
 }
 public partial class FeelLangVisitorBase:FeelLangVisitorCore{
-public FeelLangVisitorBase (){  }
+public FeelLangVisitorBase(){}
 public  override  object VisitProgram( ProgramContext context ){
 var StatethisntList = context.statement();
 var result = "";
@@ -177,11 +177,11 @@ return "_";
 }
 else {
 var id = ((Result)Visit(context.id())).text;
-if ( this.Has_ID(id) ) {
+if ( Has_ID(id) ) {
 return id;
 }
 else {
-this.Add_ID(id);
+Add_ID(id);
 return id;
 }
 }
@@ -192,8 +192,8 @@ return "_";
 }
 else {
 var id = ((Result)Visit(context.id())).text;
-if ( !this.Has_ID(id) ) {
-this.Add_ID(id);
+if ( !Has_ID(id) ) {
+Add_ID(id);
 }
 return Visit(context.typeType())+" "+id;
 }
@@ -224,7 +224,7 @@ return obj;
 public  override  object VisitAnnotationList( AnnotationListContext context ){
 var obj = "";
 foreach (var (i,v) in context.annotationItem().WithIndex()){
-var txt = ((string)this.Visit(v));
+var txt = ((string)Visit(v));
 if ( txt!="" ) {
 obj+=txt;
 }
@@ -235,7 +235,7 @@ public  override  object VisitAnnotationItem( AnnotationItemContext context ){
 var obj = "";
 var id = "";
 if ( context.id().Length==2 ) {
-id = (new System.Text.StringBuilder().Append((((Result)Visit(context.id(0)))).text).Append(":")).To_Str();
+id=(new System.Text.StringBuilder().Append(((Result)Visit(context.id(0))).text).Append(":")).To_Str();
 obj+=((Result)Visit(context.id(1))).text;
 }
 else {
@@ -243,11 +243,11 @@ obj+=((Result)Visit(context.id(0))).text;
 }
 switch (obj) {
 case "get" :
-{ this.self_property_content.Append("get;");
+{ self_property_content.Append("get;");
 return "";
 } break;
 case "set" :
-{ this.self_property_content.Append("set;");
+{ self_property_content.Append("set;");
 return "";
 } break;
 }
@@ -255,9 +255,9 @@ if ( context.tuple()!=null ) {
 obj+=((Result)Visit(context.tuple())).text;
 }
 if ( id!="" ) {
-obj = id+obj;
+obj=id+obj;
 }
-obj = "["+obj+"]";
+obj="["+obj+"]";
 return obj;
 }
 }

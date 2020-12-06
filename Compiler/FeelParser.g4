@@ -222,6 +222,7 @@ primaryExpression
 | expression op=Bang // 取引用
 | expression op=Question // 可空判断
 | expression orElse // 空值替换
+| expression typeConversion // 类型转换
 | expression callFunc // 函数调用
 | expression callChannel // 调用通道
 | expression callElement // 访问元素
@@ -232,7 +233,6 @@ primaryExpression
 | expression mul expression // 积型表达式
 | expression add expression // 和型表达式
 | expression bitwise expression // 位运算表达式
-| expression typeConversion // 类型转换
 | expression typeCheck // 类型判断
 | expression compare expression // 比较表达式
 | expression logic expression // 逻辑表达式

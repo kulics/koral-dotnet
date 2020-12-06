@@ -10,7 +10,7 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class FeelLangVisitorJudge:FeelLangVisitorImplement{
-public FeelLangVisitorJudge (){  }
+public FeelLangVisitorJudge(){}
 public  override  object VisitJudgeMatchStatement( JudgeMatchStatementContext context ){
 var obj = "";
 var expr = ((Result)Visit(context.expression()));
@@ -30,18 +30,18 @@ return obj;
 public  override  object VisitJudgeEqualCase( JudgeEqualCaseContext context ){
 var obj = "";
 var expr = ((Result)Visit(context.expression()));
-obj = (new System.Text.StringBuilder().Append("case ").Append(expr.text).Append(" :").Append(Wrap)).To_Str();
+obj=(new System.Text.StringBuilder().Append("case ").Append(expr.text).Append(" :").Append(Wrap)).To_Str();
 return obj;
 }
 public  override  object VisitJudgeTypeCase( JudgeTypeCaseContext context ){
 var obj = "";
 var id = "it";
 if ( context.id()!=null ) {
-id = (((Result)Visit(context.id()))).text;
+id=((Result)Visit(context.id())).text;
 }
 Add_ID(id);
-var type = ((string)Visit(context.typeType()));
-obj = (new System.Text.StringBuilder().Append("case ").Append(type).Append(" ").Append(id).Append(" :").Append(Wrap)).To_Str();
+var type_data = ((string)Visit(context.typeType()));
+obj=(new System.Text.StringBuilder().Append("case ").Append(type_data).Append(" ").Append(id).Append(" :").Append(Wrap)).To_Str();
 return obj;
 }
 public  override  object VisitCaseEqualStatement( CaseEqualStatementContext context ){

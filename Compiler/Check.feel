@@ -6,20 +6,20 @@
     System
     System.Collections.Generic
 
-    . = Compiler.FeelParser
-    . = Compiler.Compiler_static
+    Compiler.FeelParser => .
+    Compiler.Compiler_static => .
 }
 
-FeelLangVisitorCheck = $ () {
+FeelLangVisitorCheck := $ () {
     FeelLangVisitorCall
 
-    .VisitCheckStatement = (context : CheckStatementContext -> v : Any) {
-        obj = "try \{BlockLeft, Wrap}"
+    .VisitCheckStatement := (context : CheckStatementContext -> v : Any) {
+        obj := "try \{BlockLeft, Wrap}"
         Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         Delete_current_set()
         obj += BlockRight
-        @ item = context.checkErrorStatement()... {
+        @ item := context.checkErrorStatement()... {
             obj += Visit(item) + Wrap
         }
 
@@ -29,26 +29,26 @@ FeelLangVisitorCheck = $ () {
         <- obj
     }
 
-    .VisitCheckErrorStatement = (context : CheckErrorStatementContext -> v : Any) {
+    .VisitCheckErrorStatement := (context : CheckErrorStatementContext -> v : Any) {
         Add_current_set()
-        obj = ""
-        ID = Visit(context.id()).[Result].text
+        obj := ""
+        ID := Visit(context.id()).[Result].text
         Add_ID(ID)
 
-        Type = "Exception"
+        type_data := "Exception"
         ? context.typeType() <> nil {
-            Type = Visit(context.typeType()).[Str]
+            type_data = Visit(context.typeType()).[Str]
         }
 
-        obj += "catch( \{Type} \{ID} )\{Wrap, BlockLeft, Wrap}"
+        obj += "catch( \{type_data} \{ID} )\{Wrap, BlockLeft, Wrap}"
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         Delete_current_set()
         obj += BlockRight
         <- obj
     }
 
-    .VisitCheckFinallyStatment = (context : CheckFinallyStatmentContext -> v : Any) {
-        obj = "finally \{Wrap, BlockLeft, Wrap}"
+    .VisitCheckFinallyStatment := (context : CheckFinallyStatmentContext -> v : Any) {
+        obj := "finally \{Wrap, BlockLeft, Wrap}"
         Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         Delete_current_set()
@@ -56,9 +56,9 @@ FeelLangVisitorCheck = $ () {
         <- obj
     }
 
-    .VisitUsingStatement = (context : UsingStatementContext -> v : Any) {
-        obj = ""
-        @ i, v = context.varId().WithIndex()... {
+    .VisitUsingStatement := (context : UsingStatementContext -> v : Any) {
+        obj := ""
+        @ i, v := context.varId().WithIndex()... {
             ? i <> 0 {
                 obj += ", var " + Visit(v)
             } | {
@@ -68,7 +68,7 @@ FeelLangVisitorCheck = $ () {
         ? context.varId().Length > 1 {
             obj = "(" + obj + ")"
         }
-        r2 = Visit(context.tupleExpression()).[Result]
+        r2 := Visit(context.tupleExpression()).[Result]
         obj += " = \{r2.text}"
         obj = "using (\{obj}) \{BlockLeft, Wrap}"
         Add_current_set()
@@ -78,8 +78,8 @@ FeelLangVisitorCheck = $ () {
         <- obj
     }
 
-    .VisitCheckReportStatement = (context : CheckReportStatementContext -> v : Any) {
-        obj = "throw \{(Visit(context.expression()).[Result]).text, Terminate, Wrap}"
+    .VisitCheckReportStatement := (context : CheckReportStatementContext -> v : Any) {
+        obj := "throw \{Visit(context.expression()).[Result].text, Terminate, Wrap}"
         <- obj
     }
 }

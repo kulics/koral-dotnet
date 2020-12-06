@@ -6,21 +6,21 @@
     System
     System.Collections.Generic
 
-    . = Compiler.FeelParser
-    . = Compiler.Compiler_static
+    Compiler.FeelParser => .
+    Compiler.Compiler_static => .
 }
 
-FeelLangVisitorJudge = $ () {
+FeelLangVisitorJudge := $ () {
     FeelLangVisitorImplement
 
-    .VisitJudgeMatchStatement = (context : JudgeMatchStatementContext -> v : Any)  {
-        obj = ""
-        expr = Visit(context.expression()).[Result]
+    .VisitJudgeMatchStatement := (context : JudgeMatchStatementContext -> v : Any)  {
+        obj := ""
+        expr := Visit(context.expression()).[Result]
         obj += "switch (\{expr.text}) \{BlockLeft, Wrap}"
-        @ it = context.caseEqualStatement()... {
+        @ it := context.caseEqualStatement()... {
             obj += Visit(it).[Str] + Wrap
         }
-        @ it = context.caseTypeStatement()... {
+        @ it := context.caseTypeStatement()... {
             obj += Visit(it).[Str] + Wrap
         }
         ? context.caseElseStatement() <> nil {
@@ -30,70 +30,70 @@ FeelLangVisitorJudge = $ () {
         <- obj
     }
 
-    .VisitJudgeEqualCase = (context : JudgeEqualCaseContext -> v : Any) {
-        obj = ""
-        expr = Visit(context.expression()).[Result]
+    .VisitJudgeEqualCase := (context : JudgeEqualCaseContext -> v : Any) {
+        obj := ""
+        expr := Visit(context.expression()).[Result]
         obj = "case \{expr.text} :\{Wrap}"
         <- obj
     }
 
-    .VisitJudgeTypeCase = (context : JudgeTypeCaseContext -> v : Any) {
-        obj = ""
-        id = "it"
+    .VisitJudgeTypeCase := (context : JudgeTypeCaseContext -> v : Any) {
+        obj := ""
+        id := "it"
         ? context.id() <> nil {
-            id = (Visit(context.id()).[Result]).text
+            id = Visit(context.id()).[Result].text
         }
         Add_ID(id)
-        type = Visit(context.typeType()).[Str]
-        obj = "case \{type} \{id} :\{Wrap}"
+        type_data := Visit(context.typeType()).[Str]
+        obj = "case \{type_data} \{id} :\{Wrap}"
         <- obj
     }
 
-    .VisitCaseEqualStatement = (context : CaseEqualStatementContext -> v : Any) {
-        obj = ""
+    .VisitCaseEqualStatement := (context : CaseEqualStatementContext -> v : Any) {
+        obj := ""
         Add_current_set()
-        rList = List[Str]$()
-        @ item = context.judgeEqualCase()... {
-            r = Visit(item).[Str]
+        rList := List[Str]$()
+        @ item := context.judgeEqualCase()... {
+            r := Visit(item).[Str]
             rList.Append(r)
         }
-        process = "\{BlockLeft} \{ProcessFunctionSupport(context.functionSupportStatement()), BlockRight} break;"
-        @ r = rList... {
+        process := "\{BlockLeft} \{ProcessFunctionSupport(context.functionSupportStatement()), BlockRight} break;"
+        @ r := rList... {
             obj += r + process
         }
         Delete_current_set()
         <- obj
     }
 
-    .VisitCaseTypeStatement = (context : CaseTypeStatementContext -> v : Any) {
-        obj = ""
+    .VisitCaseTypeStatement := (context : CaseTypeStatementContext -> v : Any) {
+        obj := ""
         Add_current_set()
-        rList = List[Str]$()
-        @ item = context.judgeTypeCase()... {
-            r = Visit(item).[Str]
+        rList := List[Str]$()
+        @ item := context.judgeTypeCase()... {
+            r := Visit(item).[Str]
             rList.Append(r)
         }
-        process = "\{BlockLeft} \{ProcessFunctionSupport(context.functionSupportStatement()), BlockRight} break;"
-        @ r = rList... {
+        process := "\{BlockLeft} \{ProcessFunctionSupport(context.functionSupportStatement()), BlockRight} break;"
+        @ r := rList... {
             obj += r + process
         }
         Delete_current_set()
         <- obj
     }
 
-    .VisitCaseElseStatement = (context : CaseElseStatementContext -> v : Any) {
-        obj = ""
+    .VisitCaseElseStatement := (context : CaseElseStatementContext -> v : Any) {
+        obj := ""
         Add_current_set()
-        process = "\{BlockLeft} \{ProcessFunctionSupport(context.functionSupportStatement()), BlockRight} break;"
+        process := "\{BlockLeft} \{ProcessFunctionSupport(context.functionSupportStatement()), BlockRight} break;"
         Delete_current_set()
         obj += "default:" + Wrap + process
         <- obj
     }
 
-    .VisitJudgeStatement = (context : JudgeStatementContext -> v : Any) {
-        obj = ""
+    .VisitJudgeStatement := (context : JudgeStatementContext -> v : Any) {
+        obj := ""
         obj += Visit(context.judgeIfStatement())
-        @ it = context.judgeElseIfStatement()... {
+        @ it := context.judgeElseIfStatement()... {
             obj += Visit(it)
         }
         ? context.judgeElseStatement() <> nil {
@@ -102,9 +102,9 @@ FeelLangVisitorJudge = $ () {
         <- obj
     }
 
-    .VisitJudgeIfStatement = (context : JudgeIfStatementContext -> v : Any) {
-        b = Visit(context.expression()).[Result]
-        obj = "if ( \{b.text} ) \{BlockLeft, Wrap}"
+    .VisitJudgeIfStatement := (context : JudgeIfStatementContext -> v : Any) {
+        b := Visit(context.expression()).[Result]
+        obj := "if ( \{b.text} ) \{BlockLeft, Wrap}"
         Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         Delete_current_set()
@@ -112,8 +112,8 @@ FeelLangVisitorJudge = $ () {
         <- obj
     }
 
-    .VisitJudgeElseStatement = (context : JudgeElseStatementContext -> v : Any) {
-        obj = "else \{BlockLeft, Wrap}"
+    .VisitJudgeElseStatement := (context : JudgeElseStatementContext -> v : Any) {
+        obj := "else \{BlockLeft, Wrap}"
         Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         Delete_current_set()
@@ -121,9 +121,9 @@ FeelLangVisitorJudge = $ () {
         <- obj
     }
 
-    .VisitJudgeElseIfStatement = (context : JudgeElseIfStatementContext -> v : Any) {
-        b = Visit(context.expression()).[Result]
-        obj = "else if ( \{b.text} ) \{BlockLeft, Wrap}"
+    .VisitJudgeElseIfStatement := (context : JudgeElseIfStatementContext -> v : Any) {
+        b := Visit(context.expression()).[Result]
+        obj := "else if ( \{b.text} ) \{BlockLeft, Wrap}"
         Add_current_set()
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         Delete_current_set()

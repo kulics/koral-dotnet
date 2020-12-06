@@ -6,45 +6,44 @@
     System
     System.Collections.Generic
 
-    . = Compiler.FeelParser
-    . = Compiler.Compiler_static
+    Compiler.FeelParser => .
+    Compiler.Compiler_static => .
 }
 
 
-FeelLangVisitorImplement = $ () {
+FeelLangVisitorImplement := $ () {
     FeelLangVisitorFunction
 
-    .VisitImplementStatement = (context : ImplementStatementContext -> v : Any) {
-        id = Visit(context.id()).[Result]
+    .VisitImplementStatement := (context : ImplementStatementContext -> v : Any) {
+        id := Visit(context.id()).[Result]
         
-        obj = ""
-        extend = List[Str]$()
+        obj := ""
+        extend := List[Str]$()
         ? context.packageFieldStatement() <> nil {
-            item = context.packageFieldStatement()
-            r = Visit(item).[Result]
+            item := context.packageFieldStatement()
+            r := Visit(item).[Result]
             obj += r.text
         }
         ? context.packageNewStatement() <> nil {
-            item = context.packageNewStatement()
-            r = Visit(item).[Str]
+            item := context.packageNewStatement()
+            r := Visit(item).[Str]
             obj += "public \{id.text} \{r}"
         }
         obj += BlockRight + Wrap
-        header = ""
-        header += "\{id.permission} partial class \{id.text}"
+        header := "\{id.permission} partial class \{id.text}"
 
-        template = ""
-        template_contract = ""
+        template := ""
+        template_contract := ""
         ? context.templateDefine() <> nil {
-            item = Visit(context.templateDefine()).[TemplateItem]
+            item := Visit(context.templateDefine()).[TemplateItem]
             template += item.template
             template_contract = item.contract
             header += template
         }
 
         ? extend.Size() > 0 {
-            temp = extend.(0)
-            @ i = 1.Up_until(extend.Size())... {
+            temp := extend.(0)
+            @ i := 1.Up_until(extend.Size())... {
                 temp += "," + extend.(i)
             }
             header += ":" + temp
@@ -52,16 +51,16 @@ FeelLangVisitorImplement = $ () {
 
         header += template_contract + BlockLeft + Wrap
         obj = header + obj
-        this.self_ID = ""
-        this.super_ID = ""
+        self_ID = ""
+        super_ID = ""
         <- obj
     }
 
-    .VisitOverrideFunctionStatement = (context : OverrideFunctionStatementContext -> v : Any) {
-        id = Visit(context.id()).[Result]
-        is_virtual = " override "
-        obj = ""
-        pout = ""
+    .VisitOverrideFunctionStatement := (context : OverrideFunctionStatementContext -> v : Any) {
+        id := Visit(context.id()).[Result]
+        is_virtual := " override "
+        obj := ""
+        pout := ""
         ? context.parameterClauseOut() == nil {
             pout = "void"
         } | {
@@ -76,9 +75,9 @@ FeelLangVisitorImplement = $ () {
         }
         obj += "\{is_virtual} \{pout} \{id.text}"
         
-        template_contract = ""
+        template_contract := ""
         ? context.templateDefine() <> nil {
-            template = Visit(context.templateDefine()).[TemplateItem]
+            template := Visit(context.templateDefine()).[TemplateItem]
             obj += template.template
             template_contract = template.contract
         }

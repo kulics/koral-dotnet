@@ -10,35 +10,35 @@ using static Compiler.Compiler_static;
 namespace Compiler
 {
 public partial class Parameter{
-public Parameter (string id  = "", string type  = "", string value  = "", string annotation  = "", string permission  = ""){ this.id = id ; 
-this.type = type ; 
-this.value = value ; 
-this.annotation = annotation ; 
-this.permission = permission ; 
- }
-public string id ;
-public string type ;
-public string value ;
-public string annotation ;
-public string permission ;
+public Parameter(string id  = "", string type  = "", string value  = "", string annotation  = "", string permission  = ""){this.id = id;
+this.type = type;
+this.value = value;
+this.annotation = annotation;
+this.permission = permission;
+}
+public string id;
+public string type;
+public string value;
+public string annotation;
+public string permission;
 }
 public partial class FeelLangVisitorFunction:FeelLangVisitorExpression{
-public FeelLangVisitorFunction (){  }
+public FeelLangVisitorFunction(){}
 public  override  object VisitFunctionStatement( FunctionStatementContext context ){
 var id = ((Result)Visit(context.id()));
 var obj = "";
 var pout = "";
 if ( context.parameterClauseOut()==null ) {
-pout = "void";
+pout="void";
 }
 else {
-pout = ((string)Visit(context.parameterClauseOut()));
+pout=((string)Visit(context.parameterClauseOut()));
 if ( context.t.Type==Right_Flow ) {
 if ( pout!="void" ) {
-pout = (new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).To_Str();
+pout=(new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).To_Str();
 }
 else {
-pout = Task;
+pout=Task;
 }
 }
 }
@@ -47,7 +47,7 @@ var template_contract = "";
 if ( context.templateDefine()!=null ) {
 var template = ((TemplateItem)Visit(context.templateDefine()));
 obj+=template.template;
-template_contract = template.contract;
+template_contract=template.contract;
 }
 Add_current_set();
 Add_func_stack();
@@ -56,7 +56,7 @@ obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 Delete_current_set();
 if ( Get_func_async() ) {
-obj = " async "+obj;
+obj=" async "+obj;
 }
 Delete_func_stack();
 return obj;
@@ -101,7 +101,7 @@ obj+=", "+r.text;
 }
 }
 if ( context.expression().Length>1 ) {
-obj = (new System.Text.StringBuilder().Append("(").Append(obj).Append(")")).To_Str();
+obj=(new System.Text.StringBuilder().Append("(").Append(obj).Append(")")).To_Str();
 }
 return (new Result("var", obj));
 }
@@ -164,7 +164,7 @@ if ( context.Bang()!=null ) {
 p.type=(new System.Text.StringBuilder().Append("ref ").Append(p.type)).To_Str();
 }
 if ( context.expression()!=null ) {
-p.value=" = "+(((Result)Visit(context.expression()))).text;
+p.value=" = "+((Result)Visit(context.expression())).text;
 }
 return p;
 }
