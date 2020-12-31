@@ -48,8 +48,8 @@ left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement en
 packageStatement: (annotationSupport)? id Colon Equal (templateDefine New_Line?)?
  (packageFieldStatement|packageNewStatement);
 
-packageFieldStatement: Coin left_paren New_Line? parameterConstruct New_Line? right_paren 
-left_brace (id (more id)? Right_Arrow)? ((packageSupportStatement end|New_Line)* packageSupportStatement end?)? right_brace;
+packageFieldStatement: Coin left_paren New_Line? parameterConstruct New_Line? (Right_Arrow id (more id)?)? right_paren 
+left_brace ((packageSupportStatement end|New_Line)* packageSupportStatement end?)? right_brace;
 
 // 包支持的语句
 packageSupportStatement:
