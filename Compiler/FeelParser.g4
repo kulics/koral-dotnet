@@ -34,7 +34,7 @@ typeRedefineStatement: id Colon Equal New_Line* typeType;
 
 // 枚举
 enumStatement: (annotationSupport)? id Colon Equal New_Line* Coin
-left_brack enumSupportStatement (more enumSupportStatement)+ right_brack New_Line? left_brace right_brace;
+left_paren (Or enumSupportStatement New_Line*)* right_paren New_Line? left_brace right_brace;
 
 enumSupportStatement: id (Equal (add)? integerExpr)?;
 // 命名空间变量
