@@ -127,12 +127,8 @@ return obj;
 }
 public  override  object VisitEnumSupportStatement( EnumSupportStatementContext context ){
 var id = ((Result)Visit(context.id()));
-if ( context.integerExpr()!=null ) {
-var op = "";
-if ( context.add()!=null ) {
-op=((string)Visit(context.add()));
-}
-id.text+=" = "+op+Visit(context.integerExpr());
+if ( context.expression()!=null ) {
+id.text+=" = "+Visit(context.expression());
 }
 return id.text+",";
 }

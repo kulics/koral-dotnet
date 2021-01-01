@@ -160,13 +160,13 @@ return r;
 var id = context.Identifier().GetText();
 r.text+=id;
 r.is_virtual=true;
-if ( id[0]=='_' ) {
+if ( id[(0)]=='_' ) {
 r.permission="protected internal";
-if ( id[1].Is_lower() ) {
+if ( id[(1)].Is_lower() ) {
 r.isMutable=true;
 }
 }
-else if ( id[0].Is_lower() ) {
+else if ( id[(0)].Is_lower() ) {
 r.isMutable=true;
 }
 return r;

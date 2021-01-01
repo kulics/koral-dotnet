@@ -44,9 +44,9 @@ template_contract=item.contract;
 header+=template;
 }
 if ( extend.Size()>0 ) {
-var temp = extend[0];
+var temp = extend[(0)];
 foreach (var i in 1.Up_until(extend.Size())){
-temp+=","+extend[i];
+temp+=","+extend[(i)];
 }
 header+=":"+temp;
 }
@@ -195,9 +195,9 @@ extend.Append_all(((List<string>)r.data));
 }
 obj+=(new System.Text.StringBuilder().Append("public partial interface ").Append(ptclName)).To_Str();
 if ( extend.Size()>0 ) {
-var temp = extend[0];
+var temp = extend[(0)];
 foreach (var i in 1.Up_until(extend.Size())){
-temp+=","+extend[i];
+temp+=","+extend[(i)];
 }
 obj+=":"+temp;
 }

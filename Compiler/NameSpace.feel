@@ -134,12 +134,8 @@ FeelLangVisitorNameSpace := $ () {
 
     .VisitEnumSupportStatement := (context : EnumSupportStatementContext -> v : Any) {
         id := Visit(context.id()).[Result]
-        ? context.integerExpr() <> nil {
-            op := ""
-            ? context.add() <> nil {
-                op = Visit(context.add()).[Str]
-            }
-            id.text += " = " + op + Visit(context.integerExpr())
+        ? context.expression() <> nil {
+            id.text += " = " + Visit(context.expression())
         }
         <- id.text + ","
     }
