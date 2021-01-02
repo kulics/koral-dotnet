@@ -148,6 +148,9 @@ FeelLangVisitorExpression := $ () {
                 e2 := Visit(it).[Result]
                 r.text = "await " + r.text + e2.text
                 Set_func_async()
+            } | :: CallElementContext => it {
+                e2 := Visit(it).[Result]
+                r.text = r.text + e2.text
             } | {
                 ? context.op.Type == FeelParser.Bang {
                     r.text = "ref \{r.text}"

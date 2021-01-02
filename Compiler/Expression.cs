@@ -166,6 +166,10 @@ case CallAwaitContext it :
 r.text="await "+r.text+e2.text;
 Set_func_async();
 } break;
+case CallElementContext it :
+{ var e2 = ((Result)Visit(it));
+r.text=r.text+e2.text;
+} break;
 default:
 { if ( context.op.Type==FeelParser.Bang ) {
 r.text=(new System.Text.StringBuilder().Append("ref ").Append(r.text)).To_Str();
