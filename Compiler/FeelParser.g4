@@ -225,7 +225,6 @@ primaryExpression
 | expression typeConversion // 类型转换
 | expression callFunc // 函数调用
 | expression callChannel // 调用通道
-| expression callElement // 访问元素
 | expression callAwait  // 异步等待调用
 | expression callExpression // 链式调用
 | expression transfer expression // 传递通道值
@@ -238,7 +237,7 @@ primaryExpression
 | expression logic expression // 逻辑表达式
 ; 
 
-callExpression: call New_Line? id (left_brack templateCall right_brack)? (callFunc|callElement)?;
+callExpression: call New_Line? id (left_brack templateCall right_brack)? (callFunc)?;
 
 tuple: left_paren (tupleItem (more tupleItem)*)? right_paren; // 元组
 
@@ -265,8 +264,6 @@ callAwait: Right_Wave tuple; // 异步等待调用
 callChannel: Left_Wave expression; // 通道访问
 
 transfer: Left_Wave; // 传递通道值
-
-callElement: Dot tuple; // 元素调用
 
 callPkg: typeNotNull? Coin tuple; // 类型构造
 

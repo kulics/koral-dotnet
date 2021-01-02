@@ -21,15 +21,6 @@ if ( context.callFunc()!=null ) {
 var e2 = ((Result)Visit(context.callFunc()));
 r.text=r.text+e2.text;
 }
-else if ( context.callElement()!=null ) {
-var e2 = ((Result)Visit(context.callElement()));
-r.text=r.text+e2.text;
-}
-return r;
-}
-public  override  object VisitCallElement( CallElementContext context ){
-var r = ((Result)Visit(context.tuple()));
-r.text=(new System.Text.StringBuilder().Append("[").Append(r.text).Append("]")).To_Str();
 return r;
 }
 public  override  object VisitCallFunc( CallFuncContext context ){

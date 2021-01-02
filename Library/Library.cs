@@ -97,6 +97,26 @@ namespace Library
             return new(begin, end, false);
         }
 
+        public static T Get<T>(this IList<T> self, int index)
+        {
+            return self[index];
+        }
+
+        public static void Set<T>(this IList<T> self, int index, T value)
+        {
+            self[index] = value;
+        }
+
+        public static V Get<K, V>(this IDictionary<K, V> self, K index)
+        {
+            return self[index];
+        }
+
+        public static void Set<K, V>(this IDictionary<K, V> self, K index, V value)
+        {
+            self[index] = value;
+        }
+
         public static IEnumerable<(int index, T item)> WithIndex<T>(this IEnumerable<T> self)
         {
             return self.Select((item, index) => (index, item));
