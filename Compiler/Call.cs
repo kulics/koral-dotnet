@@ -28,7 +28,7 @@ r.text=r.text+e2.text;
 return r;
 }
 public  override  object VisitCallElement( CallElementContext context ){
-var r = ((Result)Visit(context.tuple()));
+var r = ((Result)Visit(context.expression()));
 r.text=(new System.Text.StringBuilder().Append("[").Append(r.text).Append("]")).To_Str();
 return r;
 }

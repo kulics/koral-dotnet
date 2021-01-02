@@ -30,7 +30,7 @@ FeelLangVisitorCall := $ () {
     }
 
     .VisitCallElement := (context : CallElementContext -> v : Any) {
-        r := Visit(context.tuple()).[Result]
+        r := Visit(context.expression()).[Result]
         r.text = "[\{ r.text }]"
         <- r
     }

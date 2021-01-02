@@ -203,7 +203,7 @@ varIdType: id Colon typeType | Discard;
 tupleExpression: expression (more expression)* ; // 元组
 // 基础表达式
 primaryExpression: 
-id left_brack templateCall right_brack |
+id templateCall |
 id |
 t=Discard |
 left_paren expression right_paren | 
@@ -238,7 +238,7 @@ primaryExpression
 | expression logic expression // 逻辑表达式
 ; 
 
-callExpression: call New_Line? id (left_brack templateCall right_brack)? (callFunc|callElement)?;
+callExpression: call New_Line? id templateCall? (callFunc|callElement)?;
 
 tuple: left_paren (tupleItem (more tupleItem)*)? right_paren; // 元组
 
@@ -266,13 +266,13 @@ callChannel: Left_Wave expression; // 通道访问
 
 transfer: Left_Wave; // 传递通道值
 
-callElement: Dot tuple; // 元素调用
+callElement: left_brack expression right_brack; // 元素调用
 
 callPkg: typeNotNull? Coin tuple; // 类型构造
 
 orElse: Question Or expression; // 可空取值
 
-typeConversion: Dot left_brack typeType right_brack; // 类型转化
+typeConversion: Dot left_brace typeType right_brace; // 类型转化
 
 typeCheck: Colon_Colon typeType; // 类型转化
 
@@ -280,11 +280,11 @@ nameSpaceItem: (id call New_Line?)* id;
 
 name: id (call New_Line? id)* ;
 
-templateDefine: left_brack templateDefineItem (more templateDefineItem)* right_brack;
+templateDefine: left_brace templateDefineItem (more templateDefineItem)* right_brace;
 
 templateDefineItem: id (Colon id)?; 
 
-templateCall: typeType (more typeType)*;
+templateCall: left_brace typeType (more typeType)* right_brace;
 
 lambda: left_paren (lambdaIn)? (t=(Right_Arrow|Right_Flow) parameterClauseOut?)? right_paren 
  left_brace tupleExpression right_brace
@@ -332,7 +332,7 @@ typeType: typeNullable | typeNotNull;
 
 typeNullable: Question typeNotNull;
 
-typePackage: nameSpaceItem (left_brack templateCall right_brack)?;
+typePackage: nameSpaceItem templateCall?;
 typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) New_Line* typeFunctionParameterClause right_paren;
 typeAny: TypeAny;
 

@@ -242,7 +242,7 @@ FeelLangVisitorExpression := $ () {
             ? context.t.Type == Discard {
                 <- Result$("var", "_")
             }
-        } | == 4 {
+        } | == 2 {
             id := Visit(context.id()).[Result]
             template := "<" + Visit(context.templateCall()).[Str] + ">"
             ret := Result$(id.text + template, id.text + template)

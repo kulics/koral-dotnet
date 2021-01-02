@@ -253,7 +253,7 @@ if ( context.t.Type==Discard ) {
 return (new Result("var", "_"));
 }
 } break;
-case 4 :
+case 2 :
 { var id = ((Result)Visit(context.id()));
 var template = "<"+((string)Visit(context.templateCall()))+">";
 var ret = (new Result(id.text+template, id.text+template));
