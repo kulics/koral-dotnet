@@ -107,6 +107,11 @@ namespace Library
             self[index] = value;
         }
 
+        public static void Put<T>(this IList<T> self, int index, Func<T, T> update)
+        {
+            self[index] = update(self[index]);
+        }
+
         public static V Get<K, V>(this IDictionary<K, V> self, K index)
         {
             return self[index];
@@ -115,6 +120,11 @@ namespace Library
         public static void Set<K, V>(this IDictionary<K, V> self, K index, V value)
         {
             self[index] = value;
+        }
+
+        public static void Put<K, V>(this IDictionary<K, V> self, K index, Func<V, V> update)
+        {
+            self[index] = update(self[index]);
         }
 
         public static IEnumerable<(int index, T item)> WithIndex<T>(this IEnumerable<T> self)
