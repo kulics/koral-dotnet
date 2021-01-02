@@ -41,7 +41,7 @@ enumSupportStatement: id (left_paren Equal expression right_paren)?;
 namespaceVariableStatement: (annotationSupport)? id (Colon Equal expression | Colon typeType (Equal expression)?);
 // 命名空间函数
 namespaceFunctionStatement: (annotationSupport)? id Colon Equal (templateDefine New_Line?)?
-left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
+left_paren parameterClauseIn (Right_Arrow New_Line* parameterClauseOut)? right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 定义包
@@ -65,7 +65,7 @@ packageNewStatement: (annotationSupport)? left_paren parameterClauseIn Right_Arr
 (left_paren expressionList? right_paren)? left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 函数
 packageFunctionStatement: (annotationSupport)? id Colon Equal (templateDefine New_Line?)?
-left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
+left_paren parameterClauseIn (Right_Arrow New_Line* parameterClauseOut)? right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 扩展
@@ -74,7 +74,7 @@ implementStatement: id Colon Equal (templateDefine New_Line?)?
 
 // 函数
 overrideFunctionStatement: (annotationSupport)? Dot (n='_')? id Colon Equal (templateDefine New_Line?)?
-left_paren parameterClauseIn (t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
+left_paren parameterClauseIn (Right_Arrow New_Line* parameterClauseOut)? right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 协议
@@ -89,16 +89,14 @@ New_Line ;
 
 // 函数
 protocolFunctionStatement: (annotationSupport)? id Colon (templateDefine New_Line?)? left_paren parameterClauseIn 
-t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut right_paren;
+Right_Arrow New_Line* parameterClauseOut right_paren;
 
 // 函数
 functionStatement: id Colon Equal (templateDefine New_Line?)? left_paren parameterClauseIn
-(t=(Right_Arrow|Right_Flow) New_Line* parameterClauseOut)? right_paren
+(Right_Arrow New_Line* parameterClauseOut)? right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 返回
 returnStatement: Left_Arrow (tupleExpression)?;
-// 异步返回
-returnAsyncStatement: Left_Flow (tupleExpression)?;
 // 入参
 parameterClauseIn: parameter? (more parameter)*;
 // 出参
@@ -111,7 +109,6 @@ parameter: (annotationSupport)? id Colon Dot_Dot_Dot? Bang? typeType (Equal expr
 // 函数支持的语句
 functionSupportStatement:
 returnStatement |
-returnAsyncStatement |
 judgeStatement |
 judgeMatchStatement |
 loopStatement |
@@ -226,7 +223,6 @@ primaryExpression
 | expression callFunc // 函数调用
 | expression callChannel // 调用通道
 | expression callElement // 访问元素
-| expression callAwait  // 异步等待调用
 | expression callExpression // 链式调用
 | expression transfer expression // 传递通道值
 | expression pow expression // 幂型表达式
@@ -260,8 +256,6 @@ callFunc: tuple; // 函数调用
 
 callAsync: Right_Wave expression; // 异步等待调用
 
-callAwait: Right_Wave tuple; // 异步等待调用
-
 callChannel: Left_Wave expression; // 通道访问
 
 transfer: Left_Wave; // 传递通道值
@@ -286,9 +280,9 @@ templateDefineItem: id (Colon id)?;
 
 templateCall: left_brace typeType (more typeType)* right_brace;
 
-lambda: left_paren (lambdaIn)? (t=(Right_Arrow|Right_Flow) parameterClauseOut?)? right_paren 
+lambda: left_paren (lambdaIn)? (Right_Arrow parameterClauseOut?)? right_paren 
  left_brace tupleExpression right_brace
-| left_paren (lambdaIn)? (t=(Right_Arrow|Right_Flow) parameterClauseOut?)? right_paren
+| left_paren (lambdaIn)? (Right_Arrow parameterClauseOut?)? right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 lambdaIn: id (Colon typeType)? (more id (Colon typeType)?)*;
@@ -333,7 +327,7 @@ typeType: typeNullable | typeNotNull;
 typeNullable: Question typeNotNull;
 
 typePackage: nameSpaceItem templateCall?;
-typeFunction: left_paren typeFunctionParameterClause t=(Right_Arrow|Right_Flow) New_Line* typeFunctionParameterClause right_paren;
+typeFunction: left_paren typeFunctionParameterClause Right_Arrow New_Line* typeFunctionParameterClause right_paren;
 typeAny: TypeAny;
 
 // 函数类型参数

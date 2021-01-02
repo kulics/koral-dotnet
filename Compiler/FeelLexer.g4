@@ -20,9 +20,6 @@ Comma: 				',';
 
 Equal_Arrow:	'=>';
 
-Right_Flow: 	'->>';
-Left_Flow: 		'<<-';
-
 Right_Arrow: 	'->';
 Left_Arrow: 	'<-';
 

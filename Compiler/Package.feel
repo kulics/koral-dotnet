@@ -132,13 +132,6 @@ FeelLangVisitorPackage := $ () {
             pout = "void"
         } | {
             pout = Visit(context.parameterClauseOut()).[Str]
-            ? context.t.Type == Right_Flow {
-                ? pout <> "void" {
-                    pout = "\{Task}<\{pout}>"
-                } | {
-                    pout = Task
-                }
-            }
         }
         obj += "\{is_virtual} \{pout} \{id.text}"
         
@@ -149,16 +142,11 @@ FeelLangVisitorPackage := $ () {
             template_contract = template.contract
         }
         Add_current_set()
-        Add_func_stack()
         obj += Visit(context.parameterClauseIn()) + template_contract + BlockLeft + Wrap
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         Delete_current_set()
         obj += BlockRight + Wrap
 
-        ? Get_func_async() {
-            obj = " async " + obj
-        }
-        Delete_func_stack()
         obj = "\{id.permission} " + obj
         <- obj
     }
@@ -247,13 +235,6 @@ FeelLangVisitorPackage := $ () {
         }
 
         pout := Visit(context.parameterClauseOut()).[Str]
-        ? context.t.Type == Right_Flow {
-            ? pout <> "void" {
-                pout = "\{Task}<\{pout}>"
-            } | {
-                pout = Task
-            }
-        }
         obj += pout + " " + id.text
 
         template_contract := ""

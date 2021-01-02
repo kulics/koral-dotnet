@@ -82,36 +82,20 @@ FeelLangVisitor := $ () {
         obj := ""
         in := Visit(context.typeFunctionParameterClause(0)).[Str]
         out := Visit(context.typeFunctionParameterClause(1)).[Str]
-        ? context.t.Type == Right_Arrow {
-            ? out.Length == 0 {
-                ? in.Length == 0 {
-                    obj = "Action"
-                } | {
-                    obj = "Action<\{in}>"
-                }
+        ? out.Length == 0 {
+            ? in.Length == 0 {
+                obj = "Action"
             } | {
-                ? out.First_index_of(",") >= 0 {
-                    out = "(\{out})"
-                }
-                ? in.Length == 0 {
-                    obj = "Func<\{out}>"
-                } | {
-                    obj = "Func<\{in}, \{out}>"
-                }
+                obj = "Action<\{in}>"
             }
         } | {
-            ? out.Length == 0 {
-                ? in.Length == 0 {
-                    obj = "Func<\{Task}>"
-                } | {
-                    obj = "Func<\{in}, \{Task}>"
-                }
+            ? out.First_index_of(",") >= 0 {
+                out = "(\{out})"
+            }
+            ? in.Length == 0 {
+                obj = "Func<\{out}>"
             } | {
-                ? in.Length == 0 {
-                    obj = "Func<\{Task}<\{out}>>"
-                } | {
-                    obj = "Func<\{in}, \{Task}<\{out}>>"
-                }
+                obj = "Func<\{in}, \{out}>"
             }
         }
         <- obj

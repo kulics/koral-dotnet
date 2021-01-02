@@ -144,14 +144,6 @@ pout="void";
 }
 else {
 pout=((string)Visit(context.parameterClauseOut()));
-if ( context.t.Type==Right_Flow ) {
-if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).To_Str();
-}
-else {
-pout=Task;
-}
-}
 }
 obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).To_Str();
 var template_contract = "";
@@ -161,15 +153,10 @@ obj+=template.template;
 template_contract=template.contract;
 }
 Add_current_set();
-Add_func_stack();
 obj+=Visit(context.parameterClauseIn())+template_contract+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 Delete_current_set();
 obj+=BlockRight+Wrap;
-if ( Get_func_async() ) {
-obj=" async "+obj;
-}
-Delete_func_stack();
 obj=id.permission+" static "+obj;
 return obj;
 }

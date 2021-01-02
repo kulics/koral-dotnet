@@ -161,11 +161,6 @@ case CallAsyncContext it :
 { var e2 = ((Result)Visit(it));
 r.text=r.text+e2.text;
 } break;
-case CallAwaitContext it :
-{ var e2 = ((Result)Visit(it));
-r.text="await "+r.text+e2.text;
-Set_func_async();
-} break;
 case CallElementContext it :
 { var e2 = ((Result)Visit(it));
 r.text=r.text+e2.text;

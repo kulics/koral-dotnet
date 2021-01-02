@@ -154,8 +154,7 @@ FeelLangVisitorCore := $ (
 
     all_ID_set       : HashSet[Str],
     cuttent_ID_set   : Stack[HashSet[Str]],
-    type_Id_set      : HashSet[Str],
-    func_async_stack : Stack[Bool]
+    type_Id_set      : HashSet[Str]
 ) {
     FeelParserBaseVisitor[Any]
 
@@ -186,26 +185,6 @@ FeelLangVisitorCore := $ (
     Add_type := (id : Str ->) {
         type_Id_set.Add(id)
     }
-    
-    Add_func_stack := (->) {
-        func_async_stack.Push(false)
-    }
-
-    Delete_func_stack := (->) {
-        func_async_stack.Pop()
-    }
-
-    Get_func_async := (->v : Bool) {
-        <- func_async_stack.Peek()
-    }
-
-    Set_func_async := (->) {
-        ? func_async_stack.Peek() {
-            <-
-        }
-        func_async_stack.Pop()
-        func_async_stack.Push(true)
-    }
 
     ProcessFunctionSupport := (items: Array[FunctionSupportStatementContext] -> v : Str) {
         obj := ""
@@ -223,9 +202,7 @@ FeelLangVisitorCore := (->$) {
     all_ID_set = HashSet[Str]$()
     cuttent_ID_set = Stack[HashSet[Str]]$()
     type_Id_set = HashSet[Str]$()
-    func_async_stack = Stack[Bool]$()
     cuttent_ID_set.Push(HashSet[Str]$())
-    func_async_stack.Push(false)
 }
 
 FeelLangVisitorBase := $ () {
