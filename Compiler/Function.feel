@@ -30,13 +30,6 @@ FeelLangVisitorFunction := $ () {
             pout = "void"
         } | {
             pout = Visit(context.parameterClauseOut()).[Str]
-            ? context.t.Type == Right_Flow {
-                ? pout <> "void" {
-                    pout = "\{Task}<\{pout}>"
-                } | {
-                    pout = Task
-                }
-            }
         }
         obj += "\{pout} \{id.text}"
         
@@ -47,16 +40,10 @@ FeelLangVisitorFunction := $ () {
             template_contract = template.contract
         }
         Add_current_set()
-        Add_func_stack()
         obj += "\{Visit(context.parameterClauseIn())} \{template_contract, Wrap, BlockLeft, Wrap} "
         obj += ProcessFunctionSupport(context.functionSupportStatement())
         obj += BlockRight + Wrap
         Delete_current_set()
-
-        ? Get_func_async() {
-            obj = " async " + obj
-        }
-        Delete_func_stack()
         <- obj
     }
 
@@ -66,14 +53,6 @@ FeelLangVisitorFunction := $ () {
             <- "return \{r.text, Terminate, Wrap}"
         }
         <- "return\{Terminate, Wrap}"
-    }
-
-    .VisitReturnAsyncStatement := (context : ReturnAsyncStatementContext -> v : Any) {
-        ? context.tupleExpression() <> nil {
-            r := Visit(context.tupleExpression()).[Result]
-            <- "return \{Task}.FromResult(\{r.text})\{Terminate, Wrap}"
-        }
-        <- "return \{Task}.FromResult(true)\{Terminate, Wrap}"
     }
 
     .VisitTuple := (context : TupleContext -> v : Any) {

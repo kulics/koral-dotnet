@@ -28,7 +28,7 @@ r.text=r.text+e2.text;
 return r;
 }
 public  override  object VisitCallElement( CallElementContext context ){
-var r = ((Result)Visit(context.tuple()));
+var r = ((Result)Visit(context.expression()));
 r.text=(new System.Text.StringBuilder().Append("[").Append(r.text).Append("]")).To_Str();
 return r;
 }
@@ -41,11 +41,6 @@ var r = (new Result());
 var expr = ((Result)Visit(context.expression()));
 r.data="var";
 r.text="await "+expr.text;
-Set_func_async();
-return r;
-}
-public  override  object VisitCallAwait( CallAwaitContext context ){
-var r = (new Result("var", ((Result)Visit(context.tuple())).text));
 return r;
 }
 public  override  object VisitCallPkg( CallPkgContext context ){
@@ -62,7 +57,6 @@ return r;
 }
 public  override  object VisitLambda( LambdaContext context ){
 Add_current_set();
-Add_func_stack();
 var r = (new Result("var"));
 r.text+="(";
 if ( context.lambdaIn()!=null ) {
@@ -77,10 +71,6 @@ else {
 r.text+=(new System.Text.StringBuilder().Append("{").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append("}")).To_Str();
 }
 Delete_current_set();
-if ( Get_func_async()||(context.t!=null&&context.t.Type==Right_Flow) ) {
-r.text=" async "+r.text;
-}
-Delete_func_stack();
 return r;
 }
 public  override  object VisitLambdaIn( LambdaInContext context ){

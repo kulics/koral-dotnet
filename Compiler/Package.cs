@@ -44,9 +44,9 @@ template_contract=item.contract;
 header+=template;
 }
 if ( extend.Size()>0 ) {
-var temp = extend[0];
+var temp = extend[(0)];
 foreach (var i in 1.Up_until(extend.Size())){
-temp+=","+extend[i];
+temp+=","+extend[(i)];
 }
 header+=":"+temp;
 }
@@ -125,14 +125,6 @@ pout="void";
 }
 else {
 pout=((string)Visit(context.parameterClauseOut()));
-if ( context.t.Type==Right_Flow ) {
-if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).To_Str();
-}
-else {
-pout=Task;
-}
-}
 }
 obj+=(new System.Text.StringBuilder().Append(is_virtual).Append(" ").Append(pout).Append(" ").Append(id.text)).To_Str();
 var template_contract = "";
@@ -142,15 +134,10 @@ obj+=template.template;
 template_contract=template.contract;
 }
 Add_current_set();
-Add_func_stack();
 obj+=Visit(context.parameterClauseIn())+template_contract+BlockLeft+Wrap;
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 Delete_current_set();
 obj+=BlockRight+Wrap;
-if ( Get_func_async() ) {
-obj=" async "+obj;
-}
-Delete_func_stack();
 obj=(new System.Text.StringBuilder().Append(id.permission).Append(" ")).To_Str()+obj;
 return obj;
 }
@@ -195,9 +182,9 @@ extend.Append_all(((List<string>)r.data));
 }
 obj+=(new System.Text.StringBuilder().Append("public partial interface ").Append(ptclName)).To_Str();
 if ( extend.Size()>0 ) {
-var temp = extend[0];
+var temp = extend[(0)];
 foreach (var i in 1.Up_until(extend.Size())){
-temp+=","+extend[i];
+temp+=","+extend[(i)];
 }
 obj+=":"+temp;
 }
@@ -233,14 +220,6 @@ if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
 var pout = ((string)Visit(context.parameterClauseOut()));
-if ( context.t.Type==Right_Flow ) {
-if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).To_Str();
-}
-else {
-pout=Task;
-}
-}
 obj+=pout+" "+id.text;
 var template_contract = "";
 if ( context.templateDefine()!=null ) {

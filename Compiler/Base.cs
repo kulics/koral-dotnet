@@ -43,13 +43,12 @@ isMutable=false;
 }
 }
 public partial class FeelLangVisitorCore:FeelParserBaseVisitor<object>{
-public FeelLangVisitorCore(string self_ID , string super_ID , List<string> self_property_content , HashSet<string> all_ID_set , Stack<HashSet<string>> cuttent_ID_set , HashSet<string> type_Id_set , Stack<bool> func_async_stack ){this.self_ID = self_ID;
+public FeelLangVisitorCore(string self_ID , string super_ID , List<string> self_property_content , HashSet<string> all_ID_set , Stack<HashSet<string>> cuttent_ID_set , HashSet<string> type_Id_set ){this.self_ID = self_ID;
 this.super_ID = super_ID;
 this.self_property_content = self_property_content;
 this.all_ID_set = all_ID_set;
 this.cuttent_ID_set = cuttent_ID_set;
 this.type_Id_set = type_Id_set;
-this.func_async_stack = func_async_stack;
 }
 public string self_ID;
 public string super_ID;
@@ -57,7 +56,6 @@ public List<string> self_property_content;
 public HashSet<string> all_ID_set;
 public Stack<HashSet<string>> cuttent_ID_set;
 public HashSet<string> type_Id_set;
-public Stack<bool> func_async_stack;
 public  virtual  bool Has_ID( string id ){
 return all_ID_set.Contains(id)||cuttent_ID_set.Peek().Contains(id);
 }
@@ -80,22 +78,6 @@ return type_Id_set.Contains(id);
 public  virtual  void Add_type( string id ){
 type_Id_set.Add(id);
 }
-public  virtual  void Add_func_stack(){
-func_async_stack.Push(false);
-}
-public  virtual  void Delete_func_stack(){
-func_async_stack.Pop();
-}
-public  virtual  bool Get_func_async(){
-return func_async_stack.Peek();
-}
-public  virtual  void Set_func_async(){
-if ( func_async_stack.Peek() ) {
-return;
-}
-func_async_stack.Pop();
-func_async_stack.Push(true);
-}
 public  virtual  string ProcessFunctionSupport( FunctionSupportStatementContext[] items ){
 var obj = "";
 foreach (var item in items){
@@ -111,9 +93,7 @@ self_property_content=(new List<string>());
 all_ID_set=(new HashSet<string>());
 cuttent_ID_set=(new Stack<HashSet<string>>());
 type_Id_set=(new HashSet<string>());
-func_async_stack=(new Stack<bool>());
 cuttent_ID_set.Push((new HashSet<string>()));
-func_async_stack.Push(false);
 }
 }
 public partial class FeelLangVisitorBase:FeelLangVisitorCore{
@@ -160,13 +140,13 @@ return r;
 var id = context.Identifier().GetText();
 r.text+=id;
 r.is_virtual=true;
-if ( id[0]=='_' ) {
+if ( id[(0)]=='_' ) {
 r.permission="protected internal";
-if ( id[1].Is_lower() ) {
+if ( id[(1)].Is_lower() ) {
 r.isMutable=true;
 }
 }
-else if ( id[0].Is_lower() ) {
+else if ( id[(0)].Is_lower() ) {
 r.isMutable=true;
 }
 return r;

@@ -30,7 +30,7 @@ FeelLangVisitorCall := $ () {
     }
 
     .VisitCallElement := (context : CallElementContext -> v : Any) {
-        r := Visit(context.tuple()).[Result]
+        r := Visit(context.expression()).[Result]
         r.text = "[\{ r.text }]"
         <- r
     }
@@ -45,12 +45,6 @@ FeelLangVisitorCall := $ () {
         expr := Visit(context.expression()).[Result]
         r.data = "var"
         r.text = "await " + expr.text
-        Set_func_async()
-        <- r
-    }
-
-    .VisitCallAwait := (context : CallAwaitContext -> v : Any) {
-        r := Result$("var", Visit(context.tuple()).[Result].text)
         <- r
     }
 
@@ -69,7 +63,6 @@ FeelLangVisitorCall := $ () {
 
     .VisitLambda := (context : LambdaContext -> v : Any) {
         Add_current_set()
-        Add_func_stack()
         r := Result$("var")
         r.text += "("
         ? context.lambdaIn() <> nil {
@@ -84,11 +77,6 @@ FeelLangVisitorCall := $ () {
             r.text += "{\{ProcessFunctionSupport(context.functionSupportStatement())}}"
         }
         Delete_current_set()
-
-        ? Get_func_async() || (context.t <> nil && context.t.Type == Right_Flow) {
-            r.text = " async " + r.text
-        }
-        Delete_func_stack()
         <- r
     }
 

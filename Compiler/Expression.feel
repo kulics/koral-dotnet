@@ -144,10 +144,6 @@ FeelLangVisitorExpression := $ () {
             } | :: CallAsyncContext => it {
                 e2 := Visit(it).[Result]
                 r.text = r.text + e2.text
-            } | :: CallAwaitContext => it {
-                e2 := Visit(it).[Result]
-                r.text = "await " + r.text + e2.text
-                Set_func_async()
             } | :: CallElementContext => it {
                 e2 := Visit(it).[Result]
                 r.text = r.text + e2.text
@@ -242,7 +238,7 @@ FeelLangVisitorExpression := $ () {
             ? context.t.Type == Discard {
                 <- Result$("var", "_")
             }
-        } | == 4 {
+        } | == 2 {
             id := Visit(context.id()).[Result]
             template := "<" + Visit(context.templateCall()).[Str] + ">"
             ret := Result$(id.text + template, id.text + template)

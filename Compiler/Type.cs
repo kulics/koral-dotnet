@@ -98,7 +98,6 @@ public  override  object VisitTypeFunction( TypeFunctionContext context ){
 var obj = "";
 var @in = ((string)Visit(context.typeFunctionParameterClause(0)));
 var @out = ((string)Visit(context.typeFunctionParameterClause(1)));
-if ( context.t.Type==Right_Arrow ) {
 if ( @out.Length==0 ) {
 if ( @in.Length==0 ) {
 obj="Action";
@@ -116,25 +115,6 @@ obj=(new System.Text.StringBuilder().Append("Func<").Append(@out).Append(">")).T
 }
 else {
 obj=(new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(@out).Append(">")).To_Str();
-}
-}
-}
-else {
-if ( @out.Length==0 ) {
-if ( @in.Length==0 ) {
-obj=(new System.Text.StringBuilder().Append("Func<").Append(Task).Append(">")).To_Str();
-}
-else {
-obj=(new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append(">")).To_Str();
-}
-}
-else {
-if ( @in.Length==0 ) {
-obj=(new System.Text.StringBuilder().Append("Func<").Append(Task).Append("<").Append(@out).Append(">>")).To_Str();
-}
-else {
-obj=(new System.Text.StringBuilder().Append("Func<").Append(@in).Append(", ").Append(Task).Append("<").Append(@out).Append(">>")).To_Str();
-}
 }
 }
 return obj;

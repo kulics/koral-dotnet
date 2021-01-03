@@ -33,14 +33,6 @@ pout="void";
 }
 else {
 pout=((string)Visit(context.parameterClauseOut()));
-if ( context.t.Type==Right_Flow ) {
-if ( pout!="void" ) {
-pout=(new System.Text.StringBuilder().Append(Task).Append("<").Append(pout).Append(">")).To_Str();
-}
-else {
-pout=Task;
-}
-}
 }
 obj+=(new System.Text.StringBuilder().Append(pout).Append(" ").Append(id.text)).To_Str();
 var template_contract = "";
@@ -50,15 +42,10 @@ obj+=template.template;
 template_contract=template.contract;
 }
 Add_current_set();
-Add_func_stack();
 obj+=(new System.Text.StringBuilder().Append(Visit(context.parameterClauseIn())).Append(" ").Append(template_contract).Append(Wrap).Append(BlockLeft).Append(Wrap).Append(" ")).To_Str();
 obj+=ProcessFunctionSupport(context.functionSupportStatement());
 obj+=BlockRight+Wrap;
 Delete_current_set();
-if ( Get_func_async() ) {
-obj=" async "+obj;
-}
-Delete_func_stack();
 return obj;
 }
 public  override  object VisitReturnStatement( ReturnStatementContext context ){
@@ -67,13 +54,6 @@ var r = ((Result)Visit(context.tupleExpression()));
 return (new System.Text.StringBuilder().Append("return ").Append(r.text).Append(Terminate).Append(Wrap)).To_Str();
 }
 return (new System.Text.StringBuilder().Append("return").Append(Terminate).Append(Wrap)).To_Str();
-}
-public  override  object VisitReturnAsyncStatement( ReturnAsyncStatementContext context ){
-if ( context.tupleExpression()!=null ) {
-var r = ((Result)Visit(context.tupleExpression()));
-return (new System.Text.StringBuilder().Append("return ").Append(Task).Append(".FromResult(").Append(r.text).Append(")").Append(Terminate).Append(Wrap)).To_Str();
-}
-return (new System.Text.StringBuilder().Append("return ").Append(Task).Append(".FromResult(true)").Append(Terminate).Append(Wrap)).To_Str();
 }
 public  override  object VisitTuple( TupleContext context ){
 var obj = "(";
