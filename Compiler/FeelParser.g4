@@ -260,13 +260,13 @@ callChannel: Left_Wave expression; // 通道访问
 
 transfer: Left_Wave; // 传递通道值
 
-callElement: left_brack expression right_brack; // 元素调用
+callElement: Dot left_brack expression right_brack; // 元素调用
 
 callPkg: typeNotNull? Coin tuple; // 类型构造
 
 orElse: Question Or expression; // 可空取值
 
-typeConversion: Dot left_brace typeType right_brace; // 类型转化
+typeConversion: Dot left_paren typeType right_paren; // 类型转化
 
 typeCheck: Colon_Colon typeType; // 类型转化
 
@@ -274,11 +274,11 @@ nameSpaceItem: (id call New_Line?)* id;
 
 name: id (call New_Line? id)* ;
 
-templateDefine: left_brace templateDefineItem (more templateDefineItem)* right_brace;
+templateDefine: left_brack templateDefineItem (more templateDefineItem)* right_brack;
 
 templateDefineItem: id (Colon id)?; 
 
-templateCall: left_brace typeType (more typeType)* right_brace;
+templateCall: left_brack typeType (more typeType)* right_brack;
 
 lambda: left_paren (lambdaIn)? (Right_Arrow parameterClauseOut?)? right_paren 
  left_brace tupleExpression right_brace
