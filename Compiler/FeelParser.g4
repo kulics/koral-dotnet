@@ -147,21 +147,21 @@ judgeTypeCase: typeType (Equal_Arrow id)?;
 judgeStatement:
 judgeIfStatement judgeElseIfStatement* judgeElseStatement?;
 // else if 判断
-judgeElseIfStatement: New_Line? Or expression
+judgeElseIfStatement: New_Line? Or left_paren expression right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // else 判断
 judgeElseStatement: New_Line? Or
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // if 判断
-judgeIfStatement: Question expression
+judgeIfStatement: Question left_paren expression right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 循环
-loopStatement: At loopId (more loopId)* Colon Equal expression Dot_Dot_Dot
+loopStatement: At left_paren loopId (more loopId)* Colon Equal expression Dot_Dot_Dot right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 loopId: id;
 // 条件循环
-loopCaseStatement: At expression 
+loopCaseStatement: At left_paren expression right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace loopElseStatement?;
 // else 判断
 loopElseStatement: New_Line? And
@@ -175,7 +175,7 @@ checkStatement:
 Bang left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)* checkFinallyStatment 
 | Bang left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)+ ;
 // 定义检查变量
-usingStatement: Bang id (more id)* Colon Equal tupleExpression Semi varId (more varId)*
+usingStatement: Bang left_paren id (more id)* Colon Equal tupleExpression Semi varId (more varId)* right_paren
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 错误处理
 checkErrorStatement: New_Line? Or (Colon_Colon typeType)? Equal_Arrow id left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
