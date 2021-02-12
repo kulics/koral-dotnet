@@ -9,17 +9,36 @@ using static Compiler.Compiler_static;
 
 namespace Compiler
 {
-public partial class Iterator{
-public Iterator(Result begin , Result end , Result step ){this.begin = begin;
-this.end = end;
-this.step = step;
-}
-public Result begin;
-public Result end;
-public Result step;
-}
 public partial class FeelLangVisitorLoop:FeelLangVisitorJudge{
 public FeelLangVisitorLoop(){}
+public  override  object VisitRangeExpression( RangeExpressionContext context ){
+Func<Result, Result> fn = (e1)=>{var e2 = ((Result)Visit(context.expression(0)));
+var r = (new Result());
+r.data="IEnumerable<int>";
+var rangeName = "";
+switch (context.n.Type) {
+case FeelParser.To :
+{ rangeName="Up_to";
+} break;
+case FeelParser.Downto :
+{ rangeName="Down_to";
+} break;
+case FeelParser.Until :
+{ rangeName="Up_until";
+} break;
+case FeelParser.Downuntil :
+{ rangeName="Down_until";
+} break;
+}
+r.text=(new System.Text.StringBuilder().Append(e1.text).Append(".").Append(rangeName).Append("(").Append(e2.text).Append(")")).To_Str();
+if ( context.expression(1)!=null ) {
+var step = ((Result)Visit(context.expression(1)));
+r.text+=(new System.Text.StringBuilder().Append(".Step(").Append(step.text).Append(")")).To_Str();
+}
+return r;
+};
+return fn;
+}
 public  override  object VisitLoopStatement( LoopStatementContext context ){
 var obj = "";
 var arr = ((Result)Visit(context.expression()));

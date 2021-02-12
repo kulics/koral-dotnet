@@ -10,10 +10,33 @@
     Compiler.Compiler_static => .
 }
 
-Iterator := $ (begin : Result, end   : Result, step  : Result) {}
-
 FeelLangVisitorLoop := $ () {
     FeelLangVisitorJudge
+
+    .VisitRangeExpression := (context : RangeExpressionContext -> v : Any) {
+        fn : (Result->Result) = (e1) {
+            e2 := Visit(context.expression(0)).[Result]
+            r := Result$()
+            r.data = "IEnumerable<int>"
+            rangeName := ""
+            ? context.n.Type == FeelParser.To {
+                rangeName = "Up_to"
+            } | == FeelParser.Downto {
+                rangeName = "Down_to"
+            } | == FeelParser.Until {
+                rangeName = "Up_until"
+            } | == FeelParser.Downuntil {
+                rangeName = "Down_until"
+            }
+            r.text = "\{e1.text}.\{rangeName}(\{e2.text})"
+            ? context.expression(1) <> nil {
+                step := Visit(context.expression(1)).[Result]
+                r.text += ".Step(\{step.text})"
+            }
+            <- r
+        }
+        <- fn
+    }
 
     .VisitLoopStatement := (context : LoopStatementContext -> v : Any) {
         obj := ""

@@ -134,6 +134,10 @@ case TypeConversionContext it :
 r.data=e2;
 r.text=(new System.Text.StringBuilder().Append("((").Append(e2).Append(")").Append(r.text).Append(")")).To_Str();
 } break;
+case RangeExpressionContext it :
+{ var fn = ((Func<Result, Result>)Visit(it));
+return fn(r);
+} break;
 case TypeCheckContext it :
 { var e2 = ((string)Visit(it));
 r.data=e2;
@@ -221,7 +225,10 @@ return "!=";
 return context.op.Text;
 }
 public  override  object VisitLogic( LogicContext context ){
-return context.op.Text;
+if ( context.op.Type==And ) {
+return "&&";
+}
+return "||";
 }
 public  override  object VisitAdd( AddContext context ){
 return context.op.Text;

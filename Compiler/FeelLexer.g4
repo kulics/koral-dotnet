@@ -26,16 +26,12 @@ Left_Arrow: 	'<-';
 Right_Wave:		'~>';
 Left_Wave: 		'<~';
 
-Less_Less_Less: 			'<<<';
-Greater_Greater_Greater: 	'>>>';
-Caret_Caret_Caret: 			'^^^';
-And_And_And: 				'&&&';
-Or_Or_Or: 					'|||';
-Tilde_Tilde_Tilde: 			'~~~';
-
-And_And: 		'&&';
-Or_Or: 			'||';
-Tilde_Tilde: 	'~~';
+Less_Less: 			'<<';
+Greater_Greater: 	'>>';
+Caret_Caret: 		'^^';
+And_And: 			'&&';
+Or_Or: 				'||';
+Tilde_Tilde: 		'~~';
 
 Less: 		'<';
 Greater: 	'>';
@@ -56,6 +52,25 @@ At: 		'@';
 Bang: 		'!';
 Coin: 		'$';
 
+Var: 'var';
+
+If: 'if';
+Else: 'else';
+In: 'in';
+Case: 'case';
+For: 'for';
+Do: 'do';
+Break: 'break';
+Continue: 'continue';
+To: 'to';
+Downto: 'downto';
+Until: 'until';
+Downuntil: 'downuntil';
+By: 'by';
+Func: 'fun';
+Return: 'ret';
+New: 'new';
+
 Add:    '+';
 Sub:    '-';
 Mul:    '*';
@@ -63,10 +78,11 @@ Div:    '/';
 Mod:   	'%';
 Caret:  '^';
 
-And:    '&';
-Or:     '|';
-Tilde: 	'~';
+And:    'and';
+Or:     'or';
+Not:	'not';
 
+Tilde: 	'~';
 Back_Quote:  '`';
 Sharp:	'#';
 

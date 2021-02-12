@@ -123,6 +123,9 @@ FeelLangVisitorExpression := $ () {
                 e2 := Visit(it).[Str]
                 r.data = e2
                 r.text = "((\{e2})\{r.text})"
+            } | :: RangeExpressionContext => it {
+                fn := Visit(it).[(Result->Result)]
+                <- fn(r)
             } | :: TypeCheckContext => it {
                 e2 := Visit(it).[Str]
                 r.data = e2
@@ -212,7 +215,10 @@ FeelLangVisitorExpression := $ () {
     }
 
     .VisitLogic := (context : LogicContext -> v : Any) {
-        <- context.op.Text
+        ? context.op.Type == And {
+            <- "&&"
+        }
+        <- "||"
     }
 
     .VisitAdd := (context : AddContext -> v : Any) {
