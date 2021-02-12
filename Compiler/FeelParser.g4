@@ -8,7 +8,7 @@ statement: New_Line* (annotationSupport)?
 exportStatement end? New_Line* (namespaceSupportStatement end|New_Line)* (namespaceSupportStatement end?)? New_Line* ;
 
 // 导出命名空间
-exportStatement: Sharp nameSpaceItem;
+exportStatement: Out nameSpaceItem;
 
 namespaceSupportStatement:
 importStatement |
@@ -22,7 +22,7 @@ typeRedefineStatement |
 New_Line ;
 
 // 导入命名空间
-importStatement: Sharp left_brace ((importSubStatement | typeAliasStatement) end|New_Line)*
+importStatement: In left_brace ((importSubStatement | typeAliasStatement) end|New_Line)*
 ((importSubStatement | typeAliasStatement) end?)? right_brace;
 
 importSubStatement: (annotationSupport)? (nameSpaceItem stringExpr? | nameSpaceItem? stringExpr) (Equal_Arrow (id|Dot))?;
@@ -136,7 +136,7 @@ caseEqualStatement: Case New_Line? Equal_Equal judgeEqualCase (more New_Line? ju
 
 judgeEqualCase: expression;
 
-caseTypeStatement: Case New_Line? Colon_Colon judgeTypeCase (more New_Line? judgeTypeCase)* Do
+caseTypeStatement: Case New_Line? Is judgeTypeCase (more New_Line? judgeTypeCase)* Do
 (functionSupportStatement end|New_Line)* (functionSupportStatement end?)?;
 
 judgeTypeCase: typeType (id)?;
@@ -155,7 +155,7 @@ judgeIfStatement: If expression Do (functionSupportStatement|
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
 
 // 循环
-loopStatement: For Var loopId (more loopId)* In expression Do (functionSupportStatement|
+loopStatement: For loopId (more loopId)* In expression Do (functionSupportStatement|
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
 loopId: id;
 // 条件循环
@@ -267,9 +267,9 @@ callPkg: (typeNotNull Coin tuple | New tuple); // 类型构造
 
 orElse: Question Colon expression; // 可空取值
 
-typeConversion: Dot left_paren typeType right_paren; // 类型转化
+typeConversion: As typeType; // 类型转化
 
-typeCheck: Colon_Colon typeType; // 类型转化
+typeCheck: Is typeType; // 类型转化
 
 nameSpaceItem: (id call New_Line?)* id;
 

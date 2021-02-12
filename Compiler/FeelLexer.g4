@@ -53,10 +53,10 @@ Bang: 		'!';
 Coin: 		'$';
 
 Var: 'var';
-
 If: 'if';
 Else: 'else';
 In: 'in';
+Out: 'out';
 Case: 'case';
 For: 'for';
 Do: 'do';
@@ -70,6 +70,8 @@ By: 'by';
 Func: 'fun';
 Return: 'ret';
 New: 'new';
+Is:	'is';
+As:	'as';
 
 Add:    '+';
 Sub:    '-';
