@@ -59,7 +59,6 @@ In: 'in';
 Out: 'out';
 Case: 'case';
 For: 'for';
-Do: 'do';
 Break: 'break';
 Continue: 'continue';
 To: 'to';

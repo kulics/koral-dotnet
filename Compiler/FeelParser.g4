@@ -41,8 +41,8 @@ enumSupportStatement: id (left_paren Equal expression right_paren)?;
 namespaceVariableStatement: (annotationSupport)? Var id (Equal expression | typeType (Equal expression)?);
 // 命名空间函数
 namespaceFunctionStatement: (annotationSupport)? Func id (templateDefine New_Line?)?
-left_paren parameterClauseIn right_paren (left_paren New_Line* parameterClauseOut right_paren)? Do (functionSupportStatement|
-left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
+left_paren parameterClauseIn right_paren (left_paren New_Line* parameterClauseOut right_paren)?
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 定义包
 packageStatement: (annotationSupport)? id Colon Equal (templateDefine New_Line?)?
@@ -93,8 +93,8 @@ Right_Arrow New_Line* parameterClauseOut right_paren;
 
 // 函数
 functionStatement: Func id (templateDefine New_Line?)? left_paren parameterClauseIn right_paren 
-(left_paren New_Line* parameterClauseOut right_paren)? Do (functionSupportStatement|
-left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
+(left_paren New_Line* parameterClauseOut right_paren)?
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 返回
 returnStatement: Return (tupleExpression)?;
 // 入参
@@ -127,17 +127,18 @@ expressionStatement ;
 
 // 条件判断
 judgeMatchStatement:
-If expression In left_brace (caseEqualStatement|caseTypeStatement)* caseElseStatement? right_brace;
+If expression (caseEqualStatement|caseTypeStatement)* caseElseStatement?;
 
 // 判断条件声明
-caseElseStatement: New_Line? Else Do (functionSupportStatement end|New_Line)* (functionSupportStatement end?)?;
-caseEqualStatement: Case New_Line? Equal_Equal judgeEqualCase (more New_Line? judgeEqualCase)* Do
-(functionSupportStatement end|New_Line)* (functionSupportStatement end?)?;
+caseElseStatement: New_Line? Else
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+caseEqualStatement: New_Line? Case New_Line? Equal_Equal judgeEqualCase (more New_Line? judgeEqualCase)*
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 judgeEqualCase: expression;
 
-caseTypeStatement: Case New_Line? Is judgeTypeCase (more New_Line? judgeTypeCase)* Do
-(functionSupportStatement end|New_Line)* (functionSupportStatement end?)?;
+caseTypeStatement: New_Line? Case New_Line? Is judgeTypeCase (more New_Line? judgeTypeCase)*
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 judgeTypeCase: typeType (id)?;
 
@@ -145,25 +146,25 @@ judgeTypeCase: typeType (id)?;
 judgeStatement:
 judgeIfStatement judgeElseIfStatement* judgeElseStatement?;
 // else if 判断
-judgeElseIfStatement: New_Line? Else If expression Do (functionSupportStatement|
-left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
+judgeElseIfStatement: New_Line? Else If expression
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // else 判断
-judgeElseStatement: New_Line? Else Do (functionSupportStatement|
-left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
+judgeElseStatement: New_Line? Else
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // if 判断
-judgeIfStatement: If expression Do (functionSupportStatement|
-left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
+judgeIfStatement: If expression
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 循环
-loopStatement: For loopId (more loopId)* In expression Do (functionSupportStatement|
-left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
+loopStatement: For loopId (more loopId)* In expression
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 loopId: id;
 // 条件循环
-loopCaseStatement: For expression Do (functionSupportStatement|
-left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace) loopElseStatement?;
+loopCaseStatement: For expression
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace loopElseStatement?;
 // else 判断
-loopElseStatement: New_Line? Else Do (functionSupportStatement|
-left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace);
+loopElseStatement: New_Line? Else
+left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 跳出循环
 loopJumpStatement: Break;
 // 跳过当前循环
@@ -281,8 +282,8 @@ templateDefineItem: id (id)?;
 
 templateCall: left_brack typeType (more typeType)* right_brack;
 
-lambda: Func left_paren (lambdaIn)? right_paren Do tupleExpression
-| Func left_paren (lambdaIn)? right_paren Do
+lambda: Func (lambdaIn)? left_brace tupleExpression right_brace
+| Func (lambdaIn)?
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 lambdaIn: id (typeType)? (more id (typeType)?)*;
