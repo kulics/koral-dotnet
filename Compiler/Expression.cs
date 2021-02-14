@@ -123,6 +123,11 @@ case PowContext it :
 r.text=(new System.Text.StringBuilder().Append(op).Append("(").Append(e1.text).Append(", ").Append(((Result)e2).text).Append(")")).To_Str();
 return r;
 } break;
+case MethodContext it :
+{ r.data="var";
+r.text=e1.text+((Result)op).text+"("+((Result)e2).text+")";
+return r;
+} break;
 }
 r.text=e1.text+op+((Result)e2).text;
 } break;
@@ -133,10 +138,6 @@ case TypeConversionContext it :
 { var e2 = ((string)Visit(it));
 r.data=e2;
 r.text=(new System.Text.StringBuilder().Append("((").Append(e2).Append(")").Append(r.text).Append(")")).To_Str();
-} break;
-case RangeExpressionContext it :
-{ var fn = ((Func<Result, Result>)Visit(it));
-return fn(r);
 } break;
 case TypeCheckContext it :
 { var e2 = ((string)Visit(it));
@@ -160,6 +161,10 @@ r.data=r.rootID;
 else {
 r.text=r.text+e2.text;
 }
+} break;
+case CallMethodContext it :
+{ var e2 = ((Result)Visit(it));
+r.text=r.text+e2.text;
 } break;
 case CallAsyncContext it :
 { var e2 = ((Result)Visit(it));

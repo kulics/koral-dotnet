@@ -114,6 +114,15 @@ namespace Library
             }
             return new(begin, end, step, order);
         }
+
+        public IntRange by(int step)
+        {
+            if (step <= 0)
+            {
+                throw new("Step must be bigger than zero.");
+            }
+            return new(begin, end, step, order);
+        }
     }
 
     public class IntRangeClose : IEnumerable<int>
@@ -167,6 +176,14 @@ namespace Library
         }
 
         public IntRangeClose Step(int step)
+        {
+            if (step <= 0)
+            {
+                throw new("Step must be bigger than zero.");
+            }
+            return new(begin, end, step, order);
+        }
+        public IntRangeClose by(int step)
         {
             if (step <= 0)
             {

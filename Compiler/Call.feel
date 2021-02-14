@@ -40,6 +40,22 @@ FeelLangVisitorCall := $ () {
         <- r
     }
 
+    .VisitCallMethod := (context : CallMethodContext -> v : Any) {
+        id := "." + Visit(context.id()).[Result].text
+        ? context.templateCall() <> nil {
+            id += "<" + Visit(context.templateCall()).[Str] + ">"
+        }
+        <- Result$("var", id + Visit(context.tuple()).[Result].text)
+    }
+
+    .VisitMethod := (context : MethodContext -> v : Any) {
+        id := "." + Visit(context.id()).[Result].text
+        ? context.templateCall() <> nil {
+            id += "<" + Visit(context.templateCall()).[Str] + ">"
+        }
+        <- Result$("var", id)
+    }
+
     .VisitCallAsync := (context : CallAsyncContext -> v : Any) {
         r := Result$()
         expr := Visit(context.expression()).[Result]

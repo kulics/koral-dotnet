@@ -115,6 +115,10 @@ FeelLangVisitorExpression := $ () {
                 r.data = TargetTypeF64
                 r.text = "\{op}(\{e1.text}, \{e2.[Result].text})"
                 <- r
+            } | :: MethodContext {
+                r.data = "var"
+                r.text = e1.text + op.[Result].text + "(" + e2.[Result].text + ")"
+                <- r
             }
             r.text = e1.text + op + e2.[Result].text
         } | == 2 {
@@ -123,9 +127,6 @@ FeelLangVisitorExpression := $ () {
                 e2 := Visit(it).[Str]
                 r.data = e2
                 r.text = "((\{e2})\{r.text})"
-            } | :: RangeExpressionContext => it {
-                fn := Visit(it).[(Result->Result)]
-                <- fn(r)
             } | :: TypeCheckContext => it {
                 e2 := Visit(it).[Str]
                 r.data = e2
@@ -144,6 +145,9 @@ FeelLangVisitorExpression := $ () {
                 } | {
                     r.text = r.text + e2.text
                 }
+            } | :: CallMethodContext => it {
+                e2 := Visit(it).[Result]
+                r.text = r.text + e2.text
             } | :: CallAsyncContext => it {
                 e2 := Visit(it).[Result]
                 r.text = r.text + e2.text

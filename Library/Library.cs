@@ -77,6 +77,26 @@ namespace Library
 
         public static double Log(double a, double b) => Math.Log(a, b);
 
+        public static IntRangeClose to(this int begin, int end)
+        {
+            return new(begin, end, true);
+        }
+
+        public static IntRangeClose downto(this int begin, int end)
+        {
+            return new(begin, end, false);
+        }
+
+        public static IntRange until(this int begin, int end)
+        {
+            return new(begin, end, true);
+        }
+
+        public static IntRange downuntil(this int begin, int end)
+        {
+            return new(begin, end, false);
+        }
+
         public static IntRangeClose Up_to(this int begin, int end)
         {
             return new(begin, end, true);
