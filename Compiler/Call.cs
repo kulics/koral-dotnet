@@ -37,18 +37,25 @@ var r = (new Result("var", ((Result)Visit(context.tuple())).text));
 return r;
 }
 public  override  object VisitCallMethod( CallMethodContext context ){
-var id = "."+((Result)Visit(context.id())).text;
+var id = ((Result)Visit(context.id())).text;
 if ( context.templateCall()!=null ) {
 id+="<"+((string)Visit(context.templateCall()))+">";
 }
 return (new Result("var", id+((Result)Visit(context.tuple())).text));
 }
 public  override  object VisitMethod( MethodContext context ){
-var id = "."+((Result)Visit(context.id())).text;
+var id = ((Result)Visit(context.id())).text;
 if ( context.templateCall()!=null ) {
 id+="<"+((string)Visit(context.templateCall()))+">";
 }
 return (new Result("var", id));
+}
+public  override  object VisitDoMethod( DoMethodContext context ){
+var id = ((Result)Visit(context.id())).text;
+if ( context.templateCall()!=null ) {
+id+="<"+((string)Visit(context.templateCall()))+">";
+}
+return (new Result("var", id+((Result)Visit(context.tuple())).text));
 }
 public  override  object VisitCallAsync( CallAsyncContext context ){
 var r = (new Result());

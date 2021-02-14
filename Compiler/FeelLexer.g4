@@ -66,6 +66,9 @@ Return: 'ret';
 New: 'new';
 Is:	'is';
 As:	'as';
+Do: 'do';
+Import: 'import';
+Export: 'export';
 
 Add:    '+';
 Sub:    '-';

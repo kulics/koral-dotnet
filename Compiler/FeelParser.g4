@@ -8,7 +8,7 @@ statement: New_Line* (annotationSupport)?
 exportStatement end? New_Line* (namespaceSupportStatement end|New_Line)* (namespaceSupportStatement end?)? New_Line* ;
 
 // 导出命名空间
-exportStatement: Out nameSpaceItem;
+exportStatement: Export nameSpaceItem;
 
 namespaceSupportStatement:
 importStatement |
@@ -22,7 +22,7 @@ typeRedefineStatement |
 New_Line ;
 
 // 导入命名空间
-importStatement: In left_brace ((importSubStatement | typeAliasStatement) end|New_Line)*
+importStatement: Import left_brace ((importSubStatement | typeAliasStatement) end|New_Line)*
 ((importSubStatement | typeAliasStatement) end?)? right_brace;
 
 importSubStatement: (annotationSupport)? (nameSpaceItem stringExpr? | nameSpaceItem? stringExpr) (Equal_Arrow (id|Dot))?;
@@ -231,6 +231,8 @@ primaryExpression
 | expression typeCheck // 类型判断
 | expression compare expression // 比较表达式
 | expression logic expression // 逻辑表达式
+| doMethod
+| doKey method expression
 | expression method expression
 | expression callMethod // method call
 ;
@@ -254,6 +256,8 @@ annotationItem: (id left_brace id (tuple)? right_brace | id (tuple)?);
 annotationString: stringExpr|rawStringExpr;
 
 callFunc: tuple; // 函数调用
+
+doMethod: doKey id templateCall? tuple;
 
 method: id templateCall?;
 
@@ -358,6 +362,7 @@ mul: op=(Mul | Div | Mod) (New_Line)?;
 pow: Caret (New_Line)?;
 call: op=Dot (New_Line)?;
 wave: op=Not;
+doKey: op=Do;
 
 id: (idItem);
 

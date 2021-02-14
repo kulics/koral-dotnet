@@ -41,7 +41,7 @@ FeelLangVisitorCall := $ () {
     }
 
     .VisitCallMethod := (context : CallMethodContext -> v : Any) {
-        id := "." + Visit(context.id()).[Result].text
+        id := Visit(context.id()).[Result].text
         ? context.templateCall() <> nil {
             id += "<" + Visit(context.templateCall()).[Str] + ">"
         }
@@ -49,11 +49,19 @@ FeelLangVisitorCall := $ () {
     }
 
     .VisitMethod := (context : MethodContext -> v : Any) {
-        id := "." + Visit(context.id()).[Result].text
+        id := Visit(context.id()).[Result].text
         ? context.templateCall() <> nil {
             id += "<" + Visit(context.templateCall()).[Str] + ">"
         }
         <- Result$("var", id)
+    }
+
+    .VisitDoMethod := (context : DoMethodContext -> v : Any) {
+        id := Visit(context.id()).[Result].text
+        ? context.templateCall() <> nil {
+            id += "<" + Visit(context.templateCall()).[Str] + ">"
+        }
+        <- Result$("var", id + Visit(context.tuple()).[Result].text)
     }
 
     .VisitCallAsync := (context : CallAsyncContext -> v : Any) {

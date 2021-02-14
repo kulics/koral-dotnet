@@ -124,8 +124,13 @@ r.text=(new System.Text.StringBuilder().Append(op).Append("(").Append(e1.text).A
 return r;
 } break;
 case MethodContext it :
-{ r.data="var";
-r.text=e1.text+((Result)op).text+"("+((Result)e2).text+")";
+{ if ( (context.GetChild(0) is DoKeyContext) ) {
+r.data="var";
+r.text=((Result)op).text+"("+((Result)e2).text+")";
+return r;
+}
+r.data="var";
+r.text=e1.text+"."+((Result)op).text+"("+((Result)e2).text+")";
 return r;
 } break;
 }
@@ -164,7 +169,7 @@ r.text=r.text+e2.text;
 } break;
 case CallMethodContext it :
 { var e2 = ((Result)Visit(it));
-r.text=r.text+e2.text;
+r.text=r.text+"."+e2.text;
 } break;
 case CallAsyncContext it :
 { var e2 = ((Result)Visit(it));

@@ -116,8 +116,13 @@ FeelLangVisitorExpression := $ () {
                 r.text = "\{op}(\{e1.text}, \{e2.[Result].text})"
                 <- r
             } | :: MethodContext {
+                ? context.GetChild(0) :: DoKeyContext {
+                    r.data = "var"
+                    r.text = op.[Result].text + "(" + e2.[Result].text + ")"
+                    <- r
+                }
                 r.data = "var"
-                r.text = e1.text + op.[Result].text + "(" + e2.[Result].text + ")"
+                r.text = e1.text + "." + op.[Result].text + "(" + e2.[Result].text + ")"
                 <- r
             }
             r.text = e1.text + op + e2.[Result].text
@@ -147,7 +152,7 @@ FeelLangVisitorExpression := $ () {
                 }
             } | :: CallMethodContext => it {
                 e2 := Visit(it).[Result]
-                r.text = r.text + e2.text
+                r.text = r.text + "." + e2.text
             } | :: CallAsyncContext => it {
                 e2 := Visit(it).[Result]
                 r.text = r.text + e2.text
