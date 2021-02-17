@@ -271,7 +271,7 @@ transfer: Left_Wave; // 传递通道值
 
 callElement: Dot left_brack expression right_brack; // 元素调用
 
-callPkg: (typeNotNull Coin tuple | New tuple); // 类型构造
+callPkg: typeNotNull? New tuple; // 类型构造
 
 orElse: Question Colon expression; // 可空取值
 

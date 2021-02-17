@@ -67,8 +67,8 @@ New: 'new';
 Is:	'is';
 As:	'as';
 Do: 'do';
-Import: 'import';
-Export: 'export';
+Import: 'use';
+Export: 'mod';
 
 Add:    '+';
 Sub:    '-';
