@@ -231,10 +231,6 @@ primaryExpression
 | expression typeCheck // 类型判断
 | expression compare expression // 比较表达式
 | expression logic expression // 逻辑表达式
-| doMethod
-| doKey method expression
-| expression method expression
-| expression callMethod // method call
 ;
 
 callExpression: call New_Line? id templateCall? (callFunc|callElement)?;
@@ -256,12 +252,6 @@ annotationItem: (id left_brace id (tuple)? right_brace | id (tuple)?);
 annotationString: stringExpr|rawStringExpr;
 
 callFunc: tuple; // 函数调用
-
-doMethod: doKey id templateCall? tuple;
-
-method: id templateCall?;
-
-callMethod: id templateCall? tuple; // method call
 
 callAsync: Right_Wave expression; // 异步等待调用
 

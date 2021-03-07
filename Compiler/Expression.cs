@@ -123,16 +123,6 @@ case PowContext it :
 r.text=(new System.Text.StringBuilder().Append(op).Append("(").Append(e1.text).Append(", ").Append(((Result)e2).text).Append(")")).To_Str();
 return r;
 } break;
-case MethodContext it :
-{ if ( (context.GetChild(0) is DoKeyContext) ) {
-r.data="var";
-r.text=((Result)op).text+"("+((Result)e2).text+")";
-return r;
-}
-r.data="var";
-r.text=e1.text+"."+((Result)op).text+"("+((Result)e2).text+")";
-return r;
-} break;
 }
 r.text=e1.text+op+((Result)e2).text;
 } break;
@@ -166,10 +156,6 @@ r.data=r.rootID;
 else {
 r.text=r.text+e2.text;
 }
-} break;
-case CallMethodContext it :
-{ var e2 = ((Result)Visit(it));
-r.text=r.text+"."+e2.text;
 } break;
 case CallAsyncContext it :
 { var e2 = ((Result)Visit(it));
