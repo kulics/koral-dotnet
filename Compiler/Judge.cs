@@ -63,10 +63,7 @@ public  override  object VisitCaseTypeStatement( CaseTypeStatementContext contex
 var obj = "";
 Add_current_set();
 var rList = (new List<string>());
-foreach (var item in context.judgeTypeCase()){
-var r = ((string)Visit(item));
-rList.Append(r);
-}
+rList.Append(((string)Visit(context.judgeTypeCase())));
 var process = (new System.Text.StringBuilder().Append(BlockLeft).Append(" ").Append(ProcessFunctionSupport(context.functionSupportStatement())).Append(BlockRight).Append(" break;")).To_Str();
 foreach (var r in rList){
 obj+=r+process;

@@ -137,10 +137,10 @@ left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement en
 
 judgeEqualCase: expression;
 
-caseTypeStatement: New_Line? Case New_Line? Is judgeTypeCase (more New_Line? judgeTypeCase)*
+caseTypeStatement: New_Line? Case New_Line? judgeTypeCase
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
-judgeTypeCase: typeType (id)?;
+judgeTypeCase: id typeType;
 
 // 判断
 judgeStatement:
@@ -156,7 +156,7 @@ judgeIfStatement: If expression
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 
 // 循环
-loopStatement: For loopId (more loopId)* In expression
+loopStatement: For expression Case loopId (more loopId)*
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 loopId: id;
 // 条件循环
@@ -171,17 +171,17 @@ loopJumpStatement: Break;
 loopContinueStatement: Continue;
 // 检查
 checkStatement: 
-Bang left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)* checkFinallyStatment 
-| Bang left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)+ ;
+Try left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)* checkFinallyStatment 
+| Try left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace (checkErrorStatement)+ ;
 // 定义检查变量
-usingStatement: Bang left_paren id (more id)* Colon Equal tupleExpression Semi varId (more varId)* right_paren
+usingStatement: Try Var id (more id)* Equal tupleExpression Semi varId (more varId)*
 left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 错误处理
-checkErrorStatement: New_Line? Or (Colon_Colon typeType)? Equal_Arrow id left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+checkErrorStatement: New_Line? Case id (typeType)? left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 最终执行
-checkFinallyStatment: New_Line? And left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
+checkFinallyStatment: New_Line? Else left_brace (functionSupportStatement end|New_Line)* (functionSupportStatement end?)? right_brace;
 // 抛出异常
-checkReportStatement: Bang Left_Arrow expression ;
+checkReportStatement: Throw expression ;
 
 // 声明变量
 variableDeclaredStatement: Var id typeType ;
@@ -259,7 +259,7 @@ callChannel: Left_Wave expression; // 通道访问
 
 transfer: Left_Wave; // 传递通道值
 
-callElement: Dot left_brack expression right_brack; // 元素调用
+callElement: Dot left_paren expression right_paren; // 元素调用
 
 callPkg: typeNotNull? New tuple; // 类型构造
 
@@ -352,7 +352,6 @@ mul: op=(Mul | Div | Mod) (New_Line)?;
 pow: Caret (New_Line)?;
 call: op=Dot (New_Line)?;
 wave: op=Not;
-doKey: op=Do;
 
 id: (idItem);
 

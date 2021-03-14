@@ -69,10 +69,7 @@ FeelLangVisitorJudge := $ () {
         obj := ""
         Add_current_set()
         rList := List[Str]$()
-        @ item := context.judgeTypeCase()... {
-            r := Visit(item).[Str]
-            rList.Append(r)
-        }
+        rList.Append(Visit(context.judgeTypeCase()).[Str])
         process := "\{BlockLeft} \{ProcessFunctionSupport(context.functionSupportStatement()), BlockRight} break;"
         @ r := rList... {
             obj += r + process
