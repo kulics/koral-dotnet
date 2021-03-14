@@ -219,7 +219,13 @@ var obj = "";
 if ( context.annotationSupport()!=null ) {
 obj+=Visit(context.annotationSupport());
 }
-var pout = ((string)Visit(context.parameterClauseOut()));
+var pout = "";
+if ( context.parameterClauseOut()==null ) {
+pout="void";
+}
+else {
+pout=((string)Visit(context.parameterClauseOut()));
+}
 obj+=pout+" "+id.text;
 var template_contract = "";
 if ( context.templateDefine()!=null ) {
