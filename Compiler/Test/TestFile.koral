@@ -1,0 +1,10 @@
+mod demo;
+
+let add(a Int, b Int) Int = a + b; 
+
+let main() Int = {
+    let a = 1;
+    let b = 2;
+    let c = add(a, b) - 3 + 1 * 5;
+    c
+}

@@ -2,15 +2,16 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
     <Antlr4UseCSharpGenerator>True</Antlr4UseCSharpGenerator>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>12.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>12.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,18 +19,13 @@
       <!-- <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets> -->
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Library">
-      <HintPath>..\Library\bin\Release\netstandard2.1\Library.dll</HintPath>
-    </Reference>
+    <PackageReference Include="LLVMSharp" Version="16.0.0"/>
   </ItemGroup>
   <ItemGroup>
-    <Antlr4 Include="FeelLexer.g4">
+    <Antlr4 Include="KoralLexer.g4">
       <CopyToOutputDirectory></CopyToOutputDirectory>
     </Antlr4>
-    <Antlr4 Include="FeelParser.g4">
+    <Antlr4 Include="KoralParser.g4">
       <Generator></Generator>
       <Encoding></Encoding>
       <TargetLanguage></TargetLanguage>
@@ -39,5 +35,8 @@
       <ForceAtn></ForceAtn>
       <CopyToOutputDirectory></CopyToOutputDirectory>
     </Antlr4>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Test\" />
   </ItemGroup>
 </Project>
