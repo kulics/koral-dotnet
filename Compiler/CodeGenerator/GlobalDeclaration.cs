@@ -13,7 +13,18 @@ namespace Compiler.CodeGenerator
     public partial class LLVMGeneratorVisitor
     {
         public override void Visit(ModuleDeclarationNode node) => throw new NotImplementedException();
-        public override void Visit(GlobalVariableDeclarationNode node) => throw new NotImplementedException();
+        public override void Visit(GlobalVariableDeclarationNode node)
+        {
+            var id = node.Id;
+            var def = module.AddGlobal(FindType(id.Type), id.Name);
+            if (node.Expression is IntegerLiteralExpressionNode i)
+            {
+                def.Initializer = LLVMValueRef.CreateConstInt(FindType(id.Type), (ulong)i.Value);
+                namedValues[id] = new IdentifierValue(true, def);
+                return;
+            }
+            throw new NotImplementedException();
+        }
 
         public override void Visit(GlobalFunctionDeclarationNode node)
         {

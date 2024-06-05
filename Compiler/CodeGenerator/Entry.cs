@@ -15,12 +15,6 @@ namespace Compiler.CodeGenerator
             using var module = LLVMModuleRef.CreateWithName("LLVMSharpIntro");
             using var builder = module.Context.CreateBuilder();
 
-            //var functype = LLVMTypeRef.CreateFunction(LLVMTypeRef.Int32, []);
-            //var def = module.AddFunction("main", functype);
-            //var bb = def.AppendBasicBlock("entry");
-            //builder.PositionAtEnd(bb);
-            //builder.BuildRet(LLVMValueRef.CreateConstInt(LLVMTypeRef.Int32, 123));
-
             var visitor = new LLVMGeneratorVisitor(module, builder);
             visitor.Visit(node);
 

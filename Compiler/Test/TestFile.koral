@@ -1,10 +1,15 @@
 mod demo;
 
+let x Int = 3;
+let mut y Int = 0;
+
 let add(a Int, b Int) Int = a + b; 
 
 let main() Int = {
     let a = 1;
-    let b = 2;
-    let c = add(a, b) - 3 + 1 * 5;
+    let mut b = 2;
+    b = 3;
+    y = 1;
+    let c = add(a, b) - x + y * 5;
     c
 }

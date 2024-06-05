@@ -87,6 +87,13 @@ namespace Compiler.CodeGenerator
             var retValue = builder.BuildCall2(functype, fn, [.. args]);
             valueStack.Push(retValue);
         }
-        public override void Visit(AssignmentExpressionNode node) => throw new NotImplementedException();
+        public override void Visit(AssignmentExpressionNode node)
+        {
+            var variable = namedValues[node.Id];
+            node.Value.Accept(this);
+            var newValue = valueStack.Pop();
+            builder.BuildStore(newValue, variable.Value);
+            valueStack.Push(NullValue);
+        }
     }
 }

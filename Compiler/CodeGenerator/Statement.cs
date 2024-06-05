@@ -9,9 +9,16 @@ namespace Compiler.CodeGenerator
         {
             node.InitValue.Accept(this);
             var initValue = valueStack.Pop();
-            var variable = builder.BuildAlloca(FindType(node.Id.Type));
-            builder.BuildStore(initValue, variable);
-            namedValues[node.Id] = new IdentifierValue(true, variable);
+            if (node.Id.Kind == IdentifierKind.Immutable)
+            {
+                namedValues[node.Id] = new IdentifierValue(false, initValue);
+            }
+            else
+            {
+                var variable = builder.BuildAlloca(FindType(node.Id.Type));
+                builder.BuildStore(initValue, variable);
+                namedValues[node.Id] = new IdentifierValue(true, variable);
+            }
         }
         public override void Visit(ExpressionStatementNode node)
         {

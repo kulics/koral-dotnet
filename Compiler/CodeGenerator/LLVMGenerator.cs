@@ -10,19 +10,25 @@ using System.Threading.Tasks;
 
 namespace Compiler.CodeGenerator
 {
-    public partial class LLVMGeneratorVisitor(LLVMModuleRef module, LLVMBuilderRef builder) : NodeVisitor
+    public partial class LLVMGeneratorVisitor : NodeVisitor
     {
         private static readonly LLVMValueRef NullValue = new(IntPtr.Zero);
 
-        private readonly LLVMModuleRef module = module;
+        private readonly LLVMModuleRef module;
 
-        private readonly LLVMBuilderRef builder = builder;
+        private readonly LLVMBuilderRef builder;
 
         private readonly Dictionary<Identifier, IdentifierValue> namedValues = [];
 
         private readonly Stack<LLVMValueRef> valueStack = [];
 
         private readonly Dictionary<string, LLVMTypeRef> funcTypes = [];
+
+        public LLVMGeneratorVisitor(LLVMModuleRef module, LLVMBuilderRef builder)
+        {
+            this.module = module;
+            this.builder = builder;
+        }
 
         private struct IdentifierValue(bool isPtr, LLVMValueRef value)
         {
