@@ -24,6 +24,10 @@ namespace Compiler.CodeGenerator
 
         private readonly Dictionary<string, LLVMTypeRef> funcTypes = [];
 
+        private string? currentFunctionName;
+
+        private int basicBlockCount = 0;
+
         public LLVMGeneratorVisitor(LLVMModuleRef module, LLVMBuilderRef builder)
         {
             this.module = module;
@@ -46,5 +50,9 @@ namespace Compiler.CodeGenerator
         }
 
         public override void Visit(ParameterDeclarationNode node) => throw new NotImplementedException();
+        public override void Visit(MemberNode node) => throw new NotImplementedException();
+        public override void Visit(MethodNode node) => throw new NotImplementedException();
+        public override void Visit(VirtualMethodNode node) => throw new NotImplementedException();
+
     }
 }

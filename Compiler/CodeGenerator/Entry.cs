@@ -9,7 +9,6 @@ namespace Compiler.CodeGenerator
 {
     public static class Entry
     {
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] public delegate int Int32Delegate();
         public static void Generate(ProgramNode node, string path)
         {
             using var module = LLVMModuleRef.CreateWithName("LLVMSharpIntro");
@@ -17,7 +16,7 @@ namespace Compiler.CodeGenerator
 
             var visitor = new LLVMGeneratorVisitor(module, builder);
             visitor.Visit(node);
-
+            module.Dump();
             module.Verify(LLVMVerifierFailureAction.LLVMPrintMessageAction);
             module.WriteBitcodeToFile(path);
         }

@@ -17,7 +17,7 @@ namespace Compiler.CodeGenerator
         {
             var id = node.Id;
             var def = module.AddGlobal(FindType(id.Type), id.Name);
-            if (node.Expression is IntegerLiteralExpressionNode i)
+            if (node.InitValue is IntegerLiteralExpressionNode i)
             {
                 def.Initializer = LLVMValueRef.CreateConstInt(FindType(id.Type), (ulong)i.Value);
                 namedValues[id] = new IdentifierValue(true, def);
@@ -30,17 +30,19 @@ namespace Compiler.CodeGenerator
         {
             var funcName = node.Id.Name;
             var paramTypes = new List<LLVMTypeRef>();
-            foreach (var item in node.Parameters)
+            foreach (var item in node.ParameterTypes)
             {
-                paramTypes.Add(FindType(item.ParameterType));
+                paramTypes.Add(FindType(item.ParamType));
             }
-            var returnType = FindType(node.returnType);
+            var returnType = FindType(node.ReturnType);
             var functype = LLVMTypeRef.CreateFunction(returnType, [.. paramTypes]);
             funcTypes[funcName] = functype;
             var def = module.AddFunction(funcName, functype);
-            var bb = def.AppendBasicBlock("entry");
+            currentFunctionName = funcName;
+            basicBlockCount++;
+            var bb = def.AppendBasicBlock(basicBlockCount.ToString());
             builder.PositionAtEnd(bb);
-            foreach (var (index, item) in node.Parameters.WithIndex())
+            foreach (var (index, item) in node.ParameterTypes.WithIndex())
             {
                 namedValues[item.Id] = new IdentifierValue(false, def.GetParam((uint)index));
             }
@@ -59,7 +61,7 @@ namespace Compiler.CodeGenerator
             }
             else if (type == BuiltinTypes.Void)
             {
-                return LLVMTypeRef.Void;
+                return LLVMTypeRef.Int1;
             }
             throw new NotImplementedException();
         }

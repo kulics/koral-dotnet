@@ -7,33 +7,27 @@ using System.Threading.Tasks;
 
 namespace Compiler.AstNodes
 {
-    public class ExpressionNode(KoralType typeInfo) : Node()
+    public record class ExpressionNode(KoralType Type) : Node()
     {
-        public KoralType Type { get; } = typeInfo;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public sealed class IdentifierExpressionNode(Identifier id) : ExpressionNode(id.Type)
+    public sealed record class IdentifierExpressionNode(Identifier Id) : ExpressionNode(Id.Type)
     {
-        public Identifier Id { get; } = id;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public abstract class LiteralExpressionNode(KoralType type) : ExpressionNode(type)
+    public abstract record class LiteralExpressionNode(KoralType type) : ExpressionNode(type)
     {
     }
 
-    public sealed class IntegerLiteralExpressionNode(long value) : LiteralExpressionNode(BuiltinTypes.Int)
+    public sealed record class IntegerLiteralExpressionNode(long Value) : LiteralExpressionNode(BuiltinTypes.Int)
     {
-        public long Value { get; } = value;
-
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public sealed class BooleanLiteralExpressionNode(bool value) : LiteralExpressionNode(BuiltinTypes.Bool)
+    public sealed record class BooleanLiteralExpressionNode(bool Value) : LiteralExpressionNode(BuiltinTypes.Bool)
     {
-        public bool Value { get; } = value;
-
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
@@ -42,16 +36,13 @@ namespace Compiler.AstNodes
         Add, Sub, Mul, Div, Mod
     }
 
-    public sealed class CalculativeExpressionNode(
-        ExpressionNode lhs,
-        ExpressionNode rhs,
-        CalculativeOperator operatorName,
-        KoralType type
-    ) : ExpressionNode(type)
+    public sealed record class CalculativeExpressionNode(
+        ExpressionNode Lhs,
+        ExpressionNode Rhs,
+        CalculativeOperator OperatorName,
+        KoralType Type
+    ) : ExpressionNode(Type)
     {
-        public ExpressionNode Lhs { get; } = lhs;
-        public ExpressionNode Rhs { get; } = rhs;
-        public CalculativeOperator operatorName { get; } = operatorName;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
@@ -60,15 +51,12 @@ namespace Compiler.AstNodes
         Equal, NotEqual, Less, LessEqual, Greater, GreaterEqual
     }
 
-    public sealed class CompareExpressionNode(
-        ExpressionNode lhs,
-        ExpressionNode rhs,
-        CompareOperator operatorName
+    public sealed record class CompareExpressionNode(
+        ExpressionNode Lhs,
+        ExpressionNode Rhs,
+        CompareOperator OperatorName
     ) : ExpressionNode(BuiltinTypes.Bool)
     {
-        public ExpressionNode Lhs { get; } = lhs;
-        public ExpressionNode Rhs { get; } = rhs;
-        public CompareOperator OperatorName { get; } = operatorName;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
@@ -77,47 +65,58 @@ namespace Compiler.AstNodes
         And, Or
     }
 
-    public sealed class LogicExpressionNode(
-        ExpressionNode lhs,
-        ExpressionNode rhs,
-        LogicOperator operatorName
+    public sealed record class LogicExpressionNode(
+        ExpressionNode Lhs,
+        ExpressionNode Rhs,
+        LogicOperator OperatorName
     ) : ExpressionNode(BuiltinTypes.Bool)
     {
-        public ExpressionNode Lhs { get; } = lhs;
-        public ExpressionNode Rhs { get; } = rhs;
-        public LogicOperator operatorName { get; } = operatorName;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public sealed class BlockExpressionNode(
-        List<StatementNode> stats,
-        ExpressionNode? expr) : ExpressionNode(expr?.Type ?? BuiltinTypes.Void)
+    public sealed record class BlockExpressionNode(
+        List<StatementNode> Stats,
+        ExpressionNode? Expr) : ExpressionNode(Expr?.Type ?? BuiltinTypes.Void)
     {
-        public List<StatementNode> Stats { get; } = stats;
-        public ExpressionNode? Expr { get; } = expr;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public sealed class FunctionCallExpressionNode(
-        Identifier id,
-        ExpressionNode expr,
-        List<KoralType> types,
-        List<ExpressionNode> args,
-        KoralType type) : ExpressionNode(type)
+    public sealed record class FunctionCallExpressionNode(
+        Identifier Id,
+        ExpressionNode Expr,
+        List<KoralType> Types,
+        List<ExpressionNode> Args,
+        KoralType Type) : ExpressionNode(Type)
     {
-        public Identifier Id { get; } = id;
-        public ExpressionNode Expr { get; } = expr;
-        public List<KoralType> Types { get; } = types;
-        public List<ExpressionNode> Args { get; } = args;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public sealed class AssignmentExpressionNode(
-        Identifier id,
-        ExpressionNode newValue) : ExpressionNode(BuiltinTypes.Void)
+    public sealed record class AssignmentExpressionNode(
+        Identifier Id,
+        ExpressionNode NewValue) : ExpressionNode(BuiltinTypes.Void)
     {
-        public Identifier Id { get; } = id;
-        public ExpressionNode Value { get; } = newValue;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
+
+    public sealed record class ConditionNode(ExpressionNode Expr): Node
+    {
+        public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
+    }
+
+    public sealed record class IfThenElseExpressionNode(
+        ConditionNode Condition,
+        ExpressionNode ThenBranch,
+        ExpressionNode ElseBranch,
+        KoralType Type) : ExpressionNode(Type)
+    {
+        public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
+    }
+
+    public sealed record class IfThenExpressionNode(
+        ConditionNode Condition,
+        ExpressionNode ThenBranch) : ExpressionNode(BuiltinTypes.Void)
+    {
+        public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
+    }
+
 }

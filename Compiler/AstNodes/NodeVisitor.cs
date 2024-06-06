@@ -19,6 +19,10 @@ namespace Compiler.AstNodes
         public abstract void Visit(GlobalVariableDeclarationNode node);
         public abstract void Visit(GlobalInterfaceDeclarationNode node);
 
+        public abstract void Visit(MemberNode node);
+        public abstract void Visit(MethodNode node);
+        public abstract void Visit(VirtualMethodNode node);
+
         public abstract void Visit(StatementNode node);
         public abstract void Visit(VariableStatementNode node);
         public abstract void Visit(ExpressionStatementNode node);
@@ -32,5 +36,9 @@ namespace Compiler.AstNodes
         public abstract void Visit(BlockExpressionNode node);
         public abstract void Visit(FunctionCallExpressionNode node);
         public abstract void Visit(AssignmentExpressionNode node);
+
+        public abstract void Visit(ConditionNode node);
+        public abstract void Visit(IfThenElseExpressionNode node);
+        public abstract void Visit(IfThenExpressionNode node);
     }
 }

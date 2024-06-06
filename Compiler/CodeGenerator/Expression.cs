@@ -29,7 +29,11 @@ namespace Compiler.CodeGenerator
         {
             if (node is IntegerLiteralExpressionNode i)
             {
-                valueStack.Push(LLVMValueRef.CreateConstInt(LLVMTypeRef.Int32, (ulong)i.Value, true));
+                valueStack.Push(LLVMValueRef.CreateConstInt(LLVMTypeRef.Int32, (ulong)i.Value));
+            }
+            else if (node is BooleanLiteralExpressionNode b)
+            {
+                valueStack.Push(LLVMValueRef.CreateConstInt(LLVMTypeRef.Int1, (ulong)(b.Value ? 1 : 0)));
             }
             else
             {
@@ -42,7 +46,7 @@ namespace Compiler.CodeGenerator
             var lhs = valueStack.Pop();
             node.Rhs.Accept(this);
             var rhs = valueStack.Pop();
-            valueStack.Push(node.operatorName switch
+            valueStack.Push(node.OperatorName switch
             {
                 CalculativeOperator.Add =>
                     builder.BuildAdd(lhs, rhs),
@@ -90,10 +94,71 @@ namespace Compiler.CodeGenerator
         public override void Visit(AssignmentExpressionNode node)
         {
             var variable = namedValues[node.Id];
-            node.Value.Accept(this);
+            node.NewValue.Accept(this);
             var newValue = valueStack.Pop();
             builder.BuildStore(newValue, variable.Value);
             valueStack.Push(NullValue);
+        }
+        public override void Visit(ConditionNode node)
+        {
+            node.Expr.Accept(this);
+        }
+        public override void Visit(IfThenElseExpressionNode node)
+        {
+            if (currentFunctionName == null)
+            {
+                throw new NotImplementedException();
+            }
+            var def = module.GetNamedFunction(currentFunctionName);
+            basicBlockCount++;
+            var thenBlock = def.AppendBasicBlock(basicBlockCount.ToString());
+            basicBlockCount++;
+            var elseBlock = def.AppendBasicBlock(basicBlockCount.ToString());
+            basicBlockCount++;
+            var endBlock = def.AppendBasicBlock(basicBlockCount.ToString());
+
+            var retType = FindType(node.Type);
+            var tempValue = builder.BuildAlloca(retType);
+
+            node.Condition.Accept(this);
+            var conditionValue = valueStack.Pop();
+            builder.BuildCondBr(conditionValue, thenBlock, elseBlock);
+
+            builder.PositionAtEnd(thenBlock);
+            node.ThenBranch.Accept(this);
+            builder.BuildStore(valueStack.Pop(), tempValue);
+            builder.BuildBr(endBlock);
+
+            builder.PositionAtEnd(elseBlock);
+            node.ElseBranch.Accept(this);
+            builder.BuildStore(valueStack.Pop(), tempValue);
+            builder.BuildBr(endBlock);
+
+            builder.PositionAtEnd(endBlock);
+            var ret = builder.BuildLoad2(retType, tempValue);
+            valueStack.Push(ret);
+        }
+        public override void Visit(IfThenExpressionNode node)
+        {
+            if (currentFunctionName == null)
+            {
+                throw new NotImplementedException();
+            }
+            var def = module.GetNamedFunction(currentFunctionName);
+            basicBlockCount++;
+            var thenBlock = def.AppendBasicBlock(basicBlockCount.ToString());
+            basicBlockCount++;
+            var endBlock = def.AppendBasicBlock(basicBlockCount.ToString());
+
+            node.Condition.Accept(this);
+            var conditionValue = valueStack.Pop();
+            builder.BuildCondBr(conditionValue, thenBlock, endBlock);
+
+            builder.PositionAtEnd(thenBlock);
+            node.ThenBranch.Accept(this);
+            builder.BuildBr(endBlock);
+
+            builder.PositionAtEnd(endBlock);
         }
     }
 }

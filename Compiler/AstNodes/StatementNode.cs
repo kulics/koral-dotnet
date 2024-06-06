@@ -7,23 +7,20 @@ using System.Threading.Tasks;
 
 namespace Compiler.AstNodes
 {
-    public abstract class StatementNode : Node
+    public abstract record class StatementNode : Node
     {
         internal StatementNode() { }
     }
 
-    public sealed class VariableStatementNode(
-        Identifier id,
-        ExpressionNode initValue) : StatementNode()
+    public sealed record class VariableStatementNode(
+        Identifier Id,
+        ExpressionNode InitValue) : StatementNode()
     {
-        public Identifier Id { get; } = id;
-        public ExpressionNode InitValue { get; } = initValue;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public sealed class ExpressionStatementNode(ExpressionNode expr) : StatementNode()
+    public sealed record class ExpressionStatementNode(ExpressionNode Expression) : StatementNode()
     {
-        public ExpressionNode Expression { get; } = expr;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 }

@@ -8,102 +8,77 @@ using Compiler.Types;
 
 namespace Compiler.AstNodes
 {
-    public abstract class DeclarationNode : Node
+    public abstract record class DeclarationNode : Node
     {
         internal DeclarationNode() { }
     }
 
-    public sealed class ModuleDeclarationNode(string name) : DeclarationNode
+    public sealed record class ModuleDeclarationNode(string Name) : DeclarationNode
     {
-        public string Name { get; set; } = name;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public sealed class GlobalFunctionDeclarationNode(
-            Identifier id,
-            List<TypeParameter> typeParameter,
-            List<ParameterDeclarationNode> parameterTypes,
-            KoralType returnType,
-            ExpressionNode body) : DeclarationNode()
+    public sealed record class GlobalFunctionDeclarationNode(
+            Identifier Id,
+            List<TypeParameter> TypeParameter,
+            List<ParameterDeclarationNode> ParameterTypes,
+            KoralType ReturnType,
+            ExpressionNode Body) : DeclarationNode()
     {
-        public Identifier Id { get; } = id;
-        public List<TypeParameter> TypeParameter = typeParameter;
-        public List<ParameterDeclarationNode> Parameters { get; } = parameterTypes;
-        public KoralType returnType { get; } = returnType;
-        public ExpressionNode Body { get; } = body;
-
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public sealed class ParameterDeclarationNode(Identifier id, KoralType paramType) : Node()
+    public sealed record class ParameterDeclarationNode(Identifier Id, KoralType ParamType) : Node()
     {
-        public Identifier Id { get; } = id;
-        public KoralType ParameterType { get; } = paramType;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public sealed class GlobalVariableDeclarationNode(Identifier id, ExpressionNode initValue) : DeclarationNode()
+    public sealed record class GlobalVariableDeclarationNode(Identifier Id, ExpressionNode InitValue) : DeclarationNode()
     {
-        public Identifier Id { get; } = id;
-        public ExpressionNode Expression { get; } = initValue;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public sealed class GlobalRecordDeclarationNode(
-        KoralType type,
-        List<TypeParameter> typeParameter,
-        List<Identifier> fields,
-        List<MethodNode> methods,
-        KoralType? implements
+    public sealed record class GlobalRecordDeclarationNode(
+        KoralType Type,
+        List<TypeParameter> TypeParameter,
+        List<Identifier> Fields,
+        List<MethodNode> Methods,
+        KoralType? Implements
     ) : DeclarationNode()
     {
-        public KoralType Type { get; } = type;
-        public List<TypeParameter> typeParameters { get; } = typeParameter;
-        public List<Identifier> Fields { get; } = fields;
-        public List<MethodNode> Methods { get; } = methods;
-        public KoralType? Implements { get; } = implements;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public sealed class GlobalInterfaceDeclarationNode(
-        KoralType type,
-        List<TypeParameter> typeParameter,
-        List<VirtualMethodNode> methods
+    public sealed record class GlobalInterfaceDeclarationNode(
+        KoralType Type,
+        List<TypeParameter> TypeParameter,
+        List<VirtualMethodNode> Methods
     ) : DeclarationNode()
     {
-        public KoralType Type { get; } = type;
-        public List<TypeParameter> TypeParameters = typeParameter;
-        public List<VirtualMethodNode>  Methods = methods;
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public abstract class MemberNode : Node
+    public abstract record class MemberNode : Node
     {
         internal MemberNode() { }
     }
 
-    public sealed class MethodNode(
-        Identifier id,
-        List<Identifier> parameters,
-        Type returnType,
-        ExpressionNode body,
-        bool isOverride
+    public sealed record class MethodNode(
+        Identifier Id,
+        List<Identifier> Parameters,
+        KoralType ReturnType,
+        ExpressionNode Body,
+        bool IsOverride
     ) : MemberNode()
     {
-        public Identifier Id { get; } = id;
-        public List<Identifier> Parameters { get; } = parameters;
-        public Type ReturnType { get; } = returnType;
-        public ExpressionNode Body { get; } = body;
-        public bool IsOverride { get; } = isOverride;
+        public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
-    public sealed class VirtualMethodNode(
-            Identifier id,
-            List<Identifier> parameters,
-            KoralType returnType
+    public sealed record class VirtualMethodNode(
+            Identifier Id,
+            List<Identifier> Parameters,
+            KoralType ReturnType
         ) : MemberNode()
     {
-        public Identifier Id { get; } = id;
-        public List<Identifier> Parameters { get; } = parameters;
-        public KoralType ReturnType { get; } = returnType;
+        public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 }

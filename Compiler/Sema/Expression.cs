@@ -52,6 +52,8 @@ namespace Compiler.Sema
         {
             PrimaryExpressionContext it => VisitPrimaryExpression(it),
             BlockExpressionContext it => VisitBlockExpression(it),
+            IfThenElseExpressionContext it => VisitIfThenElseExpression(it),
+            IfDoExpressionContext it => VisitIfDoExpression(it),
             ExpressionWithBlockContext it => VisitExpressionWithBlock(it),
             AssignmentExpressionContext it => VisitAssignmentExpression(it),
             _ => throw new CompilingCheckException()
@@ -63,6 +65,8 @@ namespace Compiler.Sema
             return expr switch
             {
                 BlockExpressionContext it => VisitBlockExpression(it),
+                IfDoExpressionWithBlockContext it => VisitIfDoExpressionWithBlock(it),
+                IfThenElseExpressionWithBlockContext it => VisitIfThenElseExpressionWithBlock(it),
                 AssignmentExpressionWithBlockContext it => VisitAssignmentExpressionWithBlock(it),
                 _ => throw new CompilingCheckException()
             };
@@ -295,6 +299,55 @@ namespace Compiler.Sema
                 throw new CompilingCheckException($"the type of assign value '{expr.Type.Name}' is not confirm '${id.Type.Name}'");
             }
             return new(id, expr);
+        }
+
+        public override IfThenExpressionNode VisitIfDoExpression(IfDoExpressionContext context) =>
+            ProcessIfThen(context.condition(), () => VisitExpression(context.expression()));
+
+        public override IfThenExpressionNode VisitIfDoExpressionWithBlock(IfDoExpressionWithBlockContext context) =>
+            ProcessIfThen(context.condition(), () => VisitExpressionWithBlock(context.expressionWithBlock()));
+
+        public override IfThenElseExpressionNode VisitIfThenElseExpression(IfThenElseExpressionContext context) =>
+            ProcessIfThenEsle(context.condition(), context.expression(0), () => VisitExpression(context.expression(1)));
+
+        public override IfThenElseExpressionNode VisitIfThenElseExpressionWithBlock(IfThenElseExpressionWithBlockContext context) =>
+            ProcessIfThenEsle(context.condition(), context.expression(), () => VisitExpressionWithBlock(context.expressionWithBlock()));
+
+        public override ConditionNode VisitCondition(ConditionContext context)
+        {
+            if (context.pattern() is not null || context.And() is not null || context.Or() is not null)
+            {
+                throw new NotImplementedException();
+            }
+            var expr = VisitExpression(context.expression());
+            if (expr.Type != BuiltinTypes.Bool)
+            {
+                throw new CompilingCheckException($"the type of if condition is '{expr.Type.Name}', but want '${BuiltinTypes.Bool.Name}'");
+            }
+            return new(expr);
+        }
+
+        IfThenExpressionNode ProcessIfThen(ConditionContext condContext, Func<ExpressionNode> thenFunc)
+        {
+            PushScope();
+            var condition = VisitCondition(condContext);
+            var thenBranch = thenFunc();
+            PopScope();
+            return new(condition, thenBranch);
+        }
+
+        IfThenElseExpressionNode ProcessIfThenEsle(ConditionContext condContext, ExpressionContext thenContext, Func<ExpressionNode> elseFunc)
+        {
+            PushScope();
+            var condition = VisitCondition(condContext);
+            var thenBranch = VisitExpression(thenContext);
+            PopScope();
+            var elseBranch = elseFunc();
+            if (thenBranch.Type != elseBranch.Type)
+            {
+                throw new CompilingCheckException($"the type of then branch is '{thenBranch.Type.Name}', and the type of else branch is '${elseBranch.Type.Name}', they are not equal");
+            }
+            return new(condition, thenBranch, elseBranch, thenBranch.Type);
         }
     }
 }
