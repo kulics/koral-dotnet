@@ -13,9 +13,10 @@ namespace Compiler.Sema
         public KoralLangVisitor()
         {
             var rootScope = new Scope();
-            rootScope.PushType(BuiltinTypes.Void);
-            rootScope.PushType(BuiltinTypes.Int);
-            rootScope.PushType(BuiltinTypes.Bool);
+            foreach (var type in BuiltinTypes.Enumerate())
+            {
+                rootScope.PushType(type);
+            }
             scopes.Push(rootScope);
         }
 
@@ -27,7 +28,7 @@ namespace Compiler.Sema
 
         private static string VisitIdentifier(TypeIdentifierContext context) => context.UpperIdentifier().GetText();
 
-        void PushScope() => scopes.Push(new());
+        void PushScope(bool isLoop = false) => scopes.Push(new() { IsLoop = isLoop });
 
         void PopScope() => scopes.Pop();
 

@@ -4,13 +4,15 @@ using System.Collections.Generic;
 
 namespace Compiler.Sema
 {
-    internal class Scope
+    internal class Scope()
     {
         readonly Dictionary<string, Identifier> identifiers = [];
         readonly Dictionary<string, KoralType> types = [];
+        public bool IsLoop { get; init; }
 
         public void PushId(Identifier id) => identifiers[id.Name] = id;
-        public Identifier? GetId(string id) {
+        public Identifier? GetId(string id)
+        {
             if (identifiers.TryGetValue(id, out var result))
             {
                 return result;

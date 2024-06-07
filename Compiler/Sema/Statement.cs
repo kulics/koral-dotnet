@@ -4,6 +4,8 @@ using Antlr4.Runtime.Misc;
 using Compiler.AstNodes;
 using System.Security.Cryptography.X509Certificates;
 using Compiler.Types;
+using System;
+using System.Linq;
 
 namespace Compiler.Sema
 {
@@ -16,6 +18,8 @@ namespace Compiler.Sema
             {
                 VariableDeclarationContext it => VisitVariableDeclaration(it),
                 ExpressionStatementContext it => VisitExpressionStatement(it),
+                BreakStatementContext it => VisitBreakStatement(it),
+                ContinueStatementContext it => VisitContinueStatement(it),
                 _ => throw new CompilingCheckException()
             };
         }
@@ -28,7 +32,7 @@ namespace Compiler.Sema
             }
             var expr = VisitExpressionWithTerminator(context.expressionWithTerminator());
             KoralType typeInfo;
-            if(context.type() is null)
+            if (context.type() is null)
             {
                 typeInfo = expr.Type;
             }
@@ -58,6 +62,23 @@ namespace Compiler.Sema
                 node = VisitExpressionWithBlock(context.expressionWithBlock());
             }
             return new(node);
+        }
+
+        public override BreakStatementNode VisitBreakStatement(BreakStatementContext context)
+        {
+            if (scopes.Any(i => i.IsLoop))
+            {
+                return new BreakStatementNode();
+            }
+            throw new CompilingCheckException("here is not in a loop scope");
+        }
+        public override ContinueStatementNode VisitContinueStatement(ContinueStatementContext context)
+        {
+            if (scopes.Any(i => i.IsLoop))
+            {
+                return new ContinueStatementNode();
+            }
+            throw new CompilingCheckException("here is not in a loop scope");
         }
     }
 }

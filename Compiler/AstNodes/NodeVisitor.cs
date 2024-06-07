@@ -26,6 +26,8 @@ namespace Compiler.AstNodes
         public abstract void Visit(StatementNode node);
         public abstract void Visit(VariableStatementNode node);
         public abstract void Visit(ExpressionStatementNode node);
+        public abstract void Visit(BreakStatementNode node);
+        public abstract void Visit(ContinueStatementNode node);
 
         public abstract void Visit(ExpressionNode node);
         public abstract void Visit(IdentifierExpressionNode node);
@@ -40,5 +42,6 @@ namespace Compiler.AstNodes
         public abstract void Visit(ConditionNode node);
         public abstract void Visit(IfThenElseExpressionNode node);
         public abstract void Visit(IfThenExpressionNode node);
+        public abstract void Visit(WhileThenExpressionNode node);
     }
 }

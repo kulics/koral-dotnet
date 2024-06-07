@@ -48,12 +48,13 @@ namespace Compiler.CodeGenerator
             }
             node.Body.Accept(this);
             builder.BuildRet(valueStack.Pop());
+            currentFunctionName = null;
         }
 
         public override void Visit(GlobalInterfaceDeclarationNode node) => throw new NotImplementedException();
         public override void Visit(GlobalRecordDeclarationNode node) => throw new NotImplementedException();
 
-        LLVMTypeRef FindType(KoralType type)
+        private LLVMTypeRef FindType(KoralType type)
         {
             if (type == BuiltinTypes.Int)
             {

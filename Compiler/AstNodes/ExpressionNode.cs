@@ -98,7 +98,7 @@ namespace Compiler.AstNodes
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public sealed record class ConditionNode(ExpressionNode Expr): Node
+    public sealed record class ConditionNode(ExpressionNode Expr) : Node
     {
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
@@ -119,4 +119,9 @@ namespace Compiler.AstNodes
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
+    public sealed record class WhileThenExpressionNode(ConditionNode Condition,
+        ExpressionNode ThenBranch) : ExpressionNode(BuiltinTypes.Void)
+    {
+        public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
+    }
 }

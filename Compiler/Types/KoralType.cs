@@ -29,6 +29,10 @@ namespace Compiler.Types
             {
                 return true;
             }
+            else if (this == BuiltinTypes.Nothing)
+            {
+                return true;
+            }
             else
             {
                 return false;

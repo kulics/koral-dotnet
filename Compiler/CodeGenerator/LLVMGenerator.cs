@@ -1,5 +1,6 @@
 ﻿using Compiler.AstNodes;
 using Compiler.Library;
+using Compiler.Types;
 using LLVMSharp.Interop;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,11 @@ namespace Compiler.CodeGenerator
 
         private string? currentFunctionName;
 
+        private Stack<(LLVMBasicBlockRef loopIn, LLVMBasicBlockRef loopOut)> loopStack = [];
+
         private int basicBlockCount = 0;
+
+
 
         public LLVMGeneratorVisitor(LLVMModuleRef module, LLVMBuilderRef builder)
         {

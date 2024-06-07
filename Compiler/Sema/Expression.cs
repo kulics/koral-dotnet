@@ -54,6 +54,7 @@ namespace Compiler.Sema
             BlockExpressionContext it => VisitBlockExpression(it),
             IfThenElseExpressionContext it => VisitIfThenElseExpression(it),
             IfDoExpressionContext it => VisitIfDoExpression(it),
+            WhileDoExpressionContext it => VisitWhileDoExpression(it),
             ExpressionWithBlockContext it => VisitExpressionWithBlock(it),
             AssignmentExpressionContext it => VisitAssignmentExpression(it),
             _ => throw new CompilingCheckException()
@@ -67,6 +68,7 @@ namespace Compiler.Sema
                 BlockExpressionContext it => VisitBlockExpression(it),
                 IfDoExpressionWithBlockContext it => VisitIfDoExpressionWithBlock(it),
                 IfThenElseExpressionWithBlockContext it => VisitIfThenElseExpressionWithBlock(it),
+                WhileDoExpressionWithBlockContext it => VisitWhileDoExpressionWithBlock(it),
                 AssignmentExpressionWithBlockContext it => VisitAssignmentExpressionWithBlock(it),
                 _ => throw new CompilingCheckException()
             };
@@ -348,6 +350,20 @@ namespace Compiler.Sema
                 throw new CompilingCheckException($"the type of then branch is '{thenBranch.Type.Name}', and the type of else branch is '${elseBranch.Type.Name}', they are not equal");
             }
             return new(condition, thenBranch, elseBranch, thenBranch.Type);
+        }
+
+        public override WhileThenExpressionNode VisitWhileDoExpression(WhileDoExpressionContext context) =>
+            ProcessWhileThen(context.condition(), () => VisitExpression(context.expression()));
+        public override WhileThenExpressionNode VisitWhileDoExpressionWithBlock(WhileDoExpressionWithBlockContext context) =>
+            ProcessWhileThen(context.condition(), () => VisitExpressionWithBlock(context.expressionWithBlock()));
+
+        WhileThenExpressionNode ProcessWhileThen(ConditionContext condContext, Func<ExpressionNode> thenFunc)
+        {
+            PushScope(isLoop: true);
+            var condition = VisitCondition(condContext);
+            var thenBranch = thenFunc();
+            PopScope();
+            return new(condition, thenBranch);
         }
     }
 }

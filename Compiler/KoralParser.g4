@@ -52,7 +52,13 @@ statement
     : variableDeclaration
     | functionDeclaration
     | expressionStatement
+    | breakStatement
+    | continueStatement
     ;
+
+breakStatement: Break SemiColon;
+
+continueStatement: Continue SemiColon;
 
 expressionStatement
     : expression SemiColon

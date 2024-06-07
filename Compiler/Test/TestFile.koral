@@ -16,3 +16,13 @@ let main() Int = {
     let c = add(a, b) - x + y * 5;
     c
 }
+
+let loop() Void = {
+    while false then 1;
+}
+
+let loopBreak() Void = {
+    while false then {
+        break;
+    }
+}

@@ -1,4 +1,5 @@
 ﻿using Compiler.AstNodes;
+using Compiler.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,16 @@ namespace Compiler.AstNodes
     }
 
     public sealed record class ExpressionStatementNode(ExpressionNode Expression) : StatementNode()
+    {
+        public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
+    }
+
+    public sealed record class BreakStatementNode() : StatementNode()
+    {
+        public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
+    }
+
+    public sealed record class ContinueStatementNode() : StatementNode()
     {
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
