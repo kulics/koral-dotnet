@@ -29,15 +29,7 @@ namespace Compiler.CodeGenerator
         public override void Visit(GlobalFunctionDeclarationNode node)
         {
             var funcName = node.Id.Name;
-            var paramTypes = new List<LLVMTypeRef>();
-            foreach (var item in node.ParameterTypes)
-            {
-                paramTypes.Add(FindType(item.ParamType));
-            }
-            var returnType = FindType(node.ReturnType);
-            var functype = LLVMTypeRef.CreateFunction(returnType, [.. paramTypes]);
-            funcTypes[funcName] = functype;
-            var def = module.AddFunction(funcName, functype);
+            var def = module.GetNamedFunction(funcName);
             currentFunctionName = funcName;
             basicBlockCount++;
             var bb = def.AppendBasicBlock(basicBlockCount.ToString());

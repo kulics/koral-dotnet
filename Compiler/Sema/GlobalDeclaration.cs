@@ -4,6 +4,7 @@ using Compiler.AstNodes;
 using Compiler.Types;
 using System.Collections.Generic;
 using static Compiler.KoralParser;
+using System;
 
 namespace Compiler.Sema
 {
@@ -12,6 +13,47 @@ namespace Compiler.Sema
         public override ModuleDeclarationNode VisitModuleDeclaration(ModuleDeclarationContext context) =>
             new(VisitIdentifier(context.variableIdentifier()));
 
+        void PreVisitGlobalDeclaration(GlobalDeclarationContext context)
+        {
+            var declaration = context.GetChild(0);
+            switch (declaration)
+            {
+                case GlobalVariableDeclarationContext it:
+                    if (it.type() is not null)
+                    {
+                        var idName = VisitIdentifier(it.variableIdentifier());
+                        if (IsRedefineId(idName))
+                        {
+                            throw new CompilingCheckException($"identifier: '{idName}' is redefined");
+                        }
+                        var type = CheckTypeNode(VisitType(it.type()));
+                        var id = new Identifier(idName, type, it.Mut() != null ? IdentifierKind.Mutable : IdentifierKind.Immutable);
+                        PushId(id);
+                    }
+                    break;
+                case GlobalFunctionDeclarationContext it:
+                    if (it.type() is not null)
+                    {
+                        var idName = VisitIdentifier(it.variableIdentifier());
+                        if (IsRedefineId(idName))
+                        {
+                            throw new CompilingCheckException($"identifier: '{idName}' is redefined");
+                        }
+                        if (it.typeParameterList() is not null)
+                        {
+                            throw new CompilingCheckException();
+                        }
+                        var returnType = CheckTypeNode(VisitType(it.type()));
+                        var parameters = VisitParameterList(it.parameterList());
+                        var type = new FunctionType(parameters.Map(i => i.Type), returnType);
+                        var id = new Identifier(idName, type, IdentifierKind.Immutable);
+                        PushId(id);
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
         public override DeclarationNode VisitGlobalDeclaration(GlobalDeclarationContext context)
         {
             var declaration = context.GetChild(0);
@@ -19,55 +61,54 @@ namespace Compiler.Sema
             {
                 GlobalVariableDeclarationContext it => VisitGlobalVariableDeclaration(it),
                 GlobalFunctionDeclarationContext it => VisitGlobalFunctionDeclaration(it),
-                GlobalRecordDeclarationContext => throw new CompilingCheckException(),
-                GlobalInterfaceDeclarationContext => throw new CompilingCheckException(),
-                GlobalExtensionDeclarationContext => throw new CompilingCheckException(),
-                GlobalSumTypeDeclarationContext => throw new CompilingCheckException(),
+                GlobalRecordDeclarationContext => throw new NotImplementedException(),
+                GlobalInterfaceDeclarationContext => throw new NotImplementedException(),
+                GlobalExtensionDeclarationContext => throw new NotImplementedException(),
+                GlobalSumTypeDeclarationContext => throw new NotImplementedException(),
                 _ => throw new CompilingCheckException()
             };
         }
 
         public override GlobalVariableDeclarationNode VisitGlobalVariableDeclaration(GlobalVariableDeclarationContext context)
         {
-            var idName = VisitIdentifier(context.variableIdentifier());
-            if (IsRedefineId(idName))
-            {
-                throw new CompilingCheckException($"identifier: '{idName}' is redefined");
-            }
             var expr = VisitExpressionWithTerminator(context.expressionWithTerminator());
-
-            KoralType typeInfo;
+            var idName = VisitIdentifier(context.variableIdentifier());
             if (context.type() is null)
             {
-                typeInfo = expr.Type;
+                if (IsRedefineId(idName))
+                {
+                    throw new CompilingCheckException($"identifier: '{idName}' is redefined");
+                }
+
+                var typeInfo = expr.Type;
+                var id = new Identifier(idName, typeInfo, context.Mut() != null ? IdentifierKind.Mutable : IdentifierKind.Immutable);
+                PushId(id);
+                return new(id, expr);
             }
             else
             {
-                var targetTypeInfo = CheckTypeNode(VisitType(context.type()));
-                if (!CanAssign(expr.Type, targetTypeInfo))
+                var id = GetId(idName) ?? throw new CompilingCheckException("internal error");
+                if (!CanAssign(expr.Type, id.Type))
                 {
-                    throw new CompilingCheckException($"the type of init value '{expr.Type.Name}' is not confirm '{targetTypeInfo.Name}'");
+                    throw new CompilingCheckException($"the type of init value '{expr.Type.Name}' is not confirm '{id.Type.Name}'");
                 }
-                typeInfo = targetTypeInfo;
-            };
-            var id = new Identifier(idName, typeInfo, context.Mut() != null ? IdentifierKind.Mutable : IdentifierKind.Immutable);
-            PushId(id);
-            return new(id, expr);
+                return new(id, expr);
+            }
         }
 
         public override GlobalFunctionDeclarationNode VisitGlobalFunctionDeclaration(GlobalFunctionDeclarationContext context)
         {
             var idName = VisitIdentifier(context.variableIdentifier());
-            if (IsRedefineId(idName))
-            {
-                throw new CompilingCheckException($"identifier: '{idName}' is redefined");
-            }
             if (context.typeParameterList() is not null)
             {
                 throw new CompilingCheckException();
             }
             if (context.type() is null)
             {
+                if (IsRedefineId(idName))
+                {
+                    throw new CompilingCheckException($"identifier: '{idName}' is redefined");
+                }
                 var parameters = VisitParameterList(context.parameterList());
                 PushScope();
                 foreach (var item in parameters)
@@ -98,9 +139,8 @@ namespace Compiler.Sema
             {
                 var returnType = CheckTypeNode(VisitType(context.type()));
                 var parameters = VisitParameterList(context.parameterList());
-                var type = new FunctionType(parameters.Map(i => i.Type), returnType);
-                var id = new Identifier(idName, type, IdentifierKind.Immutable);
-                PushId(id);
+                var id = GetId(idName) ?? throw new CompilingCheckException("internal error");
+
                 PushScope();
                 foreach (var item in parameters)
                 {

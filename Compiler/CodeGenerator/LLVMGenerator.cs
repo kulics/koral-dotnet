@@ -31,7 +31,7 @@ namespace Compiler.CodeGenerator
 
         private int basicBlockCount = 0;
 
-        private LLVMValueRef GetVoidValue() => LLVMValueRef.CreateConstInt(LLVMTypeRef.Int1, 0);
+        private static LLVMValueRef GetVoidValue() => LLVMValueRef.CreateConstInt(LLVMTypeRef.Int1, 0);
 
         public LLVMGeneratorVisitor(LLVMModuleRef module, LLVMBuilderRef builder)
         {
@@ -47,7 +47,24 @@ namespace Compiler.CodeGenerator
 
         public override void Visit(ProgramNode node)
         {
-            // 还没处理 module
+            // todo: 还没处理 module
+            // pre load function
+            foreach (var item in node.Declarations)
+            {
+                if (item is GlobalFunctionDeclarationNode n)
+                {
+                    var funcName = n.Id.Name;
+                    var paramTypes = new List<LLVMTypeRef>();
+                    foreach (var t in n.ParameterTypes)
+                    {
+                        paramTypes.Add(FindType(t.ParamType));
+                    }
+                    var returnType = FindType(n.ReturnType);
+                    var functype = LLVMTypeRef.CreateFunction(returnType, [.. paramTypes]);
+                    funcTypes[funcName] = functype;
+                    module.AddFunction(funcName, functype);
+                }
+            }
             foreach (var item in node.Declarations)
             {
                 item.Accept(this);

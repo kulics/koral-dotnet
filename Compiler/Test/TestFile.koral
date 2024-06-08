@@ -3,8 +3,6 @@ mod demo;
 let x Int = 3;
 let mut y Int = 0;
 
-let add(a Int, b Int) Int = a + b; 
-
 let main() Int = {
     let a = 1;
     let mut b = 1;
@@ -16,6 +14,8 @@ let main() Int = {
     let c = add(a, b) - x + y * 5;
     c
 }
+
+let add(a Int, b Int) Int = a + b; 
 
 let loop() Void = {
     while false then 1;

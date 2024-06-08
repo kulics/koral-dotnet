@@ -89,7 +89,7 @@ namespace Compiler.CodeGenerator
                 }
                 else
                 {
-                    builder.BuildRet(LLVMValueRef.CreateConstInt(LLVMTypeRef.Int1, 0));
+                    builder.BuildRet(GetVoidValue());
                 }
 
                 builder.PositionAtEnd(endBlock);

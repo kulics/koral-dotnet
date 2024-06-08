@@ -3,6 +3,7 @@ using Compiler.Types;
 using System.Linq;
 using Compiler.AstNodes;
 using static Compiler.KoralParser;
+using Compiler.Library;
 
 namespace Compiler.Sema
 {
@@ -20,9 +21,17 @@ namespace Compiler.Sema
             scopes.Push(rootScope);
         }
 
-        public override ProgramNode VisitProgram(ProgramContext context) =>
-            new(VisitModuleDeclaration(context.moduleDeclaration()),
-                context.globalDeclaration().Select(VisitGlobalDeclaration).ToList());
+        public override ProgramNode VisitProgram(ProgramContext context)
+        {
+            var module = VisitModuleDeclaration(context.moduleDeclaration());
+            var sourceDeclaration = context.globalDeclaration();
+            foreach (var item in sourceDeclaration)
+            {
+                PreVisitGlobalDeclaration(item);
+            }
+            var declarationes = sourceDeclaration.Map(VisitGlobalDeclaration).ToList();
+            return new(module, declarationes);
+        }
 
         private static string VisitIdentifier(VariableIdentifierContext context) => context.LowerIdentifier().GetText();
 
