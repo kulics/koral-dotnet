@@ -44,7 +44,7 @@ namespace Compiler.Sema
             else
             {
                 var targetTypeInfo = CheckTypeNode(VisitType(context.type()));
-                if (CannotAssign(expr.Type, targetTypeInfo))
+                if (!CanAssign(expr.Type, targetTypeInfo))
                 {
                     throw new CompilingCheckException($"the type of init value '{expr.Type.Name}' is not confirm '{targetTypeInfo.Name}'");
                 }
@@ -78,8 +78,11 @@ namespace Compiler.Sema
                     }
                     PushId(item);
                 }
+                // todo: 没有声明返回类型怎么支持 内部的 return 语句？
+                PushScope();
                 var expr = VisitExpressionWithTerminator(context.expressionWithTerminator());
                 var returnType = expr.Type;
+                PopScope();
                 PopScope();
                 var type = new FunctionType(parameters.Map(i => i.Type), returnType);
                 var id = new Identifier(idName, type, IdentifierKind.Immutable);
@@ -107,11 +110,13 @@ namespace Compiler.Sema
                     }
                     PushId(item);
                 }
+                PushScope(isFuncBody: returnType);
                 var expr = VisitExpressionWithTerminator(context.expressionWithTerminator());
-                if (CannotAssign(expr.Type, returnType))
+                if (!CanAssign(expr.Type, returnType))
                 {
                     throw new CompilingCheckException($"the return is '{returnType.Name}', but find '{expr.Type.Name}'");
                 }
+                PopScope();
                 PopScope();
                 return new(
                     id,

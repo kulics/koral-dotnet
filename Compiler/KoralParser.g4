@@ -54,11 +54,30 @@ statement
     | expressionStatement
     | breakStatement
     | continueStatement
+    | returnStatement
     ;
 
-breakStatement: Break SemiColon;
+expressionOrControl
+    : expression
+    | breakExpression
+    | continueExpression
+    | returnExpression
+    ;
 
-continueStatement: Continue SemiColon;
+breakExpression: Break;
+
+continueExpression: Continue;
+
+returnExpression: Return expression?;
+
+breakStatement: breakExpression SemiColon;
+
+continueStatement: continueExpression SemiColon;
+
+returnStatement
+    : Return expression? SemiColon
+    | Return expressionWithBlock NewLine
+    ;
 
 expressionStatement
     : expression SemiColon
@@ -70,9 +89,10 @@ expressionWithTerminator: expressionWithBlock NewLine | expression SemiColon;
 expression
     : primaryExpression
     | expressionWithBlock
-    | ifDoExpression
+    | ifThenExpression
     | ifThenElseExpression
-    | whileDoExpression
+    | whileThenExpression
+    | whileThenElseExpression
     | assignmentExpression
     | expression memberAccessCallSuffix
     | expression callSuffix
@@ -87,9 +107,10 @@ expression
 
 expressionWithBlock
     : blockExpression
-    | ifDoExpressionWithBlock
+    | ifThenExpressionWithBlock
     | ifThenElseExpressionWithBlock
-    | whileDoExpressionWithBlock
+    | whileThenExpressionWithBlock
+    | whileThenElseExpressionWithBlock
     | assignmentExpressionWithBlock
     ;
 
@@ -114,11 +135,11 @@ assignmentExpressionWithBlock: variableIdentifier Equal NewLine* expressionWithB
 
 lambdaExpression: parameterList (type)? Arrow NewLine* expression;
 
-ifDoExpression
-    : If NewLine* condition Then NewLine* expression
+ifThenExpression
+    : If NewLine* condition Then NewLine* expressionOrControl
     ;
 
-ifDoExpressionWithBlock
+ifThenExpressionWithBlock
     : If NewLine* condition Then NewLine* expressionWithBlock
     ;
 
@@ -130,12 +151,20 @@ ifThenElseExpressionWithBlock
     : If NewLine* condition Then NewLine* expression Else NewLine* expressionWithBlock
     ;
 
-whileDoExpression
-    : While NewLine* condition Then NewLine* expression
+whileThenExpression
+    : While NewLine* condition Then NewLine* expressionOrControl
     ;
 
-whileDoExpressionWithBlock
+whileThenExpressionWithBlock
     : While NewLine* condition Then NewLine* expressionWithBlock
+    ;
+
+whileThenElseExpression
+    : While NewLine* condition Then NewLine* expression Else NewLine* expression
+    ;
+
+whileThenElseExpressionWithBlock
+    : While NewLine* condition Then NewLine* expression Else NewLine* expressionWithBlock
     ;
 
 condition

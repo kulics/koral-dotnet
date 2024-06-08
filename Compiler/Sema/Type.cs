@@ -31,7 +31,6 @@ namespace Compiler.Sema
                 _ => targetType,
             };
         }
-        bool CannotAssign(KoralType rhs, KoralType lhs) => !CanAssign(rhs, lhs);
         bool CanAssign(KoralType rhs, KoralType lhs)
         {
             return rhs.TypeEquals(lhs);

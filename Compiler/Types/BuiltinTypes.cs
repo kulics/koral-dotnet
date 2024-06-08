@@ -11,14 +11,12 @@ namespace Compiler.Types
         public static readonly RecordType Void = new("Void", [], "Void");
         public static readonly RecordType Bool = new("Bool", [], "Bool");
         public static readonly RecordType Int = new("Int", [], "Int");
-        public static readonly RecordType Nothing = new("Nothing", [], "Nothing");
 
         public static IEnumerable<RecordType> Enumerate()
         {
             yield return Void;
             yield return Bool;
             yield return Int;
-            yield return Nothing;
         }
     }
 }

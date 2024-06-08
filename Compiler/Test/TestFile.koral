@@ -26,3 +26,19 @@ let loopBreak() Void = {
         break;
     }
 }
+
+let whileThenElse() Void = {
+    while true then {
+        break;
+    } else {
+        1
+    }
+}
+
+let retValue() Int = {
+    if true then {
+        return 1;
+        3
+    }
+    2
+}

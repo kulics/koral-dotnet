@@ -124,4 +124,11 @@ namespace Compiler.AstNodes
     {
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
+    public sealed record class WhileThenElseExpressionNode(ConditionNode Condition,
+        ExpressionNode ThenBranch,
+        ExpressionNode ElseBranch
+        ) : ExpressionNode(BuiltinTypes.Void)
+    {
+        public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
+    }
 }

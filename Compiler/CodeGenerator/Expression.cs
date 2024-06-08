@@ -26,51 +26,7 @@ namespace Compiler.CodeGenerator
                 valueStack.Push(idValue.Value);
             }
         }
-        public override void Visit(BreakStatementNode node)
-        {
-            if (loopStack.TryPeek(out var block) && currentFunctionName != null)
-            {
-                var def = module.GetNamedFunction(currentFunctionName);
-                basicBlockCount++;
-                var breakBlock = def.AppendBasicBlock(basicBlockCount.ToString());
-                basicBlockCount++;
-                var endBlock = def.AppendBasicBlock(basicBlockCount.ToString());
 
-                builder.BuildBr(breakBlock);
-
-                builder.PositionAtEnd(breakBlock);
-                builder.BuildBr(block.loopOut);
-
-                builder.PositionAtEnd(endBlock);
-            }
-            else
-            {
-                throw new CompilingCheckException("internal error");
-            }
-        }
-
-        public override void Visit(ContinueStatementNode node)
-        {
-            if (loopStack.TryPeek(out var block) && currentFunctionName != null)
-            {
-                var def = module.GetNamedFunction(currentFunctionName);
-                basicBlockCount++;
-                var continueBlock = def.AppendBasicBlock(basicBlockCount.ToString());
-                basicBlockCount++;
-                var endBlock = def.AppendBasicBlock(basicBlockCount.ToString());
-
-                builder.BuildBr(continueBlock);
-
-                builder.PositionAtEnd(continueBlock);
-                builder.BuildBr(block.loopIn);
-
-                builder.PositionAtEnd(endBlock);
-            }
-            else
-            {
-                throw new CompilingCheckException("internal error");
-            }
-        }
 
         public override void Visit(LiteralExpressionNode node)
         {
@@ -121,7 +77,7 @@ namespace Compiler.CodeGenerator
             }
             else
             {
-                valueStack.Push(LLVMValueRef.CreateConstInt(LLVMTypeRef.Int1, 1));
+                valueStack.Push(GetVoidValue());
             }
         }
         public override void Visit(FunctionCallExpressionNode node)
@@ -144,7 +100,7 @@ namespace Compiler.CodeGenerator
             node.NewValue.Accept(this);
             var newValue = valueStack.Pop();
             builder.BuildStore(newValue, variable.Value);
-            valueStack.Push(LLVMValueRef.CreateConstInt(LLVMTypeRef.Int1, 0));
+            valueStack.Push(GetVoidValue());
         }
         public override void Visit(ConditionNode node) => node.Expr.Accept(this);
         public override void Visit(IfThenElseExpressionNode node)
@@ -203,6 +159,8 @@ namespace Compiler.CodeGenerator
             builder.BuildBr(endBlock);
 
             builder.PositionAtEnd(endBlock);
+            valueStack.Pop();
+            valueStack.Push(GetVoidValue());
         }
 
         public override void Visit(WhileThenExpressionNode node)
@@ -233,6 +191,47 @@ namespace Compiler.CodeGenerator
             builder.BuildBr(condBlock);
 
             builder.PositionAtEnd(endBlock);
+            valueStack.Pop();
+            valueStack.Push(GetVoidValue());
+        }
+
+        public override void Visit(WhileThenElseExpressionNode node)
+        {
+            if (currentFunctionName == null)
+            {
+                throw new NotImplementedException();
+            }
+            var def = module.GetNamedFunction(currentFunctionName);
+            basicBlockCount++;
+            var condBlock = def.AppendBasicBlock(basicBlockCount.ToString());
+            basicBlockCount++;
+            var thenBlock = def.AppendBasicBlock(basicBlockCount.ToString());
+            basicBlockCount++;
+            var elseBlock = def.AppendBasicBlock(basicBlockCount.ToString());
+            basicBlockCount++;
+            var endBlock = def.AppendBasicBlock(basicBlockCount.ToString());
+
+            builder.BuildBr(condBlock);
+
+            builder.PositionAtEnd(condBlock);
+            node.Condition.Accept(this);
+            var conditionValue = valueStack.Pop();
+            builder.BuildCondBr(conditionValue, thenBlock, elseBlock);
+
+            builder.PositionAtEnd(thenBlock);
+            loopStack.Push((condBlock, endBlock));
+            node.ThenBranch.Accept(this);
+            loopStack.Pop();
+            valueStack.Pop();
+            builder.BuildBr(condBlock);
+
+            builder.PositionAtEnd(elseBlock);
+            node.ElseBranch.Accept(this);
+            valueStack.Pop();
+            builder.BuildBr(endBlock);
+
+            builder.PositionAtEnd(endBlock);
+            valueStack.Push(GetVoidValue());
         }
     }
 }

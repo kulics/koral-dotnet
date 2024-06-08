@@ -10,6 +10,8 @@ namespace Compiler.Sema
         readonly Dictionary<string, KoralType> types = [];
         public bool IsLoop { get; init; }
 
+        public KoralType? IsFuncBody { get; init; }
+
         public void PushId(Identifier id) => identifiers[id.Name] = id;
         public Identifier? GetId(string id)
         {

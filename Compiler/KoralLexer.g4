@@ -52,6 +52,7 @@ Else: 'else';
 While: 'while';
 Break: 'break';
 Continue: 'continue';
+Return: 'return';
 For: 'for';
 And: 'and';
 Or: 'or';

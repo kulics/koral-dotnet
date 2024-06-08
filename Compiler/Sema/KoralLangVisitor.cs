@@ -28,7 +28,7 @@ namespace Compiler.Sema
 
         private static string VisitIdentifier(TypeIdentifierContext context) => context.UpperIdentifier().GetText();
 
-        void PushScope(bool isLoop = false) => scopes.Push(new() { IsLoop = isLoop });
+        void PushScope(bool isLoop = false, KoralType? isFuncBody = null) => scopes.Push(new() { IsLoop = isLoop, IsFuncBody = isFuncBody });
 
         void PopScope() => scopes.Pop();
 

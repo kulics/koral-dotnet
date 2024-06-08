@@ -53,8 +53,9 @@ namespace Compiler.Sema
             PrimaryExpressionContext it => VisitPrimaryExpression(it),
             BlockExpressionContext it => VisitBlockExpression(it),
             IfThenElseExpressionContext it => VisitIfThenElseExpression(it),
-            IfDoExpressionContext it => VisitIfDoExpression(it),
-            WhileDoExpressionContext it => VisitWhileDoExpression(it),
+            IfThenExpressionContext it => VisitIfThenExpression(it),
+            WhileThenExpressionContext it => VisitWhileThenExpression(it),
+            WhileThenElseExpressionContext it => VisitWhileThenElseExpression(it),
             ExpressionWithBlockContext it => VisitExpressionWithBlock(it),
             AssignmentExpressionContext it => VisitAssignmentExpression(it),
             _ => throw new CompilingCheckException()
@@ -66,9 +67,10 @@ namespace Compiler.Sema
             return expr switch
             {
                 BlockExpressionContext it => VisitBlockExpression(it),
-                IfDoExpressionWithBlockContext it => VisitIfDoExpressionWithBlock(it),
+                IfThenExpressionWithBlockContext it => VisitIfThenExpressionWithBlock(it),
                 IfThenElseExpressionWithBlockContext it => VisitIfThenElseExpressionWithBlock(it),
-                WhileDoExpressionWithBlockContext it => VisitWhileDoExpressionWithBlock(it),
+                WhileThenExpressionWithBlockContext it => VisitWhileThenExpressionWithBlock(it),
+                WhileThenElseExpressionWithBlockContext it => VisitWhileThenElseExpressionWithBlock(it),
                 AssignmentExpressionWithBlockContext it => VisitAssignmentExpressionWithBlock(it),
                 _ => throw new CompilingCheckException()
             };
@@ -239,7 +241,7 @@ namespace Compiler.Sema
             var argList = new List<ExpressionNode>();
             foreach (var (i, v) in type.ParamTypes.WithIndex())
             {
-                if (CannotAssign(callArgs[i].Type, v))
+                if (!CanAssign(callArgs[i].Type, v))
                 {
                     throw new CompilingCheckException($"the type of args{i}: '{callArgs[i].Type.Name}' is not '${v.Name}'");
                 }
@@ -296,17 +298,17 @@ namespace Compiler.Sema
                 throw new CompilingCheckException($"the identifier '{idName}' is not mutable");
             }
             var expr = exprFunc();
-            if (CannotAssign(expr.Type, id.Type))
+            if (!CanAssign(expr.Type, id.Type))
             {
                 throw new CompilingCheckException($"the type of assign value '{expr.Type.Name}' is not confirm '${id.Type.Name}'");
             }
             return new(id, expr);
         }
 
-        public override IfThenExpressionNode VisitIfDoExpression(IfDoExpressionContext context) =>
-            ProcessIfThen(context.condition(), () => VisitExpression(context.expression()));
+        public override IfThenExpressionNode VisitIfThenExpression(IfThenExpressionContext context) =>
+            ProcessIfThen(context.condition(), () => VisitExpressionOrControl(context.expressionOrControl()));
 
-        public override IfThenExpressionNode VisitIfDoExpressionWithBlock(IfDoExpressionWithBlockContext context) =>
+        public override IfThenExpressionNode VisitIfThenExpressionWithBlock(IfThenExpressionWithBlockContext context) =>
             ProcessIfThen(context.condition(), () => VisitExpressionWithBlock(context.expressionWithBlock()));
 
         public override IfThenElseExpressionNode VisitIfThenElseExpression(IfThenElseExpressionContext context) =>
@@ -314,6 +316,27 @@ namespace Compiler.Sema
 
         public override IfThenElseExpressionNode VisitIfThenElseExpressionWithBlock(IfThenElseExpressionWithBlockContext context) =>
             ProcessIfThenEsle(context.condition(), context.expression(), () => VisitExpressionWithBlock(context.expressionWithBlock()));
+
+        public override ExpressionNode VisitExpressionOrControl(ExpressionOrControlContext context)
+        {
+            if (context.expression() is var e and not null)
+            {
+                return VisitExpression(e);
+            }
+            else if (context.breakExpression() is var b and not null)
+            {
+                return VisitBreakExpression(b);
+            }
+            else if (context.continueExpression() is var c and not null)
+            {
+                return VisitContinueExpression(c);
+            }
+            else if (context.returnExpression() is var r and not null)
+            {
+                return VisitReturnExpression(r);
+            }
+            throw new NotImplementedException();
+        }
 
         public override ConditionNode VisitCondition(ConditionContext context)
         {
@@ -352,18 +375,79 @@ namespace Compiler.Sema
             return new(condition, thenBranch, elseBranch, thenBranch.Type);
         }
 
-        public override WhileThenExpressionNode VisitWhileDoExpression(WhileDoExpressionContext context) =>
-            ProcessWhileThen(context.condition(), () => VisitExpression(context.expression()));
-        public override WhileThenExpressionNode VisitWhileDoExpressionWithBlock(WhileDoExpressionWithBlockContext context) =>
+        public override WhileThenExpressionNode VisitWhileThenExpression(WhileThenExpressionContext context) =>
+            ProcessWhileThen(context.condition(), () => VisitExpressionOrControl(context.expressionOrControl()));
+        public override WhileThenExpressionNode VisitWhileThenExpressionWithBlock(WhileThenExpressionWithBlockContext context) =>
             ProcessWhileThen(context.condition(), () => VisitExpressionWithBlock(context.expressionWithBlock()));
 
         WhileThenExpressionNode ProcessWhileThen(ConditionContext condContext, Func<ExpressionNode> thenFunc)
         {
-            PushScope(isLoop: true);
+            PushScope();
             var condition = VisitCondition(condContext);
+            PushScope(isLoop: true);
             var thenBranch = thenFunc();
             PopScope();
+            PopScope();
             return new(condition, thenBranch);
+        }
+
+        public override WhileThenElseExpressionNode VisitWhileThenElseExpression(WhileThenElseExpressionContext context) =>
+            ProcessWhileThenElse(context.condition(), context.expression(0), () => VisitExpression(context.expression(1)));
+
+        public override WhileThenElseExpressionNode VisitWhileThenElseExpressionWithBlock(WhileThenElseExpressionWithBlockContext context) =>
+            ProcessWhileThenElse(context.condition(), context.expression(), () => VisitExpressionWithBlock(context.expressionWithBlock()));
+
+        WhileThenElseExpressionNode ProcessWhileThenElse(ConditionContext condContext, ExpressionContext thenContext, Func<ExpressionNode> elseFunc)
+        {
+            PushScope();
+            var condition = VisitCondition(condContext);
+            PushScope(isLoop: true);
+            var thenBranch = VisitExpression(thenContext);
+            PopScope();
+            var elseBranch = elseFunc();
+            PopScope();
+            return new(condition, thenBranch, elseBranch);
+        }
+
+        public override BlockExpressionNode VisitBreakExpression(BreakExpressionContext context)
+        {
+            if (scopes.Any(i => i.IsLoop))
+            {
+                return new BlockExpressionNode([new BreakStatementNode()], null);
+            }
+            throw new CompilingCheckException("here is not in a loop scope");
+        }
+        public override BlockExpressionNode VisitContinueExpression(ContinueExpressionContext context)
+        {
+            if (scopes.Any(i => i.IsLoop))
+            {
+                return new BlockExpressionNode([new ContinueStatementNode()], null);
+            }
+            throw new CompilingCheckException("here is not in a loop scope");
+        }
+
+        public override BlockExpressionNode VisitReturnExpression(ReturnExpressionContext context)
+        {
+            if (scopes.Map(i => i.IsFuncBody).First(i => i != null) is var type and not null)
+            {
+                // return value
+                if (context.expression() is var e and not null)
+                {
+                    var retValue = VisitExpression(e);
+                    if (!CanAssign(retValue.Type, type))
+                    {
+                        throw new CompilingCheckException($"the type of return value {retValue.Type} is not {type}");
+                    }
+                    return new BlockExpressionNode([new ReturnStatementNode(retValue)], null);
+                }
+                // return void
+                if (!CanAssign(BuiltinTypes.Void, type))
+                {
+                    throw new CompilingCheckException($"the type of return value {BuiltinTypes.Void} is not {type}");
+                }
+                return new BlockExpressionNode([new ReturnStatementNode(null)], null);
+            }
+            throw new CompilingCheckException("here is not in a function body scope");
         }
     }
 }

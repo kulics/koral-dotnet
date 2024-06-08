@@ -34,4 +34,9 @@ namespace Compiler.AstNodes
     {
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
+
+    public sealed record class ReturnStatementNode(ExpressionNode? Expression) : StatementNode()
+    {
+        public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
+    }
 }

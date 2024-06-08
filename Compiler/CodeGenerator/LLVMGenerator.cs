@@ -31,7 +31,7 @@ namespace Compiler.CodeGenerator
 
         private int basicBlockCount = 0;
 
-
+        private LLVMValueRef GetVoidValue() => LLVMValueRef.CreateConstInt(LLVMTypeRef.Int1, 0);
 
         public LLVMGeneratorVisitor(LLVMModuleRef module, LLVMBuilderRef builder)
         {
