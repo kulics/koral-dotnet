@@ -16,7 +16,7 @@ namespace Compiler.CodeGenerator
         public override void Visit(GlobalVariableDeclarationNode node)
         {
             var id = node.Id;
-            var def = module.AddGlobal(FindType(id.Type), id.Name);
+            var def = module.GetNamedGlobal(id.Name);
             if (node.InitValue is IntegerLiteralExpressionNode i)
             {
                 def.Initializer = LLVMValueRef.CreateConstInt(FindType(id.Type), (ulong)i.Value);

@@ -48,21 +48,26 @@ namespace Compiler.CodeGenerator
         public override void Visit(ProgramNode node)
         {
             // todo: 还没处理 module
-            // pre load function
+            // pre load global
             foreach (var item in node.Declarations)
             {
-                if (item is GlobalFunctionDeclarationNode n)
+                if (item is GlobalFunctionDeclarationNode globalF)
                 {
-                    var funcName = n.Id.Name;
+                    var funcName = globalF.Id.Name;
                     var paramTypes = new List<LLVMTypeRef>();
-                    foreach (var t in n.ParameterTypes)
+                    foreach (var t in globalF.ParameterTypes)
                     {
                         paramTypes.Add(FindType(t.ParamType));
                     }
-                    var returnType = FindType(n.ReturnType);
+                    var returnType = FindType(globalF.ReturnType);
                     var functype = LLVMTypeRef.CreateFunction(returnType, [.. paramTypes]);
                     funcTypes[funcName] = functype;
                     module.AddFunction(funcName, functype);
+                }
+                if (item is GlobalVariableDeclarationNode globalV)
+                {
+                    var id = globalV.Id;
+                    module.AddGlobal(FindType(id.Type), id.Name);
                 }
             }
             foreach (var item in node.Declarations)
