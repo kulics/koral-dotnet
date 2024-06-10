@@ -19,9 +19,9 @@ globalVariableDeclaration
     : Let Mut? variableIdentifier (type)? Equal NewLine* expressionWithTerminator;
 globalFunctionDeclaration
     : Let typeParameterList? variableIdentifier parameterList (type)? Equal NewLine* expressionWithTerminator;
-globalRecordDeclaration: Type typeParameterList? typeIdentifier fieldList (Colon type)? (SemiColon | With methodList);
+globalRecordDeclaration: Type Mut? typeParameterList? typeIdentifier fieldList (Is type)? (SemiColon | With methodList);
 globalInterfaceDeclaration: Type typeParameterList? typeIdentifier (SemiColon | Equal NewLine* virtualMethodList);
-globalExtensionDeclaration: Given typeParameterList? typeIdentifier (Colon type)? With methodList SemiColon?;
+globalExtensionDeclaration: Given typeParameterList? typeIdentifier (Is type)? With methodList SemiColon?;
 globalSumTypeDeclaration
     : Type typeParameterList? typeIdentifier Equal NewLine*
      LeftBrace NewLine* recordConstructor (Comma NewLine* recordConstructor)* NewLine* RightBrace SemiColon?;

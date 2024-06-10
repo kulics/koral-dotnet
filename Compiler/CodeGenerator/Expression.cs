@@ -59,12 +59,42 @@ namespace Compiler.CodeGenerator
                     builder.BuildMul(lhs, rhs),
                 CalculativeOperator.Div =>
                     builder.BuildSDiv(lhs, rhs),
+                CalculativeOperator.Mod =>
+                    builder.BuildSRem(lhs, rhs),
                 _ =>
                     throw new NotImplementedException()
             });
         }
-        public override void Visit(CompareExpressionNode node) => throw new NotImplementedException();
-        public override void Visit(LogicExpressionNode node) => throw new NotImplementedException();
+        public override void Visit(CompareExpressionNode node)
+        {
+            node.Lhs.Accept(this);
+            var lhs = valueStack.Pop();
+            node.Rhs.Accept(this);
+            var rhs = valueStack.Pop();
+            valueStack.Push(node.OperatorName switch
+            {
+                CompareOperator.Equal => builder.BuildICmp(LLVMIntPredicate.LLVMIntEQ, lhs, rhs),
+                CompareOperator.NotEqual => builder.BuildICmp(LLVMIntPredicate.LLVMIntNE, lhs, rhs),
+                CompareOperator.Less => builder.BuildICmp(LLVMIntPredicate.LLVMIntSLT, lhs, rhs),
+                CompareOperator.LessEqual => builder.BuildICmp(LLVMIntPredicate.LLVMIntSLE, lhs, rhs),
+                CompareOperator.Greater => builder.BuildICmp(LLVMIntPredicate.LLVMIntSGT, lhs, rhs),
+                CompareOperator.GreaterEqual => builder.BuildICmp(LLVMIntPredicate.LLVMIntSGE, lhs, rhs),
+                _ => throw new NotImplementedException()
+            });
+        }
+        public override void Visit(LogicExpressionNode node)
+        {
+            node.Lhs.Accept(this);
+            var lhs = valueStack.Pop();
+            node.Rhs.Accept(this);
+            var rhs = valueStack.Pop();
+            valueStack.Push(node.OperatorName switch
+            { 
+                LogicOperator.And => builder.BuildAnd(lhs, rhs),
+                LogicOperator.Or => builder.BuildOr(lhs, rhs),
+                _ => throw new NotImplementedException()
+            });
+        }
         public override void Visit(BlockExpressionNode node)
         {
             foreach (var item in node.Stats)

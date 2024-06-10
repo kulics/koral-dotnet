@@ -42,7 +42,7 @@ namespace Compiler.AstNodes
         KoralType Type,
         List<TypeParameter> TypeParameter,
         List<Identifier> Fields,
-        List<MethodNode> Methods,
+        List<MethodNode> Methods,  
         KoralType? Implements
     ) : DeclarationNode()
     {

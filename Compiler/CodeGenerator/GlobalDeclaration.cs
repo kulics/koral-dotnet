@@ -56,6 +56,10 @@ namespace Compiler.CodeGenerator
             {
                 return LLVMTypeRef.Int1;
             }
+            else if (type == BuiltinTypes.Bool)
+            {
+                return LLVMTypeRef.Int1;
+            }
             throw new NotImplementedException();
         }
     }

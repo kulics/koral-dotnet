@@ -42,3 +42,13 @@ let retValue() Int = {
     }
     2
 }
+
+let compare(x Int, y Int) Bool = {
+    let a = x > y;
+    let b = x <= y;
+    let c = x == y;
+    let d = x != y;
+    let e = x >= y;
+    let f = x < y;
+    a & b & c | d | e | f
+}
