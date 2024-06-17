@@ -47,7 +47,6 @@ Mut: 'mut';
 Let: 'let';
 Module: 'mod';
 If: 'if';
-Then: 'then';
 Else: 'else';
 While: 'while';
 Break: 'break';
