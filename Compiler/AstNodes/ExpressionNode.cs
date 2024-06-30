@@ -17,7 +17,7 @@ namespace Compiler.AstNodes
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
-    public abstract record class LiteralExpressionNode(KoralType type) : ExpressionNode(type)
+    public abstract record class LiteralExpressionNode(KoralType Type) : ExpressionNode(Type)
     {
     }
 
@@ -91,9 +91,24 @@ namespace Compiler.AstNodes
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }
 
+    public sealed record class MemberExpressionNode(
+        ExpressionNode Expr,
+        Identifier Member) : ExpressionNode(Member.Type)
+    {
+        public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
+    }
+
+    public sealed record class ConstructCallExpressionNode(
+        RecordType Id,
+        List<KoralType> Types,
+        List<ExpressionNode> Args, KoralType Type) : ExpressionNode(Type)
+    {
+        public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
+    }
+
     public sealed record class AssignmentExpressionNode(
-        Identifier Id,
-        ExpressionNode NewValue) : ExpressionNode(BuiltinTypes.Void)
+            Identifier Id,
+            ExpressionNode NewValue) : ExpressionNode(BuiltinTypes.Void)
     {
         public override void Accept(NodeVisitor visitor) => visitor.Visit(this);
     }

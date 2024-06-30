@@ -4,7 +4,7 @@ options { tokenVocab=KoralLexer; }
 
 program: moduleDeclaration NewLine* (NewLine* globalDeclaration NewLine*)* NewLine* EOF;
 
-moduleDeclaration: Module variableIdentifier SemiColon;
+moduleDeclaration: Export variableIdentifier SemiColon;
 
 globalDeclaration
     : globalVariableDeclaration
@@ -168,7 +168,7 @@ whileThenElseExpressionWithBlock
     ;
 
 condition
-    : expression (Is NewLine* pattern NewLine*)?
+    : (pattern NewLine* BackArrow NewLine*)? expression
     | condition And condition
     | condition Or condition
     | LeftParen NewLine* condition NewLine* RightParen

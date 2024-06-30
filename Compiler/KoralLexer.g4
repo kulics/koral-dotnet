@@ -1,6 +1,7 @@
 lexer grammar KoralLexer;
 
 Arrow: '->';
+BackArrow: '<-';
 
 EqualEqual: '==';
 NotEqual: '!=';
@@ -45,7 +46,7 @@ Sharp: '#';
 
 Mut: 'mut';
 Let: 'let';
-Module: 'mod';
+Export: 'export';
 If: 'if';
 Else: 'else';
 While: 'while';

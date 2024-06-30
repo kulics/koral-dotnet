@@ -24,7 +24,7 @@ namespace Compiler.Sema
 
         KoralType CheckNominalTypeNode(NominalTypeNode node)
         {
-            var targetType = GetKoralType(node.Id);
+            var targetType = GetType(node.Id);
             return targetType switch
             {
                 null => throw new CompilingCheckException($"type: '{node.Id}' is undefined"),

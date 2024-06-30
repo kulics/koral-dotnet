@@ -42,6 +42,10 @@ namespace Compiler.Sema
             {
                 return VisitFunctionCallExpression(context.expression(0), context.callSuffix());
             }
+            else if (context.memberAccess() is not null)
+            {
+                return VisitMemberAccessExpression(context.expression(0), context.memberAccess());
+            }
             else
             {
                 throw new CompilingCheckException();
@@ -91,6 +95,14 @@ namespace Compiler.Sema
             }
         }
 
+        MemberExpressionNode VisitMemberAccessExpression(ExpressionContext expr, MemberAccessContext member)
+        {
+            var targetExpr = VisitExpression(expr);
+            var type = targetExpr.Type;
+            var memberId = VisitIdentifier(member.variableIdentifier());
+            var memberExpr = type.GetMember(memberId) ?? throw new CompilingCheckException($"the type '{targetExpr.Type.Name}' have not member '{memberId}'");
+            return new(targetExpr, memberExpr);
+        }
         ExpressionNode VisitBinaryExpression(ExpressionContext lhs, IParseTree op, ExpressionContext rhs)
         {
             var lhsExpr = VisitExpression(lhs);
@@ -226,10 +238,25 @@ namespace Compiler.Sema
                 }
                 throw new CompilingCheckException("the type of expression is not a function");
             }
+            else if (context.constructExpression() is var it4 and not null)
+            {
+                return VisitConstructExpression(it4);
+            }
             else
             {
                 throw new CompilingCheckException();
             }
+        }
+
+        public override ConstructCallExpressionNode VisitConstructExpression(ConstructExpressionContext context)
+        {
+            var name = VisitIdentifier(context.typeIdentifier());
+            var type = GetType(name) ?? throw new CompilingCheckException($"the type name '{name}' is not define");
+            if (type is RecordType t)
+            {
+                return ProcessConstructCall(t, context.expression().Map(VisitExpression));
+            }
+            throw new CompilingCheckException($"the type {name} is not a data type");
         }
 
         FunctionCallExpressionNode ProcessFunctionCall(IdentifierExpressionNode expr, List<ExpressionNode> callArgs, FunctionType type)
@@ -248,6 +275,24 @@ namespace Compiler.Sema
                 argList.Add(callArgs[i]);
             }
             return new(expr.Id, expr, [], argList, type.ReturnType);
+        }
+
+        ConstructCallExpressionNode ProcessConstructCall(RecordType type, List<ExpressionNode> callArgs)
+        {
+            if (type.Fields.Count != callArgs.Count)
+            {
+                throw new CompilingCheckException($"the size of args is {callArgs.Count}, but need ${type.Fields.Count}");
+            }
+            var argList = new List<ExpressionNode>();
+            foreach (var (i, v) in type.Fields.WithIndex())
+            {
+                if (!CanAssign(callArgs[i].Type, v.Type))
+                {
+                    throw new CompilingCheckException($"the type of args{i}: '{callArgs[i].Type.Name}' is not '${v.Name}'");
+                }
+                argList.Add(callArgs[i]);
+            }
+            return new(type, [], argList, type);
         }
 
         public override LiteralExpressionNode VisitLiteralExpression(LiteralExpressionContext context)

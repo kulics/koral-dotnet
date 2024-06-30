@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Compiler.Types
 {
-    public abstract class KoralType
+    public abstract record class KoralType
     {
         public string Name { get; }
         public string UniqueName { get; }
@@ -34,26 +34,23 @@ namespace Compiler.Types
                 return false;
             }
         }
+
+        public virtual Identifier? GetMember(string name) => null;
     }
 
-    public class RecordType(
-        string name,
-        Dictionary<string, Identifier> members,
-        string uniqueName,
-        (string, List<KoralType>)? rawGenericsType = null
-    ) : KoralType(name, uniqueName)
+    public record class RecordType(
+        string Name,
+        List<Identifier> Fields,
+        string UniqueName
+    ) : KoralType(Name, UniqueName)
     {
-        public Dictionary<string, Identifier> Members { get; } = members;
-
-        public (string, List<KoralType>)? RawGenericsType = rawGenericsType;
+        public override Identifier? GetMember(string name) => Fields.Find(i => i.Name == name);
     }
 
-    public class FunctionType(List<KoralType> paramTypes, KoralType returnType) : KoralType(
-        MakeFunctionTypeName(paramTypes, returnType),
-        MakeGenericsUniqueName("Func", paramTypes, returnType))
+    public record class FunctionType(List<KoralType> ParamTypes, KoralType ReturnType) : KoralType(
+        MakeFunctionTypeName(ParamTypes, ReturnType),
+        MakeGenericsUniqueName("Func", ParamTypes, ReturnType))
     {
-        public List<KoralType> ParamTypes { get; } = paramTypes;
-        public KoralType ReturnType { get; } = returnType;
 
         static string MakeFunctionTypeName(List<KoralType> paramTypes, KoralType returnType)
         {
@@ -89,7 +86,7 @@ namespace Compiler.Types
         }
     }
 
-    public sealed class TypeParameter(
+    public record class TypeParameter(
         string name,
         ConstraintType constraint,
         bool isFromExtension = false

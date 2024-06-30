@@ -38,6 +38,8 @@ namespace Compiler.AstNodes
         public abstract void Visit(LogicExpressionNode node);
         public abstract void Visit(BlockExpressionNode node);
         public abstract void Visit(FunctionCallExpressionNode node);
+        public abstract void Visit(MemberExpressionNode node);
+        public abstract void Visit(ConstructCallExpressionNode node);
         public abstract void Visit(AssignmentExpressionNode node);
 
         public abstract void Visit(ConditionNode node);

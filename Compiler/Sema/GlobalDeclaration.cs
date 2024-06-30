@@ -50,6 +50,21 @@ namespace Compiler.Sema
                         PushId(id);
                     }
                     break;
+                case GlobalRecordDeclarationContext it:
+                    {
+                        var idName = VisitIdentifier(it.typeIdentifier());
+                        if (IsRedefineId(idName) && IsRedefineType(idName))
+                        {
+                            throw new CompilingCheckException($"identifier: '{idName}' is redefined");
+                        }
+                        if (it.typeParameterList() is not null)
+                        {
+                            throw new NotImplementedException();
+                        }
+                        var type = new RecordType(idName, [], idName);
+                        PushType(type);
+                    }
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -61,7 +76,7 @@ namespace Compiler.Sema
             {
                 GlobalVariableDeclarationContext it => VisitGlobalVariableDeclaration(it),
                 GlobalFunctionDeclarationContext it => VisitGlobalFunctionDeclaration(it),
-                GlobalRecordDeclarationContext => throw new NotImplementedException(),
+                GlobalRecordDeclarationContext it => VisitGlobalRecordDeclaration(it),
                 GlobalInterfaceDeclarationContext => throw new NotImplementedException(),
                 GlobalExtensionDeclarationContext => throw new NotImplementedException(),
                 GlobalSumTypeDeclarationContext => throw new NotImplementedException(),
@@ -182,6 +197,26 @@ namespace Compiler.Sema
             var id = VisitIdentifier(context.variableIdentifier());
             var type = CheckTypeNode(VisitType(context.type()));
             return new(id, type);
+        }
+
+        public override GlobalRecordDeclarationNode VisitGlobalRecordDeclaration(GlobalRecordDeclarationContext context)
+        {
+            var idName = VisitIdentifier(context.typeIdentifier());
+            if (GetType(idName) is not null and RecordType type)
+            {
+                var fieldList = VisitFieldList(context.fieldList());
+                type.Fields.AddRange(fieldList);
+                return new(type, [], fieldList, [], null);
+            }
+            throw new CompilingCheckException("internal error");
+        }
+
+        public override List<Identifier> VisitFieldList(FieldListContext context) => context.field().Map(VisitField);
+        public override Identifier VisitField(FieldContext context)
+        {
+            var id = VisitIdentifier(context.variableIdentifier());
+            var type = CheckTypeNode(VisitType(context.type()));
+            return new(id, type, context.Mut() is null ? IdentifierKind.Immutable : IdentifierKind.Mutable);
         }
     }
 }

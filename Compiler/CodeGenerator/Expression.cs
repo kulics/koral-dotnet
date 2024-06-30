@@ -124,6 +124,33 @@ namespace Compiler.CodeGenerator
             var retValue = builder.BuildCall2(functype, fn, [.. args]);
             valueStack.Push(retValue);
         }
+
+        public override void Visit(MemberExpressionNode node)
+        {
+            Visit(node.Expr);
+            var targetValue = valueStack.Pop();
+            if (node.Expr.Type is RecordType it) {
+                var i = it.Fields.IndexOf(node.Member);
+                var retValue = builder.BuildExtractValue(targetValue, (uint)i);
+                valueStack.Push(retValue);
+                return;
+            }
+            throw new NotImplementedException();
+        }
+
+        public override void Visit(ConstructCallExpressionNode node)
+        {
+            var type = structTypes[node.Id.Name];
+            var retValue = builder.BuildAlloca(type);
+            foreach (var (index, arg) in node.Args.WithIndex())
+            {
+                arg.Accept(this);
+                var elementPtr = builder.BuildStructGEP2(type, retValue, (uint)index);
+                builder.BuildStore(valueStack.Pop(), elementPtr);
+            }
+            var v = builder.BuildLoad2(type, retValue);
+            valueStack.Push(v);
+        }
         public override void Visit(AssignmentExpressionNode node)
         {
             var variable = namedValues[node.Id];

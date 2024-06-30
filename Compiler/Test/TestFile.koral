@@ -1,4 +1,4 @@
-mod demo;
+export demo;
 
 let x Int = 3;
 let mut y Int = 0;
@@ -53,4 +53,8 @@ let compare(x Int, y Int) Bool = {
     a & b & c | d | e | f
 }
 
-## type Foo(x Int, y Int);
+type Foo(x Int, y Int);
+
+let construct() Foo = Foo(1, 2);
+
+let accessMember(a Foo) Int = a.x + a.y;

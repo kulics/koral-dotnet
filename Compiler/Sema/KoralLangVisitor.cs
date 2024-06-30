@@ -58,11 +58,11 @@ namespace Compiler.Sema
             return null;
         }
 
-        void PushKoralType(KoralType typeInfo) => scopes.Peek().PushType(typeInfo);
+        void PushType(KoralType typeInfo) => scopes.Peek().PushType(typeInfo);
 
         bool IsRedefineType(string type) => scopes.Peek().GetTypeInfo(type) is not null;
 
-        KoralType? GetKoralType(string id)
+        KoralType? GetType(string id)
         {
             foreach (var scope in scopes)
             {

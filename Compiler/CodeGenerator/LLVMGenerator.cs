@@ -25,6 +25,8 @@ namespace Compiler.CodeGenerator
 
         private readonly Dictionary<string, LLVMTypeRef> funcTypes = [];
 
+        private readonly Dictionary<string, LLVMTypeRef> structTypes = [];
+
         private string? currentFunctionName;
 
         private Stack<(LLVMBasicBlockRef loopIn, LLVMBasicBlockRef loopOut)> loopStack = [];
@@ -64,10 +66,19 @@ namespace Compiler.CodeGenerator
                     funcTypes[funcName] = functype;
                     module.AddFunction(funcName, functype);
                 }
-                if (item is GlobalVariableDeclarationNode globalV)
+                else if (item is GlobalVariableDeclarationNode globalV)
                 {
                     var id = globalV.Id;
                     module.AddGlobal(FindType(id.Type), id.Name);
+                }
+                else if (item is GlobalRecordDeclarationNode globalR)
+                {
+                    var list = new List<LLVMTypeRef>();
+                    foreach (var v in globalR.Fields)
+                    {
+                        list.Add(FindType(v.Type));
+                    }
+                    structTypes[globalR.Type.Name] = LLVMTypeRef.CreateStruct(list.ToArray(), false);
                 }
             }
             foreach (var item in node.Declarations)

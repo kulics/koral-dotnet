@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Compiler.CodeGenerator
@@ -44,7 +45,10 @@ namespace Compiler.CodeGenerator
         }
 
         public override void Visit(GlobalInterfaceDeclarationNode node) => throw new NotImplementedException();
-        public override void Visit(GlobalRecordDeclarationNode node) => throw new NotImplementedException();
+        public override void Visit(GlobalRecordDeclarationNode node)
+        {
+
+        }
 
         private LLVMTypeRef FindType(KoralType type)
         {
@@ -59,6 +63,10 @@ namespace Compiler.CodeGenerator
             else if (type == BuiltinTypes.Bool)
             {
                 return LLVMTypeRef.Int1;
+            }
+            else if (structTypes.TryGetValue(type.Name, out var t))
+            {
+                return t;
             }
             throw new NotImplementedException();
         }
