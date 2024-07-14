@@ -1,0 +1,70 @@
+export demo;
+
+let x Int = 3;
+let mut y Int = 0;
+
+let main() Int = {
+    let a = 1;
+    let mut b = 1;
+    if (true) {
+        b = 2;
+    }
+    b = if (true) 3 else 4;
+    y = 1;
+    let c = add(a, b) - x + y * 5;
+    c
+}
+
+let add(a Int, b Int) Int = a + b; 
+
+let loop() Void = {
+    while (false) 1;
+}
+
+let loopBreak() Void = {
+    while (false) {
+        break;
+    }
+}
+
+let whileThenElse() Void = {
+    while (true) {
+        break;
+    } else {
+        1
+    }
+}
+
+let retValue() Int = {
+    if (true) {
+        return 1;
+        3
+    }
+    2
+}
+
+let compare(x Int, y Int) Bool = {
+    let a = x > y;
+    let b = x <= y;
+    let c = x == y;
+    let d = x != y;
+    let e = x >= y;
+    let f = x < y;
+    a & b & c | d | e | f
+}
+
+type Foo(x Int, y Int);
+
+let construct() Foo = Foo(1, 2);
+
+let accessMember(a Foo) Int = a.x + a.y;
+
+let arc() Void = {
+    let mut a = Foo(1, 1);
+    a = Foo(2, 2);
+    let b = Foo(3, 3);
+    a = b;
+    accessMember(a);
+    accessMember(Foo(4, 4));
+}
+
