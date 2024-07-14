@@ -59,9 +59,10 @@ namespace Compiler.CodeGenerator
                     var paramTypes = new List<LLVMTypeRef>();
                     foreach (var t in globalF.ParameterTypes)
                     {
-                        paramTypes.Add(FindType(t.ParamType));
+                        var type = MapArcType(FindType(t.ParamType));
+                        paramTypes.Add(type);
                     }
-                    var returnType = FindType(globalF.ReturnType);
+                    var returnType = MapArcType(FindType(globalF.ReturnType));
                     var functype = LLVMTypeRef.CreateFunction(returnType, [.. paramTypes]);
                     funcTypes[funcName] = functype;
                     module.AddFunction(funcName, functype);
@@ -69,11 +70,17 @@ namespace Compiler.CodeGenerator
                 else if (item is GlobalVariableDeclarationNode globalV)
                 {
                     var id = globalV.Id;
-                    module.AddGlobal(FindType(id.Type), id.Name);
+                    var type = FindType(id.Type);
+                    var mapType = MapArcType(type);
+                    module.AddGlobal(mapType, id.Name);
                 }
                 else if (item is GlobalRecordDeclarationNode globalR)
                 {
-                    var list = new List<LLVMTypeRef>();
+                    var list = new List<LLVMTypeRef>
+                    {
+                        // add ref count field
+                        LLVMTypeRef.Int32
+                    };
                     foreach (var v in globalR.Fields)
                     {
                         list.Add(FindType(v.Type));
@@ -84,6 +91,29 @@ namespace Compiler.CodeGenerator
             foreach (var item in node.Declarations)
             {
                 item.Accept(this);
+            }
+        }
+
+        private static LLVMTypeRef MapArcType(LLVMTypeRef t)
+        {
+            if (t.Kind == LLVMTypeKind.LLVMStructTypeKind)
+            {
+                return LLVMTypeRef.CreatePointer(t, 0);
+            }
+            else
+            {
+                return t;
+            }
+        }
+
+        private void ArcInc(LLVMTypeRef argType, LLVMValueRef argValue)
+        {
+            if (argType.Kind == LLVMTypeKind.LLVMStructTypeKind)
+            {
+                var elementPtr = builder.BuildStructGEP2(argType, argValue, 0);
+                var refCount = builder.BuildLoad2(LLVMTypeRef.Int32, elementPtr);
+                var newCount = builder.BuildAdd(refCount, LLVMValueRef.CreateConstInt(LLVMTypeRef.Int32, 1));
+                builder.BuildStore(newCount, elementPtr);
             }
         }
 

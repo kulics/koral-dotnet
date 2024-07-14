@@ -58,3 +58,13 @@ type Foo(x Int, y Int);
 let construct() Foo = Foo(1, 2);
 
 let accessMember(a Foo) Int = a.x + a.y;
+
+let arc() Void = {
+    let mut a = Foo(1, 1);
+    a = Foo(2, 2);
+    let b = Foo(3, 3);
+    a = b;
+    accessMember(a);
+    accessMember(Foo(4, 4));
+}
+

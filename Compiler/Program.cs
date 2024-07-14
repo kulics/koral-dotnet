@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using Compiler.Sema;
 using Compiler.CodeGenerator;
+using System.Collections.Generic;
 
 namespace Compiler
 {

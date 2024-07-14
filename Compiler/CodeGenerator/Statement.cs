@@ -16,7 +16,7 @@ namespace Compiler.CodeGenerator
             }
             else
             {
-                var variable = builder.BuildAlloca(FindType(node.Id.Type));
+                var variable = builder.BuildAlloca(MapArcType(FindType(node.Id.Type)));
                 builder.BuildStore(initValue, variable);
                 namedValues[node.Id] = new IdentifierValue(true, variable);
             }
@@ -85,6 +85,8 @@ namespace Compiler.CodeGenerator
                 {
                     e.Accept(this);
                     var retValue = valueStack.Pop();
+                    var type = FindType(node.Expression.Type);
+                    ArcInc(type, retValue);
                     builder.BuildRet(retValue);
                 }
                 else

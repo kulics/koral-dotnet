@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace Compiler.CodeGenerator
 {
@@ -16,7 +17,12 @@ namespace Compiler.CodeGenerator
         public override void Visit(IdentifierExpressionNode node)
         {
             var idValue = namedValues[node.Id];
-            if (idValue.IsPtr)
+            var type = FindType(node.Id.Type);
+            if (type.Kind == LLVMTypeKind.LLVMStructTypeKind)
+            {
+                valueStack.Push(idValue.Value);
+            }
+            else if (idValue.IsPtr)
             {
                 var loadValue = builder.BuildLoad2(FindType(node.Id.Type), idValue.Value);
                 valueStack.Push(loadValue);
@@ -89,7 +95,7 @@ namespace Compiler.CodeGenerator
             node.Rhs.Accept(this);
             var rhs = valueStack.Pop();
             valueStack.Push(node.OperatorName switch
-            { 
+            {
                 LogicOperator.And => builder.BuildAnd(lhs, rhs),
                 LogicOperator.Or => builder.BuildOr(lhs, rhs),
                 _ => throw new NotImplementedException()
@@ -119,7 +125,11 @@ namespace Compiler.CodeGenerator
             foreach (var arg in node.Args)
             {
                 arg.Accept(this);
-                args.Add(valueStack.Pop());
+                // ref count add
+                var argType = FindType(arg.Type);
+                var argValue = valueStack.Pop();
+                ArcInc(argType, argValue);
+                args.Add(argValue);
             }
             var retValue = builder.BuildCall2(functype, fn, [.. args]);
             valueStack.Push(retValue);
@@ -129,9 +139,15 @@ namespace Compiler.CodeGenerator
         {
             Visit(node.Expr);
             var targetValue = valueStack.Pop();
-            if (node.Expr.Type is RecordType it) {
+            var type = FindType(node.Expr.Type);
+            if (node.Expr.Type is RecordType it)
+            {
                 var i = it.Fields.IndexOf(node.Member);
-                var retValue = builder.BuildExtractValue(targetValue, (uint)i);
+                // arc type field index offset
+                var elementIndex = (uint)i + 1;
+                var elementPtr = builder.BuildStructGEP2(type, targetValue, elementIndex);
+                var retType = FindType(node.Member.Type);
+                var retValue = builder.BuildLoad2(retType, elementPtr);
                 valueStack.Push(retValue);
                 return;
             }
@@ -141,21 +157,29 @@ namespace Compiler.CodeGenerator
         public override void Visit(ConstructCallExpressionNode node)
         {
             var type = structTypes[node.Id.Name];
-            var retValue = builder.BuildAlloca(type);
+            var retValue = builder.BuildMalloc(type);
+            // store ref count
+            var refCountPtr = builder.BuildStructGEP2(type, retValue, (uint)0);
+            builder.BuildStore(LLVMValueRef.CreateConstInt(LLVMTypeRef.Int32, 1), refCountPtr);
             foreach (var (index, arg) in node.Args.WithIndex())
             {
                 arg.Accept(this);
+                // ref count add
+                var argType = FindType(arg.Type);
+                var argValue = valueStack.Pop();
+                ArcInc(argType, argValue);
                 var elementPtr = builder.BuildStructGEP2(type, retValue, (uint)index);
-                builder.BuildStore(valueStack.Pop(), elementPtr);
+                builder.BuildStore(argValue, elementPtr);
             }
-            var v = builder.BuildLoad2(type, retValue);
-            valueStack.Push(v);
+            valueStack.Push(retValue);
         }
         public override void Visit(AssignmentExpressionNode node)
         {
             var variable = namedValues[node.Id];
             node.NewValue.Accept(this);
+            var type = FindType(node.Id.Type);
             var newValue = valueStack.Pop();
+            ArcInc(type, newValue);
             builder.BuildStore(newValue, variable.Value);
             valueStack.Push(GetVoidValue());
         }
