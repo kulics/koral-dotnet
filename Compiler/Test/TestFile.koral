@@ -6,10 +6,10 @@ let mut y Int = 0;
 let main() Int = {
     let a = 1;
     let mut b = 1;
-    if (true) {
+    if true then {
         b = 2;
     }
-    b = if (true) 3 else 4;
+    b = if true then 3 else 4;
     y = 1;
     let c = add(a, b) - x + y * 5;
     c
@@ -18,17 +18,17 @@ let main() Int = {
 let add(a Int, b Int) Int = a + b; 
 
 let loop() Void = {
-    while (false) 1;
+    while false then 1;
 }
 
 let loopBreak() Void = {
-    while (false) {
+    while false then {
         break;
     }
 }
 
 let whileThenElse() Void = {
-    while (true) {
+    while true then {
         break;
     } else {
         1
@@ -36,7 +36,7 @@ let whileThenElse() Void = {
 }
 
 let retValue() Int = {
-    if (true) {
+    if true then {
         return 1;
         3
     }
