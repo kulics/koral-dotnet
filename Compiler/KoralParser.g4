@@ -136,35 +136,35 @@ assignmentExpressionWithBlock: variableIdentifier Equal NewLine* expressionWithB
 lambdaExpression: parameterList (type)? Arrow NewLine* expression;
 
 ifThenExpression
-    : If NewLine* LeftParen condition RightParen NewLine* expressionOrControl
+    : If NewLine* condition NewLine* Then NewLine* expressionOrControl
     ;
 
 ifThenExpressionWithBlock
-    : If NewLine* LeftParen condition RightParen NewLine* expressionWithBlock
+    : If NewLine* condition NewLine* Then NewLine* expressionWithBlock
     ;
 
 ifThenElseExpression
-    : If NewLine* LeftParen condition RightParen NewLine* expression Else NewLine* expression
+    : If NewLine* condition NewLine* Then NewLine* expression Else NewLine* expression
     ;
 
 ifThenElseExpressionWithBlock
-    : If NewLine* LeftParen condition RightParen NewLine* expression Else NewLine* expressionWithBlock
+    : If NewLine* condition NewLine* Then NewLine* expression Else NewLine* expressionWithBlock
     ;
 
 whileThenExpression
-    : While NewLine* LeftParen condition RightParen NewLine* expressionOrControl
+    : While NewLine* condition NewLine* Then NewLine* expressionOrControl
     ;
 
 whileThenExpressionWithBlock
-    : While NewLine* LeftParen condition RightParen NewLine* expressionWithBlock
+    : While NewLine* condition NewLine* Then NewLine* expressionWithBlock
     ;
 
 whileThenElseExpression
-    : While NewLine* LeftParen condition RightParen NewLine* expression Else NewLine* expression
+    : While NewLine* condition NewLine* Then NewLine* expression Else NewLine* expression
     ;
 
 whileThenElseExpressionWithBlock
-    : While NewLine* LeftParen condition RightParen NewLine* expression Else NewLine* expressionWithBlock
+    : While NewLine* condition NewLine* Then NewLine* expression Else NewLine* expressionWithBlock
     ;
 
 condition
