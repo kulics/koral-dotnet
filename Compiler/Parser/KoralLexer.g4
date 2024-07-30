@@ -48,6 +48,7 @@ Mut: 'mut';
 Let: 'let';
 Export: 'export';
 If: 'if';
+Then: 'then';
 Else: 'else';
 While: 'while';
 Break: 'break';
