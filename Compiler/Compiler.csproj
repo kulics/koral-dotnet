@@ -4,7 +4,6 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <Antlr4UseCSharpGenerator>True</Antlr4UseCSharpGenerator>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -15,26 +14,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Antlr4" Version="4.6.6">
-      <!-- <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets> -->
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1">
     </PackageReference>
     <PackageReference Include="LLVMSharp" Version="16.0.0"/>
-  </ItemGroup>
-  <ItemGroup>
-    <Antlr4 Include="KoralLexer.g4">
-      <CopyToOutputDirectory></CopyToOutputDirectory>
-    </Antlr4>
-    <Antlr4 Include="KoralParser.g4">
-      <Generator></Generator>
-      <Encoding></Encoding>
-      <TargetLanguage></TargetLanguage>
-      <Listener></Listener>
-      <Visitor></Visitor>
-      <Abstract></Abstract>
-      <ForceAtn></ForceAtn>
-      <CopyToOutputDirectory></CopyToOutputDirectory>
-    </Antlr4>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Test\" />

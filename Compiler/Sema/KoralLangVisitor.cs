@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using Compiler.Types;
 using System.Linq;
 using Compiler.AstNodes;
-using static Compiler.KoralParser;
+using static Compiler.Parser.KoralParser;
 using Compiler.Library;
+using Compiler.Parser;
 
 namespace Compiler.Sema
 {

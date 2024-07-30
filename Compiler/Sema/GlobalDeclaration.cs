@@ -3,7 +3,7 @@ using Compiler.Library;
 using Compiler.AstNodes;
 using Compiler.Types;
 using System.Collections.Generic;
-using static Compiler.KoralParser;
+using static Compiler.Parser.KoralParser;
 using System;
 
 namespace Compiler.Sema

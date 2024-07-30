@@ -1,7 +1,7 @@
 ﻿using Compiler.AstNodes;
 using Compiler.Types;
 using System.Linq;
-using static Compiler.KoralParser;
+using static Compiler.Parser.KoralParser;
 
 namespace Compiler.Sema
 {

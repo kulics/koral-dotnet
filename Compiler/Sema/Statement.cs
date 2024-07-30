@@ -1,4 +1,4 @@
-﻿using static Compiler.KoralParser;
+﻿using static Compiler.Parser.KoralParser;
 using Compiler.Library;
 using Antlr4.Runtime.Misc;
 using Compiler.AstNodes;

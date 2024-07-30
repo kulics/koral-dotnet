@@ -1,5 +1,6 @@
 using Antlr4.Runtime;
 using System;
+using System.IO;
 
 namespace Compiler
 {
@@ -7,20 +8,14 @@ namespace Compiler
     {
         public string FileDir = FileDir;
 
-        public override void SyntaxError(
-            IRecognizer recognizer,
-            IToken offendingSymbol,
-            int line,
-            int charPositionInLine,
-            string msg,
-            RecognitionException e)
+        public override void SyntaxError(TextWriter output, IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
         {
-            base.SyntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e);
-            Console.WriteLine("------Syntax Error------");
-            Console.WriteLine($"File: {this.FileDir}");
-            Console.WriteLine($"Line: {line}  Column: {charPositionInLine}");
-            Console.WriteLine($"OffendingSymbol: {offendingSymbol.Text}");
-            Console.WriteLine($"Message: {msg}");
+            base.SyntaxError(output, recognizer, offendingSymbol, line, charPositionInLine, msg, e);
+            output.WriteLine("------Syntax Error------");
+            output.WriteLine($"File: {this.FileDir}");
+            output.WriteLine($"Line: {line}  Column: {charPositionInLine}");
+            output.WriteLine($"OffendingSymbol: {offendingSymbol.Text}");
+            output.WriteLine($"Message: {msg}");
         }
     }
 }

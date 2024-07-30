@@ -239,7 +239,7 @@ type
     | functionType
     ;
 
-functionType: Fn parameterList type;
+functionType: Type parameterList type;
 
 typeIdentifier: UpperIdentifier;
 

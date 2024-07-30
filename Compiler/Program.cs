@@ -25,9 +25,9 @@ namespace Compiler
             {
                 using var fsRead = new FileStream(file, FileMode.Open);
                 var stream = new AntlrInputStream(fsRead);
-                var lexer = new KoralLexer(stream);
+                var lexer = new Parser.KoralLexer(stream);
                 var tokens = new CommonTokenStream(lexer);
-                var parser = new KoralParser(tokens)
+                var parser = new Parser.KoralParser(tokens)
                 {
                     BuildParseTree = true
                 };
